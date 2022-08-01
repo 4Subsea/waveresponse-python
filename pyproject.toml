@@ -41,7 +41,7 @@ envlist =
 
 [testenv]
 commands =
-    pytest --cov=maroon_helium --cov-report html:cov_html-{envname} ./tests
+    pytest --cov=scarlet_lithium --cov-report html:cov_html-{envname} ./tests
 deps =
     pytest
     pytest-cov

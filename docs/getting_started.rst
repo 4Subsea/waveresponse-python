@@ -17,21 +17,21 @@ This package is tested with the latest Windows, MacOS, and Ubuntu (Linux) versio
 
 Install
 -------
-``maroon_helium`` can be installed via pip from `PyPI`_.
+``scarlet_lithium`` can be installed via pip from `PyPI`_.
 
 .. code-block:: shell
 
-   pip install maroon_helium
+   pip install scarlet_lithium
 
 .. _upgrade:
 
 Upgrade
 -------
-``maroon_helium`` can be upgraded via pip from `PyPI`_.
+``scarlet_lithium`` can be upgraded via pip from `PyPI`_.
 
 .. code-block:: shell
 
-   pip install --upgrade maroon_helium
+   pip install --upgrade scarlet_lithium
 
 .. _Python.org: https://python.org
 .. _PyPI: https://pypi.org/
