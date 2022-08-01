@@ -1,0 +1,9 @@
+API reference
+=============
+This section gives an overview of all public ``scarlet_lithium`` objects,
+functions and methods.
+
+.. toctree::
+   :maxdepth: 1
+
+   first_function

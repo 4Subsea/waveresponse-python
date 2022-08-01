@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scarlet_lithium"
+authors = [
+  { name="4Subsea", email="python@4subsea.com" },
+]
+dynamic = ["version"]
+description = "Vessel motion and wave utilities"
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Unix", 
+    "Operating System :: Microsoft :: Windows",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/4Subsea/scarlet-lithium-python"
+"Bug Tracker" = "https://github.com/4Subsea/scarlet-lithium-python/issues"
+
+[tool.setuptools.dynamic]
+version = {attr = "scarlet_lithium.__version__"}
+
+[tool.pytest.ini_options]
+pythonpath = [".", "src"]
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+isolated_build = True
+envlist =
+    py
+    docs
+
+[testenv]
+commands =
+    pytest --cov=scarlet_lithium --cov-report html:cov_html-{envname} ./tests
+deps =
+    pytest
+    pytest-cov
+
+[testenv:docs]
+basepython = python3.9
+commands = sphinx-build -W -b html -d {toxworkdir}/docs_doctree docs {toxworkdir}/docs_out
+deps =
+    sphinx == 4.5
+    pydata-sphinx-theme == 0.8
+"""

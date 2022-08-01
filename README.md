@@ -1,2 +1,2 @@
 # scarlet-lithium-python
-Vessel motion and wave utilities
+Vessel motion and wave utilities.
