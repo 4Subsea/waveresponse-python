@@ -209,14 +209,14 @@ class Grid:
         Parameters
         ----------
         freq_hz : bool
-            If frequencies should be returned in Hz. If False, rad/s is used.
+            If frequencies should be returned in Hz. If ``False``, rad/s is used.
         degrees : bool
             If directions should be returned in degrees.
 
         Return
         ------
         freq : 1D-array
-            Frequencies bins.
+            Frequency bins.
         dirs : 1D-array
             Direction bins.
         vals : 2D-array (N, M)
