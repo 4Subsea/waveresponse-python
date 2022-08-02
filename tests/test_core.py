@@ -552,3 +552,49 @@ class Test_Grid:
         ])
 
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_interpolate_complex_rectangular(self):
+        a_real = 7
+        b_real = 6
+        a_imag = 3
+        b_imag = 9
+
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.linspace(0.0, 359.0, 10)
+        vp_real = np.array([[a_real * x_i + b_real * y_i for x_i in xp] for y_i in yp])
+        vp_imag = np.array([[a_imag * x_i + b_imag * y_i for x_i in xp] for y_i in yp])
+        vp = vp_real + 1j * vp_imag
+        grid = Grid(yp, xp, vp, freq_hz=True, degrees=True)
+
+        y = np.linspace(0.5, 1.0, 20)
+        x = np.linspace(5.0, 15.0, 10)
+        vals_real_expect = np.array([[a_real * x_i + b_real * y_i for x_i in x] for y_i in y])
+        vals_imag_expect = np.array([[a_imag * x_i + b_imag * y_i for x_i in x] for y_i in y])
+        vals_expect = vals_real_expect + 1j * vals_imag_expect
+
+        vals_out = grid.interpolate(y, x, freq_hz=True, degrees=True, complex_convert="rectangular")
+
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_interpolate_complex_polar(self):
+        a_amp = 7
+        b_amp = 6
+        a_phase = 0.01
+        b_phase = 0.03
+
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.linspace(0.0, 359.0, 10)
+        vp_amp = np.array([[a_amp * x_i + b_amp * y_i for x_i in xp] for y_i in yp])
+        vp_phase = np.array([[a_phase * x_i + b_phase * y_i for x_i in xp] for y_i in yp])
+        vp = vp_amp * (np.cos(vp_phase) + 1j * np.sin(vp_phase))
+        grid = Grid(yp, xp, vp, freq_hz=True, degrees=True)
+
+        y = np.linspace(0.5, 1.0, 20)
+        x = np.linspace(5.0, 15.0, 10)
+        vals_amp_expect = np.array([[a_amp * x_i + b_amp * y_i for x_i in x] for y_i in y])
+        vals_phase_expect = np.array([[a_phase * x_i + b_phase * y_i for x_i in x] for y_i in y])
+        vals_expect = vals_amp_expect * (np.cos(vals_phase_expect) + 1j * np.sin(vals_phase_expect))
+
+        vals_out = grid.interpolate(y, x, freq_hz=True, degrees=True, complex_convert="polar")
+
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
