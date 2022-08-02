@@ -624,3 +624,54 @@ class Test_Grid:
         )
 
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_interpolate_raises_freq(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.zeros((10, 15))
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        with pytest.raises(ValueError):
+            grid.interpolate([0, 1, 2, 1], [0, 1, 2])
+
+    def test_interpolate_raises_dirs(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.zeros((10, 15))
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        with pytest.raises(ValueError):
+            grid.interpolate([0, 1, 2], [0, 1, 2, 1])
+
+    def test_interpolate_raises_dirs_outside_bound(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.zeros((10, 15))
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        with pytest.raises(ValueError):
+            grid.interpolate([0, 1, 2], [0, 1, 2, 100], degrees=False)   # dirs outside bound
