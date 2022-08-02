@@ -382,3 +382,63 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(grid_rot._freq, freq_expect)
         np.testing.assert_array_almost_equal(grid_rot._dirs, dirs_expect)
         np.testing.assert_array_almost_equal(grid_rot._vals, vals_expect)
+
+    def test__call__(self):
+        freq = np.array([0, 1])
+        dirs = np.array([0, 90, 180])
+        vals = np.array([
+            [1, 2, 3],
+            [1, 2, 3],
+        ])
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=False,
+            waves_coming_from=True,
+        )
+
+        freq_out, dirs_out, vals_out = grid(freq_hz=True, degrees=True)
+
+        freq_expect = np.array([0, 1])
+        dirs_expect = np.array([0, 90, 180])
+        vals_expect = np.array([
+            [1, 2, 3],
+            [1, 2, 3],
+        ])
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test__call__2(self):
+        freq = np.array([0, 1])
+        dirs = np.array([0, 90, 180])
+        vals = np.array([
+            [1, 2, 3],
+            [1, 2, 3],
+        ])
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=False,
+            waves_coming_from=True,
+        )
+
+        freq_out, dirs_out, vals_out = grid(freq_hz=False, degrees=False)
+
+        freq_expect = (2.0 * np.pi) * np.array([0, 1])
+        dirs_expect = (np.pi / 180.0) * np.array([0, 90, 180])
+        vals_expect = np.array([
+            [1, 2, 3],
+            [1, 2, 3],
+        ])
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
