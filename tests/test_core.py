@@ -125,3 +125,32 @@ class Test_Grid:
         convention_expect = {"clockwise": False, "waves_coming_from": True}
         convention_out = grid.wave_convention
         assert convention_out == convention_expect
+
+    def test__sort(self):
+        dirs_unsorted = [1, 3, 2, 4]
+        vals_unsorted = [
+            [1, 2, 3, 4],
+            [1, 2, 3, 4],
+        ]
+        dirs_sorted_out, vals_sorted_out = Grid._sort(dirs_unsorted, vals_unsorted)
+
+        dirs_sorted_expect = np.array([1, 2, 3, 4])
+        vals_sorted_expect = np.array(
+            [
+                [1, 3, 2, 4],
+                [1, 3, 2, 4],
+            ]
+        )
+
+        np.testing.assert_array_almost_equal(dirs_sorted_out, dirs_sorted_expect)
+        np.testing.assert_array_almost_equal(vals_sorted_out, vals_sorted_expect)
+
+    def test__convert_dirs(self):
+        dirs_in = np.array([0, np.pi / 4, np.pi / 2, 3.0 * np.pi / 4, np.pi])
+        config_org = {"clockwise": False, "waves_coming_from": True}
+        config_new = {"clockwise": True, "waves_coming_from": False}
+        dirs_out = Grid._convert_dirs(dirs_in, config_new, config_org)
+
+        dirs_expect = np.array([np.pi, 3.0 * np.pi / 4, np.pi / 2, np.pi / 4, 0])
+
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)

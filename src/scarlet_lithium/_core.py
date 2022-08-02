@@ -86,3 +86,83 @@ class Grid:
             "clockwise": self._clockwise,
             "waves_coming_from": self._waves_coming_from,
         }
+
+    def set_wave_convention(self, clockwise=True, waves_coming_from=True):
+        """
+        Set wave convention.
+
+        Directions and values will be converted (in-place) to the new convention.
+
+        Parameters:
+        -----------
+        clockwise : bool
+            If positive directions are defined to be 'clockwise'. If False, 'counterclockwise'
+            is assumed.
+        waves_coming_from : bool
+            If waves are 'coming from' the given directions. If False, 'going towards'
+            convention is assumed.
+        """
+        org_conv = self.wave_convention
+        new_conv = {"clockwise": clockwise, "waves_coming_from": waves_coming_from}
+        self._freq, self._dirs, self._vals = self._convert(
+            self._freq, self._dirs, self._vals, new_conv, org_conv
+        )
+        self._clockwise = new_conv["clockwise"]
+        self._waves_coming_from = new_conv["waves_coming_from"]
+
+    def _convert(self, freq, dirs, vals, config_new, config_org):
+        """
+        Convert grid from one wave convention to another.
+        """
+        freq_org = np.asarray_chkfinite(freq).copy()
+        dirs_org = np.asarray_chkfinite(dirs).copy()
+        vals_org = np.asarray_chkfinite(vals).copy()
+
+        freq_new = freq_org
+        dirs_new = self._convert_dirs(dirs_org, config_new, config_org)
+        dirs_new, vals_new = self._sort(dirs_new, vals_org)
+
+        return freq_new, dirs_new, vals_new
+
+    @staticmethod
+    def _convert_dirs(dirs, config_new, config_org, degrees=False):
+        """
+        Convert wave directions from one convention to another.
+
+        Parameters
+        ----------
+        dirs : float or array-like
+            Wave directions in radians expressed according to 'original' convention.
+        config_new : dict
+            New wave direction convention.
+        config_org : dict
+            Original wave direction convention.
+
+        Return
+        ------
+        dirs : numpy.array
+            Wave directions in radians expressed according to 'new' convention.
+        """
+        dirs = np.asarray_chkfinite(dirs).copy()
+
+        if degrees:
+            periodicity = 360.0
+        else:
+            periodicity = 2.0 * np.pi
+
+        if config_new["waves_coming_from"] != config_org["waves_coming_from"]:
+            dirs -= periodicity / 2
+        if config_new["clockwise"] != config_org["clockwise"]:
+            dirs *= -1
+
+        return dirs % periodicity
+
+    @staticmethod
+    def _sort(dirs, vals):
+        """
+        Sort directions and values according to (unsorted) directions.
+        """
+        dirs = np.asarray_chkfinite(dirs)
+        vals = np.asarray_chkfinite(vals)
+        sorted_args = np.argsort(dirs)
+        return dirs[sorted_args], vals[:, sorted_args]
