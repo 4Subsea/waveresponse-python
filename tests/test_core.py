@@ -475,7 +475,7 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
-    def test_spectrum_interpolate_hz_deg(self):
+    def test_interpolate(self):
         a = 7
         b = 6
 
@@ -489,5 +489,66 @@ class Test_Grid:
         vals_expect = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
 
         vals_out = grid.interpolate(y, x, freq_hz=True, degrees=True)
+
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_interpolate2(self):
+        a = 7
+        b = 6
+
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.linspace(0.0, 359.0, 10)
+        vp = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in yp])
+        grid = Grid(yp, xp, vp, freq_hz=True, degrees=True)
+
+        y = np.linspace(0.5, 1.0, 20)
+        x = np.linspace(5.0, 15.0, 10)
+        vals_expect = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
+
+        y_ = (2.0 * np.pi) * y
+        x_ = (np.pi / 180.0) * x
+        vals_out = grid.interpolate(y_, x_, freq_hz=False, degrees=False)
+
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_interpolate_fill_value(self):
+
+        freq = np.array([0, 1, 2])
+        dirs = np.array([0, 90, 180, 270])
+        vals = np.array([
+            [1, 2, 3, 4],
+            [1, 2, 3, 4],
+            [1, 2, 3, 4],
+        ])
+        grid = Grid(freq, dirs, vals, freq_hz=True, degrees=True)
+
+        # extrapolate
+        vals_out = grid.interpolate([10, 20], [0, 90], freq_hz=True, degrees=True)
+
+        vals_expect = np.array([
+            [0.0, 0.0],
+            [0.0, 0.0],
+        ])
+
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_interpolate_fill_value_None(self):
+
+        freq = np.array([0, 1, 2])
+        dirs = np.array([0, 90, 180, 270])
+        vals = np.array([
+            [1, 2, 3, 4],
+            [1, 2, 3, 4],
+            [1, 2, 3, 4],
+        ])
+        grid = Grid(freq, dirs, vals, freq_hz=True, degrees=True)
+
+        # extrapolate
+        vals_out = grid.interpolate([10, 20], [0, 90], freq_hz=True, degrees=True, fill_value=None)
+
+        vals_expect = np.array([
+            [1.0, 2.0],
+            [1.0, 2.0],
+        ])
 
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
