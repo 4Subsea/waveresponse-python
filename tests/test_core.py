@@ -640,7 +640,9 @@ class Test_Grid:
         )
 
         with pytest.raises(ValueError):
-            grid.interpolate([0, 1, 2, 1], [0, 1, 2])   # freq not monotonically increasing
+            grid.interpolate(
+                [0, 1, 2, 1], [0, 1, 2]
+            )  # freq not monotonically increasing
 
     def test_interpolate_raises_dirs(self):
         freq = np.linspace(0, 1.0, 10)
@@ -657,7 +659,9 @@ class Test_Grid:
         )
 
         with pytest.raises(ValueError):
-            grid.interpolate([0, 1, 2], [0, 1, 2, 1])   # dirs not monotonically increasing
+            grid.interpolate(
+                [0, 1, 2], [0, 1, 2, 1]
+            )  # dirs not monotonically increasing
 
     def test_interpolate_raises_dirs_outside_bound(self):
         freq = np.linspace(0, 1.0, 10)
@@ -674,4 +678,6 @@ class Test_Grid:
         )
 
         with pytest.raises(ValueError):
-            grid.interpolate([0, 1, 2], [0, 1, 2, 100], degrees=False)   # dirs outside bound
+            grid.interpolate(
+                [0, 1, 2], [0, 1, 2, 100], degrees=False
+            )  # dirs outside bound

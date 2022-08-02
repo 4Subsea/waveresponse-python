@@ -366,3 +366,80 @@ class Grid:
         )
 
         return interp_fun(dirs, freq, assume_sorted=True)
+
+    def reshape(self, freq, dirs, freq_hz=True, degrees=True, complex_convert=None):
+        """
+        Reshape the grid.
+
+        Parameters
+        ----------
+        freq : array-like
+            New frequency bins. Positive and monotonically increasing.
+        dirs : array-like
+            New direction bins. Positive and monotonically increasing. Must cover
+            the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+        freq_hz : bool
+            If frequency is given in Hz. If ``False``, rad/s is assumed.
+        degrees : bool
+            If direction is given in degrees. If ``False``, radians are assumed.
+        complex_convert : str, optional
+            How to convert complex numbers (if they are present) before interpolating.
+            Should be 'rectangular' or 'polar'. If 'rectangular' (default), complex
+            values are converted to rectangular form before interpolating. If 'polar',
+            the values are instead converted to polar form before interpolating.
+            The interpolated values are converted back to complex form before they
+            are returned.
+        """
+        freq_new = np.asarray_chkfinite(freq).copy()
+        dirs_new = np.asarray_chkfinite(dirs).copy()
+
+        if freq_hz:
+            freq_new = 2.0 * np.pi * freq_new
+
+        if degrees:
+            dirs_new = (np.pi / 180.0) * dirs_new
+
+        self._check_freq(freq_new)
+        self._check_dirs(dirs_new)
+
+        vals_new = self.interpolate(
+            freq_new,
+            dirs_new,
+            freq_hz=False,
+            degrees=False,
+            complex_convert=complex_convert,
+        )
+        new = self.copy()
+        new._freq, new._dirs, new._vals = freq_new, dirs_new, vals_new
+        return new
+
+
+class RAO(Grid):
+    @classmethod
+    def from_amp_phase(
+        cls,
+        freq,
+        dirs,
+        amp,
+        phase,
+        freq_hz=True,
+        degrees=True,
+        phase_degrees=False,
+        clockwise=True,
+        waves_coming_from=True,
+    ):
+        """
+        Alternative constructor.
+        """
+
+        rao_complex = polar_to_complex(amp, phase, phase_degrees=phase_degrees)
+
+        cls(
+            freq,
+            dirs,
+            rao_complex,
+            freq_hz=freq_hz,
+            degrees=degrees,
+            clockwise=clockwise,
+            waves_coming_from=waves_coming_from,
+        )
