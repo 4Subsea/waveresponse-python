@@ -201,3 +201,36 @@ class Grid:
         dirs_new = (new._dirs - angle) % (2.0 * np.pi)
         new._dirs, new._vals = new._sort(dirs_new, new._vals)
         return new
+
+    def __call__(self, freq_hz=True, degrees=True):
+        """
+        Return a copy of the grid object's frequencies, directions and values.
+
+        Parameters
+        ----------
+        freq_hz : bool
+            If frequencies should be returned in Hz. If False, rad/s is used.
+        degrees : bool
+            If directions should be returned in degrees.
+
+        Return
+        ------
+        freq : 1D-array
+            Frequencies bins.
+        dirs : 1D-array
+            Direction bins.
+        vals : 2D-array (N, M)
+            Value grid as 2-D array of shape (N, M), such that
+            ``N=len(freq)`` and ``M=len(dirs)``.
+        """
+        freq = self._freq.copy()
+        dirs = self._dirs.copy()
+        vals = self._vals.copy()
+
+        if freq_hz:
+            freq = 1.0 / (2.0 * np.pi) * freq
+
+        if degrees:
+            dirs = (180.0 / np.pi) * dirs
+
+        return freq, dirs, vals
