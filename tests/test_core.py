@@ -201,3 +201,37 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_set_wave_convention(self):
+        freq_in = np.array([0.0, 0.5, 1.0])
+        dirs_in = np.array([0, np.pi / 4, np.pi / 2, 3.0 * np.pi / 4, np.pi])
+        vals_in = np.array([
+            [1.0, 2.0, 3.0, 4.0, 5.0],
+            [1.0, 2.0, 3.0, 4.0, 5.0],
+            [1.0, 2.0, 3.0, 4.0, 5.0],
+        ])
+        grid = Grid(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=False,
+            clockwise=False,
+            waves_coming_from=True,
+        )
+
+        grid.set_wave_convention(clockwise=True, waves_coming_from=False)
+
+        freq_expect = (2.0 * np.pi) * freq_in
+        dirs_expect = np.array([0, np.pi / 4, np.pi / 2, 3.0 * np.pi / 4, np.pi])
+        vals_expect = np.array([
+            [5.0, 4.0, 3.0, 2.0, 1.0],
+            [5.0, 4.0, 3.0, 2.0, 1.0],
+            [5.0, 4.0, 3.0, 2.0, 1.0],
+        ])
+
+        np.testing.assert_array_almost_equal(grid._freq, freq_expect)
+        np.testing.assert_array_almost_equal(grid._dirs, dirs_expect)
+        np.testing.assert_array_almost_equal(grid._vals, vals_expect)
+        assert grid._clockwise is True
+        assert grid._waves_coming_from is False

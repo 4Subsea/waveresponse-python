@@ -105,7 +105,7 @@ class Grid:
         org_conv = self.wave_convention
         new_conv = {"clockwise": clockwise, "waves_coming_from": waves_coming_from}
         self._freq, self._dirs, self._vals = self._convert(
-            self._freq, self._dirs, self._vals, new_conv, org_conv, degrees=False
+            self._freq, self._dirs, self._vals, new_conv, org_conv
         )
         self._clockwise = new_conv["clockwise"]
         self._waves_coming_from = new_conv["waves_coming_from"]
