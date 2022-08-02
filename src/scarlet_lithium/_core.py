@@ -358,6 +358,9 @@ class Grid:
         if degrees:
             dirs = (np.pi / 180.0) * dirs
 
+        self._check_freq(freq)
+        self._check_dirs(dirs)
+
         interp_fun = self._interpolate_function(
             complex_convert=complex_convert, kind="linear", fill_value=fill_value
         )
