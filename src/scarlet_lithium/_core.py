@@ -166,3 +166,7 @@ class Grid:
         vals = np.asarray_chkfinite(vals)
         sorted_args = np.argsort(dirs)
         return dirs[sorted_args], vals[:, sorted_args]
+
+    def copy(self):
+        """Return a copy of the object."""
+        return copy.deepcopy(self)
