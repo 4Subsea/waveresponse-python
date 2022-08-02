@@ -76,3 +76,13 @@ class Grid:
                 "Directions must be positive monotonically increasing and "
                 "be [0., 360.) degs (or [0., 2*pi) rads)."
             )
+
+    @property
+    def wave_convention(self):
+        """
+        Wave convention.
+        """
+        return {
+            "clockwise": self._clockwise,
+            "waves_coming_from": self._waves_coming_from,
+        }

@@ -107,3 +107,21 @@ class Test_Grid:
             dirs = np.array([0, 1, 2, 3])
             vals = np.zeros((3, 10))
             Grid(freq, dirs, vals)
+
+    def test_wave_convention(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.zeros((10, 15))
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=False,
+            waves_coming_from=True,
+        )
+
+        convention_expect = {"clockwise": False, "waves_coming_from": True}
+        convention_out = grid.wave_convention
+        assert convention_out == convention_expect
