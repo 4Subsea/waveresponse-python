@@ -1,4 +1,5 @@
 import copy
+
 import numpy as np
 from scipy.interpolate import interp2d
 
@@ -71,11 +72,7 @@ class Grid:
         """
         Check direction bins.
         """
-        if (
-            np.any(dirs[:-1] >= dirs[1:])
-            or dirs[0] < 0
-            or dirs[-1] >= 2.0 * np.pi
-        ):
+        if np.any(dirs[:-1] >= dirs[1:]) or dirs[0] < 0 or dirs[-1] >= 2.0 * np.pi:
             raise ValueError(
                 "Directions must be positive monotonically increasing and "
                 "be [0., 360.) degs (or [0., 2*pi) rads)."
