@@ -262,3 +262,123 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(grid_copy._vals, grid._vals)
         assert grid_copy._clockwise == grid._clockwise
         assert grid_copy._waves_coming_from == grid._waves_coming_from
+
+    def test_rotate_deg(self):
+        freq = np.array([0, 1])
+        dirs = np.array([0, 90, 180])
+        vals = np.array([
+            [1, 2, 3],
+            [1, 2, 3],
+        ])
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=False,
+            waves_coming_from=True,
+        )
+
+        grid_rot = grid.rotate(45, degrees=True)
+
+        freq_expect = (2.0 * np.pi) * np.array([0, 1])
+        dirs_expect = (np.pi / 180.0) * np.array([45, 135, 315])
+        vals_expect = np.array([
+            [2, 3, 1],
+            [2, 3, 1],
+        ])
+
+        np.testing.assert_array_almost_equal(grid_rot._freq, freq_expect)
+        np.testing.assert_array_almost_equal(grid_rot._dirs, dirs_expect)
+        np.testing.assert_array_almost_equal(grid_rot._vals, vals_expect)
+
+    def test_rotate_deg_neg(self):
+        freq = np.array([0, 1])
+        dirs = np.array([0, 90, 180])
+        vals = np.array([
+            [1, 2, 3],
+            [1, 2, 3],
+        ])
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=False,
+            waves_coming_from=True,
+        )
+
+        grid_rot = grid.rotate(-45, degrees=True)
+
+        freq_expect = (2.0 * np.pi) * np.array([0, 1])
+        dirs_expect = (np.pi / 180.0) * np.array([45, 135, 225])
+        vals_expect = np.array([
+            [1, 2, 3],
+            [1, 2, 3],
+        ])
+
+        np.testing.assert_array_almost_equal(grid_rot._freq, freq_expect)
+        np.testing.assert_array_almost_equal(grid_rot._dirs, dirs_expect)
+        np.testing.assert_array_almost_equal(grid_rot._vals, vals_expect)
+
+    def test_rotate_rad(self):
+        freq = np.array([0, 1])
+        dirs = np.array([0, 90, 180])
+        vals = np.array([
+            [1, 2, 3],
+            [1, 2, 3],
+        ])
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=False,
+            waves_coming_from=True,
+        )
+
+        grid_rot = grid.rotate(np.pi/4, degrees=False)
+
+        freq_expect = (2.0 * np.pi) * np.array([0, 1])
+        dirs_expect = (np.pi / 180.0) * np.array([45, 135, 315])
+        vals_expect = np.array([
+            [2, 3, 1],
+            [2, 3, 1],
+        ])
+
+        np.testing.assert_array_almost_equal(grid_rot._freq, freq_expect)
+        np.testing.assert_array_almost_equal(grid_rot._dirs, dirs_expect)
+        np.testing.assert_array_almost_equal(grid_rot._vals, vals_expect)
+
+    def test_rotate_rad_neg(self):
+        freq = np.array([0, 1])
+        dirs = np.array([0, 90, 180])
+        vals = np.array([
+            [1, 2, 3],
+            [1, 2, 3],
+        ])
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=False,
+            waves_coming_from=True,
+        )
+
+        grid_rot = grid.rotate(-np.pi/4, degrees=False)
+
+        freq_expect = (2.0 * np.pi) * np.array([0, 1])
+        dirs_expect = (np.pi / 180.0) * np.array([45, 135, 225])
+        vals_expect = np.array([
+            [1, 2, 3],
+            [1, 2, 3],
+        ])
+
+        np.testing.assert_array_almost_equal(grid_rot._freq, freq_expect)
+        np.testing.assert_array_almost_equal(grid_rot._dirs, dirs_expect)
+        np.testing.assert_array_almost_equal(grid_rot._vals, vals_expect)

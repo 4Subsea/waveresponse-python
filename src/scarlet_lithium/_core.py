@@ -173,9 +173,9 @@ class Grid:
 
     def rotate(self, angle, degrees=False):
         """
-        Rotate the grid a given angle.
+        Rotate the underlying coordinate system a given angle.
 
-        Grid directions are converted so that:
+        All directions are converted so that:
 
             dirs_new = dirs_old - angle
 
@@ -188,6 +188,11 @@ class Grid:
         degrees : bool
             Weather the rotation angle is given in degrees. If ``False``, radians
             is assumed.
+
+        Returns
+        -------
+        obj :
+            A rotated copy of the object.
         """
         if degrees:
             angle = (np.pi / 180.0) * angle
