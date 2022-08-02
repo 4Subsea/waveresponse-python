@@ -170,3 +170,29 @@ class Grid:
     def copy(self):
         """Return a copy of the object."""
         return copy.deepcopy(self)
+
+    def rotate(self, angle, degrees=False):
+        """
+        Rotate the grid a given angle.
+
+        Grid directions are converted so that:
+
+            dirs_new = dirs_old - angle
+
+        Note that the direction of positive rotation follows the set 'wave_convention'.
+
+        Parameters
+        ----------
+        angle : float
+            Rotation angle.
+        degrees : bool
+            Weather the rotation angle is given in degrees. If ``False``, radians
+            is assumed.
+        """
+        if degrees:
+            angle = (np.pi / 180.0) * angle
+
+        new = self.copy()
+        dirs_new = (new._dirs - angle) % (2.0 * np.pi)
+        new._dirs, new._vals = new._sort(dirs_new, new._vals)
+        return new
