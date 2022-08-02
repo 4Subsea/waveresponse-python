@@ -369,7 +369,7 @@ class Grid:
 
     def reshape(self, freq, dirs, freq_hz=True, degrees=True, complex_convert=None):
         """
-        Reshape the grid.
+        The object's values are (linear) interpolated to match the provided grid.
 
         Parameters
         ----------
@@ -389,6 +389,11 @@ class Grid:
             the values are instead converted to polar form before interpolating.
             The interpolated values are converted back to complex form before they
             are returned.
+
+        Returns
+        -------
+        obj :
+            Reshaped object.
         """
         freq_new = np.asarray_chkfinite(freq).copy()
         dirs_new = np.asarray_chkfinite(dirs).copy()
@@ -415,6 +420,9 @@ class Grid:
 
 
 class RAO(Grid):
+    """
+    RAO.
+    """
     @classmethod
     def from_amp_phase(
         cls,
