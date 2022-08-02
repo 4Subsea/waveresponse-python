@@ -309,3 +309,57 @@ class Grid:
             return lambda *args, **kwargs: (
                 interp_real(*args, **kwargs) + 1j * interp_imag(*args, **kwargs)
             )
+
+    def interpolate(
+        self,
+        freq,
+        dirs,
+        freq_hz=True,
+        degrees=True,
+        complex_convert="rectangular",
+        fill_value=0.0,
+    ):
+        """
+        Interpolate (linear) the grid values for given frequencies and directions.
+
+        Zero is used as fill value for extrapolation (i.e. `freq` outside the bounds
+        of the provided 2D spectrum). Directions are treated as periodic.
+
+        Parameters
+        ----------
+        freq : array-like
+            Frequency bins. Positive and monotonically increasing.
+        dirs : array-like
+            Direction bins. Positive and monotonically increasing. Must cover the directional
+            range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+        freq_hz : bool
+            If frequency is given in Hz. If ``False``, rad/s is assumed.
+        degrees : bool
+            If direction is given in degrees. If ``False``, radians are assumed.
+        complex_convert : str, optional
+            How to convert complex numbers (if they are present) before interpolating.
+            Should be 'rectangular' or 'polar'. If 'rectangular' (default), complex
+            values are converted to rectangular form before interpolating. If 'polar',
+            the values are instead converted to polar form before interpolating.
+            The interpolated values are converted back to complex form before they
+            are returned.
+        fill_value : float or None
+            The value used for extrapolation (i.e., `freq` outside the bounds of
+            the provided grid). If ``None``, values outside the domain are extrapolated
+            via nearest-neighbor extrapolation. Note that directions are treated
+            as periodic.
+        """
+        freq = np.asarray_chkfinite(freq).copy()
+        dirs = np.asarray_chkfinite(dirs).copy()
+
+        if freq_hz:
+            freq = 2.0 * np.pi * freq
+
+        if degrees:
+            dirs = (np.pi / 180.0) * dirs
+
+        interp_fun = self._interpolate_function(
+            complex_convert=complex_convert, kind="linear", fill_value=fill_value
+        )
+
+        return interp_fun(freq, dirs, assume_sorted=True)

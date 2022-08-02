@@ -198,10 +198,12 @@ class Test_Grid:
 
         freq_in = np.array([0.0, 0.5, 1.0])
         dirs_in = np.array([0, np.pi / 4, np.pi / 2, 3.0 * np.pi / 4, np.pi])
-        vals_in = np.array([
-            [1.0, 2.0, 3.0, 4.0, 5.0],
-            [1.0, 2.0, 3.0, 4.0, 5.0],
-        ])
+        vals_in = np.array(
+            [
+                [1.0, 2.0, 3.0, 4.0, 5.0],
+                [1.0, 2.0, 3.0, 4.0, 5.0],
+            ]
+        )
         config_org = {"clockwise": False, "waves_coming_from": True}
         config_new = {"clockwise": True, "waves_coming_from": False}
         freq_out, dirs_out, vals_out = grid._convert(
@@ -210,10 +212,12 @@ class Test_Grid:
 
         freq_expect = freq_in
         dirs_expect = np.array([0, np.pi / 4, np.pi / 2, 3.0 * np.pi / 4, np.pi])
-        vals_expect = np.array([
-            [5.0, 4.0, 3.0, 2.0, 1.0],
-            [5.0, 4.0, 3.0, 2.0, 1.0],
-        ])
+        vals_expect = np.array(
+            [
+                [5.0, 4.0, 3.0, 2.0, 1.0],
+                [5.0, 4.0, 3.0, 2.0, 1.0],
+            ]
+        )
 
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
@@ -222,11 +226,13 @@ class Test_Grid:
     def test_set_wave_convention(self):
         freq_in = np.array([0.0, 0.5, 1.0])
         dirs_in = np.array([0, np.pi / 4, np.pi / 2, 3.0 * np.pi / 4, np.pi])
-        vals_in = np.array([
-            [1.0, 2.0, 3.0, 4.0, 5.0],
-            [1.0, 2.0, 3.0, 4.0, 5.0],
-            [1.0, 2.0, 3.0, 4.0, 5.0],
-        ])
+        vals_in = np.array(
+            [
+                [1.0, 2.0, 3.0, 4.0, 5.0],
+                [1.0, 2.0, 3.0, 4.0, 5.0],
+                [1.0, 2.0, 3.0, 4.0, 5.0],
+            ]
+        )
         grid = Grid(
             freq_in,
             dirs_in,
@@ -241,11 +247,13 @@ class Test_Grid:
 
         freq_expect = (2.0 * np.pi) * freq_in
         dirs_expect = np.array([0, np.pi / 4, np.pi / 2, 3.0 * np.pi / 4, np.pi])
-        vals_expect = np.array([
-            [5.0, 4.0, 3.0, 2.0, 1.0],
-            [5.0, 4.0, 3.0, 2.0, 1.0],
-            [5.0, 4.0, 3.0, 2.0, 1.0],
-        ])
+        vals_expect = np.array(
+            [
+                [5.0, 4.0, 3.0, 2.0, 1.0],
+                [5.0, 4.0, 3.0, 2.0, 1.0],
+                [5.0, 4.0, 3.0, 2.0, 1.0],
+            ]
+        )
 
         np.testing.assert_array_almost_equal(grid._freq, freq_expect)
         np.testing.assert_array_almost_equal(grid._dirs, dirs_expect)
@@ -266,10 +274,12 @@ class Test_Grid:
     def test_rotate_deg(self):
         freq = np.array([0, 1])
         dirs = np.array([0, 90, 180])
-        vals = np.array([
-            [1, 2, 3],
-            [1, 2, 3],
-        ])
+        vals = np.array(
+            [
+                [1, 2, 3],
+                [1, 2, 3],
+            ]
+        )
         grid = Grid(
             freq,
             dirs,
@@ -284,10 +294,12 @@ class Test_Grid:
 
         freq_expect = (2.0 * np.pi) * np.array([0, 1])
         dirs_expect = (np.pi / 180.0) * np.array([45, 135, 315])
-        vals_expect = np.array([
-            [2, 3, 1],
-            [2, 3, 1],
-        ])
+        vals_expect = np.array(
+            [
+                [2, 3, 1],
+                [2, 3, 1],
+            ]
+        )
 
         np.testing.assert_array_almost_equal(grid_rot._freq, freq_expect)
         np.testing.assert_array_almost_equal(grid_rot._dirs, dirs_expect)
@@ -296,10 +308,12 @@ class Test_Grid:
     def test_rotate_deg_neg(self):
         freq = np.array([0, 1])
         dirs = np.array([0, 90, 180])
-        vals = np.array([
-            [1, 2, 3],
-            [1, 2, 3],
-        ])
+        vals = np.array(
+            [
+                [1, 2, 3],
+                [1, 2, 3],
+            ]
+        )
         grid = Grid(
             freq,
             dirs,
@@ -314,10 +328,12 @@ class Test_Grid:
 
         freq_expect = (2.0 * np.pi) * np.array([0, 1])
         dirs_expect = (np.pi / 180.0) * np.array([45, 135, 225])
-        vals_expect = np.array([
-            [1, 2, 3],
-            [1, 2, 3],
-        ])
+        vals_expect = np.array(
+            [
+                [1, 2, 3],
+                [1, 2, 3],
+            ]
+        )
 
         np.testing.assert_array_almost_equal(grid_rot._freq, freq_expect)
         np.testing.assert_array_almost_equal(grid_rot._dirs, dirs_expect)
@@ -326,10 +342,12 @@ class Test_Grid:
     def test_rotate_rad(self):
         freq = np.array([0, 1])
         dirs = np.array([0, 90, 180])
-        vals = np.array([
-            [1, 2, 3],
-            [1, 2, 3],
-        ])
+        vals = np.array(
+            [
+                [1, 2, 3],
+                [1, 2, 3],
+            ]
+        )
         grid = Grid(
             freq,
             dirs,
@@ -340,14 +358,16 @@ class Test_Grid:
             waves_coming_from=True,
         )
 
-        grid_rot = grid.rotate(np.pi/4, degrees=False)
+        grid_rot = grid.rotate(np.pi / 4, degrees=False)
 
         freq_expect = (2.0 * np.pi) * np.array([0, 1])
         dirs_expect = (np.pi / 180.0) * np.array([45, 135, 315])
-        vals_expect = np.array([
-            [2, 3, 1],
-            [2, 3, 1],
-        ])
+        vals_expect = np.array(
+            [
+                [2, 3, 1],
+                [2, 3, 1],
+            ]
+        )
 
         np.testing.assert_array_almost_equal(grid_rot._freq, freq_expect)
         np.testing.assert_array_almost_equal(grid_rot._dirs, dirs_expect)
@@ -356,10 +376,12 @@ class Test_Grid:
     def test_rotate_rad_neg(self):
         freq = np.array([0, 1])
         dirs = np.array([0, 90, 180])
-        vals = np.array([
-            [1, 2, 3],
-            [1, 2, 3],
-        ])
+        vals = np.array(
+            [
+                [1, 2, 3],
+                [1, 2, 3],
+            ]
+        )
         grid = Grid(
             freq,
             dirs,
@@ -370,14 +392,16 @@ class Test_Grid:
             waves_coming_from=True,
         )
 
-        grid_rot = grid.rotate(-np.pi/4, degrees=False)
+        grid_rot = grid.rotate(-np.pi / 4, degrees=False)
 
         freq_expect = (2.0 * np.pi) * np.array([0, 1])
         dirs_expect = (np.pi / 180.0) * np.array([45, 135, 225])
-        vals_expect = np.array([
-            [1, 2, 3],
-            [1, 2, 3],
-        ])
+        vals_expect = np.array(
+            [
+                [1, 2, 3],
+                [1, 2, 3],
+            ]
+        )
 
         np.testing.assert_array_almost_equal(grid_rot._freq, freq_expect)
         np.testing.assert_array_almost_equal(grid_rot._dirs, dirs_expect)
@@ -386,10 +410,12 @@ class Test_Grid:
     def test__call__(self):
         freq = np.array([0, 1])
         dirs = np.array([0, 90, 180])
-        vals = np.array([
-            [1, 2, 3],
-            [1, 2, 3],
-        ])
+        vals = np.array(
+            [
+                [1, 2, 3],
+                [1, 2, 3],
+            ]
+        )
         grid = Grid(
             freq,
             dirs,
@@ -404,10 +430,12 @@ class Test_Grid:
 
         freq_expect = np.array([0, 1])
         dirs_expect = np.array([0, 90, 180])
-        vals_expect = np.array([
-            [1, 2, 3],
-            [1, 2, 3],
-        ])
+        vals_expect = np.array(
+            [
+                [1, 2, 3],
+                [1, 2, 3],
+            ]
+        )
 
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
@@ -416,10 +444,12 @@ class Test_Grid:
     def test__call__2(self):
         freq = np.array([0, 1])
         dirs = np.array([0, 90, 180])
-        vals = np.array([
-            [1, 2, 3],
-            [1, 2, 3],
-        ])
+        vals = np.array(
+            [
+                [1, 2, 3],
+                [1, 2, 3],
+            ]
+        )
         grid = Grid(
             freq,
             dirs,
@@ -434,10 +464,12 @@ class Test_Grid:
 
         freq_expect = (2.0 * np.pi) * np.array([0, 1])
         dirs_expect = (np.pi / 180.0) * np.array([0, 90, 180])
-        vals_expect = np.array([
-            [1, 2, 3],
-            [1, 2, 3],
-        ])
+        vals_expect = np.array(
+            [
+                [1, 2, 3],
+                [1, 2, 3],
+            ]
+        )
 
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
