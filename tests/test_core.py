@@ -145,12 +145,59 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(dirs_sorted_out, dirs_sorted_expect)
         np.testing.assert_array_almost_equal(vals_sorted_out, vals_sorted_expect)
 
-    def test__convert_dirs(self):
+    def test__convert_dirs_radians(self):
         dirs_in = np.array([0, np.pi / 4, np.pi / 2, 3.0 * np.pi / 4, np.pi])
         config_org = {"clockwise": False, "waves_coming_from": True}
         config_new = {"clockwise": True, "waves_coming_from": False}
-        dirs_out = Grid._convert_dirs(dirs_in, config_new, config_org)
+        dirs_out = Grid._convert_dirs(dirs_in, config_new, config_org, degrees=False)
 
         dirs_expect = np.array([np.pi, 3.0 * np.pi / 4, np.pi / 2, np.pi / 4, 0])
 
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+
+    def test__convert_dirs_degrees(self):
+        dirs_in = np.array([0, 45.0, 90.0, 135.0, 180.0])
+        config_org = {"clockwise": False, "waves_coming_from": True}
+        config_new = {"clockwise": True, "waves_coming_from": False}
+        dirs_out = Grid._convert_dirs(dirs_in, config_new, config_org, degrees=True)
+
+        dirs_expect = np.array([180.0, 135.0, 90.0, 45.0, 0])
+
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+
+    def test__convert(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.zeros((10, 15))
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=False,
+            waves_coming_from=True,
+        )
+
+        freq_in = np.array([0.0, 0.5, 1.0])
+        dirs_in = np.array([0, np.pi / 4, np.pi / 2, 3.0 * np.pi / 4, np.pi])
+        vals_in = np.array([
+            [1.0, 2.0, 3.0, 4.0, 5.0],
+            [1.0, 2.0, 3.0, 4.0, 5.0],
+        ])
+        config_org = {"clockwise": False, "waves_coming_from": True}
+        config_new = {"clockwise": True, "waves_coming_from": False}
+        freq_out, dirs_out, vals_out = grid._convert(
+            freq_in, dirs_in, vals_in, config_new, config_org
+        )
+
+        freq_expect = freq_in
+        dirs_expect = np.array([0, np.pi / 4, np.pi / 2, 3.0 * np.pi / 4, np.pi])
+        vals_expect = np.array([
+            [5.0, 4.0, 3.0, 2.0, 1.0],
+            [5.0, 4.0, 3.0, 2.0, 1.0],
+        ])
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
