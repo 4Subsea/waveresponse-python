@@ -56,9 +56,8 @@ class Grid:
         self._check_dirs(self._dirs)
         if self._vals.shape != (len(self._freq), len(self._dirs)):
             raise ValueError(
-                "Invalid shape of value array. "
-                f"Expected shape ({len(self._freq)}, {len(self._dirs)}), "
-                f"got {self._vals.shape}."
+                "Values must have shape shape (N, M), such that ``N=len(freq)`` "
+                "and ``M=len(dirs)``."
             )
 
     def _check_freq(self, freq):
