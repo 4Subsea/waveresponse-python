@@ -4,6 +4,44 @@ import numpy as np
 from scipy.interpolate import interp2d
 
 
+def complex_to_polar(complex_vals, phase_degrees=False):
+    """
+    Convert complex numbers to polar form (i.e., amplitude and phase).
+
+    Parameters
+    ----------
+    complex_vals : array-like
+        Complex number values.
+    phase_degrees : bool
+        Weather the phase angle should be returned in degrees. If ``False``, radians
+        is assumed.
+
+    Returns
+    -------
+    amp : array
+        Amplitudes.
+    phase : array
+        Phase angles.
+    """
+    complex_vals = np.asarray_chkfinite(complex_vals).copy()
+    amp = np.abs(complex_vals)
+    phase = np.angle(complex_vals, deg=phase_degrees)
+    return amp, phase
+
+
+def polar_to_complex(amp, phase, phase_degrees=False):
+    amp = np.asarray_chkfinite(amp).copy()
+    phase = np.asarray_chkfinite(phase).copy()
+
+    if phase_degrees:
+        phase = (np.pi / 180.0) * phase
+
+    if amp.shape != phase.shape:
+        raise ValueError()
+
+    return amp * (np.cos(phase) + 1j * np.sin(phase))
+
+
 class Grid:
     """
     Frequency / direction grid.
@@ -234,3 +272,40 @@ class Grid:
             dirs = (180.0 / np.pi) * dirs
 
         return freq, dirs, vals
+
+    def _interpolate_function(self, complex_convert="rectangular", **kw):
+        """
+        Interpolation function based on ``scipy.interpolate.interp2d``.
+        """
+        xp = np.concatenate(
+            (self._dirs[-1:] - 2 * np.pi, self._dirs, self._dirs[:1] + 2.0 * np.pi)
+        )
+        yp = self._freq
+        zp = np.concatenate(
+            (
+                self._vals[:, -1:],
+                self._vals,
+                self._vals[:, :1],
+            ),
+            axis=1,
+        )
+
+        if np.all(np.real(zp)):
+            return interp2d(xp, yp, zp, **kw)
+        elif complex_convert.lower() == "polar":
+            amp, phase = complex_to_polar(zp, phase_degrees=False)
+            interp_amp = interp2d(xp, yp, amp, **kw)
+            interp_phase = interp2d(xp, yp, phase, **kw)
+            return lambda *args, **kwargs: (
+                polar_to_complex(
+                    interp_amp(*args, **kwargs),
+                    interp_phase(*args, **kwargs),
+                    phase_degrees=False,
+                )
+            )
+        else:
+            interp_real = interp2d(xp, yp, np.real(zp), **kw)
+            interp_imag = interp2d(xp, yp, np.imag(zp), **kw)
+            return lambda *args, **kwargs: (
+                interp_real(*args, **kwargs) + 1j * interp_imag(*args, **kwargs)
+            )
