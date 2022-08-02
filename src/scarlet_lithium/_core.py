@@ -102,13 +102,13 @@ class Grid:
             If waves are 'coming from' the given directions. If False, 'going towards'
             convention is assumed.
         """
-        org_conv = self.wave_convention
-        new_conv = {"clockwise": clockwise, "waves_coming_from": waves_coming_from}
+        conv_org = self.wave_convention
+        conv_new = {"clockwise": clockwise, "waves_coming_from": waves_coming_from}
         self._freq, self._dirs, self._vals = self._convert(
-            self._freq, self._dirs, self._vals, new_conv, org_conv
+            self._freq, self._dirs, self._vals, conv_new, conv_org
         )
-        self._clockwise = new_conv["clockwise"]
-        self._waves_coming_from = new_conv["waves_coming_from"]
+        self._clockwise = conv_new["clockwise"]
+        self._waves_coming_from = conv_new["waves_coming_from"]
 
     def _convert(self, freq, dirs, vals, config_new, config_org):
         """
