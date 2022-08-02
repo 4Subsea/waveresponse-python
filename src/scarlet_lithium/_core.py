@@ -290,7 +290,7 @@ class Grid:
             axis=1,
         )
 
-        if np.all(np.real(zp)):
+        if np.all(np.isreal(zp)):
             return interp2d(xp, yp, zp, **kw)
         elif complex_convert.lower() == "polar":
             amp, phase = complex_to_polar(zp, phase_degrees=False)
@@ -362,4 +362,4 @@ class Grid:
             complex_convert=complex_convert, kind="linear", fill_value=fill_value
         )
 
-        return interp_fun(freq, dirs, assume_sorted=True)
+        return interp_fun(dirs, freq, assume_sorted=True)
