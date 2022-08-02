@@ -4,6 +4,23 @@ import pytest
 from scarlet_lithium import Grid
 
 
+@pytest.fixture
+def grid():
+    freq = np.linspace(0, 1.0, 10)
+    dirs = np.linspace(0, 360.0, 15, endpoint=False)
+    vals = np.zeros((10, 15))
+    grid = Grid(
+        freq,
+        dirs,
+        vals,
+        freq_hz=True,
+        degrees=True,
+        clockwise=True,
+        waves_coming_from=True,
+    )
+    return grid
+
+
 class Test_Grid:
     def test__init__(self):
         freq = np.linspace(0, 1.0, 10)
@@ -235,3 +252,13 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(grid._vals, vals_expect)
         assert grid._clockwise is True
         assert grid._waves_coming_from is False
+
+    def test_copy(self, grid):
+        grid_copy = grid.copy()
+        assert grid is grid
+        assert grid_copy is not grid
+        np.testing.assert_array_almost_equal(grid_copy._freq, grid._freq)
+        np.testing.assert_array_almost_equal(grid_copy._dirs, grid._dirs)
+        np.testing.assert_array_almost_equal(grid_copy._vals, grid._vals)
+        assert grid_copy._clockwise == grid._clockwise
+        assert grid_copy._waves_coming_from == grid._waves_coming_from
