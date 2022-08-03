@@ -1085,3 +1085,30 @@ class Test_RAO:
         np.testing.assert_array_almost_equal(rao._vals, vals_expect)
         assert rao._clockwise is True
         assert rao._waves_coming_from is True
+
+    def test_conjugate(self):
+        freq_in = np.array([0, 1, 2])
+        dirs_in = np.array([0, 45, 90, 135])
+        vals_in = np.array(
+            [
+                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+            ]
+        )
+        rao = RAO(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        rao_conj = rao.conjugate()
+
+        assert isinstance(rao_conj, RAO)
+        np.testing.assert_array_almost_equal(rao_conj._freq, rao._freq)
+        np.testing.assert_array_almost_equal(rao_conj._dirs, rao._dirs)
+        np.testing.assert_array_almost_equal(rao_conj._vals, rao._vals.conjugate())
