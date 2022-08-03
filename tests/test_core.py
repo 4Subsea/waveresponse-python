@@ -21,6 +21,48 @@ def grid():
     return grid
 
 
+class Test_complex_to_polar:
+    def test_deg(self):
+        complex_vals = np.array([1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j])
+        amp_out, phase_out = complex_to_polar(complex_vals, phase_degrees=True)
+
+        amp_expect = np.array([1.0, 1.0, 1.0])
+        phase_expect = np.array([0.0, 90.0, 180.0])
+
+        np.testing.assert_array_almost_equal(amp_out, amp_expect)
+        np.testing.assert_array_almost_equal(phase_out, phase_expect)
+
+    def test_rad(self):
+        complex_vals = np.array([1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j])
+        amp_out, phase_out = complex_to_polar(complex_vals, phase_degrees=False)
+
+        amp_expect = np.array([1.0, 1.0, 1.0])
+        phase_expect = np.array([0.0, np.pi/2, np.pi])
+
+        np.testing.assert_array_almost_equal(amp_out, amp_expect)
+        np.testing.assert_array_almost_equal(phase_out, phase_expect)
+
+
+class Test_polar_to_complex:
+    def test_deg(self):
+        amp = np.array([1.0, 1.0, 1.0])
+        phase = np.array([0.0, 90.0, 180.0])
+        complex_out = polar_to_complex(amp, phase, phase_degrees=True)
+
+        complex_expect = np.array([1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j])
+
+        np.testing.assert_array_almost_equal(complex_out, complex_expect)
+
+    def test_rad(self):
+        amp = np.array([1.0, 1.0, 1.0])
+        phase = np.array([0.0, np.pi/2, np.pi])
+        complex_out = polar_to_complex(amp, phase, phase_degrees=False)
+
+        complex_expect = np.array([1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j])
+
+        np.testing.assert_array_almost_equal(complex_out, complex_expect)
+
+
 class Test_Grid:
     def test__init__(self):
         freq = np.linspace(0, 1.0, 10)
@@ -1112,25 +1154,3 @@ class Test_RAO:
         np.testing.assert_array_almost_equal(rao_conj._freq, rao._freq)
         np.testing.assert_array_almost_equal(rao_conj._dirs, rao._dirs)
         np.testing.assert_array_almost_equal(rao_conj._vals, rao._vals.conjugate())
-
-
-class Test_complex_to_polar:
-    def test_deg(self):
-        complex_vals = np.array([1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j])
-        amp_out, phase_out = complex_to_polar(complex_vals, phase_degrees=True)
-
-        amp_expect = np.array([1.0, 1.0, 1.0])
-        phase_expect = np.array([0.0, 90.0, 180.0])
-
-        np.testing.assert_array_almost_equal(amp_out, amp_expect)
-        np.testing.assert_array_almost_equal(phase_out, phase_expect)
-
-    def test_rad(self):
-        complex_vals = np.array([1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j])
-        amp_out, phase_out = complex_to_polar(complex_vals, phase_degrees=False)
-
-        amp_expect = np.array([1.0, 1.0, 1.0])
-        phase_expect = np.array([0.0, np.pi/2, np.pi])
-
-        np.testing.assert_array_almost_equal(amp_out, amp_expect)
-        np.testing.assert_array_almost_equal(phase_out, phase_expect)
