@@ -527,7 +527,9 @@ class RAO(Grid):
         """
         new = super().__mul__(other)
         if isinstance(other, DirectionalSpectrum):
-            return DirectionalSpectrum(new._freq, new._dirs, new._vals, **new.wave_convention)
+            return DirectionalSpectrum(
+                new._freq, new._dirs, new._vals, **new.wave_convention
+            )
         else:
             return new
 
@@ -558,4 +560,6 @@ class DirectionalSpectrum(Grid):
             New DirectionalSpectrum object.
         """
         new = super().__mul__(other)
-        return DirectionalSpectrum(new._freq, new._dirs, new._vals, **new.wave_convention)
+        return DirectionalSpectrum(
+            new._freq, new._dirs, new._vals, **new.wave_convention
+        )

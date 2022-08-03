@@ -681,3 +681,167 @@ class Test_Grid:
             grid.interpolate(
                 [0, 1, 2], [0, 1, 2, 100], degrees=False
             )  # dirs outside bound
+
+    def test_reshape(self):
+        a = 7
+        b = 6
+
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.linspace(0.0, 359.0, 10)
+        vp = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in yp])
+        grid = Grid(yp, xp, vp, freq_hz=True, degrees=True)
+
+        y = np.linspace(0.5, 1.0, 20)
+        x = np.linspace(5.0, 15.0, 10)
+        grid_reshaped = grid.reshape(y, x, freq_hz=True, degrees=True)
+
+        freq_expect = (2.0 * np.pi) * y
+        dirs_expect = (np.pi / 180.0) * x
+        vals_expect = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
+
+        freq_out = grid_reshaped._freq
+        dirs_out = grid_reshaped._dirs
+        vals_out = grid_reshaped._vals
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_reshape2(self):
+        a = 7
+        b = 6
+
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.linspace(0.0, 359.0, 10)
+        vp = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in yp])
+        grid = Grid(yp, xp, vp, freq_hz=True, degrees=True)
+
+        y = np.linspace(0.5, 1.0, 20)
+        x = np.linspace(5.0, 15.0, 10)
+        y_ = (2.0 * np.pi) * y
+        x_ = (np.pi / 180.0) * x
+        grid_reshaped = grid.reshape(y_, x_, freq_hz=False, degrees=False)
+
+        freq_expect = (2.0 * np.pi) * y
+        dirs_expect = (np.pi / 180.0) * x
+        vals_expect = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
+
+        freq_out = grid_reshaped._freq
+        dirs_out = grid_reshaped._dirs
+        vals_out = grid_reshaped._vals
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_reshape_complex_rectangular(self):
+        a_real = 7
+        b_real = 6
+        a_imag = 3
+        b_imag = 9
+
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.linspace(0.0, 359.0, 10)
+        vp_real = np.array([[a_real * x_i + b_real * y_i for x_i in xp] for y_i in yp])
+        vp_imag = np.array([[a_imag * x_i + b_imag * y_i for x_i in xp] for y_i in yp])
+        vp = vp_real + 1j * vp_imag
+        grid = Grid(yp, xp, vp, freq_hz=True, degrees=True)
+
+        y = np.linspace(0.5, 1.0, 20)
+        x = np.linspace(5.0, 15.0, 10)
+        grid_reshaped = grid.reshape(
+            y, x, freq_hz=True, degrees=True, complex_convert="rectangular"
+        )
+
+        freq_out = grid_reshaped._freq
+        dirs_out = grid_reshaped._dirs
+        vals_out = grid_reshaped._vals
+
+        freq_expect = (2.0 * np.pi) * y
+        dirs_expect = (np.pi / 180.0) * x
+        vals_real_expect = np.array(
+            [[a_real * x_i + b_real * y_i for x_i in x] for y_i in y]
+        )
+        vals_imag_expect = np.array(
+            [[a_imag * x_i + b_imag * y_i for x_i in x] for y_i in y]
+        )
+        vals_expect = vals_real_expect + 1j * vals_imag_expect
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_reshape_complex_polar(self):
+        a_amp = 7
+        b_amp = 6
+        a_phase = 0.01
+        b_phase = 0.03
+
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.linspace(0.0, 359.0, 10)
+        vp_amp = np.array([[a_amp * x_i + b_amp * y_i for x_i in xp] for y_i in yp])
+        vp_phase = np.array(
+            [[a_phase * x_i + b_phase * y_i for x_i in xp] for y_i in yp]
+        )
+        vp = vp_amp * (np.cos(vp_phase) + 1j * np.sin(vp_phase))
+        grid = Grid(yp, xp, vp, freq_hz=True, degrees=True)
+
+        y = np.linspace(0.5, 1.0, 20)
+        x = np.linspace(5.0, 15.0, 10)
+        grid_reshaped = grid.reshape(
+            y, x, freq_hz=True, degrees=True, complex_convert="polar"
+        )
+
+        freq_out = grid_reshaped._freq
+        dirs_out = grid_reshaped._dirs
+        vals_out = grid_reshaped._vals
+
+        freq_expect = (2.0 * np.pi) * y
+        dirs_expect = (np.pi / 180.0) * x
+        vals_amp_expect = np.array(
+            [[a_amp * x_i + b_amp * y_i for x_i in x] for y_i in y]
+        )
+        vals_phase_expect = np.array(
+            [[a_phase * x_i + b_phase * y_i for x_i in x] for y_i in y]
+        )
+        vals_expect = vals_amp_expect * (
+            np.cos(vals_phase_expect) + 1j * np.sin(vals_phase_expect)
+        )
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_reshape_raises_freq(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.zeros((10, 15))
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        with pytest.raises(ValueError):
+            grid.reshape([0, 1, 2, 1], [0, 1, 2])  # freq not monotonically increasing
+
+    def test_reshape_raises_dirs(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.zeros((10, 15))
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        with pytest.raises(ValueError):
+            grid.reshape([0, 1, 2], [0, 1, 2, 1])  # dirs not monotonically increasing
