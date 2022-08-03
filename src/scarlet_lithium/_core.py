@@ -42,6 +42,30 @@ def polar_to_complex(amp, phase, phase_degrees=False):
     return amp * (np.cos(phase) + 1j * np.sin(phase))
 
 
+# class GridAritmeticsMixin:
+#     def __mul__(self, other):
+#         if not isinstance(other, Grid):
+#             raise ValueError()
+#         elif np.any(self._freq != other._freq) or np.any(self._dirs != other._dirs):
+#             raise ValueError()
+#         elif self.wave_convention != other.wave_convention:
+#             raise ValueError()
+
+#         if isinstance(self, DirectionalSpectrum) or isinstance(other, DirectionalSpectrum):
+#             grid_type = DirectionalSpectrum
+#         else:
+#             grid_type = Grid
+
+#         return grid_type(
+#             self._freq,
+#             self._dirs,
+#             self._vals * other._vals,
+#             freq_hz=False,
+#             degrees=False,
+#             **self.wave_convention
+#         )
+
+
 class Grid:
     """
     Frequency / direction grid.
@@ -418,11 +442,44 @@ class Grid:
         new._freq, new._dirs, new._vals = freq_new, dirs_new, vals_new
         return new
 
+    def __mul__(self, other):
+        """
+        Multiply with another Grid object.
+
+        Both grids must have the same frequency/direction bins.
+
+        Parameters
+        ----------
+        other : obj
+            Grid object.
+
+        Returns
+        -------
+        obj :
+            New Grid object.
+        """
+        if not isinstance(other, Grid):
+            raise ValueError()
+        elif np.any(self._freq != other._freq) or np.any(self._dirs != other._dirs):
+            raise ValueError()
+        elif self.wave_convention != other.wave_convention:
+            raise ValueError()
+
+        return Grid(
+            self._freq,
+            self._dirs,
+            self._vals * other._vals,
+            freq_hz=False,
+            degrees=False,
+            **self.wave_convention
+        )
+
 
 class RAO(Grid):
     """
     RAO.
     """
+
     @classmethod
     def from_amp_phase(
         cls,
@@ -442,7 +499,7 @@ class RAO(Grid):
 
         rao_complex = polar_to_complex(amp, phase, phase_degrees=phase_degrees)
 
-        cls(
+        return cls(
             freq,
             dirs,
             rao_complex,
@@ -451,3 +508,46 @@ class RAO(Grid):
             clockwise=clockwise,
             waves_coming_from=waves_coming_from,
         )
+
+    def __mul__(self, other):
+        """
+        Multiply with another Grid object.
+
+        Both grids must have the same frequency/direction bins.
+
+        Parameters
+        ----------
+        other : obj
+            Grid object.
+
+        Returns
+        -------
+        obj :
+            New Grid object.
+        """
+        new = super().__mul__(other)
+        if isinstance(other, DirectionalSpectrum):
+            return DirectionalSpectrum(new._freq, new._dirs, new._vals, **new.wave_convention)
+        else:
+            return new
+
+
+class DirectionalSpectrum(Grid):
+    def __mul__(self, other):
+        """
+        Multiply with another Grid object.
+
+        Both grids must have the same frequency/direction bins.
+
+        Parameters
+        ----------
+        other : obj
+            Grid object.
+
+        Returns
+        -------
+        obj :
+            New DirectionalSpectrum object.
+        """
+        new = super().__mul__(other)
+        return DirectionalSpectrum(new._freq, new._dirs, new._vals, **new.wave_convention)
