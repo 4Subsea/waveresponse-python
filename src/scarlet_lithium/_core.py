@@ -494,3 +494,11 @@ class RAO(Grid):
         new = self.copy()
         new._vals = new._vals.conjugate()
         return new
+
+    def to_amp_phase(self, freq_hz=False, degrees=False, phase_degrees=False):
+        """
+        Return RAO as amplitude and phase.
+        """
+        freq, dirs, vals = self(freq_hz=freq_hz, degrees=degrees)
+        vals_amp, vals_phase = complex_to_polar(vals, phase_degrees=phase_degrees)
+        return freq, dirs, vals_amp, vals_phase
