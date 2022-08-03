@@ -460,6 +460,8 @@ class Grid:
         """
         if not isinstance(other, Grid):
             raise ValueError()
+        elif self._vals.shape != other._vals.shape:
+            raise ValueError()
         elif np.any(self._freq != other._freq) or np.any(self._dirs != other._dirs):
             raise ValueError()
         elif self.wave_convention != other.wave_convention:

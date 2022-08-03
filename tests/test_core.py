@@ -845,3 +845,133 @@ class Test_Grid:
 
         with pytest.raises(ValueError):
             grid.reshape([0, 1, 2], [0, 1, 2, 1])  # dirs not monotonically increasing
+
+    def test__mul__(self):
+        freq_in = np.array([1, 2, 3])
+        dirs_in = np.array([0, 10, 20, 30])
+        vals_in = np.array(
+            [
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+            ]
+        )
+        grid = Grid(freq_in, dirs_in, vals_in, degrees=True)
+
+        grid_squared = grid * grid
+
+        vals_expect = np.array(
+            [
+                [1, 4, 9, 16],
+                [1, 4, 9, 16],
+                [1, 4, 9, 16],
+            ]
+        )
+
+        assert isinstance(grid_squared, Grid)
+        assert grid_squared._clockwise == grid._clockwise
+        assert grid_squared._waves_coming_from == grid._waves_coming_from
+        np.testing.assert_array_almost_equal(grid_squared._freq, grid._freq)
+        np.testing.assert_array_almost_equal(grid_squared._dirs, grid._dirs)
+        np.testing.assert_array_almost_equal(grid_squared._vals, vals_expect)
+
+    def test__mul__raises_type(self):
+        freq_in = np.array([1, 2, 3])
+        dirs_in = np.array([0, 10, 20, 30])
+        vals_in = np.array(
+            [
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+            ]
+        )
+        grid = Grid(freq_in, dirs_in, vals_in, degrees=True)
+
+        with pytest.raises(ValueError):
+            grid * vals_in
+
+    def test__mul__raises_shape(self):
+        freq_in = np.array([1, 2, 3])
+        dirs_in = np.array([0, 10, 20, 30])
+        vals_in = np.array(
+            [
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+            ]
+        )
+        grid = Grid(freq_in, dirs_in, vals_in, degrees=True)
+
+        freq_in2 = np.array([1, 2])
+        dirs_in2 = np.array([0, 10, 20])
+        vals_in2 = np.array(
+            [
+                [1, 2, 3],
+                [1, 2, 3],
+            ]
+        )
+        grid2 = Grid(freq_in2, dirs_in2, vals_in2, degrees=True)
+
+        with pytest.raises(ValueError):
+            grid * grid2
+
+    def test__mul__raises_freq(self):
+        freq_in = np.array([1, 2, 3])
+        dirs_in = np.array([0, 10, 20, 30])
+        vals_in = np.array(
+            [
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+            ]
+        )
+        grid = Grid(freq_in, dirs_in, vals_in, degrees=True)
+        grid2 = grid.copy()
+        grid2._freq = 2.0 * grid2._freq
+
+        with pytest.raises(ValueError):
+            grid * grid2
+
+    def test__mul__raises_dirs(self):
+        freq_in = np.array([1, 2, 3])
+        dirs_in = np.array([0, 10, 20, 30])
+        vals_in = np.array(
+            [
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+            ]
+        )
+        grid = Grid(freq_in, dirs_in, vals_in, degrees=True)
+        grid2 = grid.copy()
+        grid2._dirs = 2.0 * grid2._dirs
+
+        with pytest.raises(ValueError):
+            grid * grid2
+
+    def test__mul__raises_convention(self):
+        freq_in = np.array([1, 2, 3])
+        dirs_in = np.array([0, 10, 20, 30])
+        vals_in = np.array(
+            [
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+            ]
+        )
+        grid = Grid(
+            freq_in,
+            dirs_in,
+            vals_in,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        grid2 = grid.copy().set_wave_convention(clockwise=False)
+        with pytest.raises(ValueError):
+            grid * grid2
+
+        grid3 = grid.copy().set_wave_convention(waves_coming_from=False)
+        with pytest.raises(ValueError):
+            grid * grid3
