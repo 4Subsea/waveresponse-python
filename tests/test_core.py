@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from scarlet_lithium import Grid
+from scarlet_lithium import Grid, RAO
 
 
 @pytest.fixture
@@ -975,3 +975,113 @@ class Test_Grid:
         grid3 = grid.copy().set_wave_convention(waves_coming_from=False)
         with pytest.raises(ValueError):
             grid * grid3
+
+
+class Test_RAO:
+    def test__init__(self):
+        freq_in = np.array([0, 1, 2])
+        dirs_in = np.array([0, 45, 90, 135])
+        vals_in = np.array(
+            [
+                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+            ]
+        )
+        rao = RAO(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        assert isinstance(rao, RAO)
+        assert isinstance(rao, Grid)
+        np.testing.assert_array_almost_equal(rao._freq, 2.0 * np.pi * freq_in)
+        np.testing.assert_array_almost_equal(rao._dirs, (np.pi / 180.0) * dirs_in)
+        np.testing.assert_array_almost_equal(rao._vals, vals_in)
+        assert rao._clockwise is True
+        assert rao._waves_coming_from is True
+
+    def test_from_amp_phase_rad(self):
+        freq_in = np.array([0, 1, 2])
+        dirs_in = np.array([0, 45, 90, 135])
+        amp_in = np.array(
+            [
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+            ]
+        )
+        phase_in = np.array(
+            [
+                [0.1, 0.2, 0.3, 0.4],
+                [0.1, 0.2, 0.3, 0.4],
+                [0.1, 0.2, 0.3, 0.4],
+            ]
+        )
+        rao = RAO.from_amp_phase(
+            freq_in,
+            dirs_in,
+            amp_in,
+            phase_in,
+            phase_degrees=False,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        vals_expect = amp_in * (np.cos(phase_in) + 1j * np.sin(phase_in))
+
+        assert isinstance(rao, RAO)
+        assert isinstance(rao, Grid)
+        np.testing.assert_array_almost_equal(rao._freq, 2.0 * np.pi * freq_in)
+        np.testing.assert_array_almost_equal(rao._dirs, (np.pi / 180.0) * dirs_in)
+        np.testing.assert_array_almost_equal(rao._vals, vals_expect)
+        assert rao._clockwise is True
+        assert rao._waves_coming_from is True
+
+    def test_from_amp_phase_deg(self):
+        freq_in = np.array([0, 1, 2])
+        dirs_in = np.array([0, 45, 90, 135])
+        amp_in = np.array(
+            [
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+            ]
+        )
+        phase_in = np.array(
+            [
+                [0.1, 0.2, 0.3, 0.4],
+                [0.1, 0.2, 0.3, 0.4],
+                [0.1, 0.2, 0.3, 0.4],
+            ]
+        )
+        rao = RAO.from_amp_phase(
+            freq_in,
+            dirs_in,
+            amp_in,
+            phase_in,
+            phase_degrees=True,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        vals_expect = amp_in * (
+            np.cos((np.pi / 180) * phase_in) + 1j * np.sin((np.pi / 180) * phase_in)
+        )
+
+        assert isinstance(rao, RAO)
+        assert isinstance(rao, Grid)
+        np.testing.assert_array_almost_equal(rao._freq, 2.0 * np.pi * freq_in)
+        np.testing.assert_array_almost_equal(rao._dirs, (np.pi / 180.0) * dirs_in)
+        np.testing.assert_array_almost_equal(rao._vals, vals_expect)
+        assert rao._clockwise is True
+        assert rao._waves_coming_from is True
