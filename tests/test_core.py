@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from scarlet_lithium import Grid, RAO, complex_to_polar, polar_to_complex
+from scarlet_lithium import RAO, Grid, complex_to_polar, polar_to_complex
 
 
 @pytest.fixture
@@ -37,7 +37,7 @@ class Test_complex_to_polar:
         amp_out, phase_out = complex_to_polar(complex_vals, phase_degrees=False)
 
         amp_expect = np.array([1.0, 1.0, 1.0])
-        phase_expect = np.array([0.0, np.pi/2, np.pi])
+        phase_expect = np.array([0.0, np.pi / 2, np.pi])
 
         np.testing.assert_array_almost_equal(amp_out, amp_expect)
         np.testing.assert_array_almost_equal(phase_out, phase_expect)
@@ -55,7 +55,7 @@ class Test_polar_to_complex:
 
     def test_rad(self):
         amp = np.array([1.0, 1.0, 1.0])
-        phase = np.array([0.0, np.pi/2, np.pi])
+        phase = np.array([0.0, np.pi / 2, np.pi])
         complex_out = polar_to_complex(amp, phase, phase_degrees=False)
 
         complex_expect = np.array([1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j])
@@ -1154,3 +1154,97 @@ class Test_RAO:
         np.testing.assert_array_almost_equal(rao_conj._freq, rao._freq)
         np.testing.assert_array_almost_equal(rao_conj._dirs, rao._dirs)
         np.testing.assert_array_almost_equal(rao_conj._vals, rao._vals.conjugate())
+
+    def test_to_amp_phase(self):
+        freq_in = np.array([0, 1, 2])
+        dirs_in = np.array([0, 1, 2])
+        vals_in = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
+                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
+                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
+            ]
+        )
+
+        rao = RAO(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_out, dirs_out, amp_out, phase_out = rao.to_amp_phase(
+            freq_hz=True, degrees=True, phase_degrees=True
+        )
+
+        freq_expect = np.array([0, 1, 2])
+        dirs_expect = np.array([0, 1, 2])
+        amp_expect = np.array(
+            [
+                [1.0, 1.0, 1.0],
+                [1.0, 1.0, 1.0],
+                [1.0, 1.0, 1.0],
+            ]
+        )
+        phase_expect = np.array(
+            [
+                [0.0, 90.0, 180.0],
+                [0.0, 90.0, 180.0],
+                [0.0, 90.0, 180.0],
+            ]
+        )
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(amp_out, amp_expect)
+        np.testing.assert_array_almost_equal(phase_out, phase_expect)
+
+    def test_to_amp_phase2(self):
+        freq_in = np.array([0, 1, 2])
+        dirs_in = np.array([0, 1, 2])
+        vals_in = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
+                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
+                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
+            ]
+        )
+
+        rao = RAO(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_out, dirs_out, amp_out, phase_out = rao.to_amp_phase(
+            freq_hz=False, degrees=False, phase_degrees=False
+        )
+
+        freq_expect = (2.0 * np.pi) * np.array([0, 1, 2])
+        dirs_expect = (np.pi / 180.0) * np.array([0, 1, 2])
+        amp_expect = np.array(
+            [
+                [1.0, 1.0, 1.0],
+                [1.0, 1.0, 1.0],
+                [1.0, 1.0, 1.0],
+            ]
+        )
+        phase_expect = np.array(
+            [
+                [0.0, np.pi / 2, np.pi],
+                [0.0, np.pi / 2, np.pi],
+                [0.0, np.pi / 2, np.pi],
+            ]
+        )
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(amp_out, amp_expect)
+        np.testing.assert_array_almost_equal(phase_out, phase_expect)

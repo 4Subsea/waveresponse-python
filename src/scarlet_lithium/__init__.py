@@ -1,4 +1,4 @@
-from ._core import Grid, complex_to_polar, polar_to_complex, RAO
+from ._core import RAO, Grid, complex_to_polar, polar_to_complex
 
 __version__ = "0.0.1"
 
