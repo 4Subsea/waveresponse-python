@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from scarlet_lithium import Grid, RAO
+from scarlet_lithium import Grid, RAO, DirectionalSpectrum
 
 
 @pytest.fixture
@@ -1112,3 +1112,92 @@ class Test_RAO:
         np.testing.assert_array_almost_equal(rao_conj._freq, rao._freq)
         np.testing.assert_array_almost_equal(rao_conj._dirs, rao._dirs)
         np.testing.assert_array_almost_equal(rao_conj._vals, rao._vals.conjugate())
+
+    # def test__mul__RAO(self):
+    #     freq_in = np.array([1, 2, 3])
+    #     dirs_in = np.array([0, 10, 20, 30])
+    #     vals_in = np.array(
+    #         [
+    #             [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+    #             [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+    #             [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+    #         ]
+    #     )
+    #     rao = RAO(freq_in, dirs_in, vals_in, degrees=True)
+
+    #     out = rao * rao
+
+    #     vals_expect = np.array(
+    #         [
+    #             [(-3 + 4j), (-7 + 24j), (-11 + 60j), (-15 + 112j)],
+    #             [(-3 + 4j), (-7 + 24j), (-11 + 60j), (-15 + 112j)],
+    #             [(-3 + 4j), (-7 + 24j), (-11 + 60j), (-15 + 112j)],
+    #         ]
+    #     )
+
+    #     assert isinstance(out, Grid)
+    #     assert out._clockwise == rao._clockwise
+    #     assert out._waves_coming_from == rao._waves_coming_from
+    #     np.testing.assert_array_almost_equal(out._freq, rao._freq)
+    #     np.testing.assert_array_almost_equal(out._dirs, rao._dirs)
+    #     np.testing.assert_array_almost_equal(out._vals, vals_expect)
+
+    # def test__mul__Grid(self):
+    #     freq_in = np.array([1, 2, 3])
+    #     dirs_in = np.array([0, 10, 20, 30])
+    #     vals_in = np.array(
+    #         [
+    #             [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+    #             [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+    #             [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+    #         ]
+    #     )
+    #     rao = RAO(freq_in, dirs_in, vals_in, degrees=True)
+    #     grid = Grid(freq_in, dirs_in, vals_in, degrees=True)
+
+    #     out = rao * grid
+
+    #     vals_expect = np.array(
+    #         [
+    #             [(-3 + 4j), (-7 + 24j), (-11 + 60j), (-15 + 112j)],
+    #             [(-3 + 4j), (-7 + 24j), (-11 + 60j), (-15 + 112j)],
+    #             [(-3 + 4j), (-7 + 24j), (-11 + 60j), (-15 + 112j)],
+    #         ]
+    #     )
+
+    #     assert isinstance(out, Grid)
+    #     assert out._clockwise == rao._clockwise
+    #     assert out._waves_coming_from == rao._waves_coming_from
+    #     np.testing.assert_array_almost_equal(out._freq, rao._freq)
+    #     np.testing.assert_array_almost_equal(out._dirs, rao._dirs)
+    #     np.testing.assert_array_almost_equal(out._vals, vals_expect)
+
+    # def test__mul__DirectionalSpectrum(self):
+    #     freq_in = np.array([1, 2, 3])
+    #     dirs_in = np.array([0, 10, 20, 30])
+    #     vals_in = np.array(
+    #         [
+    #             [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+    #             [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+    #             [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+    #         ]
+    #     )
+    #     rao = RAO(freq_in, dirs_in, vals_in, degrees=True)
+    #     grid = DirectionalSpectrum(freq_in, dirs_in, np.ones_like(vals_in), degrees=True)
+
+    #     out = rao * grid
+
+    #     vals_expect = np.array(
+    #         [
+    #             [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+    #             [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+    #             [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+    #         ]
+    #     )
+
+    #     assert isinstance(out, Grid)
+    #     assert out._clockwise == rao._clockwise
+    #     assert out._waves_coming_from == rao._waves_coming_from
+    #     np.testing.assert_array_almost_equal(out._freq, rao._freq)
+    #     np.testing.assert_array_almost_equal(out._dirs, rao._dirs)
+    #     np.testing.assert_array_almost_equal(out._vals, vals_expect)
