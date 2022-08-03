@@ -6,4 +6,4 @@ functions and methods.
 .. toctree::
    :maxdepth: 1
 
-   first_function
+   rao
