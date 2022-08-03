@@ -531,6 +531,14 @@ class RAO(Grid):
         else:
             return new
 
+    def conjugate(self):
+        """
+        Complex conjugate.
+        """
+        new = self.copy()
+        new._vals = new._vals.conjugate()
+        return new
+
 
 class DirectionalSpectrum(Grid):
     def __mul__(self, other):
