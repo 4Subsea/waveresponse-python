@@ -452,6 +452,14 @@ class Grid:
             **self.wave_convention
         )
 
+    def __abs__(self):
+        """
+        Return new object where values are converted to absolute values.
+        """
+        new = self.copy()
+        new._vals = np.abs(new._vals)
+        return new
+
 
 class RAO(Grid):
     """
