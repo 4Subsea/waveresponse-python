@@ -12,6 +12,7 @@ a direction list (1-D array) and corresponding RAO values as complex numbers (2-
     import numpy as np
     from scarlet_lithium import RAO
 
+
     freq = np.linspace(0.0, 1.0, 50)
     dirs = np.linspace(0.0, 360.0, endpoint=False)
     vals_real = np.random.random((len(freq), len(dirs)))
@@ -33,6 +34,7 @@ Alternatively, you can construct an :class:`~scarlet_lithium.RAO` using amplitud
 
     import numpy as np
     from scarlet_lithium import RAO
+
 
     freq = np.linspace(0.0, 1.0, 50)
     dirs = np.linspace(0.0, 360.0, endpoint=False)

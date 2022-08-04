@@ -15,6 +15,7 @@ from :class:`~scarlet_lithium.Grid`.
     import numpy as np
     from scarlet_lithium import Grid
 
+
     freq = np.linspace(0.0, 1.0, 50)
     dirs = np.linspace(0.0, 360.0, endpoint=False)
     vals = np.random.random((len(freq), len(dirs)))
