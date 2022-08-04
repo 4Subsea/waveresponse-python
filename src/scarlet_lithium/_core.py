@@ -747,9 +747,9 @@ class DirectionalSpectrum(Grid):
             self._vals /= np.pi / 180.0
 
         if np.any(np.iscomplex(self._vals)):
-            raise ValueError()
+            raise ValueError("Spectrum values can not be complex.")
         elif np.any(self._vals < 0.0):
-            raise ValueError()
+            raise ValueError("Spectrum values must be positive.")
 
     def __repr__(self):
         return "DirectionalSpectrum"
