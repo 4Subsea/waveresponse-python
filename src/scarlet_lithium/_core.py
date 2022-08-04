@@ -44,27 +44,27 @@ def polar_to_complex(amp, phase, phase_degrees=False):
 
 class Grid:
     """
-    Frequency / direction grid.
+    Two-dimentional frequency/(wave)direction grid.
 
     Parameters
     ----------
     freq : array-like
-        Frequency bins. Positive and monotonically increasing.
+        1-D array of grid frequency coordinates. Positive and monotonically increasing.
     dirs : array-like
-        Direction bins. Positive and monotonically increasing. Must cover the directional
-        range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+        1-D array of grid direction coordinates. Positive and monotonically increasing.
+        Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
     vals : array-like (N, M)
-        Value grid as 2-D array of shape (N, M), such that
-        ``N=len(freq)`` and ``M=len(dirs)``.
+        Values associated with the grid. Should be a 2-D array of shape (N, M),
+        such that ``N=len(freq)`` and ``M=len(dirs)``.
     freq_hz : bool
-        If frequency is given in Hz. If False, rad/s is assumed.
+        If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
     degrees : bool
-        If direction is given in degrees. If False, radians are assumed.
+        If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
     clockwise : bool
-        If positive directions are defined to be 'clockwise'. If False, 'counterclockwise'
+        If positive directions are defined to be 'clockwise'. If ``False``, 'counterclockwise'
         is assumed.
     waves_coming_from : bool
-        If waves are 'coming from' the given directions. If False, 'going towards'
+        If waves are 'coming from' the given directions. If ``False``, 'going towards'
         convention is assumed.
     """
 
@@ -103,7 +103,9 @@ class Grid:
         Check frequency bins.
         """
         if np.any(freq[:-1] >= freq[1:]) or freq[0] < 0:
-            raise ValueError("Frequencies must be positive monotonically increasing.")
+            raise ValueError(
+                "Frequencies must be positive and monotonically increasing."
+            )
 
     def _check_dirs(self, dirs):
         """
@@ -111,14 +113,14 @@ class Grid:
         """
         if np.any(dirs[:-1] >= dirs[1:]) or dirs[0] < 0 or dirs[-1] >= 2.0 * np.pi:
             raise ValueError(
-                "Directions must be positive monotonically increasing and "
+                "Directions must be positive, monotonically increasing, and "
                 "be [0., 360.) degs (or [0., 2*pi) rads)."
             )
 
     @property
     def wave_convention(self):
         """
-        Wave convention.
+        Wave direction convention.
         """
         return {
             "clockwise": self._clockwise,
@@ -127,17 +129,17 @@ class Grid:
 
     def set_wave_convention(self, clockwise=True, waves_coming_from=True):
         """
-        Set wave convention.
+        Set wave direction convention.
 
-        Directions and values will be converted (in-place) to the new convention.
+        Directions and values will be converted (in-place) to the given convention.
 
         Parameters:
         -----------
         clockwise : bool
-            If positive directions are defined to be 'clockwise'. If False, 'counterclockwise'
-            is assumed.
+            If positive directions are defined to be 'clockwise'. If ``False``,
+            'counterclockwise' is assumed.
         waves_coming_from : bool
-            If waves are 'coming from' the given directions. If False, 'going towards'
+            If waves are 'coming from' the given directions. If ``False``, 'going towards'
             convention is assumed.
         """
         conv_org = self.wave_convention
@@ -170,16 +172,17 @@ class Grid:
         Parameters
         ----------
         dirs : float or array-like
-            Wave directions in radians expressed according to 'original' convention.
+            Wave directions in 'radians' expressed according to 'original' convention.
         config_new : dict
             New wave direction convention.
         config_org : dict
             Original wave direction convention.
-
+        degrees : bool
+            If directions are given in 'degrees'. If ``False``, 'radians' is assumed.
         Return
         ------
         dirs : numpy.array
-            Wave directions in radians expressed according to 'new' convention.
+            Wave directions in 'radians' expressed according to 'new' convention.
         """
         dirs = np.asarray_chkfinite(dirs).copy()
 
@@ -211,7 +214,7 @@ class Grid:
 
     def rotate(self, angle, degrees=False):
         """
-        Rotate the underlying coordinate system a given angle.
+        Rotate the underlying grid coordinate system a given angle.
 
         All directions are converted so that:
 
@@ -253,13 +256,13 @@ class Grid:
 
         Return
         ------
-        freq : 1D-array
-            Frequency bins.
-        dirs : 1D-array
-            Direction bins.
-        vals : 2D-array (N, M)
-            Value grid as 2-D array of shape (N, M), such that
-            ``N=len(freq)`` and ``M=len(dirs)``.
+        freq : array
+            1-D array of grid frequency coordinates.
+        dirs : array
+            1-D array of grid direction coordinates.
+        vals : array (N, M)
+            Grid values as 2-D array of shape (N, M), such that ``N=len(freq)``
+            and ``M=len(dirs)``.
         """
         freq = self._freq.copy()
         dirs = self._dirs.copy()
@@ -320,34 +323,39 @@ class Grid:
         fill_value=0.0,
     ):
         """
-        Interpolate (linear) the grid values for given frequencies and directions.
+        Interpolate (linear) the grid values to match the given frequency and direction
+        coordinates.
 
-        Zero is used as fill value for extrapolation (i.e. `freq` outside the bounds
-        of the provided 2D spectrum). Directions are treated as periodic.
+        A 'fill value' is used for extrapolation (i.e. `freq` outside the bounds
+        of the provided 2-D grid). Directions are treated as periodic.
 
         Parameters
         ----------
         freq : array-like
-            Frequency bins. Positive and monotonically increasing.
+            1-D array of grid frequency coordinates. Positive and monotonically increasing.
         dirs : array-like
-            Direction bins. Positive and monotonically increasing. Must cover the directional
-            range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+            1-D array of grid direction coordinates. Positive and monotonically increasing.
         freq_hz : bool
-            If frequency is given in Hz. If ``False``, rad/s is assumed.
+            If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
         degrees : bool
-            If direction is given in degrees. If ``False``, radians are assumed.
+            If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
         complex_convert : str, optional
-            How to convert complex numbers (if they are present) before interpolating.
-            Should be 'rectangular' or 'polar'. If 'rectangular' (default), complex
-            values are converted to rectangular form before interpolating. If 'polar',
-            the values are instead converted to polar form before interpolating.
-            The interpolated values are converted back to complex form before they
-            are returned.
+            How to convert complex number grid values before interpolating. Should
+            be 'rectangular' or 'polar'. If 'rectangular' (default), complex values
+            are converted to rectangular form (i.e., real and imaginary part) before
+            interpolating. If 'polar', the values are instead converted to polar
+            form (i.e., amplitude and phase) before interpolating. The values are
+            converted back to complex form after interpolation.
         fill_value : float or None
             The value used for extrapolation (i.e., `freq` outside the bounds of
-            the provided grid). If ``None``, values outside the domain are extrapolated
-            via nearest-neighbor extrapolation. Note that directions are treated
-            as periodic.
+            the provided grid). If ``None``, values outside the frequency domain
+            are extrapolated via nearest-neighbor extrapolation. Note that directions
+            are treated as periodic (and will not need extrapolation).
+
+        Returns
+        -------
+        array :
+            Interpolated grid values.
         """
         freq = np.asarray_chkfinite(freq).copy()
         dirs = np.asarray_chkfinite(dirs).copy()
@@ -367,28 +375,43 @@ class Grid:
 
         return interp_fun(dirs, freq, assume_sorted=True)
 
-    def reshape(self, freq, dirs, freq_hz=True, degrees=True, complex_convert=None):
+    def reshape(
+        self,
+        freq,
+        dirs,
+        freq_hz=True,
+        degrees=True,
+        complex_convert=None,
+        fill_value=0.0,
+    ):
         """
-        The object's values are (linear) interpolated to match the provided grid.
+        Reshape the grid to match the given frequency/direction coordinates. Grid
+        values will be interpolated (linear).
 
         Parameters
         ----------
         freq : array-like
-            New frequency bins. Positive and monotonically increasing.
+            1-D array of new grid frequency coordinates. Positive and monotonically
+            increasing.
         dirs : array-like
-            New direction bins. Positive and monotonically increasing. Must cover
-            the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+            1-D array of new grid direction coordinates. Positive and monotonically increasing.
+            Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
         freq_hz : bool
-            If frequency is given in Hz. If ``False``, rad/s is assumed.
+            If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
         degrees : bool
-            If direction is given in degrees. If ``False``, radians are assumed.
+            If direction is given in 'degrees'. If ``False``, 'radians' are assumed.
         complex_convert : str, optional
-            How to convert complex numbers (if they are present) before interpolating.
-            Should be 'rectangular' or 'polar'. If 'rectangular' (default), complex
-            values are converted to rectangular form before interpolating. If 'polar',
-            the values are instead converted to polar form before interpolating.
-            The interpolated values are converted back to complex form before they
-            are returned.
+            How to convert complex number grid values before interpolating. Should
+            be 'rectangular' or 'polar'. If 'rectangular' (default), complex values
+            are converted to rectangular form (i.e., real and imaginary part) before
+            interpolating. If 'polar', the values are instead converted to polar
+            form (i.e., amplitude and phase) before interpolating. The values are
+            converted back to complex form after interpolation.
+        fill_value : float or None
+            The value used for extrapolation (i.e., `freq` outside the bounds of
+            the provided grid). If ``None``, values outside the frequency domain
+            are extrapolated via nearest-neighbor extrapolation. Note that directions
+            are treated as periodic (and will not need extrapolation).
 
         Returns
         -------
@@ -413,6 +436,7 @@ class Grid:
             freq_hz=False,
             degrees=False,
             complex_convert=complex_convert,
+            fill_value=fill_value,
         )
         new = self.copy()
         new._freq, new._dirs, new._vals = freq_new, dirs_new, vals_new
@@ -420,14 +444,14 @@ class Grid:
 
     def __mul__(self, other):
         """
-        Multiply with another Grid object.
+        Multiply values with another Grid object.
 
-        Both grids must have the same frequency/direction bins.
+        Both grids must have the same frequency/direction coordinates.
 
         Parameters
         ----------
         other : obj
-            Grid object.
+            Grid object to be multiplied with.
 
         Returns
         -------
