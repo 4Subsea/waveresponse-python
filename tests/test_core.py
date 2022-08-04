@@ -1394,6 +1394,27 @@ class Test_DirectionalSpectrum:
         np.testing.assert_array_almost_equal(spectrum._dirs, dirs_in)
         np.testing.assert_array_almost_equal(spectrum._vals, vals_in)
 
+    def test__init__raises_vals(self):
+        freq = np.arange(0.05, 1, 0.1)
+        dirs = np.arange(5.0, 360.0, 10.0)
+        values = np.random.random(size=(len(freq), len(dirs) + 1))
+
+        with pytest.raises(ValueError):
+            DirectionalSpectrum(
+                freq, dirs, values, freq_hz=True, degrees=True
+            )
+
+    def test_init_raises_neg_vals(self):
+        freq = np.arange(0.05, 1, 0.1)
+        dirs = np.arange(5.0, 360.0, 10.0)
+        vals = np.random.random(size=(len(freq), len(dirs)))
+        vals[0, 1] *= -1
+
+        with pytest.raises(ValueError):
+            DirectionalSpectrum(
+                freq, dirs, vals, freq_hz=True, degrees=True
+            )
+
     def test__repr___(self):
         freq_in = np.arange(0.0, 1, 0.1)
         dirs_in = np.arange(5.0, 360.0, 10.0)

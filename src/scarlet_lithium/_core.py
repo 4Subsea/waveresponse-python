@@ -746,6 +746,11 @@ class DirectionalSpectrum(Grid):
         if degrees:
             self._vals /= np.pi / 180.0
 
+        if np.any(np.iscomplex(self._vals)):
+            raise ValueError()
+        elif np.any(self._vals < 0.0):
+            raise ValueError()
+
     def __repr__(self):
         return "DirectionalSpectrum"
 
