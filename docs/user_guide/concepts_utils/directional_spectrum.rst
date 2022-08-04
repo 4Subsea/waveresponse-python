@@ -1,3 +1,3 @@
 DirectionalSpectrum
 ===================
-This is how the `DirectionalSpectrum` object works.
+This is how the `DirectionalSpectrum` class works.

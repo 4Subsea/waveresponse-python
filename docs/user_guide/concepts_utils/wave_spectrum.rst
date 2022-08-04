@@ -1,3 +1,3 @@
 WaveSpectrum
 ============
-This is how the `WaveSpectrum` object works.
+This is how the `WaveSpectrum` class works.
