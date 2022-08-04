@@ -1624,3 +1624,58 @@ class Test_DirectionalSpectrum:
         vals_out = spectrum.interpolate(y, x, freq_hz=False, degrees=False)
 
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    testdata_full_range_dir = [
+        ([1.0, 2.0, 3.0], [0.0, 1.0, 2.0, 3.0, 2.0 * np.pi]),
+        ([0.0, 1.0, 2.0, 3.0], [0.0, 1.0, 2.0, 3.0, 2.0 * np.pi]),
+        ([0.0, 1.0, 2.0, 3.0, 2.0 * np.pi], [0.0, 1.0, 2.0, 3.0, 2.0 * np.pi]),
+    ]
+
+    @pytest.mark.parametrize("x,expect", testdata_full_range_dir)
+    def test_full_range_dir(self, x, expect):
+        out = DirectionalSpectrum._full_range_dir(x)
+        np.testing.assert_array_almost_equal(out, expect)
+
+    def test_var(self):
+        y0 = 0.0
+        y1 = 2
+        a = 7
+        b = 6
+
+        y = np.linspace(y0, y1, 20)
+        x = np.arange(5, 360, 10)
+        v = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
+
+        spectrum = DirectionalSpectrum(y, x, v, freq_hz=True, degrees=True)
+        var_out = spectrum.var()
+
+        integral_expect = (
+            (1.0 / 2.0)
+            * (0.0 - 360.0)
+            * (y0 - y1)
+            * (a * (0.0 + 360.0) + b * (y0 + y1))
+        )
+
+        assert var_out == pytest.approx(integral_expect)
+
+    def test_std(self):
+        y0 = 0.0
+        y1 = 2
+        a = 7
+        b = 6
+
+        y = np.linspace(y0, y1, 20)
+        x = np.arange(5, 360, 10)
+        v = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
+
+        spectrum = DirectionalSpectrum(y, x, v, freq_hz=True, degrees=True)
+        std_out = spectrum.std()
+
+        integral_expect = (
+            (1.0 / 2.0)
+            * (0.0 - 360.0)
+            * (y0 - y1)
+            * (a * (0.0 + 360.0) + b * (y0 + y1))
+        )
+
+        assert std_out == pytest.approx(np.sqrt(integral_expect))

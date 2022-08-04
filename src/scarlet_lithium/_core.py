@@ -854,7 +854,7 @@ class DirectionalSpectrum(Grid):
         """
         Variance (integral) of the spectrum.
         """
-        x = self._full_range_dir(self._dir)
+        x = self._full_range_dir(self._dirs)
         y = self._freq
         zz = self.interpolate(y, x, freq_hz=False, degrees=False)
         return trapz([trapz(zz_x, x) for zz_x in zz], y)
