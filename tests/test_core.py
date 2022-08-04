@@ -1049,6 +1049,22 @@ class Test_Grid:
 
         np.testing.assert_array_almost_equal(grid_abs._vals, vals_expect)
 
+    def test__repr__(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.zeros((10, 15))
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        assert str(grid) == "Grid"
+
 
 class Test_RAO:
     def test__init__(self):
@@ -1302,3 +1318,25 @@ class Test_RAO:
 
         with pytest.raises(TypeError):
             np.abs(rao)
+
+    def test__repr__(self):
+        freq_in = np.array([0, 1, 2])
+        dirs_in = np.array([0, 45, 90, 135])
+        vals_in = np.array(
+            [
+                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
+            ]
+        )
+        rao = RAO(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        assert str(rao) == "RAO"
