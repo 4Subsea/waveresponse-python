@@ -1,6 +1,7 @@
 import copy
 
 import numpy as np
+from scipy.integrate import trapz
 from scipy.interpolate import interp2d
 
 
@@ -839,3 +840,27 @@ class DirectionalSpectrum(Grid):
             vals *= np.pi / 180.0
 
         return vals
+
+    @staticmethod
+    def _full_range_dir(x):
+        """Add direction range bounds (0.0 and 2.0 * np.pi)"""
+        if x[0] != 0.0:
+            x = np.r_[0.0, x]
+        if x[-1] < (2.0 * np.pi - 1e-8):
+            x = np.r_[x, 2.0 * np.pi - 1e-8]
+        return x
+
+    def var(self):
+        """
+        Variance (integral) of the spectrum.
+        """
+        x = self._full_range_dir(self._dir)
+        y = self._freq
+        zz = self.interpolate(y, x, freq_hz=False, degrees=False)
+        return trapz([trapz(zz_x, x) for zz_x in zz], y)
+
+    def std(self):
+        """
+        Standard deviation of the spectrum.
+        """
+        return np.sqrt(self.var())
