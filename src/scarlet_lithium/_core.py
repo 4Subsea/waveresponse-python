@@ -609,10 +609,10 @@ class RAO(Grid):
             1-D array of grid frequency coordinates.
         dirs : array
             1-D array of grid direction coordinates.
-        vals_amp : array (N, M)
+        amp : array (N, M)
             RAO amplitude values as 2-D array of shape (N, M), such that ``N=len(freq)``
             and ``M=len(dirs)``.
-        vals_phase : array (N, M)
+        phase : array (N, M)
             RAO phase values as 2-D array of shape (N, M), such that ``N=len(freq)``
             and ``M=len(dirs)``.
         """
