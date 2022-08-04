@@ -741,10 +741,43 @@ class DirectionalSpectrum(Grid):
         )
 
         if freq_hz:
-            self._vals = self._vals / (2.0 * np.pi)
+            self._vals /= 2.0 * np.pi
 
         if degrees:
-            self._vals = self._vals / (np.pi / 180.0)
+            self._vals /= np.pi / 180.0
 
     def __repr__(self):
         return "DirectionalSpectrum"
+
+    def __call__(self, freq_hz=False, degrees=False):
+        """
+        Return a copy of the spectrum's frequency/direction coordinates and corresponding
+        values.
+
+        Parameters
+        ----------
+        freq_hz : bool
+            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
+        degrees : bool
+            If directions should be returned in 'degrees'. If ``False``, 'radians'
+            is used.
+
+        Returns
+        -------
+        freq : array
+            1-D array of grid frequency coordinates.
+        dirs : array
+            1-D array of grid direction coordinates.
+        vals : array (N, M)
+            Spectrum values as 2-D array of shape (N, M), such that ``N=len(freq)``
+            and ``M=len(dirs)``.
+        """
+        freq, dirs, vals = super().__call__(freq_hz=freq_hz, degrees=degrees)
+
+        if freq_hz:
+            vals *= 2.0 * np.pi
+
+        if degrees:
+            vals *= np.pi / 180.0
+
+        return freq, dirs, vals
