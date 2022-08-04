@@ -491,7 +491,7 @@ class RAO(Grid):
     """
     Response amplitude operator (RAO).
 
-    The ``RAO`` class inherits from the ``Grid`` class, and is a two-dimentional
+    The ``RAO`` class inherits from the :class:`~scarlet_lithium.Grid` class, and is a two-dimentional
     frequency/(wave)direction grid. The RAO values represents a transfer function
     that can be used to calculate a degree-of-freedom's response based on a 2-D
     wave spectrum.
