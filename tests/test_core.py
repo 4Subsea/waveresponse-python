@@ -1583,3 +1583,44 @@ class Test_DirectionalSpectrum:
         vals_out = spectrum.interpolate(y, x, freq_hz=True, degrees=True)
 
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_interpolate_hz_rad(self):
+        a = 7
+        b = 6
+
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.linspace(0.0, 359.0, 10)
+        vp = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in yp])
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        y = np.linspace(0.5, 1.0, 20)
+        x = np.linspace(5.0, 15.0, 10)
+        vals_expect = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
+
+        x *= np.pi / 180.0
+        vals_expect /= np.pi / 180.0
+
+        vals_out = spectrum.interpolate(y, x, freq_hz=True, degrees=False)
+
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_interpolate_rads_rad(self):
+        a = 7
+        b = 6
+
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.linspace(0.0, 359.0, 10)
+        vp = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in yp])
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        y = np.linspace(0.5, 1.0, 20)
+        x = np.linspace(5.0, 15.0, 10)
+        vals_expect = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
+
+        x *= np.pi / 180.0
+        y *= 2.0 * np.pi
+        vals_expect /= 2.0 * np.pi * np.pi / 180.0
+
+        vals_out = spectrum.interpolate(y, x, freq_hz=False, degrees=False)
+
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
