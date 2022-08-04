@@ -619,3 +619,6 @@ class RAO(Grid):
         freq, dirs, vals = self(freq_hz=freq_hz, degrees=degrees)
         vals_amp, vals_phase = complex_to_polar(vals, phase_degrees=phase_degrees)
         return freq, dirs, vals_amp, vals_phase
+
+    def __abs__(self):
+        raise TypeError("RAO values can not be converted to absolute values.")
