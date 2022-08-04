@@ -692,3 +692,31 @@ class RAO(Grid):
 
     def __repr__(self):
         return "RAO"
+
+class DirectionalSpectrum(Grid):
+    """
+    Directional spectrum
+
+    Parameters
+    ----------
+    freq : array-like
+        1-D array of grid frequency coordinates. Positive and monotonically increasing.
+    dirs : array-like
+        1-D array of grid direction coordinates. Positive and monotonically increasing.
+        Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+    vals : array-like (N, M)
+        RAO values (complex) associated with the grid. Should be a 2-D array of shape (N, M),
+        such that ``N=len(freq)`` and ``M=len(dirs)``.
+    freq_hz : bool
+        If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+    degrees : bool
+        If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
+    clockwise : bool
+        If positive directions are defined to be 'clockwise'. If ``False``, 'counterclockwise'
+        is assumed.
+    waves_coming_from : bool
+        If waves are 'coming from' the given directions. If ``False``, 'going towards'
+        convention is assumed.
+    """
+
+    pass
