@@ -796,7 +796,7 @@ class DirectionalSpectrum(Grid):
         fill_value=0.0,
     ):
         """
-        Interpolate (linear) the grid values to match the given frequency and direction
+        Interpolate (linear) the spectrum values to match the given frequency and direction
         coordinates.
 
         A 'fill value' is used for extrapolation (i.e. `freq` outside the bounds
@@ -812,13 +812,6 @@ class DirectionalSpectrum(Grid):
             If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
         degrees : bool
             If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
-        complex_convert : str, optional
-            How to convert complex number grid values before interpolating. Should
-            be 'rectangular' or 'polar'. If 'rectangular' (default), complex values
-            are converted to rectangular form (i.e., real and imaginary part) before
-            interpolating. If 'polar', the values are instead converted to polar
-            form (i.e., amplitude and phase) before interpolating. The values are
-            converted back to complex form after interpolation.
         fill_value : float or None
             The value used for extrapolation (i.e., `freq` outside the bounds of
             the provided grid). If ``None``, values outside the frequency domain
@@ -828,7 +821,7 @@ class DirectionalSpectrum(Grid):
         Returns
         -------
         array :
-            Interpolated grid values.
+            Interpolated spectrum values.
         """
 
         vals = super().interpolate(
