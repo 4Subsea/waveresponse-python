@@ -1,7 +1,13 @@
 import numpy as np
 import pytest
 
-from scarlet_lithium import RAO, Grid, complex_to_polar, polar_to_complex
+from scarlet_lithium import (
+    RAO,
+    Grid,
+    complex_to_polar,
+    polar_to_complex,
+    DirectionalSpectrum,
+)
 
 
 @pytest.fixture
@@ -1299,3 +1305,107 @@ class Test_RAO:
 
     def test__repr__(self, rao):
         assert str(rao) == "RAO"
+
+
+class Test_DirectionalSpectrum:
+    def test__init___hz_deg(self):
+        freq_in = np.arange(0.0, 1, 0.1)
+        dirs_in = np.arange(5.0, 360.0, 10.0)
+        vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
+        spectrum = DirectionalSpectrum(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        assert spectrum._clockwise is True
+        assert spectrum._waves_coming_from is True
+        np.testing.assert_array_almost_equal(spectrum._freq, 2.0 * np.pi * freq_in)
+        np.testing.assert_array_almost_equal(spectrum._dirs, (np.pi / 180.0) * dirs_in)
+        np.testing.assert_array_almost_equal(
+            spectrum._vals, 1.0 / (2.0 * np.pi * (np.pi / 180.0)) * vals_in
+        )
+
+    def test__init___hz_rad(self):
+        freq_in = np.arange(0.0, 1, 0.1)
+        dirs_in = (np.pi / 180.0) * np.arange(5.0, 360.0, 10.0)
+        vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
+        spectrum = DirectionalSpectrum(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=False,
+            clockwise=False,
+            waves_coming_from=True,
+        )
+
+        assert spectrum._clockwise is False
+        assert spectrum._waves_coming_from is True
+        np.testing.assert_array_almost_equal(spectrum._freq, 2.0 * np.pi * freq_in)
+        np.testing.assert_array_almost_equal(spectrum._dirs, dirs_in)
+        np.testing.assert_array_almost_equal(
+            spectrum._vals, 1.0 / (2.0 * np.pi) * vals_in
+        )
+
+    def test__init___rads_deg(self):
+        freq_in = (2.0 * np.pi) * np.arange(0.0, 1, 0.1)
+        dirs_in = np.arange(5.0, 360.0, 10.0)
+        vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
+        spectrum = DirectionalSpectrum(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=False,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=False,
+        )
+
+        assert spectrum._clockwise is True
+        assert spectrum._waves_coming_from is False
+        np.testing.assert_array_almost_equal(spectrum._freq, freq_in)
+        np.testing.assert_array_almost_equal(spectrum._dirs, (np.pi / 180.0) * dirs_in)
+        np.testing.assert_array_almost_equal(
+            spectrum._vals, 1.0 / (np.pi / 180.0) * vals_in
+        )
+
+    def test__init___rads_rad(self):
+        freq_in = (2.0 * np.pi) * np.arange(0.0, 1, 0.1)
+        dirs_in = (np.pi / 180.0) * np.arange(5.0, 360.0, 10.0)
+        vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
+        spectrum = DirectionalSpectrum(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=False,
+            degrees=False,
+            clockwise=False,
+            waves_coming_from=False,
+        )
+
+        assert spectrum._clockwise is False
+        assert spectrum._waves_coming_from is False
+        np.testing.assert_array_almost_equal(spectrum._freq, freq_in)
+        np.testing.assert_array_almost_equal(spectrum._dirs, dirs_in)
+        np.testing.assert_array_almost_equal(spectrum._vals, vals_in)
+
+    def test__repr___(self):
+        freq_in = np.arange(0.0, 1, 0.1)
+        dirs_in = np.arange(5.0, 360.0, 10.0)
+        vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
+        spectrum = DirectionalSpectrum(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        assert str(spectrum) == "DirectionalSpectrum"

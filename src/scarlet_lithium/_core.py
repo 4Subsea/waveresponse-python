@@ -693,9 +693,10 @@ class RAO(Grid):
     def __repr__(self):
         return "RAO"
 
+
 class DirectionalSpectrum(Grid):
     """
-    Directional spectrum
+    Directional spectrum.
 
     Parameters
     ----------
@@ -719,4 +720,31 @@ class DirectionalSpectrum(Grid):
         convention is assumed.
     """
 
-    pass
+    def __init__(
+        self,
+        freq,
+        dirs,
+        vals,
+        freq_hz=False,
+        degrees=False,
+        clockwise=True,
+        waves_coming_from=True,
+    ):
+        super().__init__(
+            freq,
+            dirs,
+            vals,
+            freq_hz=freq_hz,
+            degrees=degrees,
+            clockwise=clockwise,
+            waves_coming_from=waves_coming_from,
+        )
+
+        if freq_hz:
+            self._vals = self._vals / (2.0 * np.pi)
+
+        if degrees:
+            self._vals = self._vals / (np.pi / 180.0)
+
+    def __repr__(self):
+        return "DirectionalSpectrum"
