@@ -1,3 +1,3 @@
 DirectionalSpectrum
 ===================
-This is how the `DirectionalSpectrum` class works.
+This is how the :class:`~scarlet_lithium.DirectionalSpectrum` class works.

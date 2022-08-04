@@ -1,3 +1,3 @@
 WaveSpectrum
 ============
-This is how the `WaveSpectrum` class works.
+This is how the :class:`~scarlet_lithium.WaveSpectrum` class works.
