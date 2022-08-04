@@ -1566,3 +1566,20 @@ class Test_DirectionalSpectrum:
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_interpolate_hz_deg(self):
+        a = 7
+        b = 6
+
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.linspace(0.0, 359.0, 10)
+        vp = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in yp])
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        y = np.linspace(0.5, 1.0, 20)
+        x = np.linspace(5.0, 15.0, 10)
+        vals_expect = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
+
+        vals_out = spectrum.interpolate(y, x, freq_hz=True, degrees=True)
+
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
