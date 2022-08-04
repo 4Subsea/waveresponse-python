@@ -1394,7 +1394,7 @@ class Test_DirectionalSpectrum:
         np.testing.assert_array_almost_equal(spectrum._dirs, dirs_in)
         np.testing.assert_array_almost_equal(spectrum._vals, vals_in)
 
-    def test__init__raises_vals(self):
+    def test__init__raises_vals_shape(self):
         freq = np.arange(0.05, 1, 0.1)
         dirs = np.arange(5.0, 360.0, 10.0)
         values = np.random.random(size=(len(freq), len(dirs) + 1))
@@ -1404,11 +1404,61 @@ class Test_DirectionalSpectrum:
                 freq, dirs, values, freq_hz=True, degrees=True
             )
 
-    def test_init_raises_neg_vals(self):
+    def test__init__raises_vals_neg(self):
         freq = np.arange(0.05, 1, 0.1)
         dirs = np.arange(5.0, 360.0, 10.0)
         vals = np.random.random(size=(len(freq), len(dirs)))
         vals[0, 1] *= -1
+
+        with pytest.raises(ValueError):
+            DirectionalSpectrum(
+                freq, dirs, vals, freq_hz=True, degrees=True
+            )
+
+    def test__init__raises_freq_neg(self):
+        freq = np.arange(-0.05, 1, 0.1)
+        dirs = np.arange(5.0, 360.0, 10.0)
+        values = np.random.random(size=(len(freq), len(dirs)))
+
+        with pytest.raises(ValueError):
+            DirectionalSpectrum(
+                freq, dirs, values, freq_hz=True, degrees=True
+            )
+
+    def test__init__raises_freq_nosort(self):
+        freq = np.array([0.5, 0.0, 1.0])
+        dirs = np.arange(5.0, 360.0, 10.0)
+        vals = np.random.random(size=(len(freq), len(dirs)))
+
+        with pytest.raises(ValueError):
+            DirectionalSpectrum(
+                freq, dirs, vals, freq_hz=True, degrees=True
+            )
+
+    def test__init__raises_dirs_360(self):
+        freq = np.arange(0.05, 1, 0.1)
+        dirs = np.linspace(0.0, 360.0, 10, endpoint=True)
+        vals = np.random.random(size=(len(freq), len(dirs)))
+
+        with pytest.raises(ValueError):
+            DirectionalSpectrum(
+                freq, dirs, vals, freq_hz=True, degrees=True
+            )
+
+    def test__init__raises_dirs_2pi(self):
+        freq = np.arange(0.05, 1, 0.1)
+        dirs = np.linspace(0.0, 2.0 * np.pi, 10, endpoint=True)
+        vals = np.random.random(size=(len(freq), len(dirs)))
+
+        with pytest.raises(ValueError):
+            DirectionalSpectrum(
+                freq, dirs, vals, freq_hz=True, degrees=False
+            )
+
+    def test__init__raises_dirs_neg(self):
+        freq = np.arange(0.05, 1, 0.1)
+        dirs = np.linspace(-1.0, 360.0, 10)
+        vals = np.random.random(size=(len(freq), len(dirs)))
 
         with pytest.raises(ValueError):
             DirectionalSpectrum(
