@@ -1,9 +1,11 @@
 RAO
 ===
-This is how the :class:`~scarlet_lithium.RAO` class works.
+The :class:`~scarlet_lithium.RAO` class provides an interface for handling response
+amplitude operators (RAOs). :class:`~scarlet_lithium.RAO` inherits from :class:`~scarlet_lithium.Grid`,
+and contains RAO values on a two-dimentional frequency/(wave)direction grid.
 
 The :class:`~scarlet_lithium.RAO` is initialized with a frequency list (1-D array),
-a direction list (1-D array) and corresponding RAO values (2-D array) as complex numbers.
+a direction list (1-D array) and corresponding RAO values as complex numbers (2-D array).
 
 .. code-block:: python
 
@@ -49,21 +51,31 @@ Alternatively, you can construct an :class:`~scarlet_lithium.RAO` using amplitud
 
 The :class:`~scarlet_lithium.RAO` class inherits from the :class:`~scarlet_lithium.Grid`
 class, and provides all the functionality that comes with :class:`~scarlet_lithium.Grid`.
-In addition, you can get the complex conjugated version of the RAO using :meth:`~scarlet_lithium.RAO.conjugate`.
+In addition, you can:
+
+Retrieve the RAO's frequency/direction coordinates and amplitude/phase values using
+:meth:`~scarlet_lithium.RAO.to_amp_phase`.
+
+.. code-block:: python
+
+    freq, dirs, amp, phase = rao.to_amp_phase(freq_hz=True, degrees=True)
+
+
+Get the complex conjugated version of the RAO using :meth:`~scarlet_lithium.RAO.conjugate`.
 
 .. code-block:: python
 
     rao_conj = rao.conjugate()
 
-And differentiate the RAO, to obtain an RAO object that represents the differentiated degree-of-freedom:
+Differentiate to obtain an RAO object that represents the differentiated degree-of-freedom:
 
 .. code-block:: python
 
     rao_diff = rao.differentiate()
 
-The RAO's frequency/direction coordinates and amplitude/phase values can be retrieved
-using the :meth:`~scarlet_lithium.RAO.to_amp_phase` method:
+.. note::
+    The differentiated version of an RAO's transfer function is obtained by:
 
-.. code-block:: python
+    .. math::
 
-    freq, dirs, amp, phase = rao.to_amp_phase(freq_hz=True, degrees=True)
+        j\omega H(j\omega)
