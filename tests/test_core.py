@@ -1322,6 +1322,7 @@ class Test_DirectionalSpectrum:
             waves_coming_from=True,
         )
 
+        assert isinstance(spectrum, Grid)
         assert spectrum._clockwise is True
         assert spectrum._waves_coming_from is True
         np.testing.assert_array_almost_equal(spectrum._freq, 2.0 * np.pi * freq_in)
@@ -1344,6 +1345,7 @@ class Test_DirectionalSpectrum:
             waves_coming_from=True,
         )
 
+        assert isinstance(spectrum, Grid)
         assert spectrum._clockwise is False
         assert spectrum._waves_coming_from is True
         np.testing.assert_array_almost_equal(spectrum._freq, 2.0 * np.pi * freq_in)
@@ -1366,6 +1368,7 @@ class Test_DirectionalSpectrum:
             waves_coming_from=False,
         )
 
+        assert isinstance(spectrum, Grid)
         assert spectrum._clockwise is True
         assert spectrum._waves_coming_from is False
         np.testing.assert_array_almost_equal(spectrum._freq, freq_in)
@@ -1388,6 +1391,7 @@ class Test_DirectionalSpectrum:
             waves_coming_from=False,
         )
 
+        assert isinstance(spectrum, Grid)
         assert spectrum._clockwise is False
         assert spectrum._waves_coming_from is False
         np.testing.assert_array_almost_equal(spectrum._freq, freq_in)
