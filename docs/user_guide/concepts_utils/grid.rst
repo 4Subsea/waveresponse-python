@@ -1,3 +1,3 @@
 Grid
 ====
-This is how the grid object works.
+This is how the :class:`~scarlet_lithium.Grid` object works.

@@ -8,3 +8,5 @@ This section will introduce concepts and utilites that are useful.
 
    grid
    rao
+   directional_spectrum
+   wave_spectrum
