@@ -133,8 +133,8 @@ class Grid:
 
         Directions and values will be converted (in-place) to the given convention.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         clockwise : bool
             If positive directions are defined to be 'clockwise'. If ``False``,
             'counterclockwise' is assumed.
