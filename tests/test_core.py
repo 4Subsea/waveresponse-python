@@ -1404,9 +1404,7 @@ class Test_DirectionalSpectrum:
         values = np.random.random(size=(len(freq), len(dirs) + 1))
 
         with pytest.raises(ValueError):
-            DirectionalSpectrum(
-                freq, dirs, values, freq_hz=True, degrees=True
-            )
+            DirectionalSpectrum(freq, dirs, values, freq_hz=True, degrees=True)
 
     def test__init__raises_vals_neg(self):
         freq = np.arange(0.05, 1, 0.1)
@@ -1415,9 +1413,7 @@ class Test_DirectionalSpectrum:
         vals[0, 1] *= -1
 
         with pytest.raises(ValueError):
-            DirectionalSpectrum(
-                freq, dirs, vals, freq_hz=True, degrees=True
-            )
+            DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
 
     def test__init__raises_freq_neg(self):
         freq = np.arange(-0.05, 1, 0.1)
@@ -1425,9 +1421,7 @@ class Test_DirectionalSpectrum:
         values = np.random.random(size=(len(freq), len(dirs)))
 
         with pytest.raises(ValueError):
-            DirectionalSpectrum(
-                freq, dirs, values, freq_hz=True, degrees=True
-            )
+            DirectionalSpectrum(freq, dirs, values, freq_hz=True, degrees=True)
 
     def test__init__raises_freq_nosort(self):
         freq = np.array([0.5, 0.0, 1.0])
@@ -1435,9 +1429,7 @@ class Test_DirectionalSpectrum:
         vals = np.random.random(size=(len(freq), len(dirs)))
 
         with pytest.raises(ValueError):
-            DirectionalSpectrum(
-                freq, dirs, vals, freq_hz=True, degrees=True
-            )
+            DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
 
     def test__init__raises_dirs_360(self):
         freq = np.arange(0.05, 1, 0.1)
@@ -1445,9 +1437,7 @@ class Test_DirectionalSpectrum:
         vals = np.random.random(size=(len(freq), len(dirs)))
 
         with pytest.raises(ValueError):
-            DirectionalSpectrum(
-                freq, dirs, vals, freq_hz=True, degrees=True
-            )
+            DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
 
     def test__init__raises_dirs_2pi(self):
         freq = np.arange(0.05, 1, 0.1)
@@ -1455,9 +1445,7 @@ class Test_DirectionalSpectrum:
         vals = np.random.random(size=(len(freq), len(dirs)))
 
         with pytest.raises(ValueError):
-            DirectionalSpectrum(
-                freq, dirs, vals, freq_hz=True, degrees=False
-            )
+            DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=False)
 
     def test__init__raises_dirs_neg(self):
         freq = np.arange(0.05, 1, 0.1)
@@ -1465,9 +1453,7 @@ class Test_DirectionalSpectrum:
         vals = np.random.random(size=(len(freq), len(dirs)))
 
         with pytest.raises(ValueError):
-            DirectionalSpectrum(
-                freq, dirs, vals, freq_hz=True, degrees=True
-            )
+            DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
 
     def test__repr___(self):
         freq_in = np.arange(0.0, 1, 0.1)
@@ -1484,3 +1470,99 @@ class Test_DirectionalSpectrum:
         )
 
         assert str(spectrum) == "DirectionalSpectrum"
+
+    def test__call___rads_rad(self):
+        freq_in = np.arange(0.0, 1, 0.1)
+        dirs_in = np.arange(5.0, 360.0, 10.0)
+        vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
+        spectrum = DirectionalSpectrum(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_out, dirs_out, vals_out = spectrum(freq_hz=False, degrees=False)
+
+        freq_expect = 2.0 * np.pi * freq_in
+        dirs_expect = (np.pi / 180.0) * dirs_in
+        vals_expect = 1.0 / (2.0 * np.pi * (np.pi / 180.0)) * vals_in
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test__call___hz_rad(self):
+        freq_in = np.arange(0.0, 1, 0.1)
+        dirs_in = np.arange(5.0, 360.0, 10.0)
+        vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
+        spectrum = DirectionalSpectrum(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_out, dirs_out, vals_out = spectrum(freq_hz=True, degrees=False)
+
+        freq_expect = freq_in
+        dirs_expect = (np.pi / 180.0) * dirs_in
+        vals_expect = 1.0 / (np.pi / 180.0) * vals_in
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test__call___rads_deg(self):
+        freq_in = np.arange(0.0, 1, 0.1)
+        dirs_in = np.arange(5.0, 360.0, 10.0)
+        vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
+        spectrum = DirectionalSpectrum(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_out, dirs_out, vals_out = spectrum(freq_hz=False, degrees=True)
+
+        freq_expect = 2.0 * np.pi * freq_in
+        dirs_expect = dirs_in
+        vals_expect = 1.0 / (2.0 * np.pi) * vals_in
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test__call___hz_deg(self):
+        freq_in = np.arange(0.0, 1, 0.1)
+        dirs_in = np.arange(5.0, 360.0, 10.0)
+        vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
+        spectrum = DirectionalSpectrum(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_out, dirs_out, vals_out = spectrum(freq_hz=True, degrees=True)
+
+        freq_expect = freq_in
+        dirs_expect = dirs_in
+        vals_expect = vals_in
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
