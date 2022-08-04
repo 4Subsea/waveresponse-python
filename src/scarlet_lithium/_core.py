@@ -486,6 +486,9 @@ class Grid:
         new._vals = np.abs(new._vals)
         return new
 
+    def __repr__(self):
+        return "Grid"
+
 
 class RAO(Grid):
     """
@@ -622,3 +625,6 @@ class RAO(Grid):
 
     def __abs__(self):
         raise TypeError("RAO values can not be converted to absolute values.")
+
+    def __repr__(self):
+        return "RAO"
