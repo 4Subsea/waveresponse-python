@@ -3,10 +3,10 @@ import pytest
 
 from scarlet_lithium import (
     RAO,
+    DirectionalSpectrum,
     Grid,
     complex_to_polar,
     polar_to_complex,
-    DirectionalSpectrum,
 )
 
 

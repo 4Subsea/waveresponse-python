@@ -788,12 +788,12 @@ class DirectionalSpectrum(Grid):
         return freq, dirs, vals
 
     def interpolate(
-            self,
-            freq,
-            dirs,
-            freq_hz=True,
-            degrees=True,
-            fill_value=0.0,
+        self,
+        freq,
+        dirs,
+        freq_hz=True,
+        degrees=True,
+        fill_value=0.0,
     ):
         """
         Interpolate (linear) the grid values to match the given frequency and direction
