@@ -233,7 +233,7 @@ class Grid:
         Returns
         -------
         obj :
-            A rotated copy of the object.
+            A copy of the Grid object where the underlying coordinate system is rotated.
         """
         if degrees:
             angle = (np.pi / 180.0) * angle
@@ -245,17 +245,19 @@ class Grid:
 
     def __call__(self, freq_hz=True, degrees=True):
         """
-        Return a copy of the grid object's frequencies, directions and values.
+        Return a copy of the grid object's frequency/direction coordinates and corresponding
+        values.
 
         Parameters
         ----------
         freq_hz : bool
-            If frequencies should be returned in Hz. If ``False``, rad/s is used.
+            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
         degrees : bool
-            If directions should be returned in degrees.
+            If directions should be returned in 'degrees'. If ``False``, 'radians'
+            is used.
 
-        Return
-        ------
+        Returns
+        -------
         freq : array
             1-D array of grid frequency coordinates.
         dirs : array
@@ -487,7 +489,33 @@ class Grid:
 
 class RAO(Grid):
     """
-    RAO.
+    Response amplitude operator (RAO).
+
+    The ``RAO`` class inherits from the ``Grid`` class, and is a two-dimentional
+    frequency/(wave)direction grid. The RAO values represents a transfer function
+    that can be used to calculate a degree-of-freedom's response based on a 2-D
+    wave spectrum.
+
+    Parameters
+    ----------
+    freq : array-like
+        1-D array of grid frequency coordinates. Positive and monotonically increasing.
+    dirs : array-like
+        1-D array of grid direction coordinates. Positive and monotonically increasing.
+        Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+    vals : array-like (N, M)
+        RAO values (complex) associated with the grid. Should be a 2-D array of shape (N, M),
+        such that ``N=len(freq)`` and ``M=len(dirs)``.
+    freq_hz : bool
+        If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+    degrees : bool
+        If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
+    clockwise : bool
+        If positive directions are defined to be 'clockwise'. If ``False``, 'counterclockwise'
+        is assumed.
+    waves_coming_from : bool
+        If waves are 'coming from' the given directions. If ``False``, 'going towards'
+        convention is assumed.
     """
 
     @classmethod
@@ -497,14 +525,47 @@ class RAO(Grid):
         dirs,
         amp,
         phase,
+        phase_degrees=False,
         freq_hz=True,
         degrees=True,
-        phase_degrees=False,
         clockwise=True,
         waves_coming_from=True,
     ):
         """
-        Alternative constructor.
+        Construct an ``RAO`` object from amplitude and phase values.
+
+        Note that the RAO is converted to, and stored as, complex values internally.
+
+        Parameters
+        ----------
+        freq : array-like
+            1-D array of grid frequency coordinates. Positive and monotonically increasing.
+        dirs : array-like
+            1-D array of grid direction coordinates. Positive and monotonically increasing.
+            Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+        amp : array-like (N, M)
+            RAO amplitude values associated with the grid. Should be a 2-D array
+            of shape (N, M), such that ``N=len(freq)`` and ``M=len(dirs)``.
+        phase : array-like (N, M)
+            RAO phase values associated with the grid. Should be a 2-D array
+            of shape (N, M), such that ``N=len(freq)`` and ``M=len(dirs)``.
+        phase_degrees : bool
+            If the RAO phase values are given in 'degrees'. If ``False``, 'radians'
+            is assumed.
+        freq_hz : bool
+            If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+        degrees : bool
+            If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
+        clockwise : bool
+            If positive directions are defined to be 'clockwise'. If ``False``,
+            'counterclockwise' is assumed.
+        waves_coming_from : bool
+            If waves are 'coming from' the given directions. If ``False``, 'going towards'
+            convention is assumed.
+
+        Returns
+        obj :
+            Initialized RAO object.
         """
 
         rao_complex = polar_to_complex(amp, phase, phase_degrees=phase_degrees)
@@ -521,15 +582,39 @@ class RAO(Grid):
 
     def conjugate(self):
         """
-        Complex conjugate.
+        Return a copy of the RAO object with complex conjugate values.
         """
         new = self.copy()
         new._vals = new._vals.conjugate()
         return new
 
-    def to_amp_phase(self, freq_hz=False, degrees=False, phase_degrees=False):
+    def to_amp_phase(self, phase_degrees=False, freq_hz=False, degrees=False):
         """
-        Return RAO as amplitude and phase.
+        Return the RAO as amplitude and phase values.
+
+        Parameters
+        ----------
+        phase_degrees : bool
+            If phase values should be returned in 'degrees'. If ``False``, 'radians'
+            is used.
+        freq_hz : bool
+            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
+        degrees : bool
+            If directions should be returned in 'degrees'. If ``False``, 'radians'
+            is used.
+
+        Returns
+        -------
+        freq : array
+            1-D array of grid frequency coordinates.
+        dirs : array
+            1-D array of grid direction coordinates.
+        vals_amp : array (N, M)
+            RAO amplitude values as 2-D array of shape (N, M), such that ``N=len(freq)``
+            and ``M=len(dirs)``.
+        vals_phase : array (N, M)
+            RAO phase values as 2-D array of shape (N, M), such that ``N=len(freq)``
+            and ``M=len(dirs)``.
         """
         freq, dirs, vals = self(freq_hz=freq_hz, degrees=degrees)
         vals_amp, vals_phase = complex_to_polar(vals, phase_degrees=phase_degrees)
