@@ -6,4 +6,5 @@ functions and methods.
 .. toctree::
    :maxdepth: 1
 
+   grid
    rao
