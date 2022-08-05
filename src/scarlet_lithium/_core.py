@@ -919,3 +919,19 @@ class DirectionalSpectrum(Grid):
 
         spectrum = np.array([trapz(zz_y, y) for zz_y in zz])
         return x, spectrum
+
+    def moment(self, n, freq_hz=None):
+        """
+        Spectral moment.
+
+        Parameters
+        ----------
+        n : int
+            Order of the spectral moment.
+        freq_hz : bool
+            If frequencies in 'Hz' should be used. If ``False``, 'rad/s' is used.
+            Defaults to original unit used during initialization.
+        """
+        f, spectrum = self.spectrum1d(axis=1, freq_hz=freq_hz)
+        m_n = trapz((f ** n) * spectrum, f)
+        return m_n
