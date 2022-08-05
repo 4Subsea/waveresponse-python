@@ -238,7 +238,7 @@ class Grid:
 
             dirs_new = dirs_old - angle
 
-        Note that the direction of positive rotation follows the set 'wave_convention'.
+        Note that the direction of positive rotation follows the set 'wave convention'.
 
         Parameters
         ----------
