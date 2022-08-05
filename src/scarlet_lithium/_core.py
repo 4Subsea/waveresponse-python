@@ -979,3 +979,15 @@ class DirectionalSpectrum(Grid):
         f, spectrum = self.spectrum1d(axis=1, freq_hz=freq_hz)
         m_n = trapz((f**n) * spectrum, f)
         return m_n
+
+
+class WaveSpectrum(DirectionalSpectrum):
+    @property
+    def hs(self):
+        """
+        Significan wave height, Hs.
+        Calculated from the zeroth-order spectral moment according to:
+        ``hs = 4.0 * np.sqrt(m0)``
+        """
+        m0 = self.moment(0)
+        return 4.0 * np.sqrt(m0)

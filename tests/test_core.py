@@ -5,6 +5,7 @@ from scarlet_lithium import (
     RAO,
     DirectionalSpectrum,
     Grid,
+    WaveSpectrum,
     complex_to_polar,
     polar_to_complex,
 )
@@ -62,6 +63,24 @@ def directional_spectrum():
         waves_coming_from=True,
     )
     return spectrum
+
+
+@pytest.fixture
+def wave():
+    freq = np.linspace(0, 1.0, 10)
+    dirs = np.linspace(0, 360.0, 15, endpoint=False)
+    vals = np.random.random((10, 15))
+    wave = WaveSpectrum(
+        freq,
+        dirs,
+        vals,
+        freq_hz=True,
+        degrees=True,
+        clockwise=True,
+        waves_coming_from=True,
+    )
+
+    return wave
 
 
 class Test_complex_to_polar:
@@ -1011,7 +1030,9 @@ class Test_Grid:
         out = grid * directional_spectrum
 
         assert isinstance(out, DirectionalSpectrum)
-        np.testing.assert_array_almost_equal(out._vals, grid._vals * directional_spectrum._vals)
+        np.testing.assert_array_almost_equal(
+            out._vals, grid._vals * directional_spectrum._vals
+        )
 
     def test__mul__rao(self, grid, rao):
         out = grid * rao
@@ -1873,3 +1894,47 @@ class Test_DirectionalSpectrum:
         assert spectrum._waves_coming_from == grid._waves_coming_from
         assert spectrum._freq_hz == grid._freq_hz
         assert spectrum._degrees == grid._degrees
+
+
+class Test_WaveSpectrum:
+    def test__init__(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.random.random((10, 15))
+        wave = WaveSpectrum(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_expect = 2.0 * np.pi * freq
+        dirs_expect = (np.pi / 180.0) * dirs
+        vals_expect = vals / (2.0 * np.pi * (np.pi / 180.0))
+
+        assert isinstance(wave, Grid)
+        assert isinstance(wave, DirectionalSpectrum)
+        np.testing.assert_array_almost_equal(wave._freq, freq_expect)
+        np.testing.assert_array_almost_equal(wave._dirs, dirs_expect)
+        np.testing.assert_array_almost_equal(wave._vals, vals_expect)
+        assert wave._clockwise is True
+        assert wave._waves_coming_from is True
+        assert wave._freq_hz is True
+        assert wave._degrees is True
+
+    def test_hs(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        freq = np.linspace(f0, f1, 20)
+        dirs = np.arange(5, 360, 10)
+        vals = np.ones((len(freq), len(dirs)))
+        wave = WaveSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+        hs_out = wave.hs
+        hs_expect = 4.0 * np.sqrt((0.0 - 360.0) * (f0 - f1))
+
+        assert hs_out == pytest.approx(hs_expect)
