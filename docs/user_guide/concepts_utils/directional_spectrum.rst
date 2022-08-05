@@ -26,6 +26,8 @@ values (2-D array).
         vals,
         freq_hz=True,
         degrees=True,
+        clockwise=False,
+        waves_coming_from=False,
     )
 
 The :class:`~scarlet_lithium.DirectionalSpectrum` class inherits from the :class:`~scarlet_lithium.Grid`

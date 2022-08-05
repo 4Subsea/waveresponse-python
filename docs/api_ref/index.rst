@@ -9,3 +9,4 @@ functions and methods.
    grid
    rao
    directional_spectrum
+   wave_spectrum
