@@ -14,7 +14,7 @@ a direction list (1-D array) and corresponding RAO values as complex numbers (2-
 
 
     freq = np.linspace(0.0, 1.0, 50)
-    dirs = np.linspace(0.0, 360.0, endpoint=False)
+    dirs = np.linspace(0.0, 360.0, 10, endpoint=False)
     vals_real = np.random.random((len(freq), len(dirs)))
     vals_imag = np.random.random((len(freq), len(dirs)))
     vals_complex = vals_real + 1j * vals_imag

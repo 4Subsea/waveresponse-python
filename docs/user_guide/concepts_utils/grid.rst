@@ -17,7 +17,7 @@ from :class:`~scarlet_lithium.Grid`.
 
 
     freq = np.linspace(0.0, 1.0, 50)
-    dirs = np.linspace(0.0, 360.0, endpoint=False)
+    dirs = np.linspace(0.0, 360.0, 10, endpoint=False)
     vals = np.random.random((len(freq), len(dirs)))
 
     grid = Grid(
