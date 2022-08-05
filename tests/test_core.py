@@ -8,7 +8,7 @@ from scarlet_lithium import RAO, Grid, complex_to_polar, polar_to_complex
 def grid():
     freq = np.linspace(0, 1.0, 10)
     dirs = np.linspace(0, 360.0, 15, endpoint=False)
-    vals = np.zeros((10, 15))
+    vals = np.random.random((10, 15))
     grid = Grid(
         freq,
         dirs,
@@ -19,6 +19,26 @@ def grid():
         waves_coming_from=True,
     )
     return grid
+
+
+@pytest.fixture
+def rao():
+    freq = np.linspace(0, 1.0, 10)
+    dirs = np.linspace(0, 360.0, 15, endpoint=False)
+    vals_amp = np.random.random((10, 15))
+    vals_phase = np.random.random((10, 15))
+    rao = RAO.from_amp_phase(
+        freq,
+        dirs,
+        vals_amp,
+        vals_phase,
+        phase_degrees=False,
+        freq_hz=True,
+        degrees=True,
+        clockwise=True,
+        waves_coming_from=True,
+    )
+    return rao
 
 
 class Test_complex_to_polar:
