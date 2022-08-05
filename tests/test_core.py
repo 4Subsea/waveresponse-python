@@ -1956,3 +1956,39 @@ class Test_WaveSpectrum:
         tz_expect = np.sqrt(m0 / m2)
 
         assert tz_out == pytest.approx(tz_expect, rel=0.1)
+
+    def test_tp_hz(self):
+        freq = np.linspace(0, 2, 20)
+        dirs = np.arange(5, 360, 10)
+        vals = np.ones((len(freq), len(dirs)))
+
+        idx_dirs_max = 4
+        idx_freq_max = 10
+        vals[idx_freq_max, idx_dirs_max] = 2.0
+
+        wave = WaveSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+        tp_out = wave.tp
+
+        fp_expect = freq[idx_freq_max]
+        tp_expect = 1.0 / fp_expect
+
+        assert tp_out == tp_expect
+
+    def test_tp_rads(self):
+        freq = np.linspace(0, 2, 20)
+        dirs = np.arange(5, 360, 10)
+        vals = np.ones((len(freq), len(dirs)))
+
+        idx_dirs_max = 4
+        idx_freq_max = 10
+        vals[idx_freq_max, idx_dirs_max] = 2.0
+
+        wave = WaveSpectrum(freq, dirs, vals, freq_hz=False, degrees=True)
+
+        tp_out = wave.tp
+
+        fp_expect = freq[idx_freq_max] / (2.0 * np.pi)
+        tp_expect = 1.0 / fp_expect
+
+        assert tp_out == tp_expect

@@ -997,8 +997,7 @@ class WaveSpectrum(DirectionalSpectrum):
     @property
     def tz(self):
         """
-        Mean crossing period, Tz, (sometimes called the mean wave period) in
-        'seconds'.
+        Mean crossing period, Tz, (sometimes called the mean wave period) in 'seconds'.
 
         Calculated from the zeroth- and second-order spectral moments according to:
 
@@ -1007,3 +1006,15 @@ class WaveSpectrum(DirectionalSpectrum):
         m0 = self.moment(0)
         m2 = self.moment(2, freq_hz=True)
         return np.sqrt(m0 / m2)
+
+    @property
+    def tp(self):
+        """
+        Wave peak period in 'seconds'.
+
+        The period at which the 'non-directional' wave spectrum, ``S(f)``, has its maximum
+        value.
+        """
+        f, S = self.spectrum1d(axis=1, freq_hz=True)
+        fp = f[np.argmax(S)]
+        return 1.0 / fp
