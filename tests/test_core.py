@@ -47,6 +47,23 @@ def rao():
     return rao
 
 
+@pytest.fixture
+def directional_spectrum():
+    freq = np.linspace(0, 1.0, 10)
+    dirs = np.linspace(0, 360.0, 15, endpoint=False)
+    vals = np.random.random((10, 15))
+    spectrum = DirectionalSpectrum(
+        freq,
+        dirs,
+        vals,
+        freq_hz=True,
+        degrees=True,
+        clockwise=True,
+        waves_coming_from=True,
+    )
+    return spectrum
+
+
 class Test_complex_to_polar:
     def test_deg(self):
         complex_vals = np.array([1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j])
@@ -989,6 +1006,18 @@ class Test_Grid:
         )
         with pytest.raises(ValueError):
             grid * grid3
+
+    def test__mul__dir_spectrum(self, grid, directional_spectrum):
+        out = grid * directional_spectrum
+
+        assert isinstance(out, DirectionalSpectrum)
+        np.testing.assert_array_almost_equal(out._vals, grid._vals * directional_spectrum._vals)
+
+    def test__mul__rao(self, grid, rao):
+        out = grid * rao
+
+        assert isinstance(out, Grid)
+        np.testing.assert_array_almost_equal(out._vals, grid._vals * rao._vals)
 
     def test__abs__(self):
         freq_in = np.array([1, 2, 3])
