@@ -1195,26 +1195,7 @@ class Test_RAO:
         assert rao._degrees is True
         assert rao._phase_degrees is True
 
-    def test_conjugate(self):
-        freq_in = np.array([0, 1, 2])
-        dirs_in = np.array([0, 45, 90, 135])
-        vals_in = np.array(
-            [
-                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
-                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
-                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
-            ]
-        )
-        rao = RAO(
-            freq_in,
-            dirs_in,
-            vals_in,
-            freq_hz=True,
-            degrees=True,
-            clockwise=True,
-            waves_coming_from=True,
-        )
-
+    def test_conjugate(self, rao):
         rao_conj = rao.conjugate()
 
         assert isinstance(rao_conj, RAO)
@@ -1316,47 +1297,9 @@ class Test_RAO:
         np.testing.assert_array_almost_equal(amp_out, amp_expect)
         np.testing.assert_array_almost_equal(phase_out, phase_expect)
 
-    def test__abs__raises(self):
-        freq_in = np.array([0, 1, 2])
-        dirs_in = np.array([0, 45, 90, 135])
-        vals_in = np.array(
-            [
-                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
-                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
-                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
-            ]
-        )
-        rao = RAO(
-            freq_in,
-            dirs_in,
-            vals_in,
-            freq_hz=True,
-            degrees=True,
-            clockwise=True,
-            waves_coming_from=True,
-        )
-
+    def test__abs__raises(self, rao):
         with pytest.raises(TypeError):
             np.abs(rao)
 
-    def test__repr__(self):
-        freq_in = np.array([0, 1, 2])
-        dirs_in = np.array([0, 45, 90, 135])
-        vals_in = np.array(
-            [
-                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
-                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
-                [(1 + 2j), (3 + 4j), (5 + 6j), (7 + 8j)],
-            ]
-        )
-        rao = RAO(
-            freq_in,
-            dirs_in,
-            vals_in,
-            freq_hz=True,
-            degrees=True,
-            clockwise=True,
-            waves_coming_from=True,
-        )
-
+    def test__repr__(self, rao):
         assert str(rao) == "RAO"
