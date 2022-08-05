@@ -99,6 +99,8 @@ class Grid:
         self._vals = np.asarray_chkfinite(vals).copy()
         self._clockwise = clockwise
         self._waves_coming_from = waves_coming_from
+        self._freq_hz = freq_hz
+        self._degrees = degrees
 
         if freq_hz:
             self._freq = 2.0 * np.pi * self._freq
@@ -259,7 +261,7 @@ class Grid:
         new._dirs, new._vals = new._sort(dirs_new, new._vals)
         return new
 
-    def __call__(self, freq_hz=True, degrees=True):
+    def __call__(self, freq_hz=None, degrees=None):
         """
         Return a copy of the grid object's frequency/direction coordinates and corresponding
         values.
@@ -268,9 +270,10 @@ class Grid:
         ----------
         freq_hz : bool
             If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
+            Defaults to original units used during initialization.
         degrees : bool
             If directions should be returned in 'degrees'. If ``False``, 'radians'
-            is used.
+            is used. Defaults to original units used during initialization.
 
         Returns
         -------
@@ -285,6 +288,11 @@ class Grid:
         freq = self._freq.copy()
         dirs = self._dirs.copy()
         vals = self._vals.copy()
+
+        if freq_hz is None:
+            freq_hz = self._freq_hz
+        if degrees is None:
+            degrees = self._degrees
 
         if freq_hz:
             freq = 1.0 / (2.0 * np.pi) * freq
@@ -537,6 +545,27 @@ class RAO(Grid):
         convention is assumed.
     """
 
+    def __init__(
+        self,
+        freq,
+        dirs,
+        vals,
+        freq_hz=False,
+        degrees=False,
+        clockwise=False,
+        waves_coming_from=True,
+    ):
+        super().__init__(
+            freq,
+            dirs,
+            vals,
+            freq_hz=freq_hz,
+            degrees=degrees,
+            clockwise=clockwise,
+            waves_coming_from=waves_coming_from,
+        )
+        self._phase_degrees = False
+
     @classmethod
     def from_amp_phase(
         cls,
@@ -586,10 +615,9 @@ class RAO(Grid):
         obj :
             Initialized RAO object.
         """
-
         rao_complex = polar_to_complex(amp, phase, phase_degrees=phase_degrees)
 
-        return cls(
+        rao = cls(
             freq,
             dirs,
             rao_complex,
@@ -598,6 +626,8 @@ class RAO(Grid):
             clockwise=clockwise,
             waves_coming_from=waves_coming_from,
         )
+        rao._phase_degrees = phase_degrees
+        return rao
 
     def conjugate(self):
         """
@@ -607,7 +637,7 @@ class RAO(Grid):
         new._vals = new._vals.conjugate()
         return new
 
-    def to_amp_phase(self, phase_degrees=False, freq_hz=False, degrees=False):
+    def to_amp_phase(self, phase_degrees=None, freq_hz=None, degrees=None):
         """
         Return the RAO as amplitude and phase values.
 
@@ -615,12 +645,13 @@ class RAO(Grid):
         ----------
         phase_degrees : bool
             If phase values should be returned in 'degrees'. If ``False``, 'radians'
-            is used.
+            is used. Defaults to original units used during initialization or ``False``.
         freq_hz : bool
             If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
+            Defaults to original units used during initialization.
         degrees : bool
             If directions should be returned in 'degrees'. If ``False``, 'radians'
-            is used.
+            is used. Defaults to original units used during initialization.
 
         Returns
         -------
@@ -635,6 +666,13 @@ class RAO(Grid):
             RAO phase values as 2-D array of shape (N, M), such that ``N=len(freq)``
             and ``M=len(dirs)``.
         """
+        if freq_hz is None:
+            freq_hz = self._freq_hz
+        if degrees is None:
+            degrees = self._degrees
+        if phase_degrees is None:
+            phase_degrees = self._phase_degrees
+
         freq, dirs, vals = self(freq_hz=freq_hz, degrees=degrees)
         vals_amp, vals_phase = complex_to_polar(vals, phase_degrees=phase_degrees)
         return freq, dirs, vals_amp, vals_phase
