@@ -83,6 +83,8 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(grid._vals, vals)
         assert grid._clockwise is True
         assert grid._waves_coming_from is True
+        assert grid._freq_hz is True
+        assert grid._degrees is True
 
     def test__init__2(self):
         freq = np.linspace(0, 1.0, 10)
@@ -103,6 +105,8 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(grid._vals, vals)
         assert grid._clockwise is False
         assert grid._waves_coming_from is False
+        assert grid._freq_hz is False
+        assert grid._degrees is False
 
     def test__init__raises_duplicate_freq(self):
         with pytest.raises(ValueError):
@@ -1094,6 +1098,9 @@ class Test_RAO:
         np.testing.assert_array_almost_equal(rao._vals, vals_in)
         assert rao._clockwise is True
         assert rao._waves_coming_from is True
+        assert rao._freq_hz is True
+        assert rao._degrees is True
+        assert rao._phase_degrees is False
 
     def test_from_amp_phase_rad(self):
         freq_in = np.array([0, 1, 2])
@@ -1133,6 +1140,9 @@ class Test_RAO:
         np.testing.assert_array_almost_equal(rao._vals, vals_expect)
         assert rao._clockwise is True
         assert rao._waves_coming_from is True
+        assert rao._freq_hz is True
+        assert rao._degrees is True
+        assert rao._phase_degrees is False
 
     def test_from_amp_phase_deg(self):
         freq_in = np.array([0, 1, 2])
@@ -1174,6 +1184,9 @@ class Test_RAO:
         np.testing.assert_array_almost_equal(rao._vals, vals_expect)
         assert rao._clockwise is True
         assert rao._waves_coming_from is True
+        assert rao._freq_hz is True
+        assert rao._degrees is True
+        assert rao._phase_degrees is True
 
     def test_conjugate(self):
         freq_in = np.array([0, 1, 2])
