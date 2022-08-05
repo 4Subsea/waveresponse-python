@@ -407,7 +407,7 @@ class Grid:
         dirs,
         freq_hz=True,
         degrees=True,
-        complex_convert=None,
+        complex_convert="rectangular",
         fill_value=0.0,
     ):
         """
