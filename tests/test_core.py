@@ -191,21 +191,8 @@ class Test_Grid:
             vals = np.zeros((3, 10))
             Grid(freq, dirs, vals)
 
-    def test_wave_convention(self):
-        freq = np.linspace(0, 1.0, 10)
-        dirs = np.linspace(0, 360.0, 15, endpoint=False)
-        vals = np.zeros((10, 15))
-        grid = Grid(
-            freq,
-            dirs,
-            vals,
-            freq_hz=True,
-            degrees=True,
-            clockwise=False,
-            waves_coming_from=True,
-        )
-
-        convention_expect = {"clockwise": False, "waves_coming_from": True}
+    def test_wave_convention(self, grid):
+        convention_expect = {"clockwise": True, "waves_coming_from": True}
         convention_out = grid.wave_convention
         assert convention_out == convention_expect
 
@@ -941,20 +928,9 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(grid_squared._dirs, grid._dirs)
         np.testing.assert_array_almost_equal(grid_squared._vals, vals_expect)
 
-    def test__mul__raises_type(self):
-        freq_in = np.array([1, 2, 3])
-        dirs_in = np.array([0, 10, 20, 30])
-        vals_in = np.array(
-            [
-                [1, 2, 3, 4],
-                [1, 2, 3, 4],
-                [1, 2, 3, 4],
-            ]
-        )
-        grid = Grid(freq_in, dirs_in, vals_in, degrees=True)
-
+    def test__mul__raises_type(self, grid):
         with pytest.raises(ValueError):
-            grid * vals_in
+            grid * grid._vals
 
     def test__mul__raises_shape(self):
         freq_in = np.array([1, 2, 3])
@@ -981,64 +957,28 @@ class Test_Grid:
         with pytest.raises(ValueError):
             grid * grid2
 
-    def test__mul__raises_freq(self):
-        freq_in = np.array([1, 2, 3])
-        dirs_in = np.array([0, 10, 20, 30])
-        vals_in = np.array(
-            [
-                [1, 2, 3, 4],
-                [1, 2, 3, 4],
-                [1, 2, 3, 4],
-            ]
-        )
-        grid = Grid(freq_in, dirs_in, vals_in, degrees=True)
+    def test__mul__raises_freq(self, grid):
         grid2 = grid.copy()
         grid2._freq = 2.0 * grid2._freq
 
         with pytest.raises(ValueError):
             grid * grid2
 
-    def test__mul__raises_dirs(self):
-        freq_in = np.array([1, 2, 3])
-        dirs_in = np.array([0, 10, 20, 30])
-        vals_in = np.array(
-            [
-                [1, 2, 3, 4],
-                [1, 2, 3, 4],
-                [1, 2, 3, 4],
-            ]
-        )
-        grid = Grid(freq_in, dirs_in, vals_in, degrees=True)
+    def test__mul__raises_dirs(self, grid):
         grid2 = grid.copy()
         grid2._dirs = 2.0 * grid2._dirs
 
         with pytest.raises(ValueError):
             grid * grid2
 
-    def test__mul__raises_convention(self):
-        freq_in = np.array([1, 2, 3])
-        dirs_in = np.array([0, 10, 20, 30])
-        vals_in = np.array(
-            [
-                [1, 2, 3, 4],
-                [1, 2, 3, 4],
-                [1, 2, 3, 4],
-            ]
-        )
-        grid = Grid(
-            freq_in,
-            dirs_in,
-            vals_in,
-            degrees=True,
-            clockwise=True,
-            waves_coming_from=True,
-        )
+    def test__mul__raises_convention(self, grid):
+        grid.set_wave_convention(clockwise=False, waves_coming_from=False)
 
-        grid2 = grid.copy().set_wave_convention(clockwise=False)
+        grid2 = grid.copy().set_wave_convention(clockwise=True, waves_coming_from=False)
         with pytest.raises(ValueError):
             grid * grid2
 
-        grid3 = grid.copy().set_wave_convention(waves_coming_from=False)
+        grid3 = grid.copy().set_wave_convention(clockwise=False, waves_coming_from=False)
         with pytest.raises(ValueError):
             grid * grid3
 
