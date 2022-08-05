@@ -922,7 +922,7 @@ class DirectionalSpectrum(Grid):
 
     def moment(self, n, freq_hz=None):
         """
-        Spectral moment.
+        Calculate spectral moment (along the frequency domain).
 
         Parameters
         ----------
@@ -931,6 +931,11 @@ class DirectionalSpectrum(Grid):
         freq_hz : bool
             If frequencies in 'Hz' should be used. If ``False``, 'rad/s' is used.
             Defaults to original unit used during initialization.
+
+        Returns
+        -------
+        float :
+            Spectral moment.
         """
         f, spectrum = self.spectrum1d(axis=1, freq_hz=freq_hz)
         m_n = trapz((f ** n) * spectrum, f)
