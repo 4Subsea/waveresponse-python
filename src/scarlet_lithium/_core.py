@@ -699,6 +699,10 @@ class DirectionalSpectrum(Grid):
     """
     Directional spectrum.
 
+    The ``DirectionalSpectrum`` class inherits from the :class:`~scarlet_lithium.Grid`
+    class, and is a two-dimentional frequency/(wave)direction grid. The spectrum values
+    represents spectrum density.
+
     Parameters
     ----------
     freq : array-like
@@ -707,8 +711,8 @@ class DirectionalSpectrum(Grid):
         1-D array of grid direction coordinates. Positive and monotonically increasing.
         Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
     vals : array-like (N, M)
-        RAO values (complex) associated with the grid. Should be a 2-D array of shape (N, M),
-        such that ``N=len(freq)`` and ``M=len(dirs)``.
+        Spectrum density values associated with the grid. Should be a 2-D array
+        of shape (N, M), such that ``N=len(freq)`` and ``M=len(dirs)``.
     freq_hz : bool
         If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
     degrees : bool
@@ -775,7 +779,7 @@ class DirectionalSpectrum(Grid):
         dirs : array
             1-D array of grid direction coordinates.
         vals : array (N, M)
-            Spectrum values as 2-D array of shape (N, M), such that ``N=len(freq)``
+            Spectrum density values as 2-D array of shape (N, M), such that ``N=len(freq)``
             and ``M=len(dirs)``.
         """
         freq, dirs, vals = super().__call__(freq_hz=freq_hz, degrees=degrees)
@@ -822,7 +826,7 @@ class DirectionalSpectrum(Grid):
         Returns
         -------
         array :
-            Interpolated spectrum values.
+            Interpolated spectrum density values.
         """
 
         vals = super().interpolate(
@@ -892,7 +896,7 @@ class DirectionalSpectrum(Grid):
             Spectrum bins corresponding to the specified axis. `axis=1` yields
             frequencies, while `axis=0` yields directions.
         spectrum : 1-D array
-            Spectrum values, where the spectrum is integrated over the
+            Spectrum density values, where the spectrum is integrated over the
             specified axis.
         """
 
