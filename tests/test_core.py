@@ -1746,7 +1746,7 @@ class Test_DirectionalSpectrum:
         np.testing.assert_array_almost_equal(dir_out, dir_expect)
         np.testing.assert_array_almost_equal(spectrum1d_out, spectrum1d_expect)
 
-    def test_m0_hz(self):
+    def test_moment_m0_hz(self):
         f0 = 0.0
         f1 = 2.0
 
@@ -1761,7 +1761,7 @@ class Test_DirectionalSpectrum:
 
         assert m_out == pytest.approx(m_expect)
 
-    def test_m0_rads(self):
+    def test_moment_m0_rads(self):
         f0 = 0.0
         f1 = 2.0
 
@@ -1776,7 +1776,7 @@ class Test_DirectionalSpectrum:
 
         assert m_out == pytest.approx(m_expect)
 
-    def test_m1_hz(self):
+    def test_moment_m1_hz(self):
         f0 = 0.0
         f1 = 2.0
 
@@ -1791,7 +1791,7 @@ class Test_DirectionalSpectrum:
 
         assert m_out == pytest.approx(m_expect)
 
-    def test_m1_rads(self):
+    def test_moment_m1_rads(self):
         f0 = 0.0
         f1 = 2.0
 
@@ -1806,7 +1806,7 @@ class Test_DirectionalSpectrum:
 
         assert m_out == pytest.approx(m_expect)
 
-    def test_m2_hz(self):
+    def test_moment_m2_hz(self):
         f0 = 0.0
         f1 = 2.0
 
@@ -1822,7 +1822,7 @@ class Test_DirectionalSpectrum:
         # not exactly same due to error in trapz for higher order functions
         assert m_out == pytest.approx(m_expect, rel=0.1)
 
-    def test_m2_rads(self):
+    def test_moment_m2_rads(self):
         f0 = 0.0
         f1 = 2.0
 
