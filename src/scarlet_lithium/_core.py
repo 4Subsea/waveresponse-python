@@ -245,13 +245,13 @@ class Grid:
         angle : float
             Rotation angle.
         degrees : bool
-            Weather the rotation angle is given in degrees. If ``False``, radians
+            Weather the rotation angle is given in 'degrees'. If ``False``, 'radians'
             is assumed.
 
         Returns
         -------
         obj :
-            A copy of the Grid object where the underlying coordinate system is rotated.
+            A copy of the object where the underlying coordinate system is rotated.
         """
         if degrees:
             angle = (np.pi / 180.0) * angle
@@ -442,7 +442,7 @@ class Grid:
         Returns
         -------
         obj :
-            Reshaped object.
+            A copy of the object where the underlying coordinate system is reshaped.
         """
         freq_new = np.asarray_chkfinite(freq).copy()
         dirs_new = np.asarray_chkfinite(dirs).copy()
@@ -482,7 +482,7 @@ class Grid:
         Returns
         -------
         obj :
-            New Grid object.
+            A copy of the object where the values are multiplied with another Grid.
         """
         if not isinstance(other, Grid):
             raise ValueError()
@@ -631,7 +631,7 @@ class RAO(Grid):
 
     def conjugate(self):
         """
-        Return a copy of the RAO object with complex conjugate values.
+        Return a copy of the object with complex conjugate values.
         """
         new = self.copy()
         new._vals = new._vals.conjugate()
