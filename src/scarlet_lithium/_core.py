@@ -13,8 +13,8 @@ def complex_to_polar(complex_vals, phase_degrees=False):
     complex_vals : array-like
         Complex number values.
     phase_degrees : bool
-        Weather the phase angle should be returned in degrees. If ``False``, radians
-        is assumed.
+        Weather the phase angles should be returned in 'degrees'. If ``False``,
+        'radians' is assumed.
 
     Returns
     -------
@@ -30,6 +30,22 @@ def complex_to_polar(complex_vals, phase_degrees=False):
 
 
 def polar_to_complex(amp, phase, phase_degrees=False):
+    """
+    Convert polar coordinates (i.e., amplitude and phase) to complex numbers.
+
+    Parameters
+    ----------
+    complex_vals : array-like
+        Complex number values.
+    phase_degrees : bool
+        Weather the phase angles are given in 'degrees'. If ``False``, 'radians'
+        is assumed.
+
+    Returns
+    -------
+    array :
+        Complex numbers.
+    """
     amp = np.asarray_chkfinite(amp).copy()
     phase = np.asarray_chkfinite(phase).copy()
 
