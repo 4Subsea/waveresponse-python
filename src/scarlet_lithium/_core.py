@@ -864,3 +864,58 @@ class DirectionalSpectrum(Grid):
         Standard deviation of the spectrum.
         """
         return np.sqrt(self.var())
+
+    def spectrum1d(self, axis=1, freq_hz=None, degrees=None):
+        """
+        Integrate the spectrum over a given axis.
+
+        Parameters
+        ----------
+        axis : int
+            Axis along which integration of the spectrum is done. For `axis=1`
+            (default) the spectrum is integrated over direction, resulting
+            in the so-called 'non-directional' spectrum. For `axis=0` the
+            spectrum is integrated over frequency, resulting in the directional
+            'distribution' of the spectrum.
+        freq_hz : bool
+            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is
+            used. This option is only relevant if `axis=1`. Defaults to original
+            unit used during instantiation.
+        degrees : bool
+            If directions should be returned in degrees. This option is only
+            relevant if `axis=0`. Defaults to original unit used during
+            instantiation.
+
+        Returns
+        -------
+        x : 1-D array
+            Spectrum bins corresponding to the specified axis. `axis=1` yields
+            frequencies, while `axis=0` yields directions.
+        spectrum : 1-D array
+            Spectrum values, where the spectrum is integrated over the
+            specified axis.
+        """
+
+        if freq_hz is None:
+            freq_hz = self._freq_hz
+
+        if axis == 1:
+            degrees = False
+        elif degrees is None:
+            degrees = self._degrees
+
+        freq, dirs, vals = self(freq_hz=freq_hz, degrees=degrees)
+
+        if axis == 0:
+            y = freq
+            x = dirs
+            zz = vals.T
+        elif axis == 1:
+            y = self._full_range_dir(dirs)
+            x = freq
+            zz = self.interpolate(x, y, freq_hz=freq_hz, degrees=degrees)
+        else:
+            raise ValueError("'axis' must be 0 or 1.")
+
+        spectrum = np.array([trapz(zz_y, y) for zz_y in zz])
+        return x, spectrum
