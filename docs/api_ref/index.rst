@@ -8,3 +8,4 @@ functions and methods.
 
    grid
    rao
+   directional_spectrum
