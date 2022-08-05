@@ -1073,20 +1073,7 @@ class Test_Grid:
 
         np.testing.assert_array_almost_equal(grid_abs._vals, vals_expect)
 
-    def test__repr__(self):
-        freq = np.linspace(0, 1.0, 10)
-        dirs = np.linspace(0, 360.0, 15, endpoint=False)
-        vals = np.zeros((10, 15))
-        grid = Grid(
-            freq,
-            dirs,
-            vals,
-            freq_hz=True,
-            degrees=True,
-            clockwise=True,
-            waves_coming_from=True,
-        )
-
+    def test__repr__(self, grid):
         assert str(grid) == "Grid"
 
 
