@@ -1992,3 +1992,23 @@ class Test_WaveSpectrum:
         tp_expect = 1.0 / fp_expect
 
         assert tp_out == tp_expect
+
+    testdata_mean_direction = [
+        (0.0, np.pi / 2, np.pi / 4),
+        (np.pi / 2.0, np.pi, 3.0 * np.pi / 4),
+        (np.pi, 3.0 * np.pi / 2.0, 5.0 * np.pi / 4),
+        (3.0 * np.pi / 2.0, 2.0 * np.pi, 7.0 * np.pi / 4),
+        (np.pi / 2.0, 3.0 * np.pi / 2.0, np.pi),
+    ]
+
+    @pytest.mark.parametrize("d0,d1,expect", testdata_mean_direction)
+    def test_mean_direction(self, d0, d1, expect):
+        dirs = np.linspace(0, 2.0 * np.pi, 100)
+        spectrum1d = np.zeros_like(dirs)
+
+        dirs_mask = (dirs >= d0) & (dirs <= d1)
+        spectrum1d[dirs_mask] = 1.0
+
+        out = WaveSpectrum._mean_direction(dirs, spectrum1d)
+
+        assert out == pytest.approx(expect, rel=0.1)

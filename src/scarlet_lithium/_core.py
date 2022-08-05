@@ -1018,3 +1018,19 @@ class WaveSpectrum(DirectionalSpectrum):
         f, S = self.spectrum1d(axis=1, freq_hz=True)
         fp = f[np.argmax(S)]
         return 1.0 / fp
+
+    @staticmethod
+    def _mean_direction(dirs, spectrum):
+        """
+        Mean spectrum direction.
+
+        Parameters
+        ----------
+        dirs : array-like
+            Directions in 'radians'.
+        spectrum : array-like
+            1-D spectrum directional distribution.
+        """
+        sin = trapz(np.sin(dirs) * spectrum, dirs)
+        cos = trapz(np.cos(dirs) * spectrum, dirs)
+        return np.arctan2(sin, cos) % (2.0 * np.pi)
