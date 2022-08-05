@@ -1787,7 +1787,7 @@ class Test_DirectionalSpectrum:
 
         m_out = spectrum.moment(1, freq_hz=True)
 
-        m_expect = (1.0 / 2.0) * (0.0 - 360.0) * (f0 ** 2 - f1 ** 2)
+        m_expect = (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2)
 
         assert m_out == pytest.approx(m_expect)
 
@@ -1802,7 +1802,7 @@ class Test_DirectionalSpectrum:
 
         m_out = spectrum.moment(1, freq_hz=False)
 
-        m_expect = (1.0 / 2.0) * (0.0 - 360.0) * (f0 ** 2 - f1 ** 2) * (2.0 * np.pi)
+        m_expect = (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2) * (2.0 * np.pi)
 
         assert m_out == pytest.approx(m_expect)
 
@@ -1817,7 +1817,7 @@ class Test_DirectionalSpectrum:
 
         m_out = spectrum.moment(2, freq_hz=True)
 
-        m_expect = (1.0 / 3.0) * (0.0 - 360.0) * (f0 ** 3 - f1 ** 3)
+        m_expect = (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3)
 
         # not exactly same due to error in trapz for higher order functions
         assert m_out == pytest.approx(m_expect, rel=0.1)
@@ -1834,7 +1834,7 @@ class Test_DirectionalSpectrum:
         m_out = spectrum.moment(2, freq_hz=False)
 
         m_expect = (
-            (1.0 / 3.0) * (0.0 - 360.0) * (f0 ** 3 - f1 ** 3) * (2.0 * np.pi) ** 2
+            (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (2.0 * np.pi) ** 2
         )
 
         # not exactly same due to error in trapz for higher order functions

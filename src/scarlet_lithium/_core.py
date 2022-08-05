@@ -497,7 +497,7 @@ class Grid:
         elif self.wave_convention != other.wave_convention:
             raise ValueError()
 
-        return Grid(
+        new = Grid(
             self._freq,
             self._dirs,
             self._vals * other._vals,
@@ -505,6 +505,13 @@ class Grid:
             degrees=False,
             **self.wave_convention
         )
+
+        if isinstance(self, DirectionalSpectrum) or isinstance(
+            other, DirectionalSpectrum
+        ):
+            return DirectionalSpectrum.from_grid(new)
+
+        return new
 
     def __abs__(self):
         """
@@ -732,7 +739,7 @@ class DirectionalSpectrum(Grid):
         vals,
         freq_hz=False,
         degrees=False,
-        clockwise=True,
+        clockwise=False,
         waves_coming_from=True,
     ):
         super().__init__(
@@ -755,6 +762,31 @@ class DirectionalSpectrum(Grid):
             raise ValueError("Spectrum values can not be complex.")
         elif np.any(self._vals < 0.0):
             raise ValueError("Spectrum values must be positive.")
+
+    @classmethod
+    def from_grid(cls, grid):
+        """
+        Construct a ``DirectionalSpectrum`` object from a ``Grid``.
+
+        Parameters
+        ----------
+        grid : obj
+            Grid object.
+
+        Returns
+        -------
+        cls :
+            Initialized DirectionalSpectrum object.
+        """
+        return cls(
+            grid._freq,
+            grid._dirs,
+            grid._vals,
+            freq_hz=False,
+            degrees=False,
+            clockwise=grid._clockwise,
+            waves_coming_from=grid._waves_coming_from,
+        )
 
     def __repr__(self):
         return "DirectionalSpectrum"
@@ -942,5 +974,5 @@ class DirectionalSpectrum(Grid):
             Spectral moment.
         """
         f, spectrum = self.spectrum1d(axis=1, freq_hz=freq_hz)
-        m_n = trapz((f ** n) * spectrum, f)
+        m_n = trapz((f**n) * spectrum, f)
         return m_n
