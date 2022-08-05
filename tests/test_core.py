@@ -1484,21 +1484,8 @@ class Test_DirectionalSpectrum:
         with pytest.raises(ValueError):
             DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
 
-    def test__repr___(self):
-        freq_in = np.arange(0.0, 1, 0.1)
-        dirs_in = np.arange(5.0, 360.0, 10.0)
-        vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
-        spectrum = DirectionalSpectrum(
-            freq_in,
-            dirs_in,
-            vals_in,
-            freq_hz=True,
-            degrees=True,
-            clockwise=True,
-            waves_coming_from=True,
-        )
-
-        assert str(spectrum) == "DirectionalSpectrum"
+    def test__repr___(self, directional_spectrum):
+        assert str(directional_spectrum) == "DirectionalSpectrum"
 
     def test__call___rads_rad(self):
         freq_in = np.arange(0.0, 1, 0.1)
