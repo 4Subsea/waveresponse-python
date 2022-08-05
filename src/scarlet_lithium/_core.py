@@ -91,7 +91,7 @@ class Grid:
         vals,
         freq_hz=False,
         degrees=False,
-        clockwise=True,
+        clockwise=False,
         waves_coming_from=True,
     ):
         self._freq = np.asarray_chkfinite(freq).copy()
