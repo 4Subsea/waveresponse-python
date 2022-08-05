@@ -834,6 +834,7 @@ class DirectionalSpectrum(Grid):
         freq_hz=True,
         degrees=True,
         fill_value=0.0,
+        **kwargs,
     ):
         """
         Interpolate (linear) the spectrum values to match the given frequency and direction
