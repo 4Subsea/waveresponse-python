@@ -1679,3 +1679,69 @@ class Test_DirectionalSpectrum:
         )
 
         assert std_out == pytest.approx(np.sqrt(integral_expect))
+
+    def test_spectrum1d_axis1_hz(self):
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.arange(5.0, 360.0, 10)
+        vp = np.ones((len(yp), len(xp)))
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        f_out, spectrum1d_out = spectrum.spectrum1d(axis=1, freq_hz=True)
+
+        f_expect = yp
+        spectrum1d_expect = np.array([360.0 - 0.0] * len(f_expect))
+
+        np.testing.assert_array_almost_equal(f_out, f_expect)
+        np.testing.assert_array_almost_equal(spectrum1d_out, spectrum1d_expect)
+
+    def test_spectrum1d_axis1_rads(self):
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.linspace(0.0, 359.0, 10)
+        vp = np.ones((len(yp), len(xp)))
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        f_out, spectrum1d_out = spectrum.spectrum1d(axis=1, freq_hz=False)
+
+        f_expect = yp * (2.0 * np.pi)
+        spectrum1d_expect = np.array([360.0 - 0.0] * len(f_expect)) / (2.0 * np.pi)
+
+        np.testing.assert_array_almost_equal(f_out, f_expect)
+        np.testing.assert_array_almost_equal(spectrum1d_out, spectrum1d_expect)
+
+    def test_spectrum1d_axis0_deg(self):
+        f0 = 0.0
+        f1 = 2.0
+        d0 = 0.0
+        d1 = 359.0
+
+        yp = np.linspace(f0, f1, 20)
+        xp = np.linspace(d0, d1, 10)
+        vp = np.ones((len(yp), len(xp)))
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        dir_out, spectrum1d_out = spectrum.spectrum1d(axis=0, degrees=True)
+
+        dir_expect = xp
+        spectrum1d_expect = np.array([f1 - f0] * len(dir_expect))
+
+        np.testing.assert_array_almost_equal(dir_out, dir_expect)
+        np.testing.assert_array_almost_equal(spectrum1d_out, spectrum1d_expect)
+
+    def test_spectrum1d_axis0_rad(self):
+        f0 = 0.0
+        f1 = 2.0
+        d0 = 0.0
+        d1 = 359.0
+
+        yp = np.linspace(f0, f1, 20)
+        xp = np.linspace(d0, d1, 10)
+        vp = np.ones((len(yp), len(xp)))
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        dir_out, spectrum1d_out = spectrum.spectrum1d(axis=0, degrees=False)
+
+        dir_expect = xp * (np.pi / 180.0)
+        spectrum1d_expect = np.array([f1 - f0] * len(dir_expect)) / (np.pi / 180.0)
+
+        np.testing.assert_array_almost_equal(dir_out, dir_expect)
+        np.testing.assert_array_almost_equal(spectrum1d_out, spectrum1d_expect)
