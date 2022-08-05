@@ -766,7 +766,13 @@ class DirectionalSpectrum(Grid):
     @classmethod
     def from_grid(cls, grid):
         """
-        Construct a ``DirectionalSpectrum`` object from a ``Grid``.
+        Construct a ``DirectionalSpectrum`` object from a ``Grid`` object.
+
+        It is assumed that the grid's values represent spectrum density values that
+        correspond to frequency/direction units given during initialization. Note
+        that if you scale the frequency/direction bins of the spectrum, you must
+        also scale the corresponding spectrum density values (since the total energy/integral
+        of the spectrum should be preserved).
 
         Parameters
         ----------
@@ -779,13 +785,10 @@ class DirectionalSpectrum(Grid):
             Initialized DirectionalSpectrum object.
         """
         return cls(
-            grid._freq,
-            grid._dirs,
-            grid._vals,
-            freq_hz=False,
-            degrees=False,
-            clockwise=grid._clockwise,
-            waves_coming_from=grid._waves_coming_from,
+            *grid(freq_hz=grid._freq_hz, degrees=grid._degrees),
+            freq_hz=grid._freq_hz,
+            degrees=grid._degrees,
+            **grid.wave_convention
         )
 
     def __repr__(self):

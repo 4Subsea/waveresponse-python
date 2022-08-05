@@ -1855,3 +1855,21 @@ class Test_DirectionalSpectrum:
 
         # not exactly same due to error in trapz for higher order functions
         assert m_out == pytest.approx(m_expect, rel=0.1)
+
+    def test_from_grid(self, grid):
+        spectrum = DirectionalSpectrum.from_grid(grid)
+
+        vals_expect = grid._vals.copy()
+        if grid._freq_hz:
+            vals_expect /= 2.0 * np.pi
+        if grid._degrees:
+            vals_expect /= np.pi / 180.0
+
+        assert isinstance(spectrum, DirectionalSpectrum)
+        np.testing.assert_array_almost_equal(spectrum._freq, grid._freq)
+        np.testing.assert_array_almost_equal(spectrum._dirs, grid._dirs)
+        np.testing.assert_array_almost_equal(spectrum._vals, vals_expect)
+        assert spectrum._clockwise == grid._clockwise
+        assert spectrum._waves_coming_from == grid._waves_coming_from
+        assert spectrum._freq_hz == grid._freq_hz
+        assert spectrum._degrees == grid._degrees
