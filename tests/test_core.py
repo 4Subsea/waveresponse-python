@@ -2046,3 +2046,35 @@ class Test_WaveSpectrum:
         dirp_expect = expect
 
         assert dirp_out == pytest.approx(dirp_expect, rel=0.1)
+
+    @pytest.mark.parametrize("d0,d1,expect", testdata_mean_direction)
+    def test_dirm_deg(self, d0, d1, expect):
+        freq = np.linspace(0, 2, 20)
+        dirs = np.linspace(0, 2.0 * np.pi - 1e-3, 100)
+        vals = np.zeros((len(freq), len(dirs)))
+
+        dirs_mask = (dirs >= d0) & (dirs <= d1)
+        vals[:, dirs_mask] = 1.0
+
+        wave = WaveSpectrum(freq, dirs, vals, freq_hz=True, degrees=False)
+
+        dirm_out = wave.dirm(degrees=True)
+        dirm_expect = (180.0 / np.pi) * expect
+
+        assert dirm_out == pytest.approx(dirm_expect, rel=0.1)
+
+    @pytest.mark.parametrize("d0,d1,expect", testdata_mean_direction)
+    def test_dirm_rad(self, d0, d1, expect):
+        freq = np.linspace(0, 2, 20)
+        dirs = np.linspace(0, 2.0 * np.pi - 1e-3, 100)
+        vals = np.zeros((len(freq), len(dirs)))
+
+        dirs_mask = (dirs >= d0) & (dirs <= d1)
+        vals[:, dirs_mask] = 1.0
+
+        wave = WaveSpectrum(freq, dirs, vals, freq_hz=True, degrees=False)
+
+        dirm_out = wave.dirm(degrees=False)
+        dirm_expect = expect
+
+        assert dirm_out == pytest.approx(dirm_expect, rel=0.1)

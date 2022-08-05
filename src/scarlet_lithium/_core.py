@@ -1066,3 +1066,27 @@ class WaveSpectrum(DirectionalSpectrum):
             dirp = (180.0 / np.pi) * dirp
 
         return dirp
+
+    def dirm(self, degrees=None):
+        """
+        Mean wave direction.
+
+        Parameters
+        ----------
+        degrees : bool
+            If mean wave direction should be returned in 'degrees'. If ``False``,
+            the direction is returned in 'radians'. Defaults to original unit used
+            during instantiation.
+        """
+
+        dp, sp = self.spectrum1d(axis=0, degrees=False)
+
+        d = self._full_range_dir(dp)
+        spectrum_dir = np.interp(d, dp, sp, period=2.0 * np.pi)
+
+        dirm = self._mean_direction(d, spectrum_dir)
+
+        if degrees:
+            dirm = np.degrees(dirm)
+
+        return dirm
