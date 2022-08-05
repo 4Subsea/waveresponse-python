@@ -978,7 +978,9 @@ class Test_Grid:
         with pytest.raises(ValueError):
             grid * grid2
 
-        grid3 = grid.copy().set_wave_convention(clockwise=False, waves_coming_from=False)
+        grid3 = grid.copy().set_wave_convention(
+            clockwise=False, waves_coming_from=False
+        )
         with pytest.raises(ValueError):
             grid * grid3
 
