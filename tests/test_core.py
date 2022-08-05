@@ -1745,3 +1745,97 @@ class Test_DirectionalSpectrum:
 
         np.testing.assert_array_almost_equal(dir_out, dir_expect)
         np.testing.assert_array_almost_equal(spectrum1d_out, spectrum1d_expect)
+
+    def test_m0_hz(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        yp = np.linspace(f0, f1, 20)
+        xp = np.arange(5, 360, 10)
+        vp = np.ones((len(yp), len(xp)))
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        m_out = spectrum.moment(0, freq_hz=True)
+
+        m_expect = (0.0 - 360.0) * (f0 - f1)
+
+        assert m_out == pytest.approx(m_expect)
+
+    def test_m0_rads(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        yp = np.linspace(f0, f1, 20)
+        xp = np.arange(5, 360, 10)
+        vp = np.ones((len(yp), len(xp)))
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        m_out = spectrum.moment(0, freq_hz=False)
+
+        m_expect = (0.0 - 360.0) * (f0 - f1)
+
+        assert m_out == pytest.approx(m_expect)
+
+    def test_m1_hz(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        yp = np.linspace(f0, f1, 20)
+        xp = np.arange(5, 360, 10)
+        vp = np.ones((len(yp), len(xp)))
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        m_out = spectrum.moment(1, freq_hz=True)
+
+        m_expect = (1.0 / 2.0) * (0.0 - 360.0) * (f0 ** 2 - f1 ** 2)
+
+        assert m_out == pytest.approx(m_expect)
+
+    def test_m1_rads(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        yp = np.linspace(f0, f1, 20)
+        xp = np.arange(5, 360, 10)
+        vp = np.ones((len(yp), len(xp)))
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        m_out = spectrum.moment(1, freq_hz=False)
+
+        m_expect = (1.0 / 2.0) * (0.0 - 360.0) * (f0 ** 2 - f1 ** 2) * (2.0 * np.pi)
+
+        assert m_out == pytest.approx(m_expect)
+
+    def test_m2_hz(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        yp = np.linspace(f0, f1, 20)
+        xp = np.arange(5, 360, 10)
+        vp = np.ones((len(yp), len(xp)))
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        m_out = spectrum.moment(2, freq_hz=True)
+
+        m_expect = (1.0 / 3.0) * (0.0 - 360.0) * (f0 ** 3 - f1 ** 3)
+
+        # not exactly same due to error in trapz for higher order functions
+        assert m_out == pytest.approx(m_expect, rel=0.1)
+
+    def test_m2_rads(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        yp = np.linspace(f0, f1, 20)
+        xp = np.arange(5, 360, 10)
+        vp = np.ones((len(yp), len(xp)))
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        m_out = spectrum.moment(2, freq_hz=False)
+
+        m_expect = (
+            (1.0 / 3.0) * (0.0 - 360.0) * (f0 ** 3 - f1 ** 3) * (2.0 * np.pi) ** 2
+        )
+
+        # not exactly same due to error in trapz for higher order functions
+        assert m_out == pytest.approx(m_expect, rel=0.1)
