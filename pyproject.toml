@@ -20,6 +20,10 @@ classifiers = [
     "Operating System :: Unix", 
     "Operating System :: Microsoft :: Windows",
 ]
+dependencies = [
+    "numpy",
+    "scipy",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/4Subsea/scarlet-lithium-python"

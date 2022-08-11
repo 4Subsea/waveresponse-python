@@ -1,5 +1,5 @@
-4Insight QA Utilites for Python
-=======================================
+Vessel motion and wave utilities
+================================
 
 Awesome intro here 
 
