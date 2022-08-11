@@ -59,3 +59,21 @@ This function is roughly equivalent to:
         wave_body = wave_body.reshape(freq_, dirs_, freq_hz=False, degrees=False)
 
         return rao_squared * wave_body
+
+The response is returned as a :class:`~scarlet_lithium.DirectionalSpectrum` object,
+and provides useful spectrum operations such as:
+
+.. code-block:: python
+
+    # Get non-directional response spectrum
+    spectrum1d = response.spectrum1d(axis=1)
+
+    # Calculate response variance
+    var = response.var()
+
+    # Calculate response standard deviation
+    std = response.std()
+
+    # Etc.
+
+
