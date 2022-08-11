@@ -13,7 +13,7 @@ def complex_to_polar(complex_vals, phase_degrees=False):
     complex_vals : array-like
         Complex number values.
     phase_degrees : bool
-        Weather the phase angles should be returned in 'degrees'. If ``False``,
+        Whether the phase angles should be returned in 'degrees'. If ``False``,
         'radians' is assumed.
 
     Returns
