@@ -197,6 +197,7 @@ class Grid:
             Original wave direction convention.
         degrees : bool
             If directions are given in 'degrees'. If ``False``, 'radians' is assumed.
+        
         Return
         ------
         dirs : numpy.array
