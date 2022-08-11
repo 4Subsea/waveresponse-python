@@ -333,12 +333,14 @@ class Grid:
                     phase_degrees=False,
                 )
             )
-        else:
+        elif complex_convert.lower() == "rectangular":
             interp_real = interp2d(xp, yp, np.real(zp), **kw)
             interp_imag = interp2d(xp, yp, np.imag(zp), **kw)
             return lambda *args, **kwargs: (
                 interp_real(*args, **kwargs) + 1j * interp_imag(*args, **kwargs)
             )
+        else:
+            raise ValueError("Unknown 'complex_convert' type")
 
     def interpolate(
         self,
