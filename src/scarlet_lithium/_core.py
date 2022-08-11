@@ -38,7 +38,7 @@ def polar_to_complex(amp, phase, phase_degrees=False):
     complex_vals : array-like
         Complex number values.
     phase_degrees : bool
-        Weather the phase angles are given in 'degrees'. If ``False``, 'radians'
+        Whether the phase angles are given in 'degrees'. If ``False``, 'radians'
         is assumed.
 
     Returns
