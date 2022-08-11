@@ -23,7 +23,7 @@ def complex_to_polar(complex_vals, phase_degrees=False):
     phase : array
         Phase angles.
     """
-    complex_vals = np.asarray_chkfinite(complex_vals).copy()
+    complex_vals = np.asarray_chkfinite(complex_vals)
     amp = np.abs(complex_vals)
     phase = np.angle(complex_vals, deg=phase_degrees)
     return amp, phase
@@ -46,8 +46,8 @@ def polar_to_complex(amp, phase, phase_degrees=False):
     array :
         Complex numbers.
     """
-    amp = np.asarray_chkfinite(amp).copy()
-    phase = np.asarray_chkfinite(phase).copy()
+    amp = np.asarray_chkfinite(amp)
+    phase = np.asarray_chkfinite(phase)
 
     if phase_degrees:
         phase = (np.pi / 180.0) * phase
