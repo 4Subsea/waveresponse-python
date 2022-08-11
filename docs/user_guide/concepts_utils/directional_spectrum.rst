@@ -4,7 +4,7 @@ The :class:`~scarlet_lithium.DirectionalSpectrum` class provides an interface fo
 handling 2-D directional spectra. :class:`~scarlet_lithium.DirectionalSpectrum`
 inherits from :class:`~scarlet_lithium.Grid`, and contains spectrum density values
 on a two-dimentional frequency/(wave)direction grid. :class:`~scarlet_lithium.DirectionalSpectrum`
-serves as the base class for :class:`~scarlet_lithium.WaveSpectrum`.
+is the base class for :class:`~scarlet_lithium.WaveSpectrum`.
 
 The :class:`~scarlet_lithium.DirectionalSpectrum` is initialized with a frequency
 list (1-D array), a direction list (1-D array) and corresponding spectrum density
@@ -45,9 +45,8 @@ Calculate the variance (i.e., integral) and standard deviation of the spectrum:
     std = spectrum.std()
 
 Integrate over one of the axes to obtain a one-dimentional spectrum. You can specify
-weather to integrate over the frequency axis, or the direction axis, by setting the
-appropriate `axis` parameter. ``axis=1`` yields integration over direction, while
-``axis=0`` yields integration over frequency.
+whether to integrate over the frequency axis (``axis=0``), or the direction axis
+(``axis=1``), by setting the appropriate `axis` parameter.
 
 .. code-block:: python
 
@@ -57,7 +56,7 @@ appropriate `axis` parameter. ``axis=1`` yields integration over direction, whil
     # Directional "distribution"
     spectrum_dir = spectrum1d(axis=0)
 
-Spectral moments are calculated by calling the :meth:`~scarlet_lithium.DirectionalSpectrum.moment`
+Calculate spectral moments by calling the :meth:`~scarlet_lithium.DirectionalSpectrum.moment`
 method with the desired order, `n`.
 
 .. code-block:: python
