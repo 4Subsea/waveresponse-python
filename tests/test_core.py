@@ -1951,7 +1951,7 @@ class Test_WaveSpectrum:
         tz_out = wave.tz
 
         m0 = (0.0 - 360.0) * (f0 - f1)
-        m2 = (1.0 / 3.0) * (0.0 - 360.0) * (f0 ** 3 - f1 ** 3)
+        m2 = (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3)
 
         tz_expect = np.sqrt(m0 / m2)
 

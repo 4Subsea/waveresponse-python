@@ -503,7 +503,7 @@ class Grid:
             self._vals * other._vals,
             freq_hz=False,
             degrees=False,
-            **self.wave_convention
+            **self.wave_convention,
         )
 
         if isinstance(self, DirectionalSpectrum) or isinstance(
@@ -695,7 +695,7 @@ class RAO(Grid):
             np.abs(self._vals),
             freq_hz=False,
             degrees=False,
-            **self.wave_convention
+            **self.wave_convention,
         )
 
     def __repr__(self):
@@ -788,7 +788,7 @@ class DirectionalSpectrum(Grid):
             *grid(freq_hz=grid._freq_hz, degrees=grid._degrees),
             freq_hz=grid._freq_hz,
             degrees=grid._degrees,
-            **grid.wave_convention
+            **grid.wave_convention,
         )
 
     def __repr__(self):
