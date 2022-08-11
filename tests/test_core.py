@@ -1286,9 +1286,16 @@ class Test_RAO:
         np.testing.assert_array_almost_equal(amp_out, amp_expect)
         np.testing.assert_array_almost_equal(phase_out, phase_expect)
 
-    def test__abs__raises(self, rao):
-        with pytest.raises(TypeError):
-            np.abs(rao)
+    def test__abs__(self, rao):
+        out = np.abs(rao)
+
+        assert isinstance(out, Grid)
+        assert not isinstance(out, RAO)
+        np.testing.assert_array_almost_equal(out._freq, rao._freq)
+        np.testing.assert_array_almost_equal(out._dirs, rao._dirs)
+        np.testing.assert_array_almost_equal(out._vals, np.abs(rao._vals))
+        assert out._clockwise == rao._clockwise
+        assert rao._waves_coming_from == rao._waves_coming_from
 
     def test__repr__(self, rao):
         assert str(rao) == "RAO"

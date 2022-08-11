@@ -681,7 +681,14 @@ class RAO(Grid):
         return freq, dirs, vals_amp, vals_phase
 
     def __abs__(self):
-        raise TypeError("RAO values can not be converted to absolute values.")
+        return Grid(
+            self._freq,
+            self._dirs,
+            np.abs(self._vals),
+            freq_hz=False,
+            degrees=False,
+            **self.wave_convention
+        )
 
     def __repr__(self):
         return "RAO"
