@@ -75,5 +75,3 @@ and provides useful spectrum operations such as:
     std = response.std()
 
     # Etc.
-
-
