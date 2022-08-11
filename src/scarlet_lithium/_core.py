@@ -116,6 +116,47 @@ class Grid:
                 "and ``M=len(dirs)``."
             )
 
+    def __call__(self, freq_hz=None, degrees=None):
+        """
+        Return a copy of the grid object's frequency/direction coordinates and corresponding
+        values.
+
+        Parameters
+        ----------
+        freq_hz : bool
+            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
+            Defaults to original units used during initialization.
+        degrees : bool
+            If directions should be returned in 'degrees'. If ``False``, 'radians'
+            is used. Defaults to original units used during initialization.
+
+        Returns
+        -------
+        freq : array
+            1-D array of grid frequency coordinates.
+        dirs : array
+            1-D array of grid direction coordinates.
+        vals : array (N, M)
+            Grid values as 2-D array of shape (N, M), such that ``N=len(freq)``
+            and ``M=len(dirs)``.
+        """
+        freq = self._freq.copy()
+        dirs = self._dirs.copy()
+        vals = self._vals.copy()
+
+        if freq_hz is None:
+            freq_hz = self._freq_hz
+        if degrees is None:
+            degrees = self._degrees
+
+        if freq_hz:
+            freq = 1.0 / (2.0 * np.pi) * freq
+
+        if degrees:
+            dirs = (180.0 / np.pi) * dirs
+
+        return freq, dirs, vals
+
     def _check_freq(self, freq):
         """
         Check frequency bins.
@@ -261,47 +302,6 @@ class Grid:
         dirs_new = (new._dirs - angle) % (2.0 * np.pi)
         new._dirs, new._vals = new._sort(dirs_new, new._vals)
         return new
-
-    def __call__(self, freq_hz=None, degrees=None):
-        """
-        Return a copy of the grid object's frequency/direction coordinates and corresponding
-        values.
-
-        Parameters
-        ----------
-        freq_hz : bool
-            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
-            Defaults to original units used during initialization.
-        degrees : bool
-            If directions should be returned in 'degrees'. If ``False``, 'radians'
-            is used. Defaults to original units used during initialization.
-
-        Returns
-        -------
-        freq : array
-            1-D array of grid frequency coordinates.
-        dirs : array
-            1-D array of grid direction coordinates.
-        vals : array (N, M)
-            Grid values as 2-D array of shape (N, M), such that ``N=len(freq)``
-            and ``M=len(dirs)``.
-        """
-        freq = self._freq.copy()
-        dirs = self._dirs.copy()
-        vals = self._vals.copy()
-
-        if freq_hz is None:
-            freq_hz = self._freq_hz
-        if degrees is None:
-            degrees = self._degrees
-
-        if freq_hz:
-            freq = 1.0 / (2.0 * np.pi) * freq
-
-        if degrees:
-            dirs = (180.0 / np.pi) * dirs
-
-        return freq, dirs, vals
 
     def _interpolate_function(self, complex_convert="rectangular", **kw):
         """
