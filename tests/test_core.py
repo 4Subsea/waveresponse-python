@@ -1239,6 +1239,53 @@ class Test_RAO:
         np.testing.assert_array_almost_equal(amp_out, amp_expect)
         np.testing.assert_array_almost_equal(phase_out, phase_expect)
 
+    def test_to_amp_phase_None(self):
+        freq_in = np.array([0, 1, 2])
+        dirs_in = np.array([0, 1, 2])
+        vals_in = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
+                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
+                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
+            ]
+        )
+
+        rao = RAO(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_out, dirs_out, amp_out, phase_out = rao.to_amp_phase(
+            freq_hz=None, degrees=None, phase_degrees=None
+        )
+
+        freq_expect = np.array([0, 1, 2])
+        dirs_expect = np.array([0, 1, 2])
+        amp_expect = np.array(
+            [
+                [1.0, 1.0, 1.0],
+                [1.0, 1.0, 1.0],
+                [1.0, 1.0, 1.0],
+            ]
+        )
+        phase_expect = np.array(
+            [
+                [0.0, np.pi / 2.0, np.pi],
+                [0.0, np.pi / 2.0, np.pi],
+                [0.0, np.pi / 2.0, np.pi],
+            ]
+        )
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(amp_out, amp_expect)
+        np.testing.assert_array_almost_equal(phase_out, phase_expect)
+
     def test__abs__raises(self, rao):
         with pytest.raises(TypeError):
             np.abs(rao)
