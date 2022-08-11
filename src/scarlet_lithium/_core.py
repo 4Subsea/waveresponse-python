@@ -1141,3 +1141,35 @@ class WaveSpectrum(DirectionalSpectrum):
             dirm = np.degrees(dirm)
 
         return dirm
+
+
+def calculate_response(wave, rao, heading, heading_degrees=False):
+    """
+    Calculate response spectrum.
+
+    Parameters
+    ----------
+    wave : obj
+        2-D wave spectrum as a :class:`~scarlet_lithium.WaveSpectrum` object.
+    rao : obj
+        Response amplitude operator (RAO) as a :class:`~scarlet_lithium.RAO` object.
+    heading : float
+        Heading of vessel relative to wave spectrum coordinate system.
+    heading_degrees : bool
+        Whether the heading is given in 'degrees'. If ``False``, 'radians' is assumed.
+
+    Returns
+    -------
+    obj :
+        Response spectrum as :class:`DirectionalSpectrum` object.
+    """
+    wave_body = wave.rotate(heading, degrees=heading_degrees)
+    wave_body.set_wave_convention(**rao.wave_convention)
+
+    dirs_ = wave._dirs
+    freq_ = rao._freq
+    rao_squared = np.abs(rao * rao.conjugate())
+    rao_squared = rao_squared.reshape(freq_, dirs_, freq_hz=False, degrees=False)
+    wave_body = wave_body.reshape(freq_, dirs_, freq_hz=False, degrees=False)
+
+    return rao_squared * wave_body
