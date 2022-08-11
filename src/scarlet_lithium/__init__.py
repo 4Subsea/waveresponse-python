@@ -3,9 +3,9 @@ from ._core import (
     DirectionalSpectrum,
     Grid,
     WaveSpectrum,
+    calculate_response,
     complex_to_polar,
     polar_to_complex,
-    calculate_response,
 )
 
 __version__ = "0.0.1"
