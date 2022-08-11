@@ -245,7 +245,7 @@ class Grid:
         angle : float
             Rotation angle.
         degrees : bool
-            Weather the rotation angle is given in 'degrees'. If ``False``, 'radians'
+            Whether the rotation angle is given in 'degrees'. If ``False``, 'radians'
             is assumed.
 
         Returns
