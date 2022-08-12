@@ -1143,7 +1143,9 @@ class WaveSpectrum(DirectionalSpectrum):
         return dirm
 
 
-def calculate_response(wave, rao, heading, heading_degrees=False, coord_freq="wave", coord_dirs="wave"):
+def calculate_response(
+    wave, rao, heading, heading_degrees=False, coord_freq="wave", coord_dirs="wave"
+):
     """
     Calculate response spectrum.
 
