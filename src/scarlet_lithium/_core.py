@@ -1143,7 +1143,7 @@ class WaveSpectrum(DirectionalSpectrum):
         return dirm
 
 
-def calculate_response(wave, rao, heading, heading_degrees=False):
+def calculate_response(wave, rao, heading, heading_degrees=False, coord_freq="wave", coord_dirs="wave"):
     """
     Calculate response spectrum.
 
@@ -1157,6 +1157,16 @@ def calculate_response(wave, rao, heading, heading_degrees=False):
         Heading of vessel relative to wave spectrum coordinate system.
     heading_degrees : bool
         Whether the heading is given in 'degrees'. If ``False``, 'radians' is assumed.
+    coord_freq : str, optional
+        Frequency coordinates for interpolation. Should be 'wave' or 'rao'. Determines
+        if it is the wave spectrum or the RAO that should dictate which frequencies
+        to use in response calculation. The other object will be interpolated to
+        match these frequencies.
+    coord_dirs : str, optional
+        Direction coordinates for interpolation. Should be 'wave' or 'rao'. Determines
+        if it is the wave spectrum or the RAO that should dictate which directions
+        to use in response calculation. The other object will be interpolated to
+        match these directions.
 
     Returns
     -------
@@ -1166,10 +1176,22 @@ def calculate_response(wave, rao, heading, heading_degrees=False):
     wave_body = wave.rotate(heading, degrees=heading_degrees)
     wave_body.set_wave_convention(**rao.wave_convention)
 
-    dirs_ = wave._dirs
-    freq_ = rao._freq
+    if coord_freq.lower() == "wave":
+        freq = wave._freq
+    elif coord_freq.lower() == "rao":
+        freq = rao._freq
+    else:
+        raise ValueError("Invalid `coord_freq` value. Should be 'wave' or 'rao'.")
+
+    if coord_dirs.lower() == "wave":
+        dirs = wave._dirs
+    elif coord_dirs.lower() == "rao":
+        dirs = rao._dirs
+    else:
+        raise ValueError("Invalid `coord_dirs` value. Should be 'wave' or 'rao'.")
+
     rao_squared = np.abs(rao * rao.conjugate())
-    rao_squared = rao_squared.reshape(freq_, dirs_, freq_hz=False, degrees=False)
-    wave_body = wave_body.reshape(freq_, dirs_, freq_hz=False, degrees=False)
+    rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
+    wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
 
     return rao_squared * wave_body
