@@ -141,20 +141,9 @@ class Grid:
             Grid values as 2-D array of shape (N, M), such that ``N=len(freq)``
             and ``M=len(dirs)``.
         """
-        freq = self._freq.copy()
-        dirs = self._dirs.copy()
+        freq = self.freq(freq_hz=freq_hz)
+        dirs = self.dirs(degrees=degrees)
         vals = self._vals.copy()
-
-        if freq_hz is None:
-            freq_hz = self._freq_hz
-        if degrees is None:
-            degrees = self._degrees
-
-        if freq_hz:
-            freq = 1.0 / (2.0 * np.pi) * freq
-
-        if degrees:
-            dirs = (180.0 / np.pi) * dirs
 
         return freq, dirs, vals
 
@@ -176,6 +165,46 @@ class Grid:
                 "Directions must be positive, monotonically increasing, and "
                 "be [0., 360.) degs (or [0., 2*pi) rads)."
             )
+
+    def freq(self, freq_hz=None):
+        """
+        Frequency coordinates.
+
+        Parameters
+        ----------
+        freq_hz : bool
+            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
+            Defaults to original units used during initialization.
+        """
+        freq = self._freq.copy()
+
+        if freq_hz is None:
+            freq_hz = self._freq_hz
+
+        if freq_hz:
+            freq = 1.0 / (2.0 * np.pi) * freq
+
+        return freq
+
+    def dirs(self, degrees=None):
+        """
+        Direction coordinates.
+
+        Parameters
+        ----------
+        degrees : bool
+            If directions should be returned in 'degrees'. If ``False``, 'radians'
+            is used. Defaults to original units used during initialization.
+        """
+        dirs = self._dirs.copy()
+
+        if degrees is None:
+            degrees = self._degrees
+
+        if degrees:
+            dirs = (180.0 / np.pi) * dirs
+
+        return dirs
 
     @property
     def wave_convention(self):
