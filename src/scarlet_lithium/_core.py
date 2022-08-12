@@ -1179,14 +1179,14 @@ def calculate_response(
     wave_body.set_wave_convention(**rao.wave_convention)
 
     if coord_freq.lower() == "wave":
-        freq = wave._freq
+        freq = wave_body._freq
     elif coord_freq.lower() == "rao":
         freq = rao._freq
     else:
         raise ValueError("Invalid `coord_freq` value. Should be 'wave' or 'rao'.")
 
     if coord_dirs.lower() == "wave":
-        dirs = wave._dirs
+        dirs = wave_body._dirs
     elif coord_dirs.lower() == "rao":
         dirs = rao._dirs
     else:

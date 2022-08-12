@@ -6,9 +6,9 @@ from scarlet_lithium import (
     DirectionalSpectrum,
     Grid,
     WaveSpectrum,
+    calculate_response,
     complex_to_polar,
     polar_to_complex,
-    calculate_response,
 )
 
 
@@ -2367,7 +2367,70 @@ class Test_WaveSpectrum:
 
 
 class Test_calculate_response:
-    def test_calculate_response_ones(self):
+    def test_calculate_response_coord_wave(self):
+        freq_rao = np.array([0.0, 0.5, 1.0])
+        dirs_rao = np.array([45.0, 135.0, 225.0, 315.0])
+        vals_rao = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 0.0j, 0.0 + 1.0j],
+                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 0.0j, 0.0 + 1.0j],
+                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 0.0j, 0.0 + 1.0j],
+            ]
+        )  # all amplitudes are 1
+        rao = RAO(
+            freq_rao,
+            dirs_rao,
+            vals_rao,
+            freq_hz=True,
+            degrees=True,
+            clockwise=False,
+            waves_coming_from=False,
+        )
+
+        freq_wave = np.array([0.0, 0.3, 0.6, 0.9])
+        dirs_wave = np.array([0.0, 90.0, 180.0, 270.0, 359.0])
+        vals_wave = np.ones((len(freq_wave), len(dirs_wave)))
+        wave = WaveSpectrum(
+            freq_wave,
+            dirs_wave,
+            vals_wave,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        response = calculate_response(
+            wave, rao, 0.0, coord_freq="wave", coord_dirs="wave"
+        )
+
+        assert response._clockwise == rao._clockwise
+        assert response._waves_coming_from == rao._waves_coming_from
+
+        response.set_wave_convention(**wave.wave_convention)
+
+        freq_expect = wave._freq
+        dirs_expect = wave._dirs
+        vals_expect = (
+            1.0
+            / (2.0 * np.pi * np.pi / 180.0)
+            * np.array(
+                [
+                    [1.0, 1.0, 1.0, 1.0, 1.0],
+                    [1.0, 1.0, 1.0, 1.0, 1.0],
+                    [1.0, 1.0, 1.0, 1.0, 1.0],
+                    [1.0, 1.0, 1.0, 1.0, 1.0],
+                ]
+            )
+        )
+
+        assert response._freq_hz is False
+        assert response._degrees is False
+        np.testing.assert_array_almost_equal(response._freq, freq_expect)
+        np.testing.assert_array_almost_equal(response._dirs, dirs_expect)
+        np.testing.assert_array_almost_equal(response._vals, vals_expect)
+
+    def test_calculate_response_coord_rao(self):
         freq_rao = np.array([0.0, 0.5, 1.0])
         dirs_rao = np.array([45.0, 135.0, 225.0, 315.0])
         vals_rao = np.array(
@@ -2400,18 +2463,142 @@ class Test_calculate_response:
             waves_coming_from=True,
         )
 
-        response = calculate_response(wave, rao, 0.0)
+        response = calculate_response(
+            wave, rao, 0.0, coord_freq="rao", coord_dirs="rao"
+        )
 
         freq_expect = rao._freq
-        dirs_expect = wave._dirs
-        vals_expect = np.array(
-            [
-                [1.0, 1.0, 1.0, 1.0, 1.0],
-                [1.0, 1.0, 1.0, 1.0, 1.0],
-                [0.0, 0.0, 0.0, 0.0, 0.0],  # extrapolated values
-            ]
+        dirs_expect = rao._dirs
+        vals_expect = (
+            1.0
+            / (2.0 * np.pi * np.pi / 180.0)
+            * np.array(
+                [
+                    [1.0, 1.0, 1.0, 1.0],
+                    [1.0, 1.0, 1.0, 1.0],
+                    [0.0, 0.0, 0.0, 0.0],  # extrapolated
+                ]
+            )
         )
-        vals_expect /= 2.0 * np.pi * np.pi / 180.0
+
+        assert response._freq_hz is False
+        assert response._degrees is False
+        np.testing.assert_array_almost_equal(response._freq, freq_expect)
+        np.testing.assert_array_almost_equal(response._dirs, dirs_expect)
+        np.testing.assert_array_almost_equal(response._vals, vals_expect)
+        assert response._clockwise == rao._clockwise
+        assert response._waves_coming_from == rao._waves_coming_from
+
+    def test_calculate_response_heading_degrees(self):
+        freq_rao = np.array([0.0, 0.5, 1.0])
+        dirs_rao = np.array([45.0, 135.0, 225.0, 315.0])
+        vals_rao = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 0.0j, 0.0 + 1.0j],
+                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 0.0j, 0.0 + 1.0j],
+                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 0.0j, 0.0 + 1.0j],
+            ]
+        )  # all amplitudes are 1
+        rao = RAO(
+            freq_rao,
+            dirs_rao,
+            vals_rao,
+            freq_hz=True,
+            degrees=True,
+        )
+
+        freq_wave = np.array([0.0, 0.3, 0.6, 0.9])  # extrapolation needed
+        dirs_wave = np.array([90.0, 180.0, 270.0, 359.0])
+        vals_wave = np.ones((len(freq_wave), len(dirs_wave)))
+        wave = WaveSpectrum(
+            freq_wave,
+            dirs_wave,
+            vals_wave,
+            freq_hz=True,
+            degrees=True,
+        )
+
+        response = calculate_response(
+            wave, rao, 45.0, heading_degrees=True, coord_freq="wave", coord_dirs="wave"
+        )
+        response.set_wave_convention(**wave.wave_convention)
+
+        freq_expect = wave._freq
+        dirs_expect = wave._dirs - (np.pi / 4.0)
+        vals_expect = (
+            1.0
+            / (2.0 * np.pi * np.pi / 180.0)
+            * np.array(
+                [
+                    [1.0, 1.0, 1.0, 1.0],
+                    [1.0, 1.0, 1.0, 1.0],
+                    [1.0, 1.0, 1.0, 1.0],
+                    [1.0, 1.0, 1.0, 1.0],
+                ]
+            )
+        )
+
+        assert response._freq_hz is False
+        assert response._degrees is False
+        np.testing.assert_array_almost_equal(response._freq, freq_expect)
+        np.testing.assert_array_almost_equal(response._dirs, dirs_expect)
+        np.testing.assert_array_almost_equal(response._vals, vals_expect)
+        assert response._clockwise == rao._clockwise
+        assert response._waves_coming_from == rao._waves_coming_from
+
+    def test_calculate_response_heading_radians(self):
+        freq_rao = np.array([0.0, 0.5, 1.0])
+        dirs_rao = np.array([45.0, 135.0, 225.0, 315.0])
+        vals_rao = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 0.0j, 0.0 + 1.0j],
+                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 0.0j, 0.0 + 1.0j],
+                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 0.0j, 0.0 + 1.0j],
+            ]
+        )  # all amplitudes are 1
+        rao = RAO(
+            freq_rao,
+            dirs_rao,
+            vals_rao,
+            freq_hz=True,
+            degrees=True,
+        )
+
+        freq_wave = np.array([0.0, 0.3, 0.6, 0.9])  # extrapolation needed
+        dirs_wave = np.array([90.0, 180.0, 270.0, 359.0])
+        vals_wave = np.ones((len(freq_wave), len(dirs_wave)))
+        wave = WaveSpectrum(
+            freq_wave,
+            dirs_wave,
+            vals_wave,
+            freq_hz=True,
+            degrees=True,
+        )
+
+        response = calculate_response(
+            wave,
+            rao,
+            np.pi / 4.0,
+            heading_degrees=False,
+            coord_freq="wave",
+            coord_dirs="wave",
+        )
+        response.set_wave_convention(**wave.wave_convention)
+
+        freq_expect = wave._freq
+        dirs_expect = wave._dirs - (np.pi / 4.0)
+        vals_expect = (
+            1.0
+            / (2.0 * np.pi * np.pi / 180.0)
+            * np.array(
+                [
+                    [1.0, 1.0, 1.0, 1.0],
+                    [1.0, 1.0, 1.0, 1.0],
+                    [1.0, 1.0, 1.0, 1.0],
+                    [1.0, 1.0, 1.0, 1.0],
+                ]
+            )
+        )
 
         assert response._freq_hz is False
         assert response._degrees is False
