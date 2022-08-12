@@ -52,11 +52,11 @@ This function is roughly equivalent to:
         # version of the RAO when estimating the response, since this has shown
         # best results:
         #    https://cradpdf.drdc-rddc.gc.ca/PDFS/unc341/p811241_A1b.pdf
-        freq_ = rao._freq
-        dirs_ = wave._dirs
+        freq = rao._freq
+        dirs = wave._dirs
         rao_squared = np.abs(rao * rao.conjugate())
-        rao_squared = rao_squared.reshape(freq_, dirs_, freq_hz=False, degrees=False)
-        wave_body = wave_body.reshape(freq_, dirs_, freq_hz=False, degrees=False)
+        rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
+        wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
 
         return rao_squared * wave_body
 
