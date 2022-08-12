@@ -2390,12 +2390,14 @@ class Test_calculate_response:
         freq_wave = np.array([0.0, 0.3, 0.6, 0.9])
         dirs_wave = np.array([0.0, 90.0, 180.0, 270.0, 359.0])
         vals_wave = np.ones((len(freq_wave), len(dirs_wave)))
-        vals_wave = np.array([
-            [1.0, 2.0, 3.0, 4.0, 5.0],
-            [6.0, 7.0, 8.0, 9.0, 10.0],
-            [11.0, 12.0, 13.0, 14.0, 15.0],
-            [16.0, 17.0, 18.0, 19.0, 20.0],
-        ])
+        vals_wave = np.array(
+            [
+                [1.0, 2.0, 3.0, 4.0, 5.0],
+                [6.0, 7.0, 8.0, 9.0, 10.0],
+                [11.0, 12.0, 13.0, 14.0, 15.0],
+                [16.0, 17.0, 18.0, 19.0, 20.0],
+            ]
+        )
         wave = WaveSpectrum(
             freq_wave,
             dirs_wave,
@@ -2484,7 +2486,8 @@ class Test_calculate_response:
                     [5.0, 6.0, 7.0, 8.0],
                     [0.0, 0.0, 0.0, 0.0],  # extrapolated
                 ]
-            ) ** 2
+            )
+            ** 2
         )
 
         assert response._freq_hz is False
