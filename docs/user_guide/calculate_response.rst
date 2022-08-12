@@ -61,6 +61,7 @@ This function is roughly equivalent to:
         # Reshape ``rao`` and ``wave`` so that they share the same frequency/direction
         # coordinates. In this example, ``wave`` will dictate the coordinates, and
         # the ``rao`` object will be interpoated to match these coordinates.
+        # 
         # It is recommended to reshape (i.e., interpolate) the magnitude-squared
         # version of the RAO when estimating response, since this has shown best
         # results:
@@ -74,12 +75,12 @@ This function is roughly equivalent to:
         return rao_squared * wave_body
 
 The response is returned as a :class:`~scarlet_lithium.DirectionalSpectrum` object,
-and provides useful spectrum operations such as:
+and provides useful spectrum operations, such as:
 
 .. code-block:: python
 
     # Get 'non-directional' response spectrum
-    spectrum1d = response.spectrum1d(axis=1)
+    freq, response_spectrum = response.spectrum1d(axis=1)
 
     # Calculate response variance
     var = response.var()
