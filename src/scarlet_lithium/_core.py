@@ -141,20 +141,9 @@ class Grid:
             Grid values as 2-D array of shape (N, M), such that ``N=len(freq)``
             and ``M=len(dirs)``.
         """
-        freq = self._freq.copy()
-        dirs = self._dirs.copy()
+        freq = self.freq(freq_hz=freq_hz)
+        dirs = self.dirs(degrees=degrees)
         vals = self._vals.copy()
-
-        if freq_hz is None:
-            freq_hz = self._freq_hz
-        if degrees is None:
-            degrees = self._degrees
-
-        if freq_hz:
-            freq = 1.0 / (2.0 * np.pi) * freq
-
-        if degrees:
-            dirs = (180.0 / np.pi) * dirs
 
         return freq, dirs, vals
 
