@@ -233,6 +233,108 @@ class Test_Grid:
             vals = np.zeros((3, 10))
             Grid(freq, dirs, vals)
 
+    def test_freq_None(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.zeros((10, 15))
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_out = grid.freq()
+        np.testing.assert_array_almost_equal(freq_out, freq)
+
+    def test_freq_rads(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.zeros((10, 15))
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_out = grid.freq(freq_hz=False)
+        np.testing.assert_array_almost_equal(freq_out, (2.0 * np.pi) * freq)
+
+    def test_freq_hz(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.zeros((10, 15))
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_out = grid.freq(freq_hz=True)
+        np.testing.assert_array_almost_equal(freq_out, freq)
+
+    def test_dirs_None(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.zeros((10, 15))
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        dirs_out = grid.dirs()
+        np.testing.assert_array_almost_equal(dirs_out, dirs)
+
+    def test_dirs_rad(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.zeros((10, 15))
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        dirs_out = grid.dirs(degrees=False)
+        np.testing.assert_array_almost_equal(dirs_out, (np.pi / 180.0) * dirs)
+
+    def test_dirs_deg(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.zeros((10, 15))
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        dirs_out = grid.dirs(degrees=True)
+        np.testing.assert_array_almost_equal(dirs_out, dirs)
+
     def test_wave_convention(self, grid):
         convention_expect = {"clockwise": True, "waves_coming_from": True}
         convention_out = grid.wave_convention
