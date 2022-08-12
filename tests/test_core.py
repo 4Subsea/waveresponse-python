@@ -2367,6 +2367,23 @@ class Test_WaveSpectrum:
 
 
 class Test_calculate_response:
+
+    def test_calculate_response(self, rao, wave):
+        response = calculate_response(rao, wave, 0.0)
+        assert isinstance(response, DirectionalSpectrum)
+        assert response._clockwise == rao._clockwise
+        assert response._waves_coming_from == rao._waves_coming_from
+        assert response._freq_hz is False
+        assert response._degrees is False
+
+    def test_calculate_response_raises_coord_freq(self, rao, wave):
+        with pytest.raises(ValueError):
+            calculate_response(rao, wave, 0.0, coord_freq="invalid-value")
+
+    def test_calculate_response_raises_coord_dirs(self, rao, wave):
+        with pytest.raises(ValueError):
+            calculate_response(rao, wave, 0.0, coord_freq="invalid-value")
+
     def test_calculate_response_coord_wave(self):
         freq_rao = np.array([0.0, 0.5, 1.0])
         dirs_rao = np.array([45.0, 135.0, 225.0, 315.0])
