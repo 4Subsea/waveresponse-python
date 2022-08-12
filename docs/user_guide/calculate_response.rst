@@ -1,18 +1,22 @@
 Calculate response spectrum
 ===========================
-Here is some theory:
+
+This section will show you how to calculate a first-order wave-induced motion response
+spectrum using ``scarlet_lithium``. We will assume linear theory, where a vessel's
+response is sufficiently described by a (motion) response amplitude operator (RAO)
+and a 2-D wave spectrum. The response spectrum estimation is governed by:
 
 .. math::
     S_x(\omega) = \int H_x(\omega, \beta)H_x^{*}(\omega, \beta) S_{\zeta}(\omega, \beta) d\beta
 
-where :math:`S_{\zeta}(\omega, \beta)` is the 2-D wave spectrum.
-
+where :math:`S_{\zeta}(\omega, \beta)` is the 2-D wave spectrum, :math:`H_x(\omega, \beta)`
+is the degree-of-freedom's transfer function (i.e., RAO), :math:`H_x^{*}(\omega, \beta)`
+is the complex conjugate version of the transfer function, and :math:`S_x(\omega)`
+is the response spectrum. :math:`\beta` is the relative wave direction.
 
 With ``scarlet_lithium`` it is easy to estimate a vessel's response spectrum once
 you have an :class:`~scarlet_lithium.RAO` object and a :class:`~scarlet_lithium.WaveSpectrum`
-object available.
-
-A convenience function for calculating response is provided by
+object available. A convenience function for calculating response is provided by
 :func:`~scarlet_lithium.calculate_response`:
 
 .. code-block:: python
