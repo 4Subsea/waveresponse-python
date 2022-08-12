@@ -2432,6 +2432,7 @@ class Test_calculate_response:
             )
         )
 
+        assert isinstance(response, DirectionalSpectrum)
         assert response._freq_hz is False
         assert response._degrees is False
         np.testing.assert_array_almost_equal(response._freq, freq_expect)
@@ -2490,6 +2491,7 @@ class Test_calculate_response:
             ** 2
         )
 
+        assert isinstance(response, DirectionalSpectrum)
         assert response._freq_hz is False
         assert response._degrees is False
         np.testing.assert_array_almost_equal(response._freq, freq_expect)
@@ -2547,6 +2549,7 @@ class Test_calculate_response:
             )
         )
 
+        assert isinstance(response, DirectionalSpectrum)
         assert response._freq_hz is False
         assert response._degrees is False
         np.testing.assert_array_almost_equal(response._freq, freq_expect)
@@ -2609,6 +2612,7 @@ class Test_calculate_response:
             )
         )
 
+        assert isinstance(response, DirectionalSpectrum)
         assert response._freq_hz is False
         assert response._degrees is False
         np.testing.assert_array_almost_equal(response._freq, freq_expect)
