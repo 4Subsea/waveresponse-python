@@ -69,15 +69,17 @@ Get the complex conjugated version of the RAO using :meth:`~scarlet_lithium.RAO.
 
     rao_conj = rao.conjugate()
 
-.. Differentiate to obtain an RAO object that represents the differentiated degree-of-freedom:
+Differentiate the RAO transfer function to obtain an RAO object that represents
+the degree-of-freedom's *n*\ th derivative:
 
-.. .. code-block:: python
+.. code-block:: python
 
-..     rao_diff = rao.differentiate()
+    n = 1   # order of differentiation
+    rao_diff = rao.differentiate(n)
 
-.. .. note::
-..     The differentiated version of an RAO's transfer function is obtained by:
+.. note::
+    The differentiated version of an RAO's transfer function is obtained by:
 
-..     .. math::
+    .. math::
 
-..         j\omega H(j\omega)
+        H_{\dot{x}}(\omega) = j\omega H_x(\omega)
