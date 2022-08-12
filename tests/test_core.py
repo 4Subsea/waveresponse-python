@@ -2367,7 +2367,6 @@ class Test_WaveSpectrum:
 
 
 class Test_calculate_response:
-
     def test_calculate_response(self, rao, wave):
         response = calculate_response(rao, wave, 0.0)
         assert isinstance(response, DirectionalSpectrum)
