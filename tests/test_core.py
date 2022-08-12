@@ -1201,6 +1201,189 @@ class Test_RAO:
         np.testing.assert_array_almost_equal(rao_conj._dirs, rao._dirs)
         np.testing.assert_array_almost_equal(rao_conj._vals, rao._vals.conjugate())
 
+    def test_differentiate(self):
+        freq_in = np.array([0, 1.0, 2.0, 3.0])
+        dirs_in = np.array([0, 45, 90, 135])
+        vals_in = np.array(
+            [
+                [(1.0 + 0.0j), (1.0 + 0.0j), (1.0 + 0.0j), (1.0 + 0.0j)],
+                [(0.0 + 1.0j), (0.0 + 1.0j), (0.0 + 1.0j), (0.0 + 1.0j)],
+                [(1.0 + 0.0j), (1.0 + 0.0j), (1.0 + 0.0j), (1.0 + 0.0j)],
+                [(0.0 + 1.0j), (0.0 + 1.0j), (0.0 + 1.0j), (0.0 + 1.0j)],
+            ]
+        )
+        rao = RAO(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=False,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        rao_diff = rao.differentiate()
+
+        freq_expect = rao._freq
+        dirs_expect = rao._dirs
+        vals_expect = np.array(
+            [
+                [
+                    0.0j * (1.0 + 0.0j),
+                    0.0j * (1.0 + 0.0j),
+                    0.0j * (1.0 + 0.0j),
+                    0.0j * (1.0 + 0.0j),
+                ],
+                [
+                    1.0j * (0.0 + 1.0j),
+                    1.0j * (0.0 + 1.0j),
+                    1.0j * (0.0 + 1.0j),
+                    1.0j * (0.0 + 1.0j),
+                ],
+                [
+                    2.0j * (1.0 + 0.0j),
+                    2.0j * (1.0 + 0.0j),
+                    2.0j * (1.0 + 0.0j),
+                    2.0j * (1.0 + 0.0j),
+                ],
+                [
+                    3.0j * (0.0 + 1.0j),
+                    3.0j * (0.0 + 1.0j),
+                    3.0j * (0.0 + 1.0j),
+                    3.0j * (0.0 + 1.0j),
+                ],
+            ]
+        )
+
+        assert isinstance(rao_diff, RAO)
+        np.testing.assert_array_almost_equal(rao_diff._freq, freq_expect)
+        np.testing.assert_array_almost_equal(rao_diff._dirs, dirs_expect)
+        np.testing.assert_array_almost_equal(rao_diff._vals, vals_expect)
+        assert rao._clockwise == rao._clockwise
+        assert rao._waves_coming_from == rao._waves_coming_from
+
+    def test_differentiate_order2(self):
+        freq_in = np.array([0, 1.0, 2.0, 3.0])
+        dirs_in = np.array([0, 45, 90, 135])
+        vals_in = np.array(
+            [
+                [(1.0 + 0.0j), (1.0 + 0.0j), (1.0 + 0.0j), (1.0 + 0.0j)],
+                [(0.0 + 1.0j), (0.0 + 1.0j), (0.0 + 1.0j), (0.0 + 1.0j)],
+                [(1.0 + 0.0j), (1.0 + 0.0j), (1.0 + 0.0j), (1.0 + 0.0j)],
+                [(0.0 + 1.0j), (0.0 + 1.0j), (0.0 + 1.0j), (0.0 + 1.0j)],
+            ]
+        )
+        rao = RAO(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=False,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        rao_diff = rao.differentiate(2)
+
+        freq_expect = rao._freq
+        dirs_expect = rao._dirs
+        vals_expect = np.array(
+            [
+                [
+                    0.0j ** 2 * (1.0 + 0.0j),
+                    0.0j ** 2 * (1.0 + 0.0j),
+                    0.0j ** 2 * (1.0 + 0.0j),
+                    0.0j ** 2 * (1.0 + 0.0j),
+                ],
+                [
+                    1.0j ** 2 * (0.0 + 1.0j),
+                    1.0j ** 2 * (0.0 + 1.0j),
+                    1.0j ** 2 * (0.0 + 1.0j),
+                    1.0j ** 2 * (0.0 + 1.0j),
+                ],
+                [
+                    2.0j ** 2 * (1.0 + 0.0j),
+                    2.0j ** 2 * (1.0 + 0.0j),
+                    2.0j ** 2 * (1.0 + 0.0j),
+                    2.0j ** 2 * (1.0 + 0.0j),
+                ],
+                [
+                    3.0j ** 2 * (0.0 + 1.0j),
+                    3.0j ** 2 * (0.0 + 1.0j),
+                    3.0j ** 2 * (0.0 + 1.0j),
+                    3.0j ** 2 * (0.0 + 1.0j),
+                ],
+            ]
+        )
+
+        assert isinstance(rao_diff, RAO)
+        np.testing.assert_array_almost_equal(rao_diff._freq, freq_expect)
+        np.testing.assert_array_almost_equal(rao_diff._dirs, dirs_expect)
+        np.testing.assert_array_almost_equal(rao_diff._vals, vals_expect)
+        assert rao._clockwise == rao._clockwise
+        assert rao._waves_coming_from == rao._waves_coming_from
+
+    def test_differentiate_order3(self):
+        freq_in = np.array([0, 1.0, 2.0, 3.0])
+        dirs_in = np.array([0, 45, 90, 135])
+        vals_in = np.array(
+            [
+                [(1.0 + 0.0j), (1.0 + 0.0j), (1.0 + 0.0j), (1.0 + 0.0j)],
+                [(0.0 + 1.0j), (0.0 + 1.0j), (0.0 + 1.0j), (0.0 + 1.0j)],
+                [(1.0 + 0.0j), (1.0 + 0.0j), (1.0 + 0.0j), (1.0 + 0.0j)],
+                [(0.0 + 1.0j), (0.0 + 1.0j), (0.0 + 1.0j), (0.0 + 1.0j)],
+            ]
+        )
+        rao = RAO(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=False,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        rao_diff = rao.differentiate(3)
+
+        freq_expect = rao._freq
+        dirs_expect = rao._dirs
+        vals_expect = np.array(
+            [
+                [
+                    0.0j ** 3 * (1.0 + 0.0j),
+                    0.0j ** 3 * (1.0 + 0.0j),
+                    0.0j ** 3 * (1.0 + 0.0j),
+                    0.0j ** 3 * (1.0 + 0.0j),
+                ],
+                [
+                    1.0j ** 3 * (0.0 + 1.0j),
+                    1.0j ** 3 * (0.0 + 1.0j),
+                    1.0j ** 3 * (0.0 + 1.0j),
+                    1.0j ** 3 * (0.0 + 1.0j),
+                ],
+                [
+                    2.0j ** 3 * (1.0 + 0.0j),
+                    2.0j ** 3 * (1.0 + 0.0j),
+                    2.0j ** 3 * (1.0 + 0.0j),
+                    2.0j ** 3 * (1.0 + 0.0j),
+                ],
+                [
+                    3.0j ** 3 * (0.0 + 1.0j),
+                    3.0j ** 3 * (0.0 + 1.0j),
+                    3.0j ** 3 * (0.0 + 1.0j),
+                    3.0j ** 3 * (0.0 + 1.0j),
+                ],
+            ]
+        )
+
+        assert isinstance(rao_diff, RAO)
+        np.testing.assert_array_almost_equal(rao_diff._freq, freq_expect)
+        np.testing.assert_array_almost_equal(rao_diff._dirs, dirs_expect)
+        np.testing.assert_array_almost_equal(rao_diff._vals, vals_expect)
+        assert rao._clockwise == rao._clockwise
+        assert rao._waves_coming_from == rao._waves_coming_from
+
     def test_to_amp_phase(self):
         freq_in = np.array([0, 1, 2])
         dirs_in = np.array([0, 1, 2])
