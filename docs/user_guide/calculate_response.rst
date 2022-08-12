@@ -4,7 +4,7 @@ Calculate response spectrum
 This section will show you how to calculate a first-order wave-induced motion response
 spectrum using ``scarlet_lithium``. We will assume linear theory, where a vessel's
 response is sufficiently described by a (motion) response amplitude operator (RAO)
-and a 2-D wave spectrum. The response spectrum estimation is governed by:
+and a 2-D wave spectrum. The response spectrum calculation is governed by:
 
 .. math::
     S_x(\omega) = \int H_x(\omega, \beta)H_x^{*}(\omega, \beta) S_{\zeta}(\omega, \beta) d\beta
