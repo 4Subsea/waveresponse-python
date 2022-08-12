@@ -1,7 +1,7 @@
 Calculate response spectrum
 ===========================
 With ``scarlet_lithium`` it is easy to estimate a vessel's response spectrum once
-you have a :class:`~scarlet_lithium.RAO` object and a :class:`~scarlet_lithium.WaveSpectrum`
+you have an :class:`~scarlet_lithium.RAO` object and a :class:`~scarlet_lithium.WaveSpectrum`
 object available.
 
 A convenience function for calculating response is provided by
@@ -47,12 +47,13 @@ This function is roughly equivalent to:
         wave_body.set_wave_convention(**rao.wave_convention)
 
         # Reshape ``rao`` and ``wave`` so that they share the same frequency/direction
-        # coordinates.
+        # coordinates. In this example, ``wave`` will dictate the coordinates, and
+        # the ``rao`` object will be interpoated to match these coordinates.
         # It is recommended to reshape (i.e., interpolate) the magnitude-squared
-        # version of the RAO when estimating the response, since this has shown
-        # best results:
+        # version of the RAO when estimating response, since this has shown best
+        # results:
         #    https://cradpdf.drdc-rddc.gc.ca/PDFS/unc341/p811241_A1b.pdf
-        freq = rao._freq
+        freq = wave._freq
         dirs = wave._dirs
         rao_squared = np.abs(rao * rao.conjugate())
         rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
@@ -65,7 +66,7 @@ and provides useful spectrum operations such as:
 
 .. code-block:: python
 
-    # Get non-directional response spectrum
+    # Get 'non-directional' response spectrum
     spectrum1d = response.spectrum1d(axis=1)
 
     # Calculate response variance
