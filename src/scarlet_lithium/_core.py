@@ -1144,17 +1144,17 @@ class WaveSpectrum(DirectionalSpectrum):
 
 
 def calculate_response(
-    wave, rao, heading, heading_degrees=False, coord_freq="wave", coord_dirs="wave"
+    rao, wave, heading, heading_degrees=False, coord_freq="wave", coord_dirs="wave"
 ):
     """
     Calculate response spectrum.
 
     Parameters
     ----------
-    wave : obj
-        2-D wave spectrum as a :class:`~scarlet_lithium.WaveSpectrum` object.
     rao : obj
         Response amplitude operator (RAO) as a :class:`~scarlet_lithium.RAO` object.
+    wave : obj
+        2-D wave spectrum as a :class:`~scarlet_lithium.WaveSpectrum` object.
     heading : float
         Heading of vessel relative to wave spectrum coordinate system.
     heading_degrees : bool

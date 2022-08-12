@@ -2409,7 +2409,7 @@ class Test_calculate_response:
         )
 
         response = calculate_response(
-            wave, rao, 0.0, coord_freq="wave", coord_dirs="wave"
+            rao, wave, 0.0, coord_freq="wave", coord_dirs="wave"
         )
 
         assert response._clockwise == rao._clockwise
@@ -2473,7 +2473,7 @@ class Test_calculate_response:
         )
 
         response = calculate_response(
-            wave, rao, 0.0, coord_freq="rao", coord_dirs="rao"
+            rao, wave, 0.0, coord_freq="rao", coord_dirs="rao"
         )
 
         freq_expect = rao._freq
@@ -2530,7 +2530,7 @@ class Test_calculate_response:
         )
 
         response = calculate_response(
-            wave, rao, 45.0, heading_degrees=True, coord_freq="wave", coord_dirs="wave"
+            rao, wave, 45.0, heading_degrees=True, coord_freq="wave", coord_dirs="wave"
         )
         response.set_wave_convention(**wave.wave_convention)
 
@@ -2588,8 +2588,8 @@ class Test_calculate_response:
         )
 
         response = calculate_response(
-            wave,
             rao,
+            wave,
             np.pi / 4.0,
             heading_degrees=False,
             coord_freq="wave",
