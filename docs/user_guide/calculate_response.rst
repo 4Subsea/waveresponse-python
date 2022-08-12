@@ -1,5 +1,13 @@
 Calculate response spectrum
 ===========================
+Here is some theory:
+
+.. math::
+    S_x(\omega) = \int H_x(\omega, \beta)H_x^{*}(\omega, \beta) S_{\zeta}(\omega, \beta) d\beta
+
+where :math:`S_{\zeta}(\omega, \beta)` is the 2-D wave spectrum.
+
+
 With ``scarlet_lithium`` it is easy to estimate a vessel's response spectrum once
 you have an :class:`~scarlet_lithium.RAO` object and a :class:`~scarlet_lithium.WaveSpectrum`
 object available.
