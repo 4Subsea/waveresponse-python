@@ -1,9 +1,9 @@
 WaveSpectrum
 ============
 The :class:`~scarlet_lithium.WaveSpectrum` class provides an interface for handling
-2-D directional wave spectra. :class:`~scarlet_lithium.WaveSpectrum` inherits from
-:class:`~scarlet_lithium.Grid`, and contains spectrum density values on a two-dimentional
-frequency/(wave)direction grid.
+2-D directional wave spectra. :class:`~scarlet_lithium.WaveSpectrum` extends
+:class:`~scarlet_lithium.DirectionalSpectrum`, and contains spectrum density values on
+a two-dimensional frequency/(wave)direction grid.
 
 The :class:`~scarlet_lithium.WaveSpectrum` is initialized with a frequency
 list (1-D array), a direction list (1-D array) and corresponding wave spectrum density
@@ -29,11 +29,8 @@ values (2-D array).
         waves_coming_from=False,
     )
 
-The :class:`~scarlet_lithium.WaveSpectrum` class inherits from the
-:class:`~scarlet_lithium.DirectionalSpectrum` class (and the :class:`~scarlet_lithium.Grid`
-class), and provides all the functionality that comes with
-:class:`~scarlet_lithium.DirectionalSpectrum` and :class:`~scarlet_lithium.Grid`.
-In addition, you can:
+The :class:`~scarlet_lithium.WaveSpectrum` extends the
+:class:`~scarlet_lithium.DirectionalSpectrum` class with the following:
 
 Calculate the significant wave height, Hs:
 

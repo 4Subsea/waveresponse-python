@@ -529,10 +529,10 @@ class RAO(Grid):
     """
     Response amplitude operator (RAO).
 
-    The ``RAO`` class inherits from the :class:`~scarlet_lithium.Grid` class, and is a two-dimentional
-    frequency/(wave)direction grid. The RAO values represents a transfer function
-    that can be used to calculate a degree-of-freedom's response based on a 2-D
-    wave spectrum.
+    The ``RAO`` class extends the :class:`~scarlet_lithium.Grid` class, and is a
+    two-dimensional frequency/(wave)direction grid. The RAO values represents a
+    transfer function that can be used to calculate a degree-of-freedom's response
+    based on a 2-D wave spectrum.
 
     Parameters
     ----------
@@ -706,9 +706,12 @@ class DirectionalSpectrum(Grid):
     """
     Directional spectrum.
 
-    The ``DirectionalSpectrum`` class inherits from the :class:`~scarlet_lithium.Grid`
+    The ``DirectionalSpectrum`` class extends the :class:`~scarlet_lithium.Grid`
     class, and is a two-dimentional frequency/(wave)direction grid. The spectrum values
     represents spectrum density.
+
+    Proper scaling is performed such that the total "energy" is kept constant at
+    all times.
 
     Parameters
     ----------
@@ -1040,8 +1043,8 @@ class WaveSpectrum(DirectionalSpectrum):
         """
         Wave peak direction.
 
-        The mean wave direction corresponding to the maximum value of the 'non-directional'
-        spectrum.
+        Defined as the mean wave direction along the frequency corresponding to
+        the maximum value of the 'non-directional' spectrum.
 
         Parameters
         ----------

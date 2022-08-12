@@ -2,9 +2,8 @@ DirectionalSpectrum
 ===================
 The :class:`~scarlet_lithium.DirectionalSpectrum` class provides an interface for
 handling 2-D directional spectra. :class:`~scarlet_lithium.DirectionalSpectrum`
-inherits from :class:`~scarlet_lithium.Grid`, and contains spectrum density values
-on a two-dimentional frequency/(wave)direction grid. :class:`~scarlet_lithium.DirectionalSpectrum`
-is the base class for :class:`~scarlet_lithium.WaveSpectrum`.
+extends :class:`~scarlet_lithium.Grid`, and contains spectrum density values
+on a two-dimentional frequency/(wave)direction grid.
 
 The :class:`~scarlet_lithium.DirectionalSpectrum` is initialized with a frequency
 list (1-D array), a direction list (1-D array) and corresponding spectrum density
@@ -30,9 +29,8 @@ values (2-D array).
         waves_coming_from=False,
     )
 
-The :class:`~scarlet_lithium.DirectionalSpectrum` class inherits from the :class:`~scarlet_lithium.Grid`
-class, and provides all the functionality that comes with :class:`~scarlet_lithium.Grid`.
-In addition, you can:
+The :class:`~scarlet_lithium.DirectionalSpectrum` class extends the :class:`~scarlet_lithium.Grid`
+class with the following:
 
 Calculate the variance (i.e., integral) and standard deviation of the spectrum:
 
