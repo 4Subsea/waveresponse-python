@@ -1,6 +1,7 @@
 import copy
 
 import numpy as np
+from scipy.integrate import trapz
 from scipy.interpolate import interp2d
 
 
@@ -496,14 +497,21 @@ class Grid:
         elif self.wave_convention != other.wave_convention:
             raise ValueError()
 
-        return Grid(
+        new = Grid(
             self._freq,
             self._dirs,
             self._vals * other._vals,
             freq_hz=False,
             degrees=False,
-            **self.wave_convention
+            **self.wave_convention,
         )
+
+        if isinstance(self, DirectionalSpectrum) or isinstance(
+            other, DirectionalSpectrum
+        ):
+            return DirectionalSpectrum.from_grid(new)
+
+        return new
 
     def __abs__(self):
         """
@@ -521,10 +529,10 @@ class RAO(Grid):
     """
     Response amplitude operator (RAO).
 
-    The ``RAO`` class inherits from the :class:`~scarlet_lithium.Grid` class, and is a two-dimentional
-    frequency/(wave)direction grid. The RAO values represents a transfer function
-    that can be used to calculate a degree-of-freedom's response based on a 2-D
-    wave spectrum.
+    The ``RAO`` class extends the :class:`~scarlet_lithium.Grid` class, and is a
+    two-dimensional frequency/(wave)direction grid. The RAO values represents a
+    transfer function that can be used to calculate a degree-of-freedom's response
+    based on a 2-D wave spectrum.
 
     Parameters
     ----------
@@ -687,8 +695,402 @@ class RAO(Grid):
             np.abs(self._vals),
             freq_hz=False,
             degrees=False,
-            **self.wave_convention
+            **self.wave_convention,
         )
 
     def __repr__(self):
         return "RAO"
+
+
+class DirectionalSpectrum(Grid):
+    """
+    Directional spectrum.
+
+    The ``DirectionalSpectrum`` class extends the :class:`~scarlet_lithium.Grid`
+    class, and is a two-dimentional frequency/(wave)direction grid. The spectrum values
+    represents spectrum density.
+
+    Proper scaling is performed such that the total "energy" is kept constant at
+    all times.
+
+    Parameters
+    ----------
+    freq : array-like
+        1-D array of grid frequency coordinates. Positive and monotonically increasing.
+    dirs : array-like
+        1-D array of grid direction coordinates. Positive and monotonically increasing.
+        Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+    vals : array-like (N, M)
+        Spectrum density values associated with the grid. Should be a 2-D array
+        of shape (N, M), such that ``N=len(freq)`` and ``M=len(dirs)``.
+    freq_hz : bool
+        If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+    degrees : bool
+        If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
+    clockwise : bool
+        If positive directions are defined to be 'clockwise'. If ``False``, 'counterclockwise'
+        is assumed.
+    waves_coming_from : bool
+        If waves are 'coming from' the given directions. If ``False``, 'going towards'
+        convention is assumed.
+    """
+
+    def __init__(
+        self,
+        freq,
+        dirs,
+        vals,
+        freq_hz=False,
+        degrees=False,
+        clockwise=False,
+        waves_coming_from=True,
+    ):
+        super().__init__(
+            freq,
+            dirs,
+            vals,
+            freq_hz=freq_hz,
+            degrees=degrees,
+            clockwise=clockwise,
+            waves_coming_from=waves_coming_from,
+        )
+
+        if freq_hz:
+            self._vals /= 2.0 * np.pi
+
+        if degrees:
+            self._vals /= np.pi / 180.0
+
+        if np.any(np.iscomplex(self._vals)):
+            raise ValueError("Spectrum values can not be complex.")
+        elif np.any(self._vals < 0.0):
+            raise ValueError("Spectrum values must be positive.")
+
+    @classmethod
+    def from_grid(cls, grid):
+        """
+        Construct a ``DirectionalSpectrum`` object from a ``Grid`` object.
+
+        It is assumed that the grid's values represent spectrum density values that
+        correspond to frequency/direction units given during initialization. Note
+        that if you scale the frequency/direction bins of the spectrum, you must
+        also scale the corresponding spectrum density values (since the total energy/integral
+        of the spectrum should be preserved).
+
+        Parameters
+        ----------
+        grid : obj
+            Grid object.
+
+        Returns
+        -------
+        cls :
+            Initialized DirectionalSpectrum object.
+        """
+        return cls(
+            *grid(freq_hz=grid._freq_hz, degrees=grid._degrees),
+            freq_hz=grid._freq_hz,
+            degrees=grid._degrees,
+            **grid.wave_convention,
+        )
+
+    def __repr__(self):
+        return "DirectionalSpectrum"
+
+    def __call__(self, freq_hz=False, degrees=False):
+        """
+        Return a copy of the spectrum's frequency/direction coordinates and corresponding
+        values.
+
+        Parameters
+        ----------
+        freq_hz : bool
+            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
+        degrees : bool
+            If directions should be returned in 'degrees'. If ``False``, 'radians'
+            is used.
+
+        Returns
+        -------
+        freq : array
+            1-D array of grid frequency coordinates.
+        dirs : array
+            1-D array of grid direction coordinates.
+        vals : array (N, M)
+            Spectrum density values as 2-D array of shape (N, M), such that ``N=len(freq)``
+            and ``M=len(dirs)``.
+        """
+        freq, dirs, vals = super().__call__(freq_hz=freq_hz, degrees=degrees)
+
+        if freq_hz:
+            vals *= 2.0 * np.pi
+
+        if degrees:
+            vals *= np.pi / 180.0
+
+        return freq, dirs, vals
+
+    def interpolate(
+        self,
+        freq,
+        dirs,
+        freq_hz=True,
+        degrees=True,
+        fill_value=0.0,
+        **kwargs,
+    ):
+        """
+        Interpolate (linear) the spectrum values to match the given frequency and direction
+        coordinates.
+
+        A 'fill value' is used for extrapolation (i.e. `freq` outside the bounds
+        of the provided 2-D grid). Directions are treated as periodic.
+
+        Parameters
+        ----------
+        freq : array-like
+            1-D array of grid frequency coordinates. Positive and monotonically increasing.
+        dirs : array-like
+            1-D array of grid direction coordinates. Positive and monotonically increasing.
+        freq_hz : bool
+            If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+        degrees : bool
+            If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
+        fill_value : float or None
+            The value used for extrapolation (i.e., `freq` outside the bounds of
+            the provided grid). If ``None``, values outside the frequency domain
+            are extrapolated via nearest-neighbor extrapolation. Note that directions
+            are treated as periodic (and will not need extrapolation).
+
+        Returns
+        -------
+        array :
+            Interpolated spectrum density values.
+        """
+
+        vals = super().interpolate(
+            freq,
+            dirs,
+            freq_hz=freq_hz,
+            degrees=degrees,
+            fill_value=fill_value,
+        )
+
+        if freq_hz:
+            vals *= 2.0 * np.pi
+
+        if degrees:
+            vals *= np.pi / 180.0
+
+        return vals
+
+    @staticmethod
+    def _full_range_dir(x):
+        """Add direction range bounds (0.0 and 2.0 * np.pi)"""
+        if x[0] != 0.0:
+            x = np.r_[0.0, x]
+        if x[-1] < (2.0 * np.pi - 1e-8):
+            x = np.r_[x, 2.0 * np.pi - 1e-8]
+        return x
+
+    def var(self):
+        """
+        Variance (integral) of the spectrum.
+        """
+        x = self._full_range_dir(self._dirs)
+        y = self._freq
+        zz = self.interpolate(y, x, freq_hz=False, degrees=False)
+        return trapz([trapz(zz_x, x) for zz_x in zz], y)
+
+    def std(self):
+        """
+        Standard deviation of the spectrum.
+        """
+        return np.sqrt(self.var())
+
+    def spectrum1d(self, axis=1, freq_hz=None, degrees=None):
+        """
+        Integrate the spectrum over a given axis.
+
+        Parameters
+        ----------
+        axis : int
+            Axis along which integration of the spectrum is done. For `axis=1`
+            (default) the spectrum is integrated over direction, resulting
+            in the so-called 'non-directional' spectrum. For `axis=0` the
+            spectrum is integrated over frequency, resulting in the directional
+            'distribution' of the spectrum.
+        freq_hz : bool
+            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is
+            used. This option is only relevant if `axis=1`. Defaults to original
+            unit used during instantiation.
+        degrees : bool
+            If directions should be returned in degrees. This option is only
+            relevant if `axis=0`. Defaults to original unit used during
+            instantiation.
+
+        Returns
+        -------
+        x : 1-D array
+            Spectrum bins corresponding to the specified axis. `axis=1` yields
+            frequencies, while `axis=0` yields directions.
+        spectrum : 1-D array
+            Spectrum density values, where the spectrum is integrated over the
+            specified axis.
+        """
+
+        if freq_hz is None:
+            freq_hz = self._freq_hz
+
+        if axis == 1:
+            degrees = False
+        elif degrees is None:
+            degrees = self._degrees
+
+        freq, dirs, vals = self(freq_hz=freq_hz, degrees=degrees)
+
+        if axis == 0:
+            y = freq
+            x = dirs
+            zz = vals.T
+        elif axis == 1:
+            y = self._full_range_dir(dirs)
+            x = freq
+            zz = self.interpolate(x, y, freq_hz=freq_hz, degrees=degrees)
+        else:
+            raise ValueError("'axis' must be 0 or 1.")
+
+        spectrum = np.array([trapz(zz_y, y) for zz_y in zz])
+        return x, spectrum
+
+    def moment(self, n, freq_hz=None):
+        """
+        Calculate spectral moment (along the frequency domain).
+
+        Parameters
+        ----------
+        n : int
+            Order of the spectral moment.
+        freq_hz : bool
+            If frequencies in 'Hz' should be used. If ``False``, 'rad/s' is used.
+            Defaults to original unit used during initialization.
+
+        Returns
+        -------
+        float :
+            Spectral moment.
+        """
+        f, spectrum = self.spectrum1d(axis=1, freq_hz=freq_hz)
+        m_n = trapz((f**n) * spectrum, f)
+        return m_n
+
+
+class WaveSpectrum(DirectionalSpectrum):
+    @property
+    def hs(self):
+        """
+        Significan wave height, Hs.
+
+        Calculated from the zeroth-order spectral moment according to:
+
+            ``hs = 4.0 * np.sqrt(m0)``
+        """
+        m0 = self.moment(0)
+        return 4.0 * np.sqrt(m0)
+
+    @property
+    def tz(self):
+        """
+        Mean crossing period, Tz, (sometimes called the mean wave period) in 'seconds'.
+
+        Calculated from the zeroth- and second-order spectral moments according to:
+
+            ``tz = np.sqrt(m0 / m2)``
+        """
+        m0 = self.moment(0)
+        m2 = self.moment(2, freq_hz=True)
+        return np.sqrt(m0 / m2)
+
+    @property
+    def tp(self):
+        """
+        Wave peak period in 'seconds'.
+
+        The period at which the 'non-directional' wave spectrum, ``S(f)``, has its maximum
+        value.
+        """
+        f, S = self.spectrum1d(axis=1, freq_hz=True)
+        fp = f[np.argmax(S)]
+        return 1.0 / fp
+
+    @staticmethod
+    def _mean_direction(dirs, spectrum):
+        """
+        Mean spectrum direction.
+
+        Parameters
+        ----------
+        dirs : array-like
+            Directions in 'radians'.
+        spectrum : array-like
+            1-D spectrum directional distribution.
+        """
+        sin = trapz(np.sin(dirs) * spectrum, dirs)
+        cos = trapz(np.cos(dirs) * spectrum, dirs)
+        return np.arctan2(sin, cos) % (2.0 * np.pi)
+
+    def dirp(self, degrees=None):
+        """
+        Wave peak direction.
+
+        Defined as the mean wave direction along the frequency corresponding to
+        the maximum value of the 'non-directional' spectrum.
+
+        Parameters
+        ----------
+        degrees : bool
+            If wave peak direction should be returned in 'degrees'. If ``False``,
+            the direction is returned in 'radians'. Defaults to original unit used
+            during initialization.
+        """
+
+        if degrees is None:
+            degrees = self._degrees
+
+        freq, spectrum1d = self.spectrum1d(axis=1, freq_hz=False)
+
+        dirs = self._full_range_dir(self._dirs)  # radians
+        spectrum2d = self.interpolate(freq, dirs, freq_hz=False, degrees=False)
+
+        spectrum_peak_dir = spectrum2d[np.argmax(spectrum1d), :]
+
+        dirp = self._mean_direction(dirs, spectrum_peak_dir)
+
+        if degrees:
+            dirp = (180.0 / np.pi) * dirp
+
+        return dirp
+
+    def dirm(self, degrees=None):
+        """
+        Mean wave direction.
+
+        Parameters
+        ----------
+        degrees : bool
+            If mean wave direction should be returned in 'degrees'. If ``False``,
+            the direction is returned in 'radians'. Defaults to original unit used
+            during instantiation.
+        """
+
+        dp, sp = self.spectrum1d(axis=0, degrees=False)
+
+        d = self._full_range_dir(dp)
+        spectrum_dir = np.interp(d, dp, sp, period=2.0 * np.pi)
+
+        dirm = self._mean_direction(d, spectrum_dir)
+
+        if degrees:
+            dirm = np.degrees(dirm)
+
+        return dirm
