@@ -650,13 +650,17 @@ class RAO(Grid):
 
     def differentiate(self, n=1):
         """
-        Return an RAO object where the transfer function is the nth derivative of
-        the 'original' transfer function.
+        Return the nth derivative of the RAO.
 
         Parameters
         ----------
         n : int
             Order of differentiation.
+
+        Returns
+        -------
+        obj :
+            Differentiated RAO object.
         """
         new = self.copy()
         new._vals = (new._vals.T * (1j * new._freq) ** n).T
