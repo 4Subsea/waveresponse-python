@@ -52,9 +52,8 @@ Alternatively, you can construct an :class:`~scarlet_lithium.RAO` object using a
         degrees=True,
     )
 
-The :class:`~scarlet_lithium.RAO` class inherits from the :class:`~scarlet_lithium.Grid`
-class, and provides all the functionality that comes with :class:`~scarlet_lithium.Grid`.
-In addition, you can:
+The :class:`~scarlet_lithium.RAO` class extends the :class:`~scarlet_lithium.Grid`
+class with the following:
 
 Retrieve the RAO's frequency/direction coordinates and amplitude/phase values using
 :meth:`~scarlet_lithium.RAO.to_amp_phase`.
@@ -70,7 +69,7 @@ Get the complex conjugated version of the RAO using :meth:`~scarlet_lithium.RAO.
 
     rao_conj = rao.conjugate()
 
-Differentiate the RAO transfer function to obtain an RAO object that represents
+Differentiate the RAO's transfer function to obtain an RAO object that represents
 the degree-of-freedom's *n*\ th derivative:
 
 .. code-block:: python
