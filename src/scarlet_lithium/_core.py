@@ -663,7 +663,7 @@ class RAO(Grid):
             Differentiated RAO object.
         """
         new = self.copy()
-        new._vals = (new._vals.T * (1j * new._freq) ** n).T
+        new._vals = new._vals * ((1j * new._freq.reshape(-1, 1)) ** n)
         return new
 
     def to_amp_phase(self, phase_degrees=None, freq_hz=None, degrees=None):
