@@ -26,22 +26,22 @@ object available. A convenience function for calculating response is provided by
 
 
     heading = 45.0   # degrees
-    response = calculate_response(wave, rao, heading, heading_degrees=True)
+    response = calculate_response(rao, wave, heading, heading_degrees=True)
 
 This function is roughly equivalent to:
 
 .. code-block:: python
 
-    def calculate_response(wave, rao, heading, heading_degrees=False):
+    def calculate_response(rao, wave, heading, heading_degrees=False):
         """
         Calculate response spectrum.
 
         Parameters
         ----------
-        wave : obj
-            ``WaveSpectrum`` object.
         rao : obj
             ``RAO`` object.
+        wave : obj
+            ``WaveSpectrum`` object.
         heading : float
             Heading of vessel relative to wave spectrum coordinate system.
         heading_degrees : bool
