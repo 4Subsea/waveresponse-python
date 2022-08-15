@@ -677,6 +677,24 @@ class RAO(Grid):
         new._vals = new._vals.conjugate()
         return new
 
+    def differentiate(self, n=1):
+        """
+        Return the nth derivative of the RAO.
+
+        Parameters
+        ----------
+        n : int
+            Order of differentiation.
+
+        Returns
+        -------
+        obj :
+            Differentiated RAO object.
+        """
+        new = self.copy()
+        new._vals = new._vals * ((1j * new._freq.reshape(-1, 1)) ** n)
+        return new
+
     def to_amp_phase(self, phase_degrees=None, freq_hz=None, degrees=None):
         """
         Return the RAO as amplitude and phase values.

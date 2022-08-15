@@ -4,8 +4,9 @@ The :class:`~scarlet_lithium.RAO` class provides an interface for handling respo
 amplitude operators (RAOs). :class:`~scarlet_lithium.RAO` inherits from :class:`~scarlet_lithium.Grid`,
 and contains RAO values on a two-dimentional frequency/(wave)direction grid.
 
-The :class:`~scarlet_lithium.RAO` is initialized with a frequency list (1-D array),
-a direction list (1-D array) and corresponding RAO values as complex numbers (2-D array).
+The :class:`~scarlet_lithium.RAO` class is initialized with a frequency list (1-D array),
+a direction list (1-D array) and corresponding RAO transfer function values as complex
+numbers (2-D array).
 
 .. code-block:: python
 
@@ -27,7 +28,7 @@ a direction list (1-D array) and corresponding RAO values as complex numbers (2-
         degrees=True,
     )
 
-Alternatively, you can construct an :class:`~scarlet_lithium.RAO` using amplitudes
+Alternatively, you can construct an :class:`~scarlet_lithium.RAO` object using amplitudes
 (2-D array) and phase (2-D array):
 
 .. code-block:: python
@@ -51,9 +52,8 @@ Alternatively, you can construct an :class:`~scarlet_lithium.RAO` using amplitud
         degrees=True,
     )
 
-The :class:`~scarlet_lithium.RAO` class inherits from the :class:`~scarlet_lithium.Grid`
-class, and provides all the functionality that comes with :class:`~scarlet_lithium.Grid`.
-In addition, you can:
+The :class:`~scarlet_lithium.RAO` class extends the :class:`~scarlet_lithium.Grid`
+class with the following:
 
 Retrieve the RAO's frequency/direction coordinates and amplitude/phase values using
 :meth:`~scarlet_lithium.RAO.to_amp_phase`.
@@ -69,15 +69,19 @@ Get the complex conjugated version of the RAO using :meth:`~scarlet_lithium.RAO.
 
     rao_conj = rao.conjugate()
 
-.. Differentiate to obtain an RAO object that represents the differentiated degree-of-freedom:
+Differentiate the RAO's transfer function to obtain an RAO object that represents
+the degree-of-freedom's *n*\ th derivative:
 
-.. .. code-block:: python
+.. code-block:: python
 
-..     rao_diff = rao.differentiate()
+    n = 1   # order of differentiation
+    rao_diff = rao.differentiate(n)
 
-.. .. note::
-..     The differentiated version of an RAO's transfer function is obtained by:
+.. note::
+    If :math:`H_x(j\omega)` is a transfer function for variable, :math:`x`, then
+    the corresponding transfer function for the differentiated variable, :math:`\dot{x}`,
+    is given by:
 
-..     .. math::
+    .. math::
 
-..         j\omega H(j\omega)
+        H_{\dot{x}}(\omega) = j\omega H_x(\omega)
