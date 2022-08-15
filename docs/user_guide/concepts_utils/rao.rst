@@ -78,8 +78,6 @@ the degree-of-freedom's *n*\ th derivative:
     rao_diff = rao.differentiate(n)
 
 .. note::
-    .. The differentiated version of an RAO's transfer function is obtained by:
-
     If :math:`H_x(j\omega)` is a transfer function for variable, :math:`x`, then
     the corresponding transfer function for the differentiated variable, :math:`\dot{x}`,
     is given by:
