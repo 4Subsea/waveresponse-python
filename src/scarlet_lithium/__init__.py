@@ -3,6 +3,7 @@ from ._core import (
     DirectionalSpectrum,
     Grid,
     WaveSpectrum,
+    calculate_response,
     complex_to_polar,
     polar_to_complex,
 )
@@ -10,6 +11,7 @@ from ._core import (
 __version__ = "0.0.1"
 
 __all__ = [
+    "calculate_response",
     "complex_to_polar",
     "DirectionalSpectrum",
     "Grid",

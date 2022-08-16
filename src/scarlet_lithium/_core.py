@@ -1141,3 +1141,59 @@ class WaveSpectrum(DirectionalSpectrum):
             dirm = np.degrees(dirm)
 
         return dirm
+
+
+def calculate_response(
+    rao, wave, heading, heading_degrees=False, coord_freq="wave", coord_dirs="wave"
+):
+    """
+    Calculate response spectrum.
+
+    Parameters
+    ----------
+    rao : obj
+        Response amplitude operator (RAO) as a :class:`~scarlet_lithium.RAO` object.
+    wave : obj
+        2-D wave spectrum as a :class:`~scarlet_lithium.WaveSpectrum` object.
+    heading : float
+        Heading of vessel relative to wave spectrum coordinate system.
+    heading_degrees : bool
+        Whether the heading is given in 'degrees'. If ``False``, 'radians' is assumed.
+    coord_freq : str, optional
+        Frequency coordinates for interpolation. Should be 'wave' or 'rao'. Determines
+        if it is the wave spectrum or the RAO that should dictate which frequencies
+        to use in response calculation. The other object will be interpolated to
+        match these frequencies.
+    coord_dirs : str, optional
+        Direction coordinates for interpolation. Should be 'wave' or 'rao'. Determines
+        if it is the wave spectrum or the RAO that should dictate which directions
+        to use in response calculation. The other object will be interpolated to
+        match these directions.
+
+    Returns
+    -------
+    obj :
+        Response spectrum as :class:`DirectionalSpectrum` object.
+    """
+    wave_body = wave.rotate(heading, degrees=heading_degrees)
+    wave_body.set_wave_convention(**rao.wave_convention)
+
+    if coord_freq.lower() == "wave":
+        freq = wave_body._freq
+    elif coord_freq.lower() == "rao":
+        freq = rao._freq
+    else:
+        raise ValueError("Invalid `coord_freq` value. Should be 'wave' or 'rao'.")
+
+    if coord_dirs.lower() == "wave":
+        dirs = wave_body._dirs
+    elif coord_dirs.lower() == "rao":
+        dirs = rao._dirs
+    else:
+        raise ValueError("Invalid `coord_dirs` value. Should be 'wave' or 'rao'.")
+
+    rao_squared = np.abs(rao * rao.conjugate())
+    rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
+    wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
+
+    return rao_squared * wave_body
