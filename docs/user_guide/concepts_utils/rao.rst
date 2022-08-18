@@ -63,14 +63,14 @@ Retrieve the RAO's frequency/direction coordinates and amplitude/phase values us
     freq, dirs, amp, phase = rao.to_amp_phase(freq_hz=True, degrees=True)
 
 
-Get the complex conjugated version of the RAO using :meth:`~waveresponse.RAO.conjugate`.
+Get the complex conjugate version of the RAO using :meth:`~waveresponse.RAO.conjugate`.
 
 .. code-block:: python
 
     rao_conj = rao.conjugate()
 
 Differentiate the RAO's transfer function to obtain an RAO object that represents
-the degree-of-freedom's *n*\ th derivative:
+the *n*\ th derivative of the original degree-of-freedom:
 
 .. code-block:: python
 
