@@ -90,7 +90,7 @@ are interpolated to match those new coordinates.
     dirs_new = np.array([0.0, 45.0, 90.0, 135.0, 180.0])
     grid_reshaped = grid.reshape(freq_new, dirs_new, freq_hz=True, degrees=True)
 
-Some basic aritmetics and mathematical operations are provided. These operations
+Some basic arithmetics and mathematical operations are provided. These operations
 will be done on the grid's values (2-D array).
 
 .. code-block:: python
