@@ -1,14 +1,14 @@
 Grid
 ====
-The :class:`~waveresponse.Grid` class provides an interface for handling 2-D
-arrays of values that should be interpreted on a two-dimentional frequency/(wave)direction
-grid.
+The :class:`~waveresponse.Grid` class provides an interface for handling values
+that should be interpreted on a two-dimentional frequency/(wave)direction grid.
+:class:`~waveresponse.Grid` provides some useful functionality on its own, but the
+main intension of this class is to serve as a base class. :class:`~waveresponse.RAO`,
+:class:`~waveresponse.DirectionalSpectrum` and :class:`~waveresponse.WaveSpectrum`
+are all examples of classes that extend :class:`~waveresponse.Grid`'s functionality.
 
-:class:`~waveresponse.Grid` provides some useful functionality on its own, but
-the main intension of this class is to serve as a building block for other classes.
-:class:`~waveresponse.RAO`, :class:`~waveresponse.DirectionalSpectrum` and
-:class:`~waveresponse.WaveSpectrum` are all examples of classes that inherits
-from :class:`~waveresponse.Grid`.
+The :class:`~waveresponse.Grid` class is initialized with a frequency list (1-D array),
+a direction list (1-D array) and corresponding grid values (2-D array).
 
 .. code-block:: python
 
@@ -28,8 +28,9 @@ from :class:`~waveresponse.Grid`.
         degrees=True,
     )
 
-To be able to interpret the grid directions and values, we need some information
-about the 'wave convention'. Two boolean parameters are needed:
+To be able to interpret the (wave) directions and values that are associated with
+a grid, we need some information about the 'wave convention' that is used. Two boolean
+parameters are needed:
 
 *clockwise*
     Describes the direction of positive rotation.
@@ -51,16 +52,17 @@ These parameters are set during initialization of the grid object:
         waves_coming_from=True,
     )
 
-If you want to convert the grid to a different wave convention, you can do that
-by calling the :meth:`~waveresponse.Grid.set_wave_convention` method.
+If you want to convert the grid to a different wave convention, you can achieve
+that by calling the :meth:`~waveresponse.Grid.set_wave_convention` method with the
+desired convention flags.
 
 .. code-block:: python
 
-    new_convention = {"clockwise": False, "waves_coming_from": True}
-    grid.set_wave_convention(new_convention)
+    grid.set_wave_convention(clockwise=False, waves_coming_from=True)
 
 Once you have an initialized grid object, the grid's frequency/direction coordinates
-and values can be retrieved by calling the grid:
+and values can be retrieved by calling the grid. You must then specify which coordinate
+units to return by setting the ``freq_hz`` and ``degrees`` flags.
 
 .. code-block:: python
 
