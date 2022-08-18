@@ -72,9 +72,10 @@ html_theme = "pydata_sphinx_theme"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
-html_logo = (
-    "_static/4insight-logo.svg"  # "_static/Logo 4Subsea horisontal negative.png"
-)
+# html_logo = (
+#     "_static/4insight-logo.svg"  # "_static/Logo 4Subsea horisontal negative.png"
+# )
+html_title = "WaveResponse"
 html_context = {"default_mode": "light"}
 html_favicon = "_static/favicon.png"
 
