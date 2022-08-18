@@ -7,6 +7,7 @@ This section will introduce concepts and utilites that are useful when working w
 
 .. toctree::
    :maxdepth: 2
+   :hidden:
 
    grid
    rao

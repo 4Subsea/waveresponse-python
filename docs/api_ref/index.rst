@@ -10,3 +10,4 @@ functions and methods.
    rao
    directional_spectrum
    wave_spectrum
+   calculate_response
