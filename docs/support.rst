@@ -2,7 +2,7 @@
 
 Support
 =======
-For bug/issue reports, please submit as issue on `GitHub`_. For questions and feedback contact
+For bug/issue reports, please submit an issue on `GitHub`_. For questions and feedback contact
 us at feedback@4insight.io
 
 .. _GitHub: https://github.com/4subsea/scarlet_lithium_python

@@ -1,4 +1,4 @@
-API reference
+API Reference
 =============
 This section gives an overview of all public ``scarlet_lithium`` objects,
 functions and methods.

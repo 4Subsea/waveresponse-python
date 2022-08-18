@@ -4,27 +4,36 @@
 /*****************************************************************************
 * 4Subsea tweaks
 **/
-.navbar{
-  background-color: #333333 !important;
+
+.bd-header.navbar-light#navbar-main .navbar-nav li a.nav-link {
+  padding: 0 0.5rem;
+  color: var(--pst-color-navbar-link)
 }
 
-.navbar-brand img {
-  height: 22px; /* 32px */
+
+.bd-header.navbar-light#navbar-main .navbar-nav li a.nav-link:hover{
+  color: var(--pst-color-primary)
 }
 
-.fab::before{
-  color: #f5f5f5;
+
+.admonition, div.admonition {
+  background-color: transparent ;
 }
 
-.fas::before{
-  color: #f5f5f5;
+
+h1, h2 {
+  color: var(--pst-color-h1);
 }
+
+
 
 :root {
+
   /*****************************************************************************
   * Theme config
   **/
   --pst-header-height: 44px;
+
 
   /*****************************************************************************
   * Font size
@@ -54,45 +63,40 @@
   * 
   * Colors are defined in rgb string way, "red, green, blue"
   **/
-  --pst-color-primary: 0, 45, 86;
-  --pst-color-text-base: 0, 45, 86;
-  --pst-color-info: 0, 157, 220;
+  --pst-color-primary: #00A0AF !important; /* headers */
+  --pst-color-text-base: 0, 45, 86 !important;
+  --pst-color-info: #009DDC !important;
   --pst-color-success: 0, 168, 143;
-  --pst-color-warning: 250, 166, 52;;
-  --pst-color-danger: 237, 23, 79;;
+  --pst-color-warning: 250, 166, 52;
+  --pst-color-danger: 237, 23, 79;
 
-  --pst-color-h1: var(--pst-color-primary);
-  --pst-color-h2: var(--pst-color-primary);
-  --pst-color-h3: var(--pst-color-primary);
-  --pst-color-h4: var(--pst-color-primary);
+  --pst-color-on-background: #333333 !important; /*navbar bg-colour*/
+  --pst-color-text-muted: #F5F5F5 !important; /* Navbar text and inactive sidebar links*/
+  --pst-color-text-muted: #77757A !important ; 
+
+  --pst-color-h1: #002D56 !important;
+  --pst-color-h2: var(--pst-color-h1);
+  --pst-color-h3: var(--pst-color-h1);
+  --pst-color-h4: var(--pst-color-h1);
   --pst-color-h5: var(--pst-color-text-base);
   --pst-color-h6: var(--pst-color-text-base);
   --pst-color-paragraph: var(--pst-color-text-base);
-  --pst-color-link: 0, 160, 175;
-  --pst-color-link-hover: 243, 119, 111;
-  --pst-color-headerlink: 0, 45, 86;;
-  --pst-color-headerlink-hover: 218, 211, 204;
-  --pst-color-preformatted-text: 73, 73, 74;
-  --pst-color-preformatted-background: 250, 250, 250;
-  --pst-color-inline-code: 237, 23, 79;
+  --pst-color-link: var(--pst-color-primary) !important; /*links*/
+  --pst-color-link-hover: #F3776F !important;
+  --pst-color-headerlink: #002D56 !important;;
+  --pst-color-headerlink-hover: #0032FA !important;
+  --pst-color-inline-code: #ED174F !important;
 
-  --pst-color-active-navigation: 0, 160, 175;
-  --pst-color-navbar-link: 245, 245, 245;
-  --pst-color-navbar-link-hover: var(--pst-color-active-navigation);
+
+  --pst-color-active-navigation: var(--pst-color-primary);
+  --pst-color-navbar-link: #F5F5F5 !important;
+  --pst-color-navbar-link-hover: var(--pst-color-active-navigation) !important;
   --pst-color-navbar-link-active: var(--pst-color-active-navigation);
-  --pst-color-sidebar-link: 119, 117, 122;
-  --pst-color-sidebar-link-hover: var(--pst-color-active-navigation);
-  --pst-color-sidebar-link-active: var(--pst-color-active-navigation);
-  --pst-color-sidebar-expander-background-hover: 244, 244, 244;
-  --pst-color-sidebar-caption: 218, 211, 204;
-  --pst-color-toc-link: var(--pst-color-sidebar-link);
-  --pst-color-toc-link-hover: var(--pst-color-active-navigation);
-  --pst-color-toc-link-active: var(--pst-color-active-navigation);
+
 
    /*****************************************************************************
   * Admonitions
   **/
-  --pst-color-admonition-default: var(--pst-color-info);
-  --pst-color-admonition-note: var(--pst-color-info);
+  --pst-color-admonition-default: var(--pst-color-info) !important;
+  --pst-color-admonition-note: var(--pst-color-info) !important;
 }
-

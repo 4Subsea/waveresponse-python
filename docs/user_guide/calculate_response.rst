@@ -1,4 +1,4 @@
-Calculate response spectrum
+Calculate Response Spectrum
 ===========================
 
 This section will show you how to calculate a first-order wave-induced motion response

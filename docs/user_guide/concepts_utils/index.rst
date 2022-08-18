@@ -1,4 +1,4 @@
-Concepts and utilities
+Concepts and Utilities
 ======================
 This section will introduce concepts and utilites that are useful.
 

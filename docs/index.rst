@@ -1,4 +1,4 @@
-Vessel motion and wave utilities
+Vessel Motion and Wave Utilities
 ================================
 
 Awesome intro here 
