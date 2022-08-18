@@ -1,7 +1,7 @@
 Grid
 ====
 The :class:`~waveresponse.Grid` class provides an interface for handling 2-D
-arrays of values that should be interpreted on two-dimentional frequency/(wave)direction
+arrays of values that should be interpreted on a two-dimentional frequency/(wave)direction
 grid.
 
 :class:`~waveresponse.Grid` provides some useful functionality on its own, but

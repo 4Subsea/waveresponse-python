@@ -1,8 +1,9 @@
 Vessel Motion and Wave Utilities
 ================================
 
-Awesome intro here 
-
+``waveresponse`` proviedes utilities for handling 2-D wave spectra and RAOs using
+the Python programming language. A wave spectrum and a RAO can be combined in order
+to estimate a frequency-domain response.
 
 
 .. toctree::

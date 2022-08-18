@@ -1,7 +1,9 @@
 User Guide
 ==========
 
-This user guide will show how to work with 2-D wave spectra and RAOs.
+This user guide will introduce some :ref:`concepts and utilities <concepts-utilities>`
+that can be handy when working with 2-D wave spectra and RAOs. Then, it will show
+how to :ref:`calculate response <calculate-response>` using ``waveresponse``.
 
 .. toctree::
    :maxdepth: 2

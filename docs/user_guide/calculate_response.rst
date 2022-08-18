@@ -1,3 +1,5 @@
+.. _calculate-response:
+
 Calculate response spectrum
 ===========================
 
