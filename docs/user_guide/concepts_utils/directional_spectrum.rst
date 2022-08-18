@@ -1,18 +1,18 @@
 DirectionalSpectrum
 ===================
-The :class:`~scarlet_lithium.DirectionalSpectrum` class provides an interface for
-handling 2-D directional spectra. :class:`~scarlet_lithium.DirectionalSpectrum`
-extends :class:`~scarlet_lithium.Grid`, and contains spectrum density values
+The :class:`~waveresponse.DirectionalSpectrum` class provides an interface for
+handling 2-D directional spectra. :class:`~waveresponse.DirectionalSpectrum`
+extends :class:`~waveresponse.Grid`, and contains spectrum density values
 on a two-dimentional frequency/(wave)direction grid.
 
-The :class:`~scarlet_lithium.DirectionalSpectrum` is initialized with a frequency
+The :class:`~waveresponse.DirectionalSpectrum` is initialized with a frequency
 list (1-D array), a direction list (1-D array) and corresponding spectrum density
 values (2-D array).
 
 .. code-block:: python
 
     import numpy as np
-    from scarlet_lithium import DirectionalSpectrum
+    from waveresponse import DirectionalSpectrum
 
 
     freq = np.linspace(0.0, 1.0, 50)
@@ -29,7 +29,7 @@ values (2-D array).
         waves_coming_from=False,
     )
 
-The :class:`~scarlet_lithium.DirectionalSpectrum` class extends the :class:`~scarlet_lithium.Grid`
+The :class:`~waveresponse.DirectionalSpectrum` class extends the :class:`~waveresponse.Grid`
 class with the following:
 
 Calculate the variance (i.e., integral) and standard deviation of the spectrum:
@@ -54,7 +54,7 @@ whether to integrate over the frequency axis (``axis=0``), or the direction axis
     # Directional "distribution"
     spectrum_dir = spectrum1d(axis=0)
 
-Calculate spectral moments by calling the :meth:`~scarlet_lithium.DirectionalSpectrum.moment`
+Calculate spectral moments by calling the :meth:`~waveresponse.DirectionalSpectrum.moment`
 method with the desired order, `n`.
 
 .. code-block:: python

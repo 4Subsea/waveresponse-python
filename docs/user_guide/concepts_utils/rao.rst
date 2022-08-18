@@ -1,17 +1,17 @@
 RAO
 ===
-The :class:`~scarlet_lithium.RAO` class provides an interface for handling response
-amplitude operators (RAOs). :class:`~scarlet_lithium.RAO` inherits from :class:`~scarlet_lithium.Grid`,
+The :class:`~waveresponse.RAO` class provides an interface for handling response
+amplitude operators (RAOs). :class:`~waveresponse.RAO` inherits from :class:`~waveresponse.Grid`,
 and contains RAO values on a two-dimentional frequency/(wave)direction grid.
 
-The :class:`~scarlet_lithium.RAO` class is initialized with a frequency list (1-D array),
+The :class:`~waveresponse.RAO` class is initialized with a frequency list (1-D array),
 a direction list (1-D array) and corresponding RAO transfer function values as complex
 numbers (2-D array).
 
 .. code-block:: python
 
     import numpy as np
-    from scarlet_lithium import RAO
+    from waveresponse import RAO
 
 
     freq = np.linspace(0.0, 1.0, 50)
@@ -28,13 +28,13 @@ numbers (2-D array).
         degrees=True,
     )
 
-Alternatively, you can construct an :class:`~scarlet_lithium.RAO` object using amplitudes
+Alternatively, you can construct an :class:`~waveresponse.RAO` object using amplitudes
 (2-D array) and phase (2-D array):
 
 .. code-block:: python
 
     import numpy as np
-    from scarlet_lithium import RAO
+    from waveresponse import RAO
 
 
     freq = np.linspace(0.0, 1.0, 50)
@@ -52,18 +52,18 @@ Alternatively, you can construct an :class:`~scarlet_lithium.RAO` object using a
         degrees=True,
     )
 
-The :class:`~scarlet_lithium.RAO` class extends the :class:`~scarlet_lithium.Grid`
+The :class:`~waveresponse.RAO` class extends the :class:`~waveresponse.Grid`
 class with the following:
 
 Retrieve the RAO's frequency/direction coordinates and amplitude/phase values using
-:meth:`~scarlet_lithium.RAO.to_amp_phase`.
+:meth:`~waveresponse.RAO.to_amp_phase`.
 
 .. code-block:: python
 
     freq, dirs, amp, phase = rao.to_amp_phase(freq_hz=True, degrees=True)
 
 
-Get the complex conjugated version of the RAO using :meth:`~scarlet_lithium.RAO.conjugate`.
+Get the complex conjugated version of the RAO using :meth:`~waveresponse.RAO.conjugate`.
 
 .. code-block:: python
 

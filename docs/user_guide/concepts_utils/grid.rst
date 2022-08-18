@@ -1,19 +1,19 @@
 Grid
 ====
-The :class:`~scarlet_lithium.Grid` class provides an interface for handling 2-D
+The :class:`~waveresponse.Grid` class provides an interface for handling 2-D
 arrays of values that should be interpreted on two-dimentional frequency/(wave)direction
 grid.
 
-:class:`~scarlet_lithium.Grid` provides some useful functionality on its own, but
+:class:`~waveresponse.Grid` provides some useful functionality on its own, but
 the main intension of this class is to serve as a building block for other classes.
-:class:`~scarlet_lithium.RAO`, :class:`~scarlet_lithium.DirectionalSpectrum` and
-:class:`~scarlet_lithium.WaveSpectrum` are all examples of classes that inherits
-from :class:`~scarlet_lithium.Grid`.
+:class:`~waveresponse.RAO`, :class:`~waveresponse.DirectionalSpectrum` and
+:class:`~waveresponse.WaveSpectrum` are all examples of classes that inherits
+from :class:`~waveresponse.Grid`.
 
 .. code-block:: python
 
     import numpy as np
-    from scarlet_lithium import Grid
+    from waveresponse import Grid
 
 
     freq = np.linspace(0.0, 1.0, 50)
@@ -52,7 +52,7 @@ These parameters are set during initialization of the grid object:
     )
 
 If you want to convert the grid to a different wave convention, you can do that
-by calling the :meth:`~scarlet_lithium.Grid.set_wave_convention` method.
+by calling the :meth:`~waveresponse.Grid.set_wave_convention` method.
 
 .. code-block:: python
 
@@ -66,7 +66,7 @@ and values can be retrieved by calling the grid:
 
     freq, dirs, vals = grid(freq_hz=True, degrees=True)
 
-Interpolation of the grid values is provided by the :meth:`~scarlet_lithium.Grid.interpolate`
+Interpolation of the grid values is provided by the :meth:`~waveresponse.Grid.interpolate`
 method:
 
 .. code-block:: python

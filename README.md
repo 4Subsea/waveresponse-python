@@ -1,2 +1,2 @@
-# scarlet-lithium-python
+# waveresponse-python
 Vessel motion and wave utilities.

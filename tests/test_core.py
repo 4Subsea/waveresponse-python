@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from scarlet_lithium import (
+from waveresponse import (
     RAO,
     DirectionalSpectrum,
     Grid,

@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath("../"))
 # -- Project information -----------------------------------------------------
 _TEMPLATE_VERSION = "1.0.0"
 
-project = "scarlet_lithium"
+project = "waveresponse"
 copyright = f"{date.today().year}, 4Subsea"
 author = "4Subsea"
 
@@ -88,12 +88,12 @@ html_theme_options = {
     "icon_links": [
         {
             "name": "GitHub",
-            "url": "https://github.com/4Subsea/scarlet-lithium-python",
+            "url": "https://github.com/4Subsea/waveresponse-python",
             "icon": "fab fa-github",
         },
         {
             "name": "PyPI",
-            "url": "https://pypi.org/project/scarlet-lithium",
+            "url": "https://pypi.org/project/waveresponse",
             "icon": "fas fa-box",
         },
     ],

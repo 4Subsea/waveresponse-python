@@ -2,7 +2,7 @@ Calculate response spectrum
 ===========================
 
 This section will show you how to calculate a first-order wave-induced motion response
-spectrum using ``scarlet_lithium``. We will assume linear theory and stationary
+spectrum using ``waveresponse``. We will assume linear theory and stationary
 conditions; then, the vessel's frequency-domain response is described by a (motion)
 response amplitude operator (RAO) and a 2-D wave spectrum. The response spectrum
 calculation is governed by the following equation:
@@ -15,14 +15,14 @@ is the degree-of-freedom's transfer function (i.e., RAO), :math:`H_x^{*}(\omega,
 is the complex conjugate version of the transfer function, and :math:`S_x(\omega)`
 is the response spectrum. :math:`\beta` is the relative wave direction.
 
-With ``scarlet_lithium`` it is easy to estimate a vessel's response spectrum once
-you have an :class:`~scarlet_lithium.RAO` object and a :class:`~scarlet_lithium.WaveSpectrum`
+With ``waveresponse`` it is easy to estimate a vessel's response spectrum once
+you have an :class:`~waveresponse.RAO` object and a :class:`~waveresponse.WaveSpectrum`
 object available. A convenience function for calculating response is provided by
-:func:`~scarlet_lithium.calculate_response`:
+:func:`~waveresponse.calculate_response`:
 
 .. code-block:: python
 
-    from scarlet_lithium import calculate_response
+    from waveresponse import calculate_response
 
 
     heading = 45.0   # degrees
@@ -75,7 +75,7 @@ This function is roughly equivalent to:
 
         return rao_squared * wave_body
 
-The response is returned as a :class:`~scarlet_lithium.DirectionalSpectrum` object,
+The response is returned as a :class:`~waveresponse.DirectionalSpectrum` object,
 and provides useful spectrum operations, such as:
 
 .. code-block:: python
