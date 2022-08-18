@@ -94,14 +94,20 @@ and provides useful spectrum operations, such as:
 
     # Etc.
 
-
 .. note::
 
-    :meth:`~waveresponse.calculate_response` returns the response as a 2-D spectrum
-    calculated according to:\
+    :meth:`~waveresponse.calculate_response` returns the response as a two-dimentional
+    spectrum calculated according to:\
 
     .. math::
-        H_x(\omega, \beta)H_x^{*}(\omega, \beta) S_{\zeta}(\omega, \beta)
+        S_x(\omega, \beta) = H_x(\omega, \beta)H_x^{*}(\omega, \beta) S_{\zeta}(\omega, \beta)
 
-    To obtain the one-dimentional spectrum (which is what you would measure),
-    you need to integrate over direction.
+    To obtain the one-dimentional spectrum (which is what you would measure with
+    a sensor), you need to integrate over direction:
+
+    .. math::
+        S_x(\omega) = \int S_x(\omega, \beta) d\beta
+
+    The response spectrum does not make much physical sense before it is integrated
+    and converted to a 1-D non-directional spectrum. However, the 2-D version can
+    indicate which wave directions are most important for the total response.
