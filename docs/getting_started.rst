@@ -6,12 +6,12 @@ New to Python?
 You need to have Python installed on your system before you can use this package.
 Head over to `Python.org`_ for instructions.
 
-Python Version Support
+Python version support
 ----------------------
 Officially Python 3.8, 3.9, and 3.10. We aim to support the three most
 recent major versions.
 
-OS Support
+OS support
 ----------
 This package is tested with the latest Windows, MacOS, and Ubuntu (Linux) versions.
 
