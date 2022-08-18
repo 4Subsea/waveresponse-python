@@ -11,7 +11,7 @@ numbers (2-D array).
 .. code-block:: python
 
     import numpy as np
-    from waveresponse import RAO
+    from waveresponse as wr
 
 
     freq = np.linspace(0.0, 1.0, 50)
@@ -20,7 +20,7 @@ numbers (2-D array).
     vals_imag = np.random.random((len(freq), len(dirs)))
     vals_complex = vals_real + 1j * vals_imag
 
-    rao = RAO(
+    rao = wr.RAO(
         freq,
         dirs,
         vals_complex,
@@ -34,7 +34,7 @@ Alternatively, you can construct an :class:`~waveresponse.RAO` object using ampl
 .. code-block:: python
 
     import numpy as np
-    from waveresponse import RAO
+    from waveresponse as wr
 
 
     freq = np.linspace(0.0, 1.0, 50)
@@ -42,7 +42,7 @@ Alternatively, you can construct an :class:`~waveresponse.RAO` object using ampl
     amp = np.random.random((len(freq), len(dirs)))
     phase = np.random.random((len(freq), len(dirs)))
 
-    rao = RAO.from_amp_phase(
+    rao = wr.RAO.from_amp_phase(
         freq,
         dirs,
         amp,

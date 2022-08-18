@@ -22,11 +22,11 @@ object available. A convenience function for calculating response is provided by
 
 .. code-block:: python
 
-    from waveresponse import calculate_response
+    import waveresponse as wr
 
 
     heading = 45.0   # degrees
-    response = calculate_response(rao, wave, heading, heading_degrees=True)
+    response = wr.calculate_response(rao, wave, heading, heading_degrees=True)
 
 This function is roughly equivalent to:
 

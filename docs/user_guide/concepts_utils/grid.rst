@@ -13,14 +13,14 @@ from :class:`~waveresponse.Grid`.
 .. code-block:: python
 
     import numpy as np
-    from waveresponse import Grid
+    from waveresponse as wr
 
 
     freq = np.linspace(0.0, 1.0, 50)
     dirs = np.linspace(0.0, 360.0, 10, endpoint=False)
     vals = np.random.random((len(freq), len(dirs)))
 
-    grid = Grid(
+    grid = wr.Grid(
         freq,
         dirs,
         vals,
@@ -41,7 +41,7 @@ These parameters are set during initialization of the grid object:
 
 .. code-block:: python
 
-    grid = Grid(
+    grid = wr.Grid(
         freq,
         dirs,
         vals,
