@@ -1148,9 +1148,9 @@ class Test_Grid:
         dirs_in = np.array([0, 10, 20])
         vals_in = np.array(
             [
-                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
-                [2.0 + 0.0j, 0.0 + 2.0j, -2.0 + 0.0j],
-                [3.0 + 0.0j, 0.0 + 3.0j, -3.0 + 0.0j],
+                [1.0 + 0.0j, 1.0 + 1.0j, 0.0 + 1.0j],
+                [2.0 + 0.0j, 2.0 - 2.0j, 0.0 + 2.0j],
+                [3.0 + 0.0j, 3.0 + 3.0j, 0.0 - 3.0j],
             ]
         )
         grid = Grid(
@@ -1166,9 +1166,9 @@ class Test_Grid:
 
         vals_expect = np.array(
             [
-                [1.0, 1.0, 1.0],
-                [2.0, 2.0, 2.0],
-                [3.0, 3.0, 3.0],
+                [1.0, np.sqrt(1.0**2 + 1.0**2), 1.0],
+                [2.0, np.sqrt(2.0**2 + 2.0**2), 2.0],
+                [3.0, np.sqrt(3.0**2 + 3.0**2), 3.0],
             ]
         )
 
@@ -1176,6 +1176,70 @@ class Test_Grid:
 
     def test__repr__(self, grid):
         assert str(grid) == "Grid"
+
+    def test_real(self):
+        freq_in = np.array([1, 2, 3])
+        dirs_in = np.array([0, 10, 20])
+        vals_in = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
+                [2.0 + 0.0j, 0.0 - 2.0j, -2.0 + 0.0j],
+                [3.0 + 0.0j, 0.0 + 3.0j, -3.0 + 0.0j],
+            ]
+        )
+        grid = Grid(
+            freq_in,
+            dirs_in,
+            vals_in,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        grid_real = grid.real
+
+        vals_expect = np.array(
+            [
+                [1.0, 0.0, -1.0],
+                [2.0, 0.0, -2.0],
+                [3.0, 0.0, -3.0],
+            ]
+        )
+
+        assert isinstance(grid_real, Grid)
+        np.testing.assert_array_almost_equal(grid_real._vals, vals_expect)
+
+    def test_imag(self):
+        freq_in = np.array([1, 2, 3])
+        dirs_in = np.array([0, 10, 20])
+        vals_in = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
+                [2.0 + 0.0j, 0.0 - 2.0j, -2.0 + 0.0j],
+                [3.0 + 0.0j, 0.0 + 3.0j, -3.0 + 0.0j],
+            ]
+        )
+        grid = Grid(
+            freq_in,
+            dirs_in,
+            vals_in,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        grid_imag = grid.imag
+
+        vals_expect = np.array(
+            [
+                [0.0, 1.0, 0.0],
+                [0.0, -2.0, 0.0],
+                [0.0, 3.0, 0.0],
+            ]
+        )
+
+        assert isinstance(grid_imag, Grid)
+        np.testing.assert_array_almost_equal(grid_imag._vals, vals_expect)
 
 
 class Test_RAO:

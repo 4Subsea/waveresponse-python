@@ -553,6 +553,26 @@ class Grid:
     def __repr__(self):
         return "Grid"
 
+    @property
+    def real(self):
+        """
+        Return a copy of the object where all values are converted to their real
+        part.
+        """
+        new = self.copy()
+        new._vals = new._vals.real
+        return new
+
+    @property
+    def imag(self):
+        """
+        Return a copy of the object where all values are converted to their imaginary
+        part.
+        """
+        new = self.copy()
+        new._vals = new._vals.imag
+        return new
+
 
 class RAO(Grid):
     """
@@ -1192,7 +1212,7 @@ def calculate_response(
     else:
         raise ValueError("Invalid `coord_dirs` value. Should be 'wave' or 'rao'.")
 
-    rao_squared = np.abs(rao * rao.conjugate())
+    rao_squared = (rao * rao.conjugate()).real
     rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
     wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
 
