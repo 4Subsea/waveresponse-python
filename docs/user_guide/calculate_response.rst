@@ -72,7 +72,7 @@ This function is roughly equivalent to:
         #    https://cradpdf.drdc-rddc.gc.ca/PDFS/unc341/p811241_A1b.pdf
         freq = wave_body.freq(freq_hz=False)
         dirs = wave_body.dirs(degrees=False)
-        rao_squared = np.abs(rao * rao.conjugate())
+        rao_squared = (rao * rao.conjugate()).real
         rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
         wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
 
