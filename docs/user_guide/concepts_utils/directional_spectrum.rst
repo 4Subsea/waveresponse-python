@@ -49,10 +49,10 @@ whether to integrate over the frequency axis (``axis=0``), or the direction axis
 .. code-block:: python
 
     # "Non-directional" spectrum
-    spectrum_nondir = spectrum1d(axis=1)
+    spectrum_nondir = spectrum.spectrum1d(axis=1)
 
     # Directional "distribution"
-    spectrum_dir = spectrum1d(axis=0)
+    spectrum_dir = spectrum.spectrum1d(axis=0)
 
 Calculate spectral moments by calling the :meth:`~waveresponse.DirectionalSpectrum.moment`
 method with the desired order, `n`.
