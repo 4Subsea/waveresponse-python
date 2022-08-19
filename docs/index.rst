@@ -1,5 +1,5 @@
-Vessel Motion and Wave Utilities
-================================
+WaveResponse documentation
+==========================
 
 ``waveresponse`` proviedes utilities for handling 2-D wave spectra and response amplitude
 operators (RAOs) using the Python programming language.
