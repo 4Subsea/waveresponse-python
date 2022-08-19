@@ -1206,6 +1206,7 @@ class Test_Grid:
             ]
         )
 
+        assert isinstance(grid_real, Grid)
         np.testing.assert_array_almost_equal(grid_real._vals, vals_expect)
 
     def test_imag(self):
@@ -1237,6 +1238,7 @@ class Test_Grid:
             ]
         )
 
+        assert isinstance(grid_imag, Grid)
         np.testing.assert_array_almost_equal(grid_imag._vals, vals_expect)
 
 
