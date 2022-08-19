@@ -25,6 +25,10 @@ h1, h2 {
   color: var(--pst-color-h1);
 }
 
+.navbar-light .logo__title {
+  color: var(--pst-color-navbar-link);
+}
+
 
 
 :root {
