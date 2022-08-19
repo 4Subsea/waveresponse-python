@@ -1,17 +1,17 @@
 RAO
 ===
-The :class:`~scarlet_lithium.RAO` class provides an interface for handling response
-amplitude operators (RAOs). :class:`~scarlet_lithium.RAO` inherits from :class:`~scarlet_lithium.Grid`,
+The :class:`~waveresponse.RAO` class provides an interface for handling response
+amplitude operators (RAOs). :class:`~waveresponse.RAO` extends :class:`~waveresponse.Grid`,
 and contains RAO values on a two-dimentional frequency/(wave)direction grid.
 
-The :class:`~scarlet_lithium.RAO` class is initialized with a frequency list (1-D array),
+The :class:`~waveresponse.RAO` class is initialized with a frequency list (1-D array),
 a direction list (1-D array) and corresponding RAO transfer function values as complex
 numbers (2-D array).
 
 .. code-block:: python
 
     import numpy as np
-    from scarlet_lithium import RAO
+    from waveresponse as wr
 
 
     freq = np.linspace(0.0, 1.0, 50)
@@ -20,7 +20,7 @@ numbers (2-D array).
     vals_imag = np.random.random((len(freq), len(dirs)))
     vals_complex = vals_real + 1j * vals_imag
 
-    rao = RAO(
+    rao = wr.RAO(
         freq,
         dirs,
         vals_complex,
@@ -28,13 +28,13 @@ numbers (2-D array).
         degrees=True,
     )
 
-Alternatively, you can construct an :class:`~scarlet_lithium.RAO` object using amplitudes
+Alternatively, you can construct an :class:`~waveresponse.RAO` object using amplitudes
 (2-D array) and phase (2-D array):
 
 .. code-block:: python
 
     import numpy as np
-    from scarlet_lithium import RAO
+    from waveresponse as wr
 
 
     freq = np.linspace(0.0, 1.0, 50)
@@ -42,7 +42,7 @@ Alternatively, you can construct an :class:`~scarlet_lithium.RAO` object using a
     amp = np.random.random((len(freq), len(dirs)))
     phase = np.random.random((len(freq), len(dirs)))
 
-    rao = RAO.from_amp_phase(
+    rao = wr.RAO.from_amp_phase(
         freq,
         dirs,
         amp,
@@ -52,25 +52,25 @@ Alternatively, you can construct an :class:`~scarlet_lithium.RAO` object using a
         degrees=True,
     )
 
-The :class:`~scarlet_lithium.RAO` class extends the :class:`~scarlet_lithium.Grid`
+The :class:`~waveresponse.RAO` class extends the :class:`~waveresponse.Grid`
 class with the following:
 
 Retrieve the RAO's frequency/direction coordinates and amplitude/phase values using
-:meth:`~scarlet_lithium.RAO.to_amp_phase`.
+:meth:`~waveresponse.RAO.to_amp_phase`.
 
 .. code-block:: python
 
     freq, dirs, amp, phase = rao.to_amp_phase(freq_hz=True, degrees=True)
 
 
-Get the complex conjugated version of the RAO using :meth:`~scarlet_lithium.RAO.conjugate`.
+Get the complex conjugate version of the RAO using :meth:`~waveresponse.RAO.conjugate`.
 
 .. code-block:: python
 
     rao_conj = rao.conjugate()
 
 Differentiate the RAO's transfer function to obtain an RAO object that represents
-the degree-of-freedom's *n*\ th derivative:
+the *n*\ th derivative of the original degree-of-freedom:
 
 .. code-block:: python
 

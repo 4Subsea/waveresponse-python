@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "scarlet_lithium"
+name = "waveresponse"
 authors = [
   { name="4Subsea", email="python@4subsea.com" },
 ]
@@ -26,11 +26,12 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/4Subsea/scarlet-lithium-python"
-"Bug Tracker" = "https://github.com/4Subsea/scarlet-lithium-python/issues"
+"Homepage" = "https://github.com/4Subsea/waveresponse-python"
+"Bug Tracker" = "https://github.com/4Subsea/waveresponse-python/issues"
+"Documentation" = "https://docs.4insight.io/waveresponse/python/latest/"
 
 [tool.setuptools.dynamic]
-version = {attr = "scarlet_lithium.__version__"}
+version = {attr = "waveresponse.__version__"}
 
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]
@@ -45,7 +46,7 @@ envlist =
 
 [testenv]
 commands =
-    pytest --cov=scarlet_lithium --cov-report html:cov_html-{envname} ./tests
+    pytest --cov=waveresponse --cov-report html:cov_html-{envname} ./tests
 deps =
     pytest
     pytest-cov

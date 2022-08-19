@@ -1,5 +1,5 @@
 WaveSpectrum
 ============
 
-.. autoclass:: scarlet_lithium.WaveSpectrum
+.. autoclass:: waveresponse.WaveSpectrum
     :members:

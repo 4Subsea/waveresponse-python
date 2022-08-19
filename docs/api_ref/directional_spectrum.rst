@@ -1,5 +1,5 @@
 DirectionalSpectrum
 ===================
 
-.. autoclass:: scarlet_lithium.DirectionalSpectrum
+.. autoclass:: waveresponse.DirectionalSpectrum
     :members:

@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath("../"))
 # -- Project information -----------------------------------------------------
 _TEMPLATE_VERSION = "1.0.0"
 
-project = "scarlet_lithium"
+project = "waveresponse"
 copyright = f"{date.today().year}, 4Subsea"
 author = "4Subsea"
 
@@ -48,8 +48,6 @@ napoleon_numpy_docstring = True
 # Intershpinx mapping
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
-    "datareservoirio": ("https://www.datareservoir.io/python/docs/latest", None),
-    "pandas": ("http://pandas.pydata.org/pandas-docs/stable", None),
     "numpy": ("https://numpy.org/doc/stable", None),
 }
 
@@ -74,9 +72,10 @@ html_theme = "pydata_sphinx_theme"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
-html_logo = (
-    "_static/4insight-logo.svg"  # "_static/Logo 4Subsea horisontal negative.png"
-)
+# html_logo = (
+#     "_static/4insight-logo.svg"  # "_static/Logo 4Subsea horisontal negative.png"
+# )
+html_title = "WaveResponse"
 html_context = {"default_mode": "light"}
 html_favicon = "_static/favicon.png"
 
@@ -88,12 +87,12 @@ html_theme_options = {
     "icon_links": [
         {
             "name": "GitHub",
-            "url": "https://github.com/4Subsea/scarlet-lithium-python",
+            "url": "https://github.com/4Subsea/waveresponse-python",
             "icon": "fab fa-github",
         },
         {
             "name": "PyPI",
-            "url": "https://pypi.org/project/scarlet-lithium",
+            "url": "https://pypi.org/project/waveresponse",
             "icon": "fas fa-box",
         },
     ],

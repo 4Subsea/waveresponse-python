@@ -17,21 +17,21 @@ This package is tested with the latest Windows, MacOS, and Ubuntu (Linux) versio
 
 Install
 -------
-``scarlet_lithium`` can be installed via pip from `PyPI`_.
+``waveresponse`` can be installed via pip from `PyPI`_.
 
 .. code-block:: shell
 
-   pip install scarlet_lithium
+   pip install waveresponse
 
 .. _upgrade:
 
 Upgrade
 -------
-``scarlet_lithium`` can be upgraded via pip from `PyPI`_.
+``waveresponse`` can be upgraded via pip from `PyPI`_.
 
 .. code-block:: shell
 
-   pip install --upgrade scarlet_lithium
+   pip install --upgrade waveresponse
 
 .. _Python.org: https://python.org
 .. _PyPI: https://pypi.org/

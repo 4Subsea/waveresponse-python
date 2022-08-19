@@ -1,5 +1,5 @@
 Grid
 ====
 
-.. autoclass:: scarlet_lithium.Grid
+.. autoclass:: waveresponse.Grid
     :members:

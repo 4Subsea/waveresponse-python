@@ -1,5 +1,5 @@
 RAO
 ===
 
-.. autoclass:: scarlet_lithium.RAO
+.. autoclass:: waveresponse.RAO
     :members:

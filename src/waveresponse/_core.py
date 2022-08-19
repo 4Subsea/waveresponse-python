@@ -558,7 +558,7 @@ class RAO(Grid):
     """
     Response amplitude operator (RAO).
 
-    The ``RAO`` class extends the :class:`~scarlet_lithium.Grid` class, and is a
+    The ``RAO`` class extends the :class:`~waveresponse.Grid` class, and is a
     two-dimensional frequency/(wave)direction grid. The RAO values represents a
     transfer function that can be used to calculate a degree-of-freedom's response
     based on a 2-D wave spectrum.
@@ -753,7 +753,7 @@ class DirectionalSpectrum(Grid):
     """
     Directional spectrum.
 
-    The ``DirectionalSpectrum`` class extends the :class:`~scarlet_lithium.Grid`
+    The ``DirectionalSpectrum`` class extends the :class:`~waveresponse.Grid`
     class, and is a two-dimentional frequency/(wave)direction grid. The spectrum values
     represents spectrum density.
 
@@ -1152,9 +1152,9 @@ def calculate_response(
     Parameters
     ----------
     rao : obj
-        Response amplitude operator (RAO) as a :class:`~scarlet_lithium.RAO` object.
+        Response amplitude operator (RAO) as a :class:`~waveresponse.RAO` object.
     wave : obj
-        2-D wave spectrum as a :class:`~scarlet_lithium.WaveSpectrum` object.
+        2-D wave spectrum as a :class:`~waveresponse.WaveSpectrum` object.
     heading : float
         Heading of vessel relative to wave spectrum coordinate system.
     heading_degrees : bool

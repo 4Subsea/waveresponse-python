@@ -1,6 +1,6 @@
 API Reference
 =============
-This section gives an overview of all public ``scarlet_lithium`` objects,
+This section gives an overview of all public ``waveresponse`` objects,
 functions and methods.
 
 .. toctree::
@@ -10,3 +10,4 @@ functions and methods.
    rao
    directional_spectrum
    wave_spectrum
+   calculate_response
