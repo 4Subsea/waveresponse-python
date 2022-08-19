@@ -1198,11 +1198,13 @@ class Test_Grid:
 
         grid_real = grid.real
 
-        vals_expect = np.array([
-            [1.0, 0.0, -1.0],
-            [2.0, 0.0, -2.0],
-            [3.0, 0.0, -3.0],
-        ])
+        vals_expect = np.array(
+            [
+                [1.0, 0.0, -1.0],
+                [2.0, 0.0, -2.0],
+                [3.0, 0.0, -3.0],
+            ]
+        )
 
         np.testing.assert_array_almost_equal(grid_real._vals, vals_expect)
 
@@ -1227,11 +1229,13 @@ class Test_Grid:
 
         grid_imag = grid.imag
 
-        vals_expect = np.array([
-            [0.0, 1.0, 0.0],
-            [0.0, -2.0, 0.0],
-            [0.0, 3.0, 0.0],
-        ])
+        vals_expect = np.array(
+            [
+                [0.0, 1.0, 0.0],
+                [0.0, -2.0, 0.0],
+                [0.0, 3.0, 0.0],
+            ]
+        )
 
         np.testing.assert_array_almost_equal(grid_imag._vals, vals_expect)
 
