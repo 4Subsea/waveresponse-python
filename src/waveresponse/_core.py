@@ -553,6 +553,26 @@ class Grid:
     def __repr__(self):
         return "Grid"
 
+    @property
+    def real(self):
+        """
+        Return a copy of the object where all values are converted to their real
+        part.
+        """
+        new = self.copy()
+        new._vals = new._vals.real
+        return new
+
+    @property
+    def imag(self):
+        """
+        Return a copy of the object where all values are converted to their imaginary
+        part.
+        """
+        new = self.copy()
+        new._vals = new._vals.imag
+        return new
+
 
 class RAO(Grid):
     """
