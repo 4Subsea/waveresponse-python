@@ -59,24 +59,24 @@ jobs:
           user: __token__
           password: ${{ secrets.PYPI_PROD_API_KEY }}
 
-      # - name: Upload documentation to TEST blob storage
-      #   if: ${{ startswith(github.ref, 'refs/tags/v') && endsWith(github.ref, '-test') }}
-      #   uses: azure/CLI@v1
-      #   env:
-      #     AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.FOURINSIGHTTEST_DOC_BLOB_CONNSTR }}
-      #   with:
-      #     inlineScript: |
-      #       az storage blob delete-batch -s "\$web" --pattern "engineroom-utils/python/docs/latest/*"
-      #       az storage blob upload-batch -d "\$web" -s ./build/html --destination-path "engineroom-utils/python/docs/latest"
-      #       az storage blob upload-batch -d "\$web" -s ./build/html --destination-path "engineroom-utils/python/docs/v$VERSION_NUMBER"
+      - name: Upload documentation to TEST blob storage
+        if: ${{ startswith(github.ref, 'refs/tags/v') && endsWith(github.ref, '-test') }}
+        uses: azure/CLI@v1
+        env:
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.FOURINSIGHTTEST_DOC_BLOB_CONNSTR }}
+        with:
+          inlineScript: |
+            az storage blob delete-batch -s "\$web" --pattern "waveresponse/python/docs/latest/*"
+            az storage blob upload-batch -d "\$web" -s ./build/html --destination-path "waveresponse/python/docs/latest"
+            az storage blob upload-batch -d "\$web" -s ./build/html --destination-path "waveresponse/python/docs/v$VERSION_NUMBER"
 
-      # - name: Upload documentation to PROD blob storage
-      #   if: ${{ startswith(github.ref, 'refs/tags/v') && !endsWith(github.ref, '-test') }}
-      #   uses: azure/CLI@v1
-      #   env:
-      #     AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.FOURINSIGHTPROD_DOC_BLOB_CONNSTR }}
-      #   with:
-      #     inlineScript: |
-      #       az storage blob delete-batch -s "\$web" --pattern "engineroom-utils/python/docs/latest/*"
-      #       az storage blob upload-batch -d "\$web" -s ./build/html --destination-path "engineroom-utils/python/docs/latest"
-      #       az storage blob upload-batch -d "\$web" -s ./build/html --destination-path "engineroom-utils/python/docs/v$VERSION_NUMBER"
+      - name: Upload documentation to PROD blob storage
+        if: ${{ startswith(github.ref, 'refs/tags/v') && !endsWith(github.ref, '-test') }}
+        uses: azure/CLI@v1
+        env:
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.FOURINSIGHTPROD_DOC_BLOB_CONNSTR }}
+        with:
+          inlineScript: |
+            az storage blob delete-batch -s "\$web" --pattern "waveresponse/python/docs/latest/*"
+            az storage blob upload-batch -d "\$web" -s ./build/html --destination-path "waveresponse/python/docs/latest"
+            az storage blob upload-batch -d "\$web" -s ./build/html --destination-path "waveresponse/python/docs/v$VERSION_NUMBER"
