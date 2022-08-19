@@ -1212,7 +1212,7 @@ def calculate_response(
     else:
         raise ValueError("Invalid `coord_dirs` value. Should be 'wave' or 'rao'.")
 
-    rao_squared = np.abs(rao * rao.conjugate())
+    rao_squared = (rao * rao.conjugate()).real
     rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
     wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
 
