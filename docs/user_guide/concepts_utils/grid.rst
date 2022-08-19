@@ -102,3 +102,7 @@ will be done on the grid's values (2-D array).
 
     # Convert to absolute values
     grid_abs = np.abs(grid)
+
+    # Convert to real or part
+    grid_real = np.real(grid)
+    grid_imag = np.imag(grid)
