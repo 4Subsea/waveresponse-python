@@ -2949,7 +2949,7 @@ class Test_rigid_transform:
         assert yaw_out._clockwise == yaw._clockwise
         assert yaw_out._waves_coming_from == yaw._waves_coming_from
 
-    def test_raises_type(self):
+    def test_rigid_transform_raises_type(self):
         freq = np.array([0.0, 0.5, 1.0])
         dirs = np.array([0.0, 180.0])
 
@@ -2961,7 +2961,7 @@ class Test_rigid_transform:
             ]
         )
 
-        vals_pitch = np.array(
+        vals_sway = np.array(
             [
                 [2.0 + 0.0j, 0.0 + 2.0j],
                 [2.0 + 2.0j, 0.0 + 0.0j],
@@ -2969,7 +2969,7 @@ class Test_rigid_transform:
             ]
         )
 
-        vals_yaw = np.array(
+        vals_heave = np.array(
             [
                 [3.0 + 0.0j, 0.0 + 3.0j],
                 [3.0 + 3.0j, 0.0 + 0.0j],
@@ -2977,15 +2977,42 @@ class Test_rigid_transform:
             ]
         )
 
+        vals_roll = np.array(
+            [
+                [4.0 + 0.0j, 0.0 + 4.0j],
+                [4.0 + 4.0j, 0.0 + 0.0j],
+                [0.0 + 4.0j, 4.0 + 0.0j],
+            ]
+        )
+
+        vals_pitch = np.array(
+            [
+                [5.0 + 0.0j, 0.0 + 5.0j],
+                [5.0 + 5.0j, 0.0 + 0.0j],
+                [0.0 + 5.0j, 5.0 + 0.0j],
+            ]
+        )
+
+        vals_yaw = np.array(
+            [
+                [6.0 + 0.0j, 0.0 + 6.0j],
+                [6.0 + 6.0j, 0.0 + 0.0j],
+                [0.0 + 6.0j, 6.0 + 0.0j],
+            ]
+        )
+
         surge = Grid(freq, dirs, vals_surge, degrees=True)
+        sway = RAO(freq, dirs, vals_sway, degrees=True)
+        heave = RAO(freq, dirs, vals_heave, degrees=True)
+        roll = RAO(freq, dirs, vals_roll, degrees=True)
         pitch = RAO(freq, dirs, vals_pitch, degrees=True)
         yaw = RAO(freq, dirs, vals_yaw, degrees=True)
 
+        t = np.array([40, 50, 60])
         with pytest.raises(ValueError):
-            t = np.array([40, 50, 60])
-            rigid_transform_surge(t, surge, pitch, yaw)
+            rigid_transform(t, surge, sway, heave, roll, pitch, yaw)
 
-    def test_raises_other_shape(self):
+    def test_rigid_transform_raises_dirs(self):
         freq = np.array([0.0, 0.5, 1.0])
         dirs = np.array([0.0, 180.0])
 
@@ -2997,7 +3024,7 @@ class Test_rigid_transform:
             ]
         )
 
-        vals_pitch = np.array(
+        vals_sway = np.array(
             [
                 [2.0 + 0.0j, 0.0 + 2.0j],
                 [2.0 + 2.0j, 0.0 + 0.0j],
@@ -3005,21 +3032,179 @@ class Test_rigid_transform:
             ]
         )
 
-        surge = Grid(freq, dirs, vals_surge, degrees=True)
+        vals_heave = np.array(
+            [
+                [3.0 + 0.0j, 0.0 + 3.0j],
+                [3.0 + 3.0j, 0.0 + 0.0j],
+                [0.0 + 3.0j, 3.0 + 0.0j],
+            ]
+        )
+
+        vals_roll = np.array(
+            [
+                [4.0 + 0.0j, 0.0 + 4.0j],
+                [4.0 + 4.0j, 0.0 + 0.0j],
+                [0.0 + 4.0j, 4.0 + 0.0j],
+            ]
+        )
+
+        vals_pitch = np.array(
+            [
+                [5.0 + 0.0j, 0.0 + 5.0j],
+                [5.0 + 5.0j, 0.0 + 0.0j],
+                [0.0 + 5.0j, 5.0 + 0.0j],
+            ]
+        )
+
+        surge = RAO(freq, dirs, vals_surge, degrees=True)
+        sway = RAO(freq, dirs, vals_sway, degrees=True)
+        heave = RAO(freq, dirs, vals_heave, degrees=True)
+        roll = RAO(freq, dirs, vals_roll, degrees=True)
         pitch = RAO(freq, dirs, vals_pitch, degrees=True)
 
         freq = np.array([0.0, 0.5, 1.0])
         dirs = np.array([0.0, 180.0, 359.0])
         vals_yaw = np.array(
             [
-                [3.0 + 0.0j, 0.0 + 3.0j, 1.0 + 0.0j],
-                [3.0 + 3.0j, 0.0 + 0.0j, 0.0 + 1.0j],
-                [0.0 + 3.0j, 3.0 + 0.0j, 1.0 + 1.0j],
+                [6.0 + 0.0j, 0.0 + 6.0j, 1.0 + 0.0j],
+                [6.0 + 6.0j, 0.0 + 0.0j, 0.0 + 1.0j],
+                [0.0 + 6.0j, 6.0 + 0.0j, 1.0 + 1.0j],
+            ]
+        )
+        yaw = RAO(freq, dirs, vals_yaw, degrees=True)
+
+        t = np.array([40, 50, 60])
+        with pytest.raises(ValueError):
+            rigid_transform(t, surge, sway, heave, roll, pitch, yaw)
+
+    def test_rigid_transform_raises_freq(self):
+        freq = np.array([0.0, 0.5, 1.0])
+        dirs = np.array([0.0, 180.0])
+
+        vals_surge = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j],
+                [1.0 + 1.0j, 0.0 + 0.0j],
+                [0.0 + 1.0j, 1.0 + 0.0j],
             ]
         )
 
+        vals_sway = np.array(
+            [
+                [2.0 + 0.0j, 0.0 + 2.0j],
+                [2.0 + 2.0j, 0.0 + 0.0j],
+                [0.0 + 2.0j, 2.0 + 0.0j],
+            ]
+        )
+
+        vals_heave = np.array(
+            [
+                [3.0 + 0.0j, 0.0 + 3.0j],
+                [3.0 + 3.0j, 0.0 + 0.0j],
+                [0.0 + 3.0j, 3.0 + 0.0j],
+            ]
+        )
+
+        vals_roll = np.array(
+            [
+                [4.0 + 0.0j, 0.0 + 4.0j],
+                [4.0 + 4.0j, 0.0 + 0.0j],
+                [0.0 + 4.0j, 4.0 + 0.0j],
+            ]
+        )
+
+        vals_pitch = np.array(
+            [
+                [5.0 + 0.0j, 0.0 + 5.0j],
+                [5.0 + 5.0j, 0.0 + 0.0j],
+                [0.0 + 5.0j, 5.0 + 0.0j],
+            ]
+        )
+
+        surge = RAO(freq, dirs, vals_surge, degrees=True)
+        sway = RAO(freq, dirs, vals_sway, degrees=True)
+        heave = RAO(freq, dirs, vals_heave, degrees=True)
+        roll = RAO(freq, dirs, vals_roll, degrees=True)
+        pitch = RAO(freq, dirs, vals_pitch, degrees=True)
+
+        freq = np.array([0.0, 0.5, 1.0, 2.0])
+        dirs = np.array([0.0, 180.0])
+        vals_yaw = np.array(
+            [
+                [6.0 + 0.0j, 0.0 + 6.0j],
+                [6.0 + 6.0j, 0.0 + 0.0j],
+                [0.0 + 6.0j, 6.0 + 0.0j],
+                [0.0 + 6.0j, 6.0 + 0.0j],
+            ]
+        )
         yaw = RAO(freq, dirs, vals_yaw, degrees=True)
 
+        t = np.array([40, 50, 60])
         with pytest.raises(ValueError):
-            t = np.array([40, 50, 60])
-            rigid_transform_surge(t, surge, pitch, yaw)
+            rigid_transform(t, surge, sway, heave, roll, pitch, yaw)
+
+    def test_rigid_transform_raises_convention(self):
+        freq = np.array([0.0, 0.5, 1.0])
+        dirs = np.array([0.0, 180.0])
+
+        vals_surge = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j],
+                [1.0 + 1.0j, 0.0 + 0.0j],
+                [0.0 + 1.0j, 1.0 + 0.0j],
+            ]
+        )
+
+        vals_sway = np.array(
+            [
+                [2.0 + 0.0j, 0.0 + 2.0j],
+                [2.0 + 2.0j, 0.0 + 0.0j],
+                [0.0 + 2.0j, 2.0 + 0.0j],
+            ]
+        )
+
+        vals_heave = np.array(
+            [
+                [3.0 + 0.0j, 0.0 + 3.0j],
+                [3.0 + 3.0j, 0.0 + 0.0j],
+                [0.0 + 3.0j, 3.0 + 0.0j],
+            ]
+        )
+
+        vals_roll = np.array(
+            [
+                [4.0 + 0.0j, 0.0 + 4.0j],
+                [4.0 + 4.0j, 0.0 + 0.0j],
+                [0.0 + 4.0j, 4.0 + 0.0j],
+            ]
+        )
+
+        vals_pitch = np.array(
+            [
+                [5.0 + 0.0j, 0.0 + 5.0j],
+                [5.0 + 5.0j, 0.0 + 0.0j],
+                [0.0 + 5.0j, 5.0 + 0.0j],
+            ]
+        )
+
+        vals_yaw = np.array(
+            [
+                [6.0 + 0.0j, 0.0 + 6.0j],
+                [6.0 + 6.0j, 0.0 + 0.0j],
+                [0.0 + 6.0j, 6.0 + 0.0j],
+            ]
+        )
+
+        surge = RAO(freq, dirs, vals_surge, degrees=True)
+        sway = RAO(freq, dirs, vals_sway, degrees=True)
+        heave = RAO(freq, dirs, vals_heave, degrees=True)
+        roll = RAO(freq, dirs, vals_roll, degrees=True)
+        pitch = RAO(freq, dirs, vals_pitch, degrees=True)
+        yaw = RAO(freq, dirs, vals_yaw, degrees=True)
+
+        surge.set_wave_convention(clockwise=True, waves_coming_from=True)
+        pitch.set_wave_convention(clockwise=False, waves_coming_from=False)
+
+        t = np.array([40, 50, 60])
+        with pytest.raises(ValueError):
+            rigid_transform(t, surge, sway, heave, roll, pitch, yaw)
