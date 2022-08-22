@@ -12,17 +12,17 @@ def rigid_transform(t, surge, sway, heave, roll, pitch, yaw):
     t : array-like
         Translation vector.
     surge : obj
-        Surge RAO.
+        Surge RAO. Should be of type :class:`~waveresponse.RAO`.
     sway : obj
-        Sway RAO.
+        Sway RAO. Should be of type :class:`~waveresponse.RAO`.
     heave : obj
-        Heave RAO.
+        Heave RAO. Should be of type :class:`~waveresponse.RAO`.
     roll : obj
-        Roll RAO.
+        Roll RAO. Should be of type :class:`~waveresponse.RAO`.
     pitch : obj
-        Pitch RAO.
+        Pitch RAO. Should be of type :class:`~waveresponse.RAO`.
     yaw : obj
-        Yaw RAO.
+        Yaw RAO. Should be of type :class:`~waveresponse.RAO`.
     """
     surge_new = rigid_transform_surge(t, surge, pitch, yaw)
     sway_new = rigid_transform_sway(t, sway, roll, yaw)
@@ -40,11 +40,11 @@ def rigid_transform_surge(t, surge, pitch, yaw):
     t : array-like
         Translation vector.
     surge : obj
-        Surge RAO.
+        Surge RAO. Should be of type :class:`~waveresponse.RAO`.
     pitch : obj
-        Pitch RAO.
+        Pitch RAO. Should be of type :class:`~waveresponse.RAO`.
     yaw : obj
-        Yaw RAO.
+        Yaw RAO. Should be of type :class:`~waveresponse.RAO`.
     """
     t = np.asarray_chkfinite(t)
 
@@ -70,11 +70,11 @@ def rigid_transform_sway(t, sway, roll, yaw):
     t : array-like
         Translation vector.
     sway : obj
-        Sway RAO.
+        Sway RAO. Should be of type :class:`~waveresponse.RAO`.
     roll : obj
-        Roll RAO.
+        Roll RAO. Should be of type :class:`~waveresponse.RAO`.
     yaw : obj
-        Yaw RAO.
+        Yaw RAO. Should be of type :class:`~waveresponse.RAO`.
     """
     t = np.asarray_chkfinite(t)
 
@@ -98,11 +98,11 @@ def rigid_transform_heave(t, heave, roll, pitch):
     Parameters
     ----------
     heave : obj
-        Heave RAO.
+        Heave RAO. Should be of type :class:`~waveresponse.RAO`.
     roll : obj
-        Roll RAO.
+        Roll RAO. Should be of type :class:`~waveresponse.RAO`.
     pitch : obj
-        Pitch RAO.
+        Pitch RAO. Should be of type :class:`~waveresponse.RAO`.
     t : array-like
         Translation vector.
     """
