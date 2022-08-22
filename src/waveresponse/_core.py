@@ -501,6 +501,25 @@ class Grid:
         new._freq, new._dirs, new._vals = freq_new, dirs_new, vals_new
         return new
 
+    def _check_similar(self, *others, exact_type=True):
+        """
+        Check if other grid objects are similar.
+        """
+        if exact_type:
+            type_ = type(self)
+        else:
+            type_ = Grid
+
+        for other in others:
+            if not isinstance(other, type_):
+                raise ValueError()
+            elif self._vals.shape != other._vals.shape:
+                raise ValueError()
+            elif np.any(self._freq != other._freq) or np.any(self._dirs != other._dirs):
+                raise ValueError()
+            elif self.wave_convention != other.wave_convention:
+                raise ValueError()
+
     def __mul__(self, other):
         """
         Multiply values with another Grid object.
@@ -517,14 +536,7 @@ class Grid:
         obj :
             A copy of the object where the values are multiplied with another Grid.
         """
-        if not isinstance(other, Grid):
-            raise ValueError()
-        elif self._vals.shape != other._vals.shape:
-            raise ValueError()
-        elif np.any(self._freq != other._freq) or np.any(self._dirs != other._dirs):
-            raise ValueError()
-        elif self.wave_convention != other.wave_convention:
-            raise ValueError()
+        self._check_similar(other, exact_type=False)
 
         new = Grid(
             self._freq,
