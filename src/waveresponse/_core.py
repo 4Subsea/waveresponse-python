@@ -501,7 +501,7 @@ class Grid:
         new._freq, new._dirs, new._vals = freq_new, dirs_new, vals_new
         return new
 
-    def _check_similar(self, *others, exact_type=True):
+    def _check_if_similar(self, *others, exact_type=True):
         """
         Check if other grid objects are similar.
         """
@@ -536,7 +536,7 @@ class Grid:
         obj :
             A copy of the object where the values are multiplied with another Grid.
         """
-        self._check_similar(other, exact_type=False)
+        self._check_if_similar(other, exact_type=False)
 
         new = Grid(
             self._freq,
