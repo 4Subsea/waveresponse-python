@@ -86,7 +86,7 @@ def rigid_transform_sway(t, sway, roll, yaw):
 
     sway_new = sway.copy()
     sway_new._check_similar(sway, roll, yaw, exact_type=True)
-    sway_new._vals = sway._vals + t[0] * yaw._vals + t[2] * roll._vals
+    sway_new._vals = sway._vals + t[0] * yaw._vals - t[2] * roll._vals
 
     return sway_new
 
