@@ -28,7 +28,7 @@ def rigid_transform(t, surge, sway, heave, roll, pitch, yaw):
     sway_new = rigid_transform_sway(t, sway, roll, yaw)
     heave_new = rigid_transform_heave(t, heave, roll, pitch)
 
-    return surge_new, sway_new, heave_new, roll.copy(), pitch.copy(), yaw.copy()
+    return surge_new, sway_new, heave_new
 
 
 def rigid_transform_surge(t, surge, pitch, yaw):

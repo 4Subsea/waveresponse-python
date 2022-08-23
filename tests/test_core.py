@@ -2899,7 +2899,7 @@ class Test_rigid_transform:
         yaw = RAO(freq, dirs, vals_yaw, degrees=True)
 
         t = np.array([40, 50, 60])
-        surge_out, sway_out, heave_out, roll_out, pitch_out, yaw_out = rigid_transform(
+        surge_out, sway_out, heave_out = rigid_transform(
             t, surge, sway, heave, roll, pitch, yaw
         )
 
@@ -2927,27 +2927,6 @@ class Test_rigid_transform:
         np.testing.assert_array_almost_equal(heave_out._vals, vals_heave_expect)
         assert heave_out._clockwise == heave._clockwise
         assert heave_out._waves_coming_from == heave._waves_coming_from
-
-        assert isinstance(roll_out, RAO)
-        np.testing.assert_array_almost_equal(roll_out._freq, roll._freq)
-        np.testing.assert_array_almost_equal(roll_out._dirs, roll._dirs)
-        np.testing.assert_array_almost_equal(roll_out._vals, roll._vals)
-        assert roll_out._clockwise == roll._clockwise
-        assert roll_out._waves_coming_from == roll._waves_coming_from
-
-        assert isinstance(pitch_out, RAO)
-        np.testing.assert_array_almost_equal(pitch_out._freq, pitch._freq)
-        np.testing.assert_array_almost_equal(pitch_out._dirs, pitch._dirs)
-        np.testing.assert_array_almost_equal(pitch_out._vals, pitch._vals)
-        assert pitch_out._clockwise == pitch._clockwise
-        assert pitch_out._waves_coming_from == pitch._waves_coming_from
-
-        assert isinstance(yaw_out, RAO)
-        np.testing.assert_array_almost_equal(yaw_out._freq, yaw._freq)
-        np.testing.assert_array_almost_equal(yaw_out._dirs, yaw._dirs)
-        np.testing.assert_array_almost_equal(yaw_out._vals, yaw._vals)
-        assert yaw_out._clockwise == yaw._clockwise
-        assert yaw_out._waves_coming_from == yaw._waves_coming_from
 
     def test_rigid_transform_raises_type(self):
         freq = np.array([0.0, 0.5, 1.0])
