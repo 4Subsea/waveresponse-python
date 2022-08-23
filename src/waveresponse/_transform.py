@@ -5,12 +5,17 @@ from ._core import RAO
 
 def rigid_transform(t, surge, sway, heave, roll, pitch, yaw):
     """
-    Rigid body transformation of RAOs.
+    Rigid body transformation of (surge, sway and heave) RAOs.
+
+    Transforms surge, sway and heave RAOs from one location to another on a rigid
+    body. Note that roll, pitch and yaw RAOs will not need transformation, since
+    these rotational degrees-of-freedom will be the same at all points on a rigid body.
 
     Parameters
     ----------
     t : array-like
-        Translation vector.
+        Translation vector given as (x, y, z). Determines the x-, y-, and z-cordinates
+        of the 'new' location relative to the 'old' location.
     surge : obj
         Surge RAO. Should be of type :class:`~waveresponse.RAO`.
     sway : obj
@@ -35,10 +40,13 @@ def rigid_transform_surge(t, surge, pitch, yaw):
     """
     Rigid body transformation of surge RAO.
 
+    Transforms a surge RAO from one location to another on a rigid body.
+
     Parameters
     ----------
     t : array-like
-        Translation vector.
+        Translation vector given as (x, y, z). Determines the x-, y-, and z-cordinates
+        of the 'new' location relative to the 'old' location.
     surge : obj
         Surge RAO. Should be of type :class:`~waveresponse.RAO`.
     pitch : obj
@@ -65,10 +73,13 @@ def rigid_transform_sway(t, sway, roll, yaw):
     """
     Rigid body transformation of sway RAO.
 
+    Transforms a sway RAO from one location to another on a rigid body.
+
     Parameters
     ----------
     t : array-like
-        Translation vector.
+        Translation vector given as (x, y, z). Determines the x-, y-, and z-cordinates
+        of the 'new' location relative to the 'old' location.
     sway : obj
         Sway RAO. Should be of type :class:`~waveresponse.RAO`.
     roll : obj
@@ -95,16 +106,19 @@ def rigid_transform_heave(t, heave, roll, pitch):
     """
     Rigid body transformation of heave RAO.
 
+    Transforms a heave RAO from one location to another on a rigid body.
+
     Parameters
     ----------
+    t : array-like
+        Translation vector given as (x, y, z). Determines the x-, y-, and z-cordinates
+        of the 'new' location relative to the 'old' location.
     heave : obj
         Heave RAO. Should be of type :class:`~waveresponse.RAO`.
     roll : obj
         Roll RAO. Should be of type :class:`~waveresponse.RAO`.
     pitch : obj
         Pitch RAO. Should be of type :class:`~waveresponse.RAO`.
-    t : array-like
-        Translation vector.
     """
     t = np.asarray_chkfinite(t)
 
