@@ -15,8 +15,8 @@ equations:
 .. math::
     H_{z_j}(\omega) = H_{z_i}(\omega) - x_{ij}H_{\theta}(\omega) + y_{ij}H_{\alpha}(\omega)
 
-where :math:`x_{ij}`, :math:`y_{ij}` and :math:`z_{ij}` describes the coordinates of the 'new' location,
-*j*, relative to the 'old' location, *i*. :math:`H_x(\omega)` is the surge RAO,
+where :math:`x_{ij}`, :math:`y_{ij}` and :math:`z_{ij}` are the coordinates of a 'new' location
+(*j*), relative to an 'old' location (*i*). :math:`H_x(\omega)` is the surge RAO,
 :math:`H_y(\omega)` is the sway RAO, :math:`H_z(\omega)` is the heave RAO,
 :math:`H_{\alpha}(\omega)` is the roll RAO, :math:`H_{\theta}(\omega)` is the pitch RAO,
 and :math:`H_{\gamma}(\omega)` is the yaw RAO.
@@ -30,7 +30,7 @@ and :math:`H_{\gamma}(\omega)` is the yaw RAO.
 
 With ``waveresponse`` you can easily transform RAOs from one location (*i*) to another (*j*)
 on a rigid body by calling the :meth:`~waveresponse.rigid_transform` method. You
-must then provide a translation vector, ``t``, that gives the coordinates of point
+must then provide a translation vector, `t`, that determines the coordinates of point
 *j* relative to point *i*.
 
 .. code-block:: python
@@ -41,8 +41,18 @@ must then provide a translation vector, ``t``, that gives the coordinates of poi
 
     t = np.array([10.0, 0.0, 0.0])   # (x, y, z)
 
-    # Rigid transform surge, sway and heave
+    # Rigid body transform surge, sway and heave RAOs
     surge_j, sway_j, heave_j = wr.rigid_transform(t, surge_i, sway_i, heave_i, roll, pitch, yaw)
 
-    # Rigid transform heave only
+Alternatively, you can transform the degrees-of-freedom one at a time:
+
+.. code-block:: python
+
+    # Rigid body transform surge RAO only
+    surge_j = wr.rigid_transform_surge(t, surge_i, pitch, yaw)
+
+    # Rigid body transform sway RAO only
+    sway_j = wr.rigid_transform_sway(t, sway_i, roll, yaw)
+
+    # Rigid body transform heave RAO only
     heave_j = wr.rigid_transform_heave(t, heave_i, roll, pitch)
