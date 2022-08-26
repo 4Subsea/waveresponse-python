@@ -1,6 +1,4 @@
 rigid_transform_surge
 =====================
 
-.. automodule:: waveresponse
-    :members:
-        rigid_transform_surge
+.. autofunction:: waveresponse.rigid_transform_surge

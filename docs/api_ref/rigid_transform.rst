@@ -1,6 +1,4 @@
 rigid_transform
 ===============
 
-.. automodule:: waveresponse
-    :members:
-        rigid_transform
+.. autofunction:: waveresponse.rigid_transform
