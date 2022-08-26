@@ -80,7 +80,7 @@ def rigid_transform_surge(t: np.array, surge: RAO, pitch: RAO, yaw: RAO) -> RAO:
         raise ValueError()
 
     surge_new = surge.copy()
-    surge_new._check_if_similar(surge, pitch, yaw, exact_type=True)
+    surge_new._check_is_similar(surge, pitch, yaw, exact_type=True)
     surge_new._vals = surge._vals - t[1] * yaw._vals + t[2] * pitch._vals
 
     return surge_new
@@ -118,7 +118,7 @@ def rigid_transform_sway(t: np.array, sway: RAO, roll: RAO, yaw: RAO) -> RAO:
         raise ValueError()
 
     sway_new = sway.copy()
-    sway_new._check_if_similar(sway, roll, yaw, exact_type=True)
+    sway_new._check_is_similar(sway, roll, yaw, exact_type=True)
     sway_new._vals = sway._vals + t[0] * yaw._vals - t[2] * roll._vals
 
     return sway_new
@@ -156,7 +156,7 @@ def rigid_transform_heave(t: np.array, heave: RAO, roll: RAO, pitch: RAO) -> RAO
         raise ValueError()
 
     heave_new = heave.copy()
-    heave_new._check_if_similar(heave, roll, pitch, exact_type=True)
+    heave_new._check_is_similar(heave, roll, pitch, exact_type=True)
     heave_new._vals = heave._vals - t[0] * pitch._vals + t[1] * roll._vals
 
     return heave_new
