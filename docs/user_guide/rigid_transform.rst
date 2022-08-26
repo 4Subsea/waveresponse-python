@@ -6,7 +6,7 @@ equations:
 
 .. math::
 
-    H_{x_j}(\omega) = H_{x_i}(\omega) - y_{ij}H_{\gamma}(\omega) + x_{ij} H_{\theta}(\omega)
+    H_{x_j}(\omega) = H_{x_i}(\omega) - y_{ij}H_{\gamma}(\omega) + z_{ij} H_{\theta}(\omega)
 
 .. math::
 
