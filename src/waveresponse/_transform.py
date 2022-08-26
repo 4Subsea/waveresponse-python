@@ -3,7 +3,9 @@ import numpy as np
 from ._core import RAO
 
 
-def rigid_transform(t, surge, sway, heave, roll, pitch, yaw):
+def rigid_transform(
+    t: np.array, surge: RAO, sway: RAO, heave: RAO, roll: RAO, pitch: RAO, yaw: RAO
+) -> RAO:
     """
     Rigid body transformation of (surge, sway and heave) RAOs.
 
@@ -37,7 +39,7 @@ def rigid_transform(t, surge, sway, heave, roll, pitch, yaw):
     return surge_new, sway_new, heave_new
 
 
-def rigid_transform_surge(t, surge, pitch, yaw):
+def rigid_transform_surge(t: np.array, surge: RAO, pitch: RAO, yaw: RAO) -> RAO:
     """
     Rigid body transformation of surge RAO.
 
@@ -70,7 +72,7 @@ def rigid_transform_surge(t, surge, pitch, yaw):
     return surge_new
 
 
-def rigid_transform_sway(t, sway, roll, yaw):
+def rigid_transform_sway(t: np.array, sway: RAO, roll: RAO, yaw: RAO) -> RAO:
     """
     Rigid body transformation of sway RAO.
 
@@ -103,7 +105,7 @@ def rigid_transform_sway(t, sway, roll, yaw):
     return sway_new
 
 
-def rigid_transform_heave(t, heave, roll, pitch):
+def rigid_transform_heave(t: np.array, heave: RAO, roll: RAO, pitch: RAO) -> RAO:
     """
     Rigid body transformation of heave RAO.
 
