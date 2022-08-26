@@ -28,10 +28,10 @@ and :math:`H_{\gamma}(\omega)` is the yaw RAO.
     on a rigid body. The rotational motions (i.e., roll, pitch and yaw) are independent
     of location, and will be the same for all points on a rigid body.
 
-With ``waveresponse`` you can easily transform RAOs from one location (*i*) to another (*j*)
+With ``waveresponse`` you can easily transform RAOs from one location to another
 on a rigid body by calling the :meth:`~waveresponse.rigid_transform` method. You
-must then provide a translation vector, `t`, that determines the coordinates of point
-*j* relative to point *i*.
+must then provide a translation vector, `t`, that determines the coordinates of
+the new location, *j*, relative to the old location, *i*.
 
 .. code-block:: python
 
