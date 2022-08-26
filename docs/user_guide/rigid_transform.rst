@@ -56,3 +56,11 @@ Alternatively, you can transform the degrees-of-freedom one at a time:
 
     # Rigid body transform heave RAO only
     heave_j = wr.rigid_transform_heave(t, heave_i, roll, pitch)
+
+.. tip::
+
+    The rigid body transformations provided by ``waveresponse`` are only valid for
+    'displacement' RAOs. If you want to obtain 'velocity' or 'acceleration' RAOs
+    for a new location, you can achieve that by first transforming the displacement
+    RAOs, and then differentiate the new :class:`~waveresponse.RAO` objects by calling
+    :meth:`~waveresponse.RAO.differentiate`.
