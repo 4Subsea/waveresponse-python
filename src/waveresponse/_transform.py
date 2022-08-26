@@ -7,14 +7,15 @@ def rigid_transform(t, surge, sway, heave, roll, pitch, yaw):
     """
     Rigid body transformation of (surge, sway and heave) RAOs.
 
-    Transforms surge, sway and heave RAOs from one location to another on a rigid
-    body. Note that roll, pitch and yaw RAOs will not need transformation, since
-    these rotational degrees-of-freedom will be the same at all points on a rigid body.
+    Transforms surge, sway and heave RAOs from one location to another by assuming
+    rigid body motion. Note that the rotational degrees-of-freedom (i.e., roll,
+    pitch and yaw) does not need transformation, since these are independent of
+    location, and thus will be the same for all points on a rigid body.
 
     Parameters
     ----------
     t : array-like
-        Translation vector given as (x, y, z). Determines the x-, y-, and z-cordinates
+        Translation vector given as (x, y, z) coordinates. Determines the position
         of the 'new' location relative to the 'old' location.
     surge : obj
         Surge RAO. Should be of type :class:`~waveresponse.RAO`.
@@ -45,7 +46,7 @@ def rigid_transform_surge(t, surge, pitch, yaw):
     Parameters
     ----------
     t : array-like
-        Translation vector given as (x, y, z). Determines the x-, y-, and z-cordinates
+        Translation vector given as (x, y, z) coordinates. Determines the position
         of the 'new' location relative to the 'old' location.
     surge : obj
         Surge RAO. Should be of type :class:`~waveresponse.RAO`.
@@ -78,7 +79,7 @@ def rigid_transform_sway(t, sway, roll, yaw):
     Parameters
     ----------
     t : array-like
-        Translation vector given as (x, y, z). Determines the x-, y-, and z-cordinates
+        Translation vector given as (x, y, z) coordinates. Determines the position
         of the 'new' location relative to the 'old' location.
     sway : obj
         Sway RAO. Should be of type :class:`~waveresponse.RAO`.
@@ -111,7 +112,7 @@ def rigid_transform_heave(t, heave, roll, pitch):
     Parameters
     ----------
     t : array-like
-        Translation vector given as (x, y, z). Determines the x-, y-, and z-cordinates
+        Translation vector given as (x, y, z) coordinates. Determines the position
         of the 'new' location relative to the 'old' location.
     heave : obj
         Heave RAO. Should be of type :class:`~waveresponse.RAO`.
