@@ -23,8 +23,8 @@ and :math:`H_{\gamma}(\omega)` is the yaw RAO.
 
 .. note::
 
-    It is only the translational degrees-of-freedom (i.e., surge, sway and heave)
-    that need to be transformed in order to obtain RAOs for a different location
+    Only the translational degrees-of-freedom (i.e., surge, sway and heave)
+    need to be transformed in order to obtain RAOs for a different location
     on a rigid body. The rotational motions (i.e., roll, pitch and yaw) are independent
     of location, and will be the same for all points on a rigid body.
 
