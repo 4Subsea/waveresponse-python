@@ -77,7 +77,7 @@ def rigid_transform_surge(t: np.array, surge: RAO, pitch: RAO, yaw: RAO) -> RAO:
         raise ValueError("Translation vector, `t`, should have length 3.")
 
     if not isinstance(surge, RAO):
-        raise ValueError()
+        raise ValueError("``surge`` must be of type ``RAO``.")
 
     surge_new = surge.copy()
     surge_new._check_is_similar(surge, pitch, yaw, exact_type=True)
@@ -115,7 +115,7 @@ def rigid_transform_sway(t: np.array, sway: RAO, roll: RAO, yaw: RAO) -> RAO:
         raise ValueError("Translation vector, `t`, should have length 3.")
 
     if not isinstance(sway, RAO):
-        raise ValueError()
+        raise ValueError("``sway`` must be of type ``RAO``.")
 
     sway_new = sway.copy()
     sway_new._check_is_similar(sway, roll, yaw, exact_type=True)
@@ -153,7 +153,7 @@ def rigid_transform_heave(t: np.array, heave: RAO, roll: RAO, pitch: RAO) -> RAO
         raise ValueError("Translation vector, `t`, should have length 3.")
 
     if not isinstance(heave, RAO):
-        raise ValueError()
+        raise ValueError("``heave`` must be of type ``RAO``.")
 
     heave_new = heave.copy()
     heave_new._check_is_similar(heave, roll, pitch, exact_type=True)
