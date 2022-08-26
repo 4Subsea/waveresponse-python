@@ -12,7 +12,7 @@ def rigid_transform(
     Transforms surge, sway and heave RAOs from one location to another by assuming
     rigid body motion. Note that the rotational degrees-of-freedom (i.e., roll,
     pitch and yaw) does not need transformation, since these are independent of
-    location, and thus will be the same for all points on a rigid body.
+    location, and thus will be the same for all points on the rigid body.
 
     Parameters
     ----------
