@@ -512,13 +512,15 @@ class Grid:
 
         for other in others:
             if not isinstance(other, type_):
-                raise ValueError()
+                raise ValueError(f"Wrong type. Expected {type_}, got {type(other)}.")
             elif self._vals.shape != other._vals.shape:
-                raise ValueError()
+                raise ValueError("Grid objects have different shape.")
             elif np.any(self._freq != other._freq) or np.any(self._dirs != other._dirs):
-                raise ValueError()
+                raise ValueError(
+                    "Grid objects have different frequency/direction coordinates."
+                )
             elif self.wave_convention != other.wave_convention:
-                raise ValueError()
+                raise ValueError("Grid objects have different wave conventions.")
 
     def __mul__(self, other):
         """
