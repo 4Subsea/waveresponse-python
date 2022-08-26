@@ -74,7 +74,7 @@ def rigid_transform_surge(t: np.array, surge: RAO, pitch: RAO, yaw: RAO) -> RAO:
     t = np.asarray_chkfinite(t)
 
     if len(t) != 3:
-        raise ValueError("Translation vector should have length 3.")
+        raise ValueError("Translation vector, `t`, should have length 3.")
 
     if not isinstance(surge, RAO):
         raise ValueError()
@@ -112,7 +112,7 @@ def rigid_transform_sway(t: np.array, sway: RAO, roll: RAO, yaw: RAO) -> RAO:
     t = np.asarray_chkfinite(t)
 
     if len(t) != 3:
-        raise ValueError("Translation vector should have length 3.")
+        raise ValueError("Translation vector, `t`, should have length 3.")
 
     if not isinstance(sway, RAO):
         raise ValueError()
@@ -150,7 +150,7 @@ def rigid_transform_heave(t: np.array, heave: RAO, roll: RAO, pitch: RAO) -> RAO
     t = np.asarray_chkfinite(t)
 
     if len(t) != 3:
-        raise ValueError("Translation vector should have length 3.")
+        raise ValueError("Translation vector, `t`, should have length 3.")
 
     if not isinstance(heave, RAO):
         raise ValueError()
