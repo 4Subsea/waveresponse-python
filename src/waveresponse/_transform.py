@@ -5,7 +5,7 @@ from ._core import RAO
 
 def rigid_transform(
     t: np.array, surge: RAO, sway: RAO, heave: RAO, roll: RAO, pitch: RAO, yaw: RAO
-) -> RAO:
+):
     """
     Rigid body transformation of (surge, sway and heave) RAOs.
 
@@ -20,17 +20,26 @@ def rigid_transform(
         Translation vector given as (x, y, z) coordinates. Determines the position
         of the 'new' location relative to the 'old' location.
     surge : obj
-        Surge RAO. Should be of type :class:`~waveresponse.RAO`.
+        Surge RAO.
     sway : obj
-        Sway RAO. Should be of type :class:`~waveresponse.RAO`.
+        Sway RAO.
     heave : obj
-        Heave RAO. Should be of type :class:`~waveresponse.RAO`.
+        Heave RAO.
     roll : obj
-        Roll RAO. Should be of type :class:`~waveresponse.RAO`.
+        Roll RAO.
     pitch : obj
-        Pitch RAO. Should be of type :class:`~waveresponse.RAO`.
+        Pitch RAO.
     yaw : obj
-        Yaw RAO. Should be of type :class:`~waveresponse.RAO`.
+        Yaw RAO.
+
+    Returns
+    -------
+    surge_new : obj
+        Surge RAO (rigid body transformed).
+    sway_new : obj
+        Sway RAO (rigid body transformed).
+    heave_new : obj
+        Heave RAO (rigid body transformed).
     """
     surge_new = rigid_transform_surge(t, surge, pitch, yaw)
     sway_new = rigid_transform_sway(t, sway, roll, yaw)
@@ -51,11 +60,16 @@ def rigid_transform_surge(t: np.array, surge: RAO, pitch: RAO, yaw: RAO) -> RAO:
         Translation vector given as (x, y, z) coordinates. Determines the position
         of the 'new' location relative to the 'old' location.
     surge : obj
-        Surge RAO. Should be of type :class:`~waveresponse.RAO`.
+        Surge RAO.
     pitch : obj
-        Pitch RAO. Should be of type :class:`~waveresponse.RAO`.
+        Pitch RAO.
     yaw : obj
-        Yaw RAO. Should be of type :class:`~waveresponse.RAO`.
+        Yaw RAO.
+
+    Returns
+    -------
+    surge_new : obj
+        Surge RAO (rigid body transformed).
     """
     t = np.asarray_chkfinite(t)
 
@@ -84,11 +98,16 @@ def rigid_transform_sway(t: np.array, sway: RAO, roll: RAO, yaw: RAO) -> RAO:
         Translation vector given as (x, y, z) coordinates. Determines the position
         of the 'new' location relative to the 'old' location.
     sway : obj
-        Sway RAO. Should be of type :class:`~waveresponse.RAO`.
+        Sway RAO.
     roll : obj
-        Roll RAO. Should be of type :class:`~waveresponse.RAO`.
+        Roll RAO.
     yaw : obj
-        Yaw RAO. Should be of type :class:`~waveresponse.RAO`.
+        Yaw RAO.
+
+    Returns
+    -------
+    sway_new : obj
+        Sway RAO (rigid body transformed).
     """
     t = np.asarray_chkfinite(t)
 
@@ -117,11 +136,16 @@ def rigid_transform_heave(t: np.array, heave: RAO, roll: RAO, pitch: RAO) -> RAO
         Translation vector given as (x, y, z) coordinates. Determines the position
         of the 'new' location relative to the 'old' location.
     heave : obj
-        Heave RAO. Should be of type :class:`~waveresponse.RAO`.
+        Heave RAO.
     roll : obj
-        Roll RAO. Should be of type :class:`~waveresponse.RAO`.
+        Roll RAO.
     pitch : obj
-        Pitch RAO. Should be of type :class:`~waveresponse.RAO`.
+        Pitch RAO.
+
+    Returns
+    -------
+    heave_new : obj
+        Heave RAO (rigid body transformed).
     """
     t = np.asarray_chkfinite(t)
 
