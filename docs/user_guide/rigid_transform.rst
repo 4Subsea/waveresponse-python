@@ -6,19 +6,19 @@ equations:
 
 .. math::
 
-    H_{x_j}(\omega) = H_{x_i}(\omega) - y_{ij}H_{\gamma}(\omega) + z_{ij} H_{\theta}(\omega)
+    H_{x_j}(\omega) = H_{x_i}(\omega) - y_{ij}H_{\gamma}(\omega) + z_{ij} H_{\beta}(\omega)
 
 .. math::
 
     H_{y_j}(\omega) = H_{y_i}(\omega) + x_{ij}H_{\gamma}(\omega) - z_{ij}H_{\alpha}(\omega)
 
 .. math::
-    H_{z_j}(\omega) = H_{z_i}(\omega) - x_{ij}H_{\theta}(\omega) + y_{ij}H_{\alpha}(\omega)
+    H_{z_j}(\omega) = H_{z_i}(\omega) - x_{ij}H_{\beta}(\omega) + y_{ij}H_{\alpha}(\omega)
 
 where :math:`x_{ij}`, :math:`y_{ij}` and :math:`z_{ij}` are the coordinates of a 'new' location
 (*j*), relative to an 'old' location (*i*). :math:`H_x(\omega)` is the surge RAO,
 :math:`H_y(\omega)` is the sway RAO, :math:`H_z(\omega)` is the heave RAO,
-:math:`H_{\alpha}(\omega)` is the roll RAO, :math:`H_{\theta}(\omega)` is the pitch RAO,
+:math:`H_{\alpha}(\omega)` is the roll RAO, :math:`H_{\beta}(\omega)` is the pitch RAO,
 and :math:`H_{\gamma}(\omega)` is the yaw RAO.
 
 .. note::
