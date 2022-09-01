@@ -117,6 +117,38 @@ class Grid:
                 "and ``M=len(dirs)``."
             )
 
+    def __call__(self, f, d, freq_hz=None, degrees=None, fill_value=0.0):
+        """
+        Get grid value associated with given frequency/direction coordinate by (linear)
+        interpolation.
+
+        Parameters
+        ----------
+        f : float
+            Frequency coordinate.
+        d : float
+            Direction coordinate.
+        freq_hz : bool
+            If frequency coordinate is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+            Defaults to original units used during initialization.
+        degrees : bool
+            If direction coordinate is given in 'degrees'. If ``False``, 'radians'
+            is assumed. Defaults to original units used during initialization.
+        fill_value : float or None
+            The value used for extrapolation (i.e., frequency outside the bounds of
+            the provided grid). If ``None``, values outside the frequency domain
+            are extrapolated via nearest-neighbor extrapolation. Note that directions
+            are treated as periodic (and will not need extrapolation).
+        """
+        if freq_hz is None:
+            freq_hz = self._freq_hz
+        if degrees is None:
+            degrees = self._degrees
+        value = self.interpolate(
+            f, d, freq_hz=freq_hz, degrees=degrees, fill_value=fill_value
+        )
+        return float(value)
+
     def _check_freq(self, freq):
         """
         Check frequency bins.
