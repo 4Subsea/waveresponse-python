@@ -30,7 +30,7 @@ and :math:`H_{\gamma}(\omega)` is the yaw RAO.
 
 With ``waveresponse`` you can easily transform RAOs from one location to another
 on a rigid body using the :meth:`~waveresponse.rigid_transform` function. You must
-then provide a translation vector, `t`, that determines the coordinates of the new
+then provide a 'translation vector', `t`, that determines the coordinates of the new
 location, *j*, relative to the old location, *i*.
 
 .. code-block:: python
@@ -39,7 +39,8 @@ location, *j*, relative to the old location, *i*.
     import waveresponse as wr
 
 
-    t = np.array([10.0, 0.0, 0.0])   # (x, y, z)
+    # Translation vector
+    t = np.array([10.0, 0.0, 0.0])   # (x, y, z) coordinates of j relative to i
 
     # Rigid body transform surge, sway and heave RAOs
     surge_j, sway_j, heave_j = wr.rigid_transform(t, surge_i, sway_i, heave_i, roll, pitch, yaw)
