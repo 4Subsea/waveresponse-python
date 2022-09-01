@@ -1,7 +1,6 @@
 import numpy as np
 import pytest
 
-from waveresponse._core import _check_is_similar
 from waveresponse import (
     RAO,
     DirectionalSpectrum,
@@ -11,6 +10,7 @@ from waveresponse import (
     complex_to_polar,
     polar_to_complex,
 )
+from waveresponse._core import _check_is_similar
 
 
 @pytest.fixture
