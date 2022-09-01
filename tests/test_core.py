@@ -605,7 +605,7 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(grid_rot._dirs, dirs_expect)
         np.testing.assert_array_almost_equal(grid_rot._vals, vals_expect)
 
-    def test__call__(self):
+    def test_grid(self):
         freq = np.array([0, 1])
         dirs = np.array([0, 90, 180])
         vals = np.array(
@@ -624,7 +624,7 @@ class Test_Grid:
             waves_coming_from=True,
         )
 
-        freq_out, dirs_out, vals_out = grid(freq_hz=True, degrees=True)
+        freq_out, dirs_out, vals_out = grid.grid(freq_hz=True, degrees=True)
 
         freq_expect = np.array([0, 1])
         dirs_expect = np.array([0, 90, 180])
@@ -639,7 +639,7 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
-    def test__call__2(self):
+    def test__grid2(self):
         freq = np.array([0, 1])
         dirs = np.array([0, 90, 180])
         vals = np.array(
@@ -658,7 +658,7 @@ class Test_Grid:
             waves_coming_from=True,
         )
 
-        freq_out, dirs_out, vals_out = grid(freq_hz=False, degrees=False)
+        freq_out, dirs_out, vals_out = grid.grid(freq_hz=False, degrees=False)
 
         freq_expect = (2.0 * np.pi) * np.array([0, 1])
         dirs_expect = (np.pi / 180.0) * np.array([0, 90, 180])
@@ -1858,7 +1858,7 @@ class Test_DirectionalSpectrum:
     def test__repr___(self, directional_spectrum):
         assert str(directional_spectrum) == "DirectionalSpectrum"
 
-    def test__call___rads_rad(self):
+    def test_grid_rads_rad(self):
         freq_in = np.arange(0.0, 1, 0.1)
         dirs_in = np.arange(5.0, 360.0, 10.0)
         vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
@@ -1872,7 +1872,7 @@ class Test_DirectionalSpectrum:
             waves_coming_from=True,
         )
 
-        freq_out, dirs_out, vals_out = spectrum(freq_hz=False, degrees=False)
+        freq_out, dirs_out, vals_out = spectrum.grid(freq_hz=False, degrees=False)
 
         freq_expect = 2.0 * np.pi * freq_in
         dirs_expect = (np.pi / 180.0) * dirs_in
@@ -1882,7 +1882,7 @@ class Test_DirectionalSpectrum:
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
-    def test__call___hz_rad(self):
+    def test_grid_hz_rad(self):
         freq_in = np.arange(0.0, 1, 0.1)
         dirs_in = np.arange(5.0, 360.0, 10.0)
         vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
@@ -1896,7 +1896,7 @@ class Test_DirectionalSpectrum:
             waves_coming_from=True,
         )
 
-        freq_out, dirs_out, vals_out = spectrum(freq_hz=True, degrees=False)
+        freq_out, dirs_out, vals_out = spectrum.grid(freq_hz=True, degrees=False)
 
         freq_expect = freq_in
         dirs_expect = (np.pi / 180.0) * dirs_in
@@ -1906,7 +1906,7 @@ class Test_DirectionalSpectrum:
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
-    def test__call___rads_deg(self):
+    def test_grid_rads_deg(self):
         freq_in = np.arange(0.0, 1, 0.1)
         dirs_in = np.arange(5.0, 360.0, 10.0)
         vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
@@ -1920,7 +1920,7 @@ class Test_DirectionalSpectrum:
             waves_coming_from=True,
         )
 
-        freq_out, dirs_out, vals_out = spectrum(freq_hz=False, degrees=True)
+        freq_out, dirs_out, vals_out = spectrum.grid(freq_hz=False, degrees=True)
 
         freq_expect = 2.0 * np.pi * freq_in
         dirs_expect = dirs_in
@@ -1930,7 +1930,7 @@ class Test_DirectionalSpectrum:
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
-    def test__call___hz_deg(self):
+    def test_grid__hz_deg(self):
         freq_in = np.arange(0.0, 1, 0.1)
         dirs_in = np.arange(5.0, 360.0, 10.0)
         vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
@@ -1944,7 +1944,7 @@ class Test_DirectionalSpectrum:
             waves_coming_from=True,
         )
 
-        freq_out, dirs_out, vals_out = spectrum(freq_hz=True, degrees=True)
+        freq_out, dirs_out, vals_out = spectrum.grid(freq_hz=True, degrees=True)
 
         freq_expect = freq_in
         dirs_expect = dirs_in
