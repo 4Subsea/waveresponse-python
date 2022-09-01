@@ -526,27 +526,6 @@ class Grid:
         new._freq, new._dirs, new._vals = freq_new, dirs_new, vals_new
         return new
 
-    def _check_is_similar(self, *others, exact_type=True):
-        """
-        Check if other grid objects are similar.
-        """
-        if exact_type:
-            type_ = type(self)
-        else:
-            type_ = Grid
-
-        for other in others:
-            if not isinstance(other, type_):
-                raise ValueError(f"Wrong type. Expected {type_}, got {type(other)}.")
-            elif self._vals.shape != other._vals.shape:
-                raise ValueError("Grid objects have different shape.")
-            elif np.any(self._freq != other._freq) or np.any(self._dirs != other._dirs):
-                raise ValueError(
-                    "Grid objects have different frequency/direction coordinates."
-                )
-            elif self.wave_convention != other.wave_convention:
-                raise ValueError("Grid objects have different wave conventions.")
-
     def __mul__(self, other):
         """
         Multiply values with another Grid object.
