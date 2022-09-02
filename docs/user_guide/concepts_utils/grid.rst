@@ -67,7 +67,7 @@ and ``degrees`` flags.
 
 .. code-block:: python
 
-    freq, dirs, vals = grid(freq_hz=True, degrees=True)
+    freq, dirs, vals = grid.grid(freq_hz=True, degrees=True)
 
 Interpolation of the grid values is provided by the :meth:`~waveresponse.Grid.interpolate`
 method:
