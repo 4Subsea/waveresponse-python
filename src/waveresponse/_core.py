@@ -465,8 +465,8 @@ class Grid:
         array :
             Interpolated grid values.
         """
-        freq = np.asarray_chkfinite(freq).reshape(-1).copy()
-        dirs = np.asarray_chkfinite(dirs).reshape(-1).copy()
+        freq = np.asarray_chkfinite(freq).reshape(-1)
+        dirs = np.asarray_chkfinite(dirs).reshape(-1)
 
         if freq_hz:
             freq = 2.0 * np.pi * freq
