@@ -1241,33 +1241,6 @@ class Test_Grid:
         assert isinstance(grid_imag, Grid)
         np.testing.assert_array_almost_equal(grid_imag._vals, vals_expect)
 
-    def test__call__(self):
-        a = 7
-        b = 6
-
-        freq = np.linspace(0.0, 2.0, 20)
-        dirs = np.linspace(0.0, 359.0, 10)
-        vals = np.array([[a * d_i + b * f_i for d_i in dirs] for f_i in freq])
-        grid = Grid(freq, dirs, vals, freq_hz=True, degrees=True)
-
-        val_out = grid(1.2, 10.3, freq_hz=True, degrees=True)
-
-        val_expect = a * 10.3 + b * 1.2
-        assert val_out == pytest.approx(val_expect)
-
-    def test__call__extrapolate(self):
-        a = 7
-        b = 6
-
-        freq = np.linspace(0.0, 2.0, 20)
-        dirs = np.linspace(0.0, 359.0, 10)
-        vals = np.array([[a * d_i + b * f_i for d_i in dirs] for f_i in freq])
-        grid = Grid(freq, dirs, vals, freq_hz=True, degrees=True)
-
-        val_out = grid(1_000, 10.3, freq_hz=True, degrees=True)
-        val_expect = 0.0
-        assert val_out == pytest.approx(val_expect)
-
 
 class Test_RAO:
     def test__init__(self):
