@@ -884,8 +884,9 @@ class DirectionalSpectrum(Grid):
             **grid.wave_convention,
         )
 
+    @classmethod
     def from_spectrum1d(
-        self,
+        cls,
         freq,
         dirs,
         spectrum1d,
@@ -899,8 +900,18 @@ class DirectionalSpectrum(Grid):
         freq = np.asarray_chkfinite(freq)
         dirs = np.asarray_chkfinite(dirs)
         spectrum1d = np.asarray_chkfinite(spectrum1d)
-        vals = np.repeat(spectrum1d, len(dirs)).reshape(len(freq), len(dirs))
-        self.__init__(
+        vals = (
+            np.repeat(spectrum1d, len(dirs))
+            .reshape(len(freq), len(dirs))
+            .astype("float64")
+        )
+
+        for (idx_f, idx_d), val_i in np.ndenumerate(vals):
+            f_i = freq[idx_f]
+            d_i = dirs[idx_d]
+            vals[idx_f, idx_d] = spreading(f_i, d_i) * val_i
+
+        return cls(
             freq,
             dirs,
             vals,
@@ -908,12 +919,7 @@ class DirectionalSpectrum(Grid):
             degrees=degrees,
             clockwise=clockwise,
             waves_coming_from=waves_coming_from,
-        )
-
-        for i, d in enumerate(self.dirs()):
-            self._vals[:, i] = spreading(d) * self._vals[:, i]
-
-        self.rotate(dirp, degrees=degrees)
+        ).rotate(dirp, degrees=degrees)
 
     def __repr__(self):
         return "DirectionalSpectrum"
