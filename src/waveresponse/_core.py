@@ -178,8 +178,8 @@ class Grid:
 
     def grid(self, freq_hz=None, degrees=None):
         """
-        Return a copy of the grid's frequency/direction coordinates and corresponding
-        values.
+        Return a copy of the object's frequency/direction coordinates and corresponding
+        grid values.
 
         Parameters
         ----------
