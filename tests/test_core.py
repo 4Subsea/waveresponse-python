@@ -709,6 +709,21 @@ class Test_Grid:
 
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
+    def test_interpolate_single_coordinate(self):
+        a = 7
+        b = 6
+
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.linspace(0.0, 359.0, 10)
+        vp = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in yp])
+        grid = Grid(yp, xp, vp, freq_hz=True, degrees=True)
+
+        vals_out = grid.interpolate(1.8, 12.1, freq_hz=True, degrees=True)
+
+        vals_expect = np.array([a * 12.1 + b * 1.8])
+
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
     def test_interpolate_fill_value(self):
 
         freq = np.array([0, 1, 2])
