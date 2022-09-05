@@ -29,8 +29,8 @@ values (2-D array).
         waves_coming_from=False,
     )
 
-Alternatively, you can construct a :class:`~waveresponse.WaveSpectrum` from a 1-D
-'non-directional' spectrum, a spreading function, and a peak direction:
+Alternatively, you can construct a :class:`~waveresponse.WaveSpectrum` from a 'non-directional'
+spectrum (1-D array), a spreading function and a peak direction:
 
 .. code-block:: python
 
@@ -56,6 +56,24 @@ Alternatively, you can construct a :class:`~waveresponse.WaveSpectrum` from a 1-
         clockwise=False,
         waves_coming_from=False,
     )
+
+.. note::
+    The spreading function, :math:`\kappa(f, \beta)`, must be a function of both
+    frequency, :math:`f`, and direction, :math:`\beta`. However, it is common practice
+    to use the same spreading for all frequencies. I.e.,
+
+    .. math::
+        \kappa(f, \beta) = \kappa(f)
+
+    
+
+    The spreading function must be defined such that it for each frequency, :math:`f_i`
+    yields unity integral over the direction domain (i.e., [0, 360) degrees, or [0, numpy.pi)).
+
+    .. math::
+        \int_0^{2\pi} \kappa(f_i, \beta) d\beta = 1
+
+    And it must have its maximum value at :math:`\beta = 0`.
 
 The :class:`~waveresponse.WaveSpectrum` extends the
 :class:`~waveresponse.DirectionalSpectrum` class with the following:
