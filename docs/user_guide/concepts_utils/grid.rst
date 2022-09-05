@@ -61,12 +61,13 @@ desired convention flags.
     grid.set_wave_convention(clockwise=False, waves_coming_from=True)
 
 Once you have an initialized grid object, the grid's frequency/direction coordinates
-and values can be retrieved by calling the grid. You must then specify which coordinate
-units to return by setting the ``freq_hz`` and ``degrees`` flags.
+and values can be retrieved by calling the :meth:`~waveresponse.Grid.grid` method.
+You must then specify which coordinate units to return by setting the ``freq_hz``
+and ``degrees`` flags.
 
 .. code-block:: python
 
-    freq, dirs, vals = grid(freq_hz=True, degrees=True)
+    freq, dirs, vals = grid.grid(freq_hz=True, degrees=True)
 
 Interpolation of the grid values is provided by the :meth:`~waveresponse.Grid.interpolate`
 method:

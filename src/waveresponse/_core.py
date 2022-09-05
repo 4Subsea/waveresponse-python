@@ -117,36 +117,6 @@ class Grid:
                 "and ``M=len(dirs)``."
             )
 
-    def __call__(self, freq_hz=None, degrees=None):
-        """
-        Return a copy of the grid object's frequency/direction coordinates and corresponding
-        values.
-
-        Parameters
-        ----------
-        freq_hz : bool
-            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
-            Defaults to original units used during initialization.
-        degrees : bool
-            If directions should be returned in 'degrees'. If ``False``, 'radians'
-            is used. Defaults to original units used during initialization.
-
-        Returns
-        -------
-        freq : array
-            1-D array of grid frequency coordinates.
-        dirs : array
-            1-D array of grid direction coordinates.
-        vals : array (N, M)
-            Grid values as 2-D array of shape (N, M), such that ``N=len(freq)``
-            and ``M=len(dirs)``.
-        """
-        freq = self.freq(freq_hz=freq_hz)
-        dirs = self.dirs(degrees=degrees)
-        vals = self._vals.copy()
-
-        return freq, dirs, vals
-
     def _check_freq(self, freq):
         """
         Check frequency bins.
@@ -205,6 +175,36 @@ class Grid:
             dirs = (180.0 / np.pi) * dirs
 
         return dirs
+
+    def grid(self, freq_hz=None, degrees=None):
+        """
+        Return a copy of the object's frequency/direction coordinates and corresponding
+        grid values.
+
+        Parameters
+        ----------
+        freq_hz : bool
+            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
+            Defaults to original units used during initialization.
+        degrees : bool
+            If directions should be returned in 'degrees'. If ``False``, 'radians'
+            is used. Defaults to original units used during initialization.
+
+        Returns
+        -------
+        freq : array
+            1-D array of grid frequency coordinates.
+        dirs : array
+            1-D array of grid direction coordinates.
+        vals : array (N, M)
+            Grid values as 2-D array of shape (N, M), such that ``N=len(freq)``
+            and ``M=len(dirs)``.
+        """
+        freq = self.freq(freq_hz=freq_hz)
+        dirs = self.dirs(degrees=degrees)
+        vals = self._vals.copy()
+
+        return freq, dirs, vals
 
     @property
     def wave_convention(self):
@@ -416,8 +416,8 @@ class Grid:
         array :
             Interpolated grid values.
         """
-        freq = np.asarray_chkfinite(freq).copy()
-        dirs = np.asarray_chkfinite(dirs).copy()
+        freq = np.asarray_chkfinite(freq).reshape(-1)
+        dirs = np.asarray_chkfinite(dirs).reshape(-1)
 
         if freq_hz:
             freq = 2.0 * np.pi * freq
@@ -751,7 +751,7 @@ class RAO(Grid):
         if phase_degrees is None:
             phase_degrees = self._phase_degrees
 
-        freq, dirs, vals = self(freq_hz=freq_hz, degrees=degrees)
+        freq, dirs, vals = self.grid(freq_hz=freq_hz, degrees=degrees)
         vals_amp, vals_phase = complex_to_polar(vals, phase_degrees=phase_degrees)
         return freq, dirs, vals_amp, vals_phase
 
@@ -855,7 +855,7 @@ class DirectionalSpectrum(Grid):
             Initialized DirectionalSpectrum object.
         """
         return cls(
-            *grid(freq_hz=grid._freq_hz, degrees=grid._degrees),
+            *grid.grid(freq_hz=grid._freq_hz, degrees=grid._degrees),
             freq_hz=grid._freq_hz,
             degrees=grid._degrees,
             **grid.wave_convention,
@@ -864,7 +864,7 @@ class DirectionalSpectrum(Grid):
     def __repr__(self):
         return "DirectionalSpectrum"
 
-    def __call__(self, freq_hz=False, degrees=False):
+    def grid(self, freq_hz=False, degrees=False):
         """
         Return a copy of the spectrum's frequency/direction coordinates and corresponding
         values.
@@ -887,7 +887,7 @@ class DirectionalSpectrum(Grid):
             Spectrum density values as 2-D array of shape (N, M), such that ``N=len(freq)``
             and ``M=len(dirs)``.
         """
-        freq, dirs, vals = super().__call__(freq_hz=freq_hz, degrees=degrees)
+        freq, dirs, vals = super().grid(freq_hz=freq_hz, degrees=degrees)
 
         if freq_hz:
             vals *= 2.0 * np.pi
@@ -1014,7 +1014,7 @@ class DirectionalSpectrum(Grid):
         elif degrees is None:
             degrees = self._degrees
 
-        freq, dirs, vals = self(freq_hz=freq_hz, degrees=degrees)
+        freq, dirs, vals = self.grid(freq_hz=freq_hz, degrees=degrees)
 
         if axis == 0:
             y = freq
