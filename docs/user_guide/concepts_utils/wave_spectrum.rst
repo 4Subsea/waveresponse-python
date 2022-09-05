@@ -43,7 +43,7 @@ Alternatively, you can construct a :class:`~waveresponse.WaveSpectrum` from a 1-
     vals_1d = np.random.random(len(freq))
     dirp = 45.0
 
-    spread_fun = lambda f, d: (1.0 / np.pi) * np.cos(np.radians(d / 2)) ** 2
+    spread_fun = lambda f, d: (1.0 / 180.0) * np.cos(np.radians(d / 2)) ** 2
 
     wave = wr.WaveSpectrum.from_spectrum1d(
         freq,
