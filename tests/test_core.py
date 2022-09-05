@@ -2121,6 +2121,58 @@ class Test_DirectionalSpectrum:
 
         np.testing.assert_array_almost_equal(spectrum._vals, vals_expect)
 
+    def test_from_spectrum1d_and_integrate_back_rad(self):
+        freq = np.linspace(0.0, 1.0, 50)
+        dirs = np.linspace(0.0, 2.0 * np.pi, endpoint=False)
+        vals1d = np.random.random(len(freq))
+        dirp = np.pi / 4.0
+
+        def spread_fun(f, d):
+            return (1.0 / np.pi) * np.cos(d / 2) ** 2
+
+        spectrum = DirectionalSpectrum.from_spectrum1d(
+            freq,
+            dirs,
+            vals1d,
+            spread_fun,
+            dirp,
+            freq_hz=True,
+            degrees=False,
+            clockwise=False,
+            waves_coming_from=False,
+        )
+
+        freq_out, vals1d_out = spectrum.spectrum1d(axis=1)
+
+        np.testing.assert_array_almost_equal(freq_out, freq)
+        np.testing.assert_array_almost_equal(vals1d_out, vals1d)
+
+    def test_from_spectrum1d_and_integrate_back_deg(self):
+        freq = np.linspace(0.0, 1.0, 50)
+        dirs = np.linspace(0.0, 360.0, endpoint=False)
+        vals1d = np.random.random(len(freq))
+        dirp = 45.0
+
+        def spread_fun(f, d):
+            return (1.0 / 180.0) * np.cos(np.radians(d / 2)) ** 2
+
+        spectrum = DirectionalSpectrum.from_spectrum1d(
+            freq,
+            dirs,
+            vals1d,
+            spread_fun,
+            dirp,
+            freq_hz=True,
+            degrees=True,
+            clockwise=False,
+            waves_coming_from=False,
+        )
+
+        freq_out, vals1d_out = spectrum.spectrum1d(axis=1)
+
+        np.testing.assert_array_almost_equal(freq_out, freq)
+        np.testing.assert_array_almost_equal(vals1d_out, vals1d)
+
     def test_interpolate_hz_deg(self):
         a = 7
         b = 6
