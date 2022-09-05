@@ -40,7 +40,7 @@ spectrum (1-D array), a spreading function and a peak direction:
 
     freq = np.linspace(0.0, 1.0, 50)
     dirs = np.linspace(0.0, 360.0, endpoint=False)
-    vals_1d = np.random.random(len(freq))
+    spectrum1d = np.random.random(len(freq))
     dirp = 45.0
 
     spread_fun = lambda f, d: (1.0 / 180.0) * np.cos(np.radians(d / 2)) ** 2
@@ -48,7 +48,7 @@ spectrum (1-D array), a spreading function and a peak direction:
     wave = wr.WaveSpectrum.from_spectrum1d(
         freq,
         dirs,
-        vals_1d,
+        spectrum1d,
         spread_fun,
         dirp,
         freq_hz=True,
