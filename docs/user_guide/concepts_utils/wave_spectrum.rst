@@ -60,20 +60,24 @@ spectrum (1-D array), a spreading function and a peak direction:
 .. note::
     The spreading function, :math:`\kappa(f, \beta)`, must be a function of both
     frequency, :math:`f`, and direction, :math:`\beta`. However, it is common practice
-    to use the same spreading for all frequencies. I.e.,
+    to use the same spreading for all frequencies. The spreading function must have its maximum value at :math:`\beta = 0`. I.e.,
 
     .. math::
-        \kappa(f, \beta) = \kappa(f)
+        \underset{\beta}{\operatorname{argmax}} \kappa(f, \beta) = 0
 
-    
-
-    The spreading function must be defined such that it for each frequency, :math:`f_i`
-    yields unity integral over the direction domain (i.e., [0, 360) degrees, or [0, numpy.pi)).
+    And it must be defined such that it for each frequency, :math:`f_i`
+    yields unity integral over the direction domain (i.e., [0, 360) degrees, or [0, numpy.pi)):
 
     .. math::
         \int_0^{2\pi} \kappa(f_i, \beta) d\beta = 1
 
-    And it must have its maximum value at :math:`\beta = 0`.
+    The directional spectrum is then constructed according to,
+
+    .. math::
+        S(f, \beta) = S(f) D(f, \beta - \beta_p)
+
+    where :math:`S(f)` is the non-directional spectrum, and :math:`\beta_p` is the
+    peak direction.
 
 The :class:`~waveresponse.WaveSpectrum` extends the
 :class:`~waveresponse.DirectionalSpectrum` class with the following:
