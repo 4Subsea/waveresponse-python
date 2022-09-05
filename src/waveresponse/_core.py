@@ -906,9 +906,14 @@ class DirectionalSpectrum(Grid):
             .astype("float64")
         )
 
+        if degrees:
+            period = 360.0
+        else:
+            period = 2.0 * np.pi
+
         for (idx_f, idx_d), val_i in np.ndenumerate(vals):
             f_i = freq[idx_f]
-            d_i = dirs[idx_d]
+            d_i = (dirs[idx_d] - dirp) % period
             vals[idx_f, idx_d] = spreading(f_i, d_i) * val_i
 
         return cls(
@@ -919,7 +924,7 @@ class DirectionalSpectrum(Grid):
             degrees=degrees,
             clockwise=clockwise,
             waves_coming_from=waves_coming_from,
-        ).rotate(dirp, degrees=degrees)
+        )
 
     def __repr__(self):
         return "DirectionalSpectrum"
