@@ -12,7 +12,7 @@ values (2-D array).
 .. code-block:: python
 
     import numpy as np
-    from waveresponse as wr
+    import waveresponse as wr
 
 
     freq = np.linspace(0.0, 1.0, 50)
@@ -23,6 +23,34 @@ values (2-D array).
         freq,
         dirs,
         vals,
+        freq_hz=True,
+        degrees=True,
+        clockwise=False,
+        waves_coming_from=False,
+    )
+
+Alternatively, you can construct a :class:`~waveresponse.WaveSpectrum` from a 1-D
+'non-directional' spectrum, a spreading function, and a peak direction:
+
+.. code-block:: python
+
+    import numpy as np
+    import waveresponse as wr
+
+
+    freq = np.linspace(0.0, 1.0, 50)
+    dirs = np.linspace(0.0, 360.0, endpoint=False)
+    vals_1d = np.random.random(len(freq))
+    dirp = 45.0
+
+    spread_fun = lambda f, d: (1.0 / np.pi) * np.cos(np.radians(d / 2)) ** 2
+
+    wave = wr.WaveSpectrum.from_spectrum1d(
+        freq,
+        dirs,
+        vals_1d,
+        spread_fun,
+        dirp,
         freq_hz=True,
         degrees=True,
         clockwise=False,
