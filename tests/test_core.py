@@ -2083,6 +2083,44 @@ class Test_DirectionalSpectrum:
 
         np.testing.assert_array_almost_equal(spectrum._vals, vals_expect)
 
+    def test_from_spectrum1d_freqspread(self):
+        freq = np.array([0.0, 0.5, 1.0])
+        dirs = np.array([0.0, 90.0, 180.0, 270.0])
+        spectrum1d = np.array([1.0, 2.0, 3.0])
+
+        def spread_fun(f, d):
+            return f * np.cos(np.radians(d) / 2.0) ** 2
+
+        spectrum = DirectionalSpectrum.from_spectrum1d(
+            freq, dirs, spectrum1d, spread_fun, 45.0, freq_hz=False, degrees=True
+        )
+
+        vals_expect = np.array(
+            [
+                [
+                    0.0 * np.cos(1 * np.pi / 8)**2 * 1.0,
+                    0.0 * np.cos(7 * np.pi / 8)**2 * 1.0,
+                    0.0 * np.cos(3 * np.pi / 8)**2 * 1.0,
+                    0.0 * np.cos(5 * np.pi / 8)**2 * 1.0,
+                ],
+                [
+                    0.5 * np.cos(1 * np.pi / 8)**2 * 2.0,
+                    0.5 * np.cos(7 * np.pi / 8)**2 * 2.0,
+                    0.5 * np.cos(3 * np.pi / 8)**2 * 2.0,
+                    0.5 * np.cos(5 * np.pi / 8)**2 * 2.0,
+                ],
+                [
+                    1.0 * np.cos(1 * np.pi / 8)**2 * 3.0,
+                    1.0 * np.cos(7 * np.pi / 8)**2 * 3.0,
+                    1.0 * np.cos(3 * np.pi / 8)**2 * 3.0,
+                    1.0 * np.cos(5 * np.pi / 8)**2 * 3.0,
+                ],
+            ]
+        )
+        vals_expect = vals_expect / (np.pi / 180.0)
+
+        np.testing.assert_array_almost_equal(spectrum._vals, vals_expect)
+
     def test_interpolate_hz_deg(self):
         a = 7
         b = 6
