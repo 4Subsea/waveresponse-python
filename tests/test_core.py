@@ -2083,7 +2083,7 @@ class Test_DirectionalSpectrum:
 
         np.testing.assert_array_almost_equal(spectrum._vals, vals_expect)
 
-    def test_from_spectrum1d_freqspread(self):
+    def test_from_spectrum1d_spread_freq(self):
         freq = np.array([0.0, 0.5, 1.0])
         dirs = np.array([0.0, 90.0, 180.0, 270.0])
         spectrum1d = np.array([1.0, 2.0, 3.0])
