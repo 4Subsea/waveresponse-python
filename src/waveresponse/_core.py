@@ -910,11 +910,13 @@ class DirectionalSpectrum(Grid):
             Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
         spectrum1d : array-like
             Spectrum density values as 1-D array representing the 'non-directional'
-            spectrum. `spectrum1d` must have same length as `freq`.
+            spectrum. `spectrum1d` must have the same length as `freq`.
         spreading : callable
-            Todo.
+            Spreading function. Takes a frequency coordinate (float) and a direction
+            coordinate (float), and returns a corresponding scaling value (float).
         dirp : float
-            Peak direction. Direction in which the spectrum has its maximum values.
+            Peak direction. Direction in which the spectrum should have its maximum
+            values.
         freq_hz : bool
             If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
         degrees : bool
