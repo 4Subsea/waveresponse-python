@@ -1151,6 +1151,9 @@ class DirectionalSpectrum(Grid):
 
 
 class WaveSpectrum(DirectionalSpectrum):
+    def __repr__(self):
+        return "WaveSpectrum"
+
     @property
     def hs(self):
         """
