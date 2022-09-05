@@ -906,7 +906,8 @@ class DirectionalSpectrum(Grid):
             ``S(f, beta) = S(f) * D(f, beta - dirp)``
 
         where ``S(f)`` is the non-directional spectrum, and ``D(f, beta - beta_p)``
-        is the spreading function (or 'directional distribution').
+        is the spreading function (or 'directional distribution'). ``dirp`` is
+        the peak direction.
 
         Parameters
         ----------
