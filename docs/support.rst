@@ -5,7 +5,7 @@ Support
 For bug/issue reports, please submit an issue on `GitHub`_. For questions and feedback contact
 us at feedback@4insight.io
 
-.. _GitHub: https://github.com/4subsea/waveresponse_python
+.. _GitHub: https://github.com/4subsea/waveresponse-python
 
 .. important::
 
