@@ -59,6 +59,33 @@ def polar_to_complex(amp, phase, phase_degrees=False):
     return amp * (np.cos(phase) + 1j * np.sin(phase))
 
 
+def _check_is_similar(*grids, exact_type=True):
+    """
+    Check if grid objects are similar.
+    """
+    grids = list(grids)
+    grid_ref = grids.pop()
+
+    if exact_type:
+        type_ = type(grid_ref)
+    else:
+        type_ = Grid
+
+    for grid_i in grids:
+        if not isinstance(grid_i, type_):
+            raise ValueError("Object types are not similar.")
+        elif grid_ref._vals.shape != grid_i._vals.shape:
+            raise ValueError("Grid objects have different shape.")
+        elif np.any(grid_ref._freq != grid_i._freq) or np.any(
+            grid_ref._dirs != grid_i._dirs
+        ):
+            raise ValueError(
+                "Grid objects have different frequency/direction coordinates."
+            )
+        elif grid_ref.wave_convention != grid_i.wave_convention:
+            raise ValueError("Grid objects have different wave conventions.")
+
+
 class Grid:
     """
     Two-dimentional frequency/(wave)direction grid.
@@ -518,13 +545,9 @@ class Grid:
             A copy of the object where the values are multiplied with another Grid.
         """
         if not isinstance(other, Grid):
-            raise ValueError()
-        elif self._vals.shape != other._vals.shape:
-            raise ValueError()
-        elif np.any(self._freq != other._freq) or np.any(self._dirs != other._dirs):
-            raise ValueError()
-        elif self.wave_convention != other.wave_convention:
-            raise ValueError()
+            raise ValueError("Other object is not of type 'waveresponse.Grid'.")
+
+        _check_is_similar(self, other, exact_type=False)
 
         new = Grid(
             self._freq,

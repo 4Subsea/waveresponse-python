@@ -11,3 +11,4 @@ will show how to :ref:`calculate response <calculate-response>` using ``waveresp
 
    concepts_utils/index
    calculate_response
+   rigid_transform

@@ -7,6 +7,12 @@ from ._core import (
     complex_to_polar,
     polar_to_complex,
 )
+from ._transform import (
+    rigid_transform,
+    rigid_transform_heave,
+    rigid_transform_surge,
+    rigid_transform_sway,
+)
 
 __version__ = "0.0.1"
 
@@ -17,5 +23,9 @@ __all__ = [
     "Grid",
     "polar_to_complex",
     "RAO",
+    "rigid_transform",
+    "rigid_transform_heave",
+    "rigid_transform_surge",
+    "rigid_transform_sway",
     "WaveSpectrum",
 ]

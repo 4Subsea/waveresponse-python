@@ -10,6 +10,7 @@ from waveresponse import (
     complex_to_polar,
     polar_to_complex,
 )
+from waveresponse._core import _check_is_similar
 
 
 @pytest.fixture
@@ -2715,3 +2716,193 @@ class Test_calculate_response:
         np.testing.assert_array_almost_equal(response._vals, vals_expect)
         assert response._clockwise == rao._clockwise
         assert response._waves_coming_from == rao._waves_coming_from
+
+
+class Test__check_is_similar:
+    def test_check_is_similar(self):
+        freq = np.array([0.0, 0.5, 1.0])
+        dirs = np.array([0.0, 180.0, 359.0])
+
+        vals_a = np.array(
+            [
+                [1.0, 2.0, 3.0],
+                [4.0, 5.0, 6.0],
+                [7.0, 8.0, 9.0],
+            ]
+        )
+
+        vals_b = np.array(
+            [
+                [1.0, 2.0, 3.0],
+                [4.0, 5.0, 6.0],
+                [7.0, 8.0, 9.0],
+            ]
+        )
+
+        vals_c = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 1.0j],
+                [1.0 + 1.0j, 0.0 + 0.0j, 1.0 + 1.0j],
+                [0.0 + 1.0j, 1.0 + 0.0j, 1.0 + 1.0j],
+            ]
+        )
+
+        grid_a = Grid(freq, dirs, vals_a, degrees=True)
+        grid_b = Grid(freq, dirs, vals_b, degrees=True)
+        grid_c = Grid(freq, dirs, vals_c, degrees=True)
+        _check_is_similar(grid_a, grid_b, grid_c)
+
+        grid_a = Grid(freq, dirs, vals_a, degrees=True)
+        grid_b = Grid(freq, dirs, vals_b, degrees=True)
+        grid_c = Grid(freq, dirs, vals_c, degrees=True)
+        _check_is_similar(grid_a, grid_b, grid_c, exact_type=True)
+
+        grid_a = Grid(freq, dirs, vals_a, degrees=True)
+        grid_b = Grid(freq, dirs, vals_b, degrees=True)
+        grid_c = RAO(freq, dirs, vals_c, degrees=True)
+        _check_is_similar(grid_a, grid_b, grid_c, exact_type=False)
+
+    def test_raises_type(self):
+        freq = np.array([0.0, 0.5, 1.0])
+        dirs = np.array([0.0, 180.0, 359.0])
+
+        vals_a = np.array(
+            [
+                [1.0, 2.0, 3.0],
+                [4.0, 5.0, 6.0],
+                [7.0, 8.0, 9.0],
+            ]
+        )
+
+        vals_b = np.array(
+            [
+                [1.0, 2.0, 3.0],
+                [4.0, 5.0, 6.0],
+                [7.0, 8.0, 9.0],
+            ]
+        )
+
+        vals_c = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 1.0j],
+                [1.0 + 1.0j, 0.0 + 0.0j, 1.0 + 1.0j],
+                [0.0 + 1.0j, 1.0 + 0.0j, 1.0 + 1.0j],
+            ]
+        )
+
+        grid_a = Grid(freq, dirs, vals_a, degrees=True)
+        grid_b = Grid(freq, dirs, vals_b, degrees=True)
+        grid_c = RAO(freq, dirs, vals_c, degrees=True)
+        with pytest.raises(ValueError):
+            _check_is_similar(grid_a, grid_b, grid_c, exact_type=True)
+
+    def test_raises_convention(self):
+        freq = np.array([0.0, 0.5, 1.0])
+        dirs = np.array([0.0, 180.0, 359.0])
+
+        vals_a = np.array(
+            [
+                [1.0, 2.0, 3.0],
+                [4.0, 5.0, 6.0],
+                [7.0, 8.0, 9.0],
+            ]
+        )
+
+        vals_b = np.array(
+            [
+                [1.0, 2.0, 3.0],
+                [4.0, 5.0, 6.0],
+                [7.0, 8.0, 9.0],
+            ]
+        )
+
+        vals_c = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 1.0j],
+                [1.0 + 1.0j, 0.0 + 0.0j, 1.0 + 1.0j],
+                [0.0 + 1.0j, 1.0 + 0.0j, 1.0 + 1.0j],
+            ]
+        )
+
+        grid_a = Grid(freq, dirs, vals_a, degrees=True)
+        grid_b = Grid(freq, dirs, vals_b, degrees=True)
+        grid_c = Grid(freq, dirs, vals_c, degrees=True)
+
+        grid_a.set_wave_convention(clockwise=True)
+        grid_b.set_wave_convention(clockwise=False)
+
+        with pytest.raises(ValueError):
+            _check_is_similar(grid_a, grid_b, grid_c, exact_type=True)
+
+    def test_raises_freq(self):
+        freq = np.array([0.0, 0.5, 1.0])
+        dirs = np.array([0.0, 180.0, 359.0])
+
+        vals_a = np.array(
+            [
+                [1.0, 2.0, 3.0],
+                [4.0, 5.0, 6.0],
+                [7.0, 8.0, 9.0],
+            ]
+        )
+
+        vals_b = np.array(
+            [
+                [1.0, 2.0, 3.0],
+                [4.0, 5.0, 6.0],
+                [7.0, 8.0, 9.0],
+            ]
+        )
+
+        grid_a = Grid(freq, dirs, vals_a, degrees=True)
+        grid_b = Grid(freq, dirs, vals_b, degrees=True)
+
+        freq_c = np.array([0.0, 0.5])
+        dirs_c = np.array([0.0, 180.0, 359.0])
+        vals_c = np.array(
+            [
+                [1.0, 2.0, 3.0],
+                [4.0, 5.0, 6.0],
+            ]
+        )
+        grid_c = Grid(freq_c, dirs_c, vals_c, degrees=True)
+
+        with pytest.raises(ValueError):
+            _check_is_similar(grid_a, grid_b, grid_c)
+
+    def test_raises_dirs(self):
+        freq = np.array([0.0, 0.5, 1.0])
+        dirs = np.array([0.0, 180.0, 359.0])
+
+        vals_a = np.array(
+            [
+                [1.0, 2.0, 3.0],
+                [4.0, 5.0, 6.0],
+                [7.0, 8.0, 9.0],
+            ]
+        )
+
+        vals_b = np.array(
+            [
+                [1.0, 2.0, 3.0],
+                [4.0, 5.0, 6.0],
+                [7.0, 8.0, 9.0],
+            ]
+        )
+
+        grid_a = Grid(freq, dirs, vals_a, degrees=True)
+        grid_b = Grid(freq, dirs, vals_b, degrees=True)
+
+        freq_c = np.array([0.0, 0.5, 1.0])
+        dirs_c = np.array([0.0, 180.0])
+        vals_c = np.array(
+            [
+                [1.0, 2.0],
+                [4.0, 5.0],
+                [7.0, 8.0],
+            ]
+        )
+        grid_c = Grid(freq_c, dirs_c, vals_c, degrees=True)
+
+        with pytest.raises(ValueError):
+            _check_is_similar(grid_a, grid_b, grid_c)

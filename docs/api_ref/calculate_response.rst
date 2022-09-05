@@ -1,6 +1,4 @@
 calculate_response
 ==================
 
-.. automodule:: waveresponse
-    :members:
-        calculate_response
+.. autofunction:: waveresponse.calculate_response
