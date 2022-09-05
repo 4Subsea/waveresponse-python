@@ -897,10 +897,33 @@ class DirectionalSpectrum(Grid):
         clockwise=False,
         waves_coming_from=True,
     ):
+        """
+        Construct a ``DirectionalSpectrum`` object from a ``Grid`` object.
+
+        It is assumed that the grid's values represent spectrum density values that
+        correspond to frequency/direction units given during initialization. Note
+        that if you scale the frequency/direction bins of the spectrum, you must
+        also scale the corresponding spectrum density values (since the total energy/integral
+        of the spectrum should be preserved).
+
+        Parameters
+        ----------
+        grid : obj
+            Grid object.
+
+        Returns
+        -------
+        cls :
+            Initialized DirectionalSpectrum object.
+        """
         freq = np.asarray_chkfinite(freq)
         dirs = np.asarray_chkfinite(dirs)
         spectrum1d = np.asarray_chkfinite(spectrum1d)
-        vals = np.repeat(spectrum1d, len(dirs)).reshape(len(freq), len(dirs))
+        vals = (
+            np.repeat(spectrum1d, len(dirs))
+            .reshape(len(freq), len(dirs))
+            .astype("float64")
+        )
 
         if degrees:
             period = 360.0
