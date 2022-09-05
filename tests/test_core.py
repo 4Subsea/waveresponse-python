@@ -2442,6 +2442,9 @@ class Test_WaveSpectrum:
         assert wave._freq_hz is True
         assert wave._degrees is True
 
+    def test__repr__(self, wave):
+        assert str(wave) == "WaveSpectrum"
+
     def test_hs(self):
         f0 = 0.0
         f1 = 2.0
