@@ -898,16 +898,17 @@ class DirectionalSpectrum(Grid):
         waves_coming_from=True,
     ):
         """
-        Construct a 2-D directional spectrum from a 1-D 'non-directional' spectrum,
+        Construct a 2-D 'directional' spectrum from a 1-D 'non-directional' spectrum,
         a spreading function and a peak direction.
 
         The directional spectrum is constructed according to:
 
             ``S(f, beta) = S(f) * D(f, beta - dirp)``
 
-        where ``S(f)`` is the non-directional spectrum, and ``D(f, beta - beta_p)``
-        is the spreading function (or 'directional distribution'). ``dirp`` is
-        the peak direction.
+        where ``S(f)`` is the non-directional spectrum, ``D(f, beta - beta_p)``
+        is the spreading function (or 'directional distribution'), and ``dirp``
+        is the peak direction. ``f`` is the frequency coordinate, and ``beta`` is
+        the direction coordinate.
 
         Parameters
         ----------
@@ -917,10 +918,10 @@ class DirectionalSpectrum(Grid):
             1-D array of grid direction coordinates. Positive and monotonically increasing.
             Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
         spectrum1d : array-like
-            Spectrum density values as 1-D array representing the 'non-directional'
-            spectrum. This 1-D spectrum will be scaled according to `spread_fun`,
-            and distributed to all direction coordinates. `spectrum1d` must have
-            the same length as `freq`.
+            1-D array of non-directional spectrum density values. These 1-D spectrum
+            values will be scaled according to the spreading function, and distributed
+            to all frequency/direction coordinates. `spectrum1d` must have the same
+            length as `freq`.
         spread_fun : callable
             Spreading function. Takes a frequency coordinate (float) and a direction
             coordinate (float) as input, and returns a corresponding scaling value
