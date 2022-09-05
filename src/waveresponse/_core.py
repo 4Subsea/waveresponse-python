@@ -900,11 +900,7 @@ class DirectionalSpectrum(Grid):
         freq = np.asarray_chkfinite(freq)
         dirs = np.asarray_chkfinite(dirs)
         spectrum1d = np.asarray_chkfinite(spectrum1d)
-        vals = (
-            np.repeat(spectrum1d, len(dirs))
-            .reshape(len(freq), len(dirs))
-            .astype("float64")
-        )
+        vals = np.repeat(spectrum1d, len(dirs)).reshape(len(freq), len(dirs))
 
         if degrees:
             period = 360.0

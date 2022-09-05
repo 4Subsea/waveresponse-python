@@ -1985,22 +1985,22 @@ class Test_DirectionalSpectrum:
         vals_expect = np.array(
             [
                 [
-                    np.cos(1 * np.pi / 8)**2 * 1.0,
-                    np.cos(7 * np.pi / 8)**2 * 1.0,
-                    np.cos(3 * np.pi / 8)**2 * 1.0,
-                    np.cos(5 * np.pi / 8)**2 * 1.0,
+                    np.cos(1 * np.pi / 8) ** 2 * 1.0,
+                    np.cos(7 * np.pi / 8) ** 2 * 1.0,
+                    np.cos(3 * np.pi / 8) ** 2 * 1.0,
+                    np.cos(5 * np.pi / 8) ** 2 * 1.0,
                 ],
                 [
-                    np.cos(1 * np.pi / 8)**2 * 2.0,
-                    np.cos(7 * np.pi / 8)**2 * 2.0,
-                    np.cos(3 * np.pi / 8)**2 * 2.0,
-                    np.cos(5 * np.pi / 8)**2 * 2.0,
+                    np.cos(1 * np.pi / 8) ** 2 * 2.0,
+                    np.cos(7 * np.pi / 8) ** 2 * 2.0,
+                    np.cos(3 * np.pi / 8) ** 2 * 2.0,
+                    np.cos(5 * np.pi / 8) ** 2 * 2.0,
                 ],
                 [
-                    np.cos(1 * np.pi / 8)**2 * 3.0,
-                    np.cos(7 * np.pi / 8)**2 * 3.0,
-                    np.cos(3 * np.pi / 8)**2 * 3.0,
-                    np.cos(5 * np.pi / 8)**2 * 3.0,
+                    np.cos(1 * np.pi / 8) ** 2 * 3.0,
+                    np.cos(7 * np.pi / 8) ** 2 * 3.0,
+                    np.cos(3 * np.pi / 8) ** 2 * 3.0,
+                    np.cos(5 * np.pi / 8) ** 2 * 3.0,
                 ],
             ]
         )
@@ -2017,28 +2017,28 @@ class Test_DirectionalSpectrum:
             return np.cos(d / 2.0) ** 2
 
         spectrum = DirectionalSpectrum.from_spectrum1d(
-            freq, dirs, spectrum1d, spread_fun, np.pi/4, freq_hz=False, degrees=False
+            freq, dirs, spectrum1d, spread_fun, np.pi / 4, freq_hz=False, degrees=False
         )
 
         vals_expect = np.array(
             [
                 [
-                    np.cos(1 * np.pi / 8)**2 * 1.0,
-                    np.cos(7 * np.pi / 8)**2 * 1.0,
-                    np.cos(3 * np.pi / 8)**2 * 1.0,
-                    np.cos(5 * np.pi / 8)**2 * 1.0,
+                    np.cos(1 * np.pi / 8) ** 2 * 1.0,
+                    np.cos(7 * np.pi / 8) ** 2 * 1.0,
+                    np.cos(3 * np.pi / 8) ** 2 * 1.0,
+                    np.cos(5 * np.pi / 8) ** 2 * 1.0,
                 ],
                 [
-                    np.cos(1 * np.pi / 8)**2 * 2.0,
-                    np.cos(7 * np.pi / 8)**2 * 2.0,
-                    np.cos(3 * np.pi / 8)**2 * 2.0,
-                    np.cos(5 * np.pi / 8)**2 * 2.0,
+                    np.cos(1 * np.pi / 8) ** 2 * 2.0,
+                    np.cos(7 * np.pi / 8) ** 2 * 2.0,
+                    np.cos(3 * np.pi / 8) ** 2 * 2.0,
+                    np.cos(5 * np.pi / 8) ** 2 * 2.0,
                 ],
                 [
-                    np.cos(1 * np.pi / 8)**2 * 3.0,
-                    np.cos(7 * np.pi / 8)**2 * 3.0,
-                    np.cos(3 * np.pi / 8)**2 * 3.0,
-                    np.cos(5 * np.pi / 8)**2 * 3.0,
+                    np.cos(1 * np.pi / 8) ** 2 * 3.0,
+                    np.cos(7 * np.pi / 8) ** 2 * 3.0,
+                    np.cos(3 * np.pi / 8) ** 2 * 3.0,
+                    np.cos(5 * np.pi / 8) ** 2 * 3.0,
                 ],
             ]
         )
@@ -2060,22 +2060,22 @@ class Test_DirectionalSpectrum:
         vals_expect = np.array(
             [
                 [
-                    np.cos(1 * np.pi / 8)**2 * 1.0,
-                    np.cos(3 * np.pi / 8)**2 * 1.0,
-                    np.cos(5 * np.pi / 8)**2 * 1.0,
-                    np.cos(7 * np.pi / 8)**2 * 1.0,
+                    np.cos(1 * np.pi / 8) ** 2 * 1.0,
+                    np.cos(3 * np.pi / 8) ** 2 * 1.0,
+                    np.cos(5 * np.pi / 8) ** 2 * 1.0,
+                    np.cos(7 * np.pi / 8) ** 2 * 1.0,
                 ],
                 [
-                    np.cos(1 * np.pi / 8)**2 * 2.0,
-                    np.cos(3 * np.pi / 8)**2 * 2.0,
-                    np.cos(5 * np.pi / 8)**2 * 2.0,
-                    np.cos(7 * np.pi / 8)**2 * 2.0,
+                    np.cos(1 * np.pi / 8) ** 2 * 2.0,
+                    np.cos(3 * np.pi / 8) ** 2 * 2.0,
+                    np.cos(5 * np.pi / 8) ** 2 * 2.0,
+                    np.cos(7 * np.pi / 8) ** 2 * 2.0,
                 ],
                 [
-                    np.cos(1 * np.pi / 8)**2 * 3.0,
-                    np.cos(3 * np.pi / 8)**2 * 3.0,
-                    np.cos(5 * np.pi / 8)**2 * 3.0,
-                    np.cos(7 * np.pi / 8)**2 * 3.0,
+                    np.cos(1 * np.pi / 8) ** 2 * 3.0,
+                    np.cos(3 * np.pi / 8) ** 2 * 3.0,
+                    np.cos(5 * np.pi / 8) ** 2 * 3.0,
+                    np.cos(7 * np.pi / 8) ** 2 * 3.0,
                 ],
             ]
         )
@@ -2098,22 +2098,22 @@ class Test_DirectionalSpectrum:
         vals_expect = np.array(
             [
                 [
-                    0.0 * np.cos(1 * np.pi / 8)**2 * 1.0,
-                    0.0 * np.cos(7 * np.pi / 8)**2 * 1.0,
-                    0.0 * np.cos(3 * np.pi / 8)**2 * 1.0,
-                    0.0 * np.cos(5 * np.pi / 8)**2 * 1.0,
+                    0.0 * np.cos(1 * np.pi / 8) ** 2 * 1.0,
+                    0.0 * np.cos(7 * np.pi / 8) ** 2 * 1.0,
+                    0.0 * np.cos(3 * np.pi / 8) ** 2 * 1.0,
+                    0.0 * np.cos(5 * np.pi / 8) ** 2 * 1.0,
                 ],
                 [
-                    0.5 * np.cos(1 * np.pi / 8)**2 * 2.0,
-                    0.5 * np.cos(7 * np.pi / 8)**2 * 2.0,
-                    0.5 * np.cos(3 * np.pi / 8)**2 * 2.0,
-                    0.5 * np.cos(5 * np.pi / 8)**2 * 2.0,
+                    0.5 * np.cos(1 * np.pi / 8) ** 2 * 2.0,
+                    0.5 * np.cos(7 * np.pi / 8) ** 2 * 2.0,
+                    0.5 * np.cos(3 * np.pi / 8) ** 2 * 2.0,
+                    0.5 * np.cos(5 * np.pi / 8) ** 2 * 2.0,
                 ],
                 [
-                    1.0 * np.cos(1 * np.pi / 8)**2 * 3.0,
-                    1.0 * np.cos(7 * np.pi / 8)**2 * 3.0,
-                    1.0 * np.cos(3 * np.pi / 8)**2 * 3.0,
-                    1.0 * np.cos(5 * np.pi / 8)**2 * 3.0,
+                    1.0 * np.cos(1 * np.pi / 8) ** 2 * 3.0,
+                    1.0 * np.cos(7 * np.pi / 8) ** 2 * 3.0,
+                    1.0 * np.cos(3 * np.pi / 8) ** 2 * 3.0,
+                    1.0 * np.cos(5 * np.pi / 8) ** 2 * 3.0,
                 ],
             ]
         )
