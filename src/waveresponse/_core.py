@@ -898,23 +898,33 @@ class DirectionalSpectrum(Grid):
         waves_coming_from=True,
     ):
         """
-        Construct a ``DirectionalSpectrum`` object from a ``Grid`` object.
-
-        It is assumed that the grid's values represent spectrum density values that
-        correspond to frequency/direction units given during initialization. Note
-        that if you scale the frequency/direction bins of the spectrum, you must
-        also scale the corresponding spectrum density values (since the total energy/integral
-        of the spectrum should be preserved).
+        Construct a ``DirectionalSpectrum`` object from a 1-D spectrum, a spreading
+        function and a peak direction.
 
         Parameters
         ----------
-        grid : obj
-            Grid object.
-
-        Returns
-        -------
-        cls :
-            Initialized DirectionalSpectrum object.
+        freq : array-like
+            1-D array of grid frequency coordinates. Positive and monotonically increasing.
+        dirs : array-like
+            1-D array of grid direction coordinates. Positive and monotonically increasing.
+            Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+        spectrum1d : array-like
+            Spectrum density values as 1-D array representing the 'non-directional'
+            spectrum. `spectrum1d` must have same length as `freq`.
+        spreading : callable
+            Todo.
+        dirp : float
+            Peak direction. Direction in which the spectrum has its maximum values.
+        freq_hz : bool
+            If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+        degrees : bool
+            If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
+        clockwise : bool
+            If positive directions are defined to be 'clockwise'. If ``False``,
+            'counterclockwise' is assumed.
+        waves_coming_from : bool
+            If waves are 'coming from' the given directions. If ``False``, 'going towards'
+            convention is assumed.
         """
         freq = np.asarray_chkfinite(freq)
         dirs = np.asarray_chkfinite(dirs)
