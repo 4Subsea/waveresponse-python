@@ -890,7 +890,7 @@ class DirectionalSpectrum(Grid):
         freq,
         dirs,
         spectrum1d,
-        spreading,
+        spread_fun,
         dirp,
         freq_hz=False,
         degrees=False,
@@ -911,7 +911,7 @@ class DirectionalSpectrum(Grid):
         spectrum1d : array-like
             Spectrum density values as 1-D array representing the 'non-directional'
             spectrum. `spectrum1d` must have the same length as `freq`.
-        spreading : callable
+        spread_fun : callable
             Spreading function. Takes a frequency coordinate (float) and a direction
             coordinate (float), and returns a corresponding scaling value (float).
         dirp : float
@@ -945,7 +945,7 @@ class DirectionalSpectrum(Grid):
         for (idx_f, idx_d), val_i in np.ndenumerate(vals):
             f_i = freq[idx_f]
             d_i = (dirs[idx_d] - dirp) % period
-            vals[idx_f, idx_d] = spreading(f_i, d_i) * val_i
+            vals[idx_f, idx_d] = spread_fun(f_i, d_i) * val_i
 
         return cls(
             freq,
