@@ -898,21 +898,15 @@ class DirectionalSpectrum(Grid):
         waves_coming_from=True,
     ):
         """
-        Construct a 2-D 'directional' spectrum from a 1-D 'non-directional' spectrum,
+        Construct a 2-D directional spectrum from a 1-D 'non-directional' spectrum,
         a spreading function and a peak direction.
 
         The directional spectrum is constructed according to:
 
-            ``S(f, beta) = S(f) * D(f, beta)``
+            ``S(f, beta) = S(f) * D(f, beta - dirp)``
 
-        where ``f`` is the frequency coordinate, and ``beta`` is the wave direction
-        coordinate. ``S(f)`` is the 1-D non-directional spectrum, and ``D(f, beta)``
-        is the 'directional distribution'. The directional distribution is in general
-        a function of frequency and direction, and is given by:
-
-            ``D(f, beta) = spread_fun(f, beta - dirp)``
-
-        where ``dirp`` is the wave peak direction.
+        where ``S(f)`` is the non-directional spectrum, and ``D(f, beta - beta_p)``
+        is the spreading function (or 'directional distribution').
 
         Parameters
         ----------
