@@ -1354,17 +1354,29 @@ class _BaseSpreading:
             Direction coordinate. Units should be according to the `degrees` flag
             given during initialization.
         """
-
         if self._freq_hz:
             frequency = 2.0 * np.pi * frequency
+
         if self._degrees:
             direction = (np.pi / 180.0) * direction
             scale = np.pi / 180.0
+        else:
+            scale = 1.0
 
         return scale * self._spread_fun(frequency, direction % (2.0 * np.pi))
 
     @abstractmethod
     def _spread_fun(self, omega, theta):
+        """
+        Get spreading value for given frequency/direction coordinate.
+
+        Parameters
+        ----------
+        omega : float
+            Frequency coordinate in 'rad/s'.
+        direction : float
+            Direction coordinate in 'radians'.
+        """
         raise NotImplementedError()
 
 
