@@ -1,6 +1,7 @@
 from ._core import (
     RAO,
     Cosine2sSpreading,
+    CosineSquaredSpreading,
     DirectionalSpectrum,
     Grid,
     WaveSpectrum,
@@ -21,6 +22,7 @@ __all__ = [
     "calculate_response",
     "complex_to_polar",
     "Cosine2sSpreading",
+    "CosineSquaredSpreading",
     "DirectionalSpectrum",
     "Grid",
     "polar_to_complex",
