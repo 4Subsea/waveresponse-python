@@ -58,25 +58,40 @@ spectrum (1-D array), a spreading function and a peak direction:
     )
 
 .. note::
-    The directional spectrum is constructed according to,
+    The directional spectrum is constructed according to:
 
     .. math::
-        S(f, \beta) = S(f) D(f, \beta - \beta_p)
+        S(f, \beta) = S(f) D(f, \bar{\beta})
 
-    where :math:`S(f)` is the non-directional spectrum, :math:`D(f, \beta - \beta_p)` is
+    where,
+
+    .. math::
+        \bar{\beta} = \beta - \beta_p
+
+    :math:`S(f)` is the non-directional spectrum, :math:`D(f, \beta - \beta_p)` is
     the spreading function (sometimes referred to as the 'directional distribution'),
     and :math:`\beta_p` is the spectrum's peak direction. In general, the spreading
     function should be a function of both frequency, :math:`f`, and direction,
     :math:`\beta`. However, it is common practice to use
     the same spreading for all frequencies.
 
+    .. where :math:`S(f)` is the non-directional spectrum, :math:`D(f, \beta - \beta_p)` is
+    .. the spreading function (sometimes referred to as the 'directional distribution'),
+    .. and :math:`\beta_p` is the spectrum's peak direction. In general, the spreading
+    .. function should be a function of both frequency, :math:`f`, and direction,
+    .. :math:`\beta`. However, it is common practice to use
+    .. the same spreading for all frequencies.
+
     The spreading function must be defined such that it for each frequency, :math:`f_i`, yields unity
     integral over the direction domain (i.e., [0, 360) degrees, or [0, numpy.pi)):
 
     .. math::
-        \int_0^{2\pi} D(f_i, \beta) d\beta = 1
+        \int_0^{2\pi} D(f_i, \bar{\beta}) d\bar{\beta} = 1
 
-    The spreading function should have its maximum value at :math:`\beta - \beta_p = 0`.
+    And it should have its maximum value at :math:`\bar{\beta} = \beta - \beta_p = 0`.
+
+    .. math::
+        \underset{\bar{\beta}}{\operatorname{argmax}} D(f, \bar{\beta}) = 0
 
 The :class:`~waveresponse.WaveSpectrum` extends the
 :class:`~waveresponse.DirectionalSpectrum` class with the following:
