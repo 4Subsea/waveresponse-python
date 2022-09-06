@@ -58,40 +58,36 @@ spectrum (1-D array), a spreading function and a peak direction:
     )
 
 .. note::
-    The directional spectrum is constructed according to:
+    Often you do not have access to a full directional wave spectrum. Then, it is
+    common to instead construct a directional spectrum from a standardized frequency
+    spectrum, :math:`S(\omega)`, and a directional spreading function,
+    :math:`D(\omega, \beta)`:
 
     .. math::
-        S(f, \beta) = S(f) D(f, \bar{\beta})
+        S(\omega, \beta) = S(\omega) D(\omega, \beta)
 
-    where,
-
-    .. math::
-        \bar{\beta} = \beta - \beta_p
-
-    :math:`S(f)` is the non-directional spectrum, :math:`D(f, \beta - \beta_p)` is
-    the spreading function (sometimes referred to as the 'directional distribution'),
-    and :math:`\beta_p` is the spectrum's peak direction. In general, the spreading
-    function should be a function of both frequency, :math:`f`, and direction,
-    :math:`\beta`. However, it is common practice to use
-    the same spreading for all frequencies.
-
-    .. where :math:`S(f)` is the non-directional spectrum, :math:`D(f, \beta - \beta_p)` is
-    .. the spreading function (sometimes referred to as the 'directional distribution'),
-    .. and :math:`\beta_p` is the spectrum's peak direction. In general, the spreading
-    .. function should be a function of both frequency, :math:`f`, and direction,
-    .. :math:`\beta`. However, it is common practice to use
-    .. the same spreading for all frequencies.
-
-    The spreading function must be defined such that it for each frequency, :math:`f_i`, yields unity
-    integral over the direction domain (i.e., [0, 360) degrees, or [0, numpy.pi)):
+    In general, the spreading function is a function of both frequency, :math:`\omega`,
+    and direction, :math:`\beta`. However, it is common to use the same spreading
+    for all frequencies. Since the frequency spectrum is obtained by integrating
+    the directional spectrum over the directional domain (i.e., [0, 360)  degrees,
+    or [0, 2\ :math:`\pi`) radians),
 
     .. math::
-        \int_0^{2\pi} D(f_i, \bar{\beta}) d\bar{\beta} = 1
+        S(\omega) = \int_0^{2\pi} S(\omega, \beta)
 
-    And it should have its maximum value at :math:`\bar{\beta} = \beta - \beta_p = 0`.
+    we get the following requirement for the spreading function for each frequency,
+    :math:`\omega_i`:
 
     .. math::
-        \underset{\bar{\beta}}{\operatorname{argmax}} D(f, \bar{\beta}) = 0
+        \int_0^{2\pi} D(\omega_i, \beta) = 1
+
+    Standardized spreading functions (denoted :math:`\kappa` here), are usually
+    defined such that they have their maximum value at :math:`\beta = 0`. From these
+    standardized spreading functions, we can obtain a spreading function with arbitrary
+    peak direction, :math:`\beta_p`, by:
+
+    .. math::
+        D(\omega, \beta) = \kappa(\omega, \beta - \beta_p)
 
 The :class:`~waveresponse.WaveSpectrum` extends the
 :class:`~waveresponse.DirectionalSpectrum` class with the following:
@@ -125,3 +121,8 @@ Calculate the mean wave direction:
 .. code-block::
 
     wave.dirm()
+
+
+Standardized wave spectra
+-------------------------
+Often you 
