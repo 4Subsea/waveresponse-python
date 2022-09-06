@@ -1364,7 +1364,31 @@ class _BaseSpreading:
             direction = (np.pi / 180.0) * direction
             scale = np.pi / 180.0
 
-        return scale * self._spread_fun(frequency, direction)
+        return scale * self._spread_fun(frequency, direction % 2.0 * np.pi)
+
+
+class CosineSquaredSpreading(_BaseSpreading):
+    def __init__(self, freq_hz=False, degrees=False):
+        """
+        Cosine-squared type spreading.
+
+        Parameters
+        ----------
+        freq_hz : bool
+            If frequencies passed to the spreading function will be given in 'Hz'.
+            If ``False``, 'rad/s' is assumed.
+        degrees : bool
+            If directions passed to the spreading function will be given in 'degrees'.
+            If ``False``, 'radians' is assumed.
+        """
+        super().__init__(freq_hz=freq_hz, degrees=degrees)
+
+    def _spread_fun(self, omega, theta):
+        if np.pi / 2.0 <= theta <= 3.0 * np.pi / 2.0:
+            return 0
+        else:
+            c = 2.0 / np.pi
+            return c * np.cos(theta) ** 2.0
 
 
 class Cosine2sSpreading(_BaseSpreading):
