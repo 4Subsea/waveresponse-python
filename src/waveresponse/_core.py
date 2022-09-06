@@ -1389,5 +1389,4 @@ class Cosine2sSpreading(_BaseSpreading):
     def _spread_fun(self, omega, theta):
         s = self._s
         c = 2 ** (2 * s) * gamma(s + 1) ** 2 / (2 * np.pi * gamma(2 * s + 1))
-        # c = gamma(s + 1.0) / (gamma(s + 0.5) * 2.0 * np.sqrt(np.pi))
         return c * np.cos(theta / 2.0) ** (2.0 * s)
