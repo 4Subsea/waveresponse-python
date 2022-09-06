@@ -43,7 +43,8 @@ spectrum (1-D array), a spreading function and a peak direction:
     spectrum1d = np.random.random(len(freq))
     dirp = 45.0
 
-    spread_fun = lambda f, d: (1.0 / 180.0) * np.cos(np.radians(d / 2)) ** 2
+    def spread_fun(f, d):
+        return (1.0 / 180.0) * np.cos(np.radians(d / 2)) ** 2
 
     wave = wr.WaveSpectrum.from_spectrum1d(
         freq,
@@ -84,7 +85,7 @@ spectrum (1-D array), a spreading function and a peak direction:
     Standardized spreading functions (denoted :math:`\kappa` here), are usually
     defined such that they have their maximum value at :math:`\beta = 0`. From these
     standardized spreading functions, we can obtain a spreading function with arbitrary
-    peak direction, :math:`\beta_p`, by:
+    peak direction, :math:`\beta_p`:
 
     .. math::
         D(\omega, \beta) = \kappa(\omega, \beta - \beta_p)
