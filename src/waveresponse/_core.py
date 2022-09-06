@@ -1358,13 +1358,14 @@ class _BaseSpreading:
             Direction coordinate. Units should be according to the `degrees` flag
             given during initialization.
         """
+
         if self._freq_hz:
             frequency = 2.0 * np.pi * frequency
         if self._degrees:
             direction = (np.pi / 180.0) * direction
             scale = np.pi / 180.0
 
-        return scale * self._spread_fun(frequency, direction % 2.0 * np.pi)
+        return scale * self._spread_fun(frequency, direction % (2.0 * np.pi))
 
 
 class CosineSquaredSpreading(_BaseSpreading):
@@ -1392,9 +1393,9 @@ class CosineSquaredSpreading(_BaseSpreading):
     def _spread_fun(self, omega, theta):
         if np.pi / 2.0 <= theta <= 3.0 * np.pi / 2.0:
             return 0
-        else:
-            c = 2.0 / np.pi
-            return c * np.cos(theta) ** 2.0
+
+        c = 2.0 / np.pi
+        return c * np.cos(theta) ** 2.0
 
 
 class Cosine2sSpreading(_BaseSpreading):
