@@ -1341,11 +1341,7 @@ class _BaseSpreading:
         self._freq_hz = freq_hz
         self._degrees = degrees
 
-    @abstractmethod
-    def _spread_fun(self, omega, theta):
-        raise NotImplementedError()
-
-    def spread_fun(self, frequency, direction):
+    def __call__(self, frequency, direction):
         """
         Spreading function.
 
@@ -1366,6 +1362,10 @@ class _BaseSpreading:
             scale = np.pi / 180.0
 
         return scale * self._spread_fun(frequency, direction % (2.0 * np.pi))
+
+    @abstractmethod
+    def _spread_fun(self, omega, theta):
+        raise NotImplementedError()
 
 
 class CosineSquaredSpreading(_BaseSpreading):
