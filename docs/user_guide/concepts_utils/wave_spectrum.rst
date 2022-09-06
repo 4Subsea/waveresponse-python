@@ -5,6 +5,9 @@ The :class:`~waveresponse.WaveSpectrum` class provides an interface for handling
 :class:`~waveresponse.DirectionalSpectrum`, and contains spectrum density values on
 a two-dimensional frequency/(wave)direction grid.
 
+.. math::
+    S_{\zeta}(\omega, \beta)
+
 The :class:`~waveresponse.WaveSpectrum` is initialized with a frequency
 list (1-D array), a direction list (1-D array) and corresponding wave spectrum density
 values (2-D array).

@@ -5,6 +5,9 @@ handling 2-D directional spectra. :class:`~waveresponse.DirectionalSpectrum`
 extends :class:`~waveresponse.Grid`, and contains spectrum density values
 on a two-dimentional frequency/(wave)direction grid.
 
+.. math::
+    S(\omega, \beta)
+
 The :class:`~waveresponse.DirectionalSpectrum` is initialized with a frequency
 list (1-D array), a direction list (1-D array) and corresponding spectrum density
 values (2-D array).
