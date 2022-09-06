@@ -1343,7 +1343,7 @@ class _BaseSpreading:
 
     def __call__(self, frequency, direction):
         """
-        Spreading function.
+        Get spreading value for given frequency/direction coordinate.
 
         Parameters
         ----------
