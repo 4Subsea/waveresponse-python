@@ -1,8 +1,10 @@
 import copy
+from abc import abstractmethod
 
 import numpy as np
 from scipy.integrate import trapz
 from scipy.interpolate import interp2d
+from scipy.special import gamma
 
 
 def complex_to_polar(complex_vals, phase_degrees=False):
@@ -1320,3 +1322,72 @@ def calculate_response(
     wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
 
     return rao_squared * wave_body
+
+
+class _BaseSpreading:
+    def __init__(self, freq_hz=False, degrees=False):
+        """
+        Base class for spreading functions.
+
+        Parameters
+        ----------
+        freq_hz : bool
+            If frequencies passed to the spreading function will be given in 'Hz'.
+            If ``False``, 'rad/s' is assumed.
+        degrees : bool
+            If directions passed to the spreading function will be given in 'degrees'.
+            If ``False``, 'radians' is assumed.
+        """
+        self._freq_hz = freq_hz
+        self._degrees = degrees
+
+    @abstractmethod
+    def _spread_fun(self, omega, theta):
+        raise NotImplementedError()
+
+    def spread_fun(self, frequency, direction):
+        """
+        Spreading function.
+
+        Parameters
+        ----------
+        frequency : float
+            Frequency coordinate. Units should be according to the `freq_hz` flag
+            given during initialization.
+        direction : float
+            Direction coordinate. Units should be according to the `degrees` flag
+            given during initialization.
+        """
+        if self._freq_hz:
+            frequency = 2.0 * np.pi * frequency
+        if self._degrees:
+            direction = (np.pi / 180.0) * direction
+            scale = np.pi / 180.0
+
+        return scale * self._spread_fun(frequency, direction)
+
+
+class Cosine2sSpreading(_BaseSpreading):
+    def __init__(self, s, freq_hz=False, degrees=False):
+        """
+        Cosine-2s type spreading.
+
+        Parameters
+        ----------
+        s : int
+            Spreading coefficient.
+        freq_hz : bool
+            If frequencies passed to the spreading function will be given in 'Hz'.
+            If ``False``, 'rad/s' is assumed.
+        degrees : bool
+            If directions passed to the spreading function will be given in 'degrees'.
+            If ``False``, 'radians' is assumed.
+        """
+        self._s = s
+        super().__init__(freq_hz=freq_hz, degrees=degrees)
+
+    def _spread_fun(self, omega, theta):
+        s = self._s
+        c = 2 ** (2 * s) * gamma(s + 1) ** 2 / (2 * np.pi * gamma(2 * s + 1))
+        # c = gamma(s + 1.0) / (gamma(s + 0.5) * 2.0 * np.sqrt(np.pi))
+        return c * np.cos(theta / 2.0) ** (2.0 * s)
