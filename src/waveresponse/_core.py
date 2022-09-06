@@ -1372,6 +1372,12 @@ class CosineSquaredSpreading(_BaseSpreading):
         """
         Cosine-squared type spreading.
 
+        Defined as:
+
+            ``D(theta) = (2 / pi) * cos(theta) ** 2`` , for -pi/2 <= theta <= pi/2
+
+            ``D(theta) = 0`` , otherwise
+
         Parameters
         ----------
         freq_hz : bool
@@ -1395,6 +1401,14 @@ class Cosine2sSpreading(_BaseSpreading):
     def __init__(self, s, freq_hz=False, degrees=False):
         """
         Cosine-2s type spreading.
+
+        Defined as:
+
+            ``D(theta) = C(s) * cos(theta / 2) ** (2 * s)``
+
+        where,
+
+            ``C(s) = 2 ** (2 * s) * gamma(s + 1) ** 2 / (2 * np.pi * gamma(2 * s + 1))``
 
         Parameters
         ----------
