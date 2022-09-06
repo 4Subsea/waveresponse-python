@@ -33,7 +33,7 @@ values (2-D array).
     )
 
 Alternatively, you can construct a :class:`~waveresponse.WaveSpectrum` from a 'non-directional'
-spectrum (1-D array), a spreading function and a peak direction:
+spectrum (1-D array), a directional spreading function and a peak direction:
 
 .. code-block:: python
 
@@ -88,7 +88,7 @@ spectrum (1-D array), a spreading function and a peak direction:
     Standardized spreading functions (denoted :math:`\kappa` here), are usually
     defined such that they have their maximum value at :math:`\theta = 0`. From these
     standardized spreading functions, we can obtain a spreading function with arbitrary
-    peak direction, :math:`\theta_p`:
+    peak direction, :math:`\theta_p`, by:
 
     .. math::
         D(\omega, \theta) = \kappa(\omega, \theta - \theta_p)
