@@ -6,7 +6,7 @@ extends :class:`~waveresponse.Grid`, and contains spectrum density values
 on a two-dimentional frequency/(wave)direction grid.
 
 .. math::
-    S(\omega, \beta)
+    S(\omega, \theta)
 
 The :class:`~waveresponse.DirectionalSpectrum` is initialized with a frequency
 list (1-D array), a direction list (1-D array) and corresponding spectrum density

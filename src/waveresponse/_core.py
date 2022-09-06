@@ -903,11 +903,11 @@ class DirectionalSpectrum(Grid):
 
         The directional spectrum is constructed according to:
 
-            ``S(f, beta) = S(f) * D(f, beta - beta_p)``
+            ``S(f, theta) = S(f) * D(f, theta - theta_p)``
 
-        where ``S(f)`` is the non-directional spectrum, ``D(f, beta - beta_p)``
-        is the directional spreading function, and ``beta_p`` is the peak direction.
-        ``f`` is the frequency coordinate, and ``beta`` is the direction coordinate.
+        where ``S(f)`` is the non-directional spectrum, ``D(f, theta - theta_p)``
+        is the directional spreading function, and ``theta_p`` is the peak direction.
+        ``f`` is the frequency coordinate, and ``theta`` is the direction coordinate.
 
         Parameters
         ----------

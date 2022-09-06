@@ -10,12 +10,12 @@ amplitude operator (RAO) and a 2-D wave spectrum. Calculation of the response sp
 is governed by the following equation:
 
 .. math::
-    S_x(\omega) = \int H_x(\omega, \beta)H_x^{*}(\omega, \beta) S_{\zeta}(\omega, \beta) d\beta
+    S_x(\omega) = \int H_x(\omega, \theta)H_x^{*}(\omega, \theta) S_{\zeta}(\omega, \theta) d\theta
 
-where :math:`S_{\zeta}(\omega, \beta)` is the 2-D wave spectrum, :math:`H_x(\omega, \beta)`
-is the degree-of-freedom's transfer function (i.e., RAO), :math:`H_x^{*}(\omega, \beta)`
+where :math:`S_{\zeta}(\omega, \theta)` is the 2-D wave spectrum, :math:`H_x(\omega, \theta)`
+is the degree-of-freedom's transfer function (i.e., RAO), :math:`H_x^{*}(\omega, \theta)`
 is the complex conjugate version of the transfer function, and :math:`S_x(\omega)`
-is the response spectrum. :math:`\beta` is the relative wave direction, and :math:`\omega`
+is the response spectrum. :math:`\theta` is the relative wave direction, and :math:`\omega`
 is the angular frequency.
 
 With ``waveresponse`` it is easy to estimate a vessel's response spectrum once
@@ -100,13 +100,13 @@ and provides useful spectrum operations, such as:
     spectrum calculated according to:\
 
     .. math::
-        S_x(\omega, \beta) = H_x(\omega, \beta)H_x^{*}(\omega, \beta) S_{\zeta}(\omega, \beta)
+        S_x(\omega, \theta) = H_x(\omega, \theta)H_x^{*}(\omega, \theta) S_{\zeta}(\omega, \theta)
 
     To obtain the one-dimentional spectrum (which is what you would measure with
     a sensor), you need to integrate over direction:
 
     .. math::
-        S_x(\omega) = \int S_x(\omega, \beta) d\beta
+        S_x(\omega) = \int S_x(\omega, \theta) d\theta
 
     The response spectrum does not make much physical sense before it is integrated
     and converted to a 1-D non-directional spectrum. However, the 2-D version can

@@ -6,7 +6,7 @@ The :class:`~waveresponse.WaveSpectrum` class provides an interface for handling
 a two-dimensional frequency/(wave)direction grid.
 
 .. math::
-    S_{\zeta}(\omega, \beta)
+    S_{\zeta}(\omega, \theta)
 
 The :class:`~waveresponse.WaveSpectrum` is initialized with a frequency
 list (1-D array), a direction list (1-D array) and corresponding wave spectrum density
@@ -65,33 +65,33 @@ spectrum (1-D array), a spreading function and a peak direction:
     Often you do not have access to a full directional wave spectrum. Then, it is
     common to instead construct a directional spectrum from a standardized frequency
     spectrum, :math:`S(\omega)`, and a directional spreading function,
-    :math:`D(\omega, \beta)`:
+    :math:`D(\omega, \theta)`:
 
     .. math::
-        S(\omega, \beta) = S(\omega) D(\omega, \beta)
+        S(\omega, \theta) = S(\omega) D(\omega, \theta)
 
     In general, the spreading function is a function of both frequency, :math:`\omega`,
-    and direction, :math:`\beta`. However, it is common to use the same spreading
+    and direction, :math:`\theta`. However, it is common to use the same spreading
     for all frequencies. Since the frequency spectrum is obtained by integrating
     the directional spectrum over the directional domain (i.e., [0, 360)  degrees,
     or [0, 2\ :math:`\pi`) radians),
 
     .. math::
-        S(\omega) = \int_0^{2\pi} S(\omega, \beta)
+        S(\omega) = \int_0^{2\pi} S(\omega, \theta)
 
     we get the following requirement for the spreading function for each frequency,
     :math:`\omega_i`:
 
     .. math::
-        \int_0^{2\pi} D(\omega_i, \beta) = 1
+        \int_0^{2\pi} D(\omega_i, \theta) = 1
 
     Standardized spreading functions (denoted :math:`\kappa` here), are usually
-    defined such that they have their maximum value at :math:`\beta = 0`. From these
+    defined such that they have their maximum value at :math:`\theta = 0`. From these
     standardized spreading functions, we can obtain a spreading function with arbitrary
-    peak direction, :math:`\beta_p`:
+    peak direction, :math:`\theta_p`:
 
     .. math::
-        D(\omega, \beta) = \kappa(\omega, \beta - \beta_p)
+        D(\omega, \theta) = \kappa(\omega, \theta - \theta_p)
 
 The :class:`~waveresponse.WaveSpectrum` extends the
 :class:`~waveresponse.DirectionalSpectrum` class with the following:

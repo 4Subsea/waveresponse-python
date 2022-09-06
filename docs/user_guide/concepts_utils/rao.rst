@@ -5,7 +5,7 @@ amplitude operators (RAOs). :class:`~waveresponse.RAO` extends :class:`~waveresp
 and contains RAO values on a two-dimentional frequency/(wave)direction grid.
 
 .. math::
-    H(\omega, \beta)
+    H(\omega, \theta)
 
 The :class:`~waveresponse.RAO` class is initialized with a frequency list (1-D array),
 a direction list (1-D array) and corresponding RAO transfer function values as complex
