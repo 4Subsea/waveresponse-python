@@ -125,8 +125,3 @@ Calculate the mean wave direction:
 .. code-block::
 
     wave.dirm()
-
-
-Standardized wave spectra
--------------------------
-Often you 
