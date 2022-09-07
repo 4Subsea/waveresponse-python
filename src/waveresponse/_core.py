@@ -1402,7 +1402,7 @@ class CosineHalfSpreading(_BaseSpreading):
         """
         super().__init__(freq_hz=freq_hz, degrees=degrees)
 
-    def _spread_fun(self, omega, theta):
+    def _spread_fun(self, _, theta, /):
         if np.pi / 2.0 <= theta <= 3.0 * np.pi / 2.0:
             return 0
 
@@ -1437,7 +1437,7 @@ class CosineFullSpreading(_BaseSpreading):
         self._s = s
         super().__init__(freq_hz=freq_hz, degrees=degrees)
 
-    def _spread_fun(self, omega, theta):
+    def _spread_fun(self, _, theta, /):
         s = self._s
         c = 2 ** (2 * s) * gamma(s + 1) ** 2 / (2 * np.pi * gamma(2 * s + 1))
         return c * np.cos(theta / 2.0) ** (2.0 * s)
