@@ -1380,7 +1380,7 @@ class _BaseSpreading:
         raise NotImplementedError()
 
 
-class CosineSquaredSpreading(_BaseSpreading):
+class CosineHalfSpreading(_BaseSpreading):
     def __init__(self, freq_hz=False, degrees=False):
         """
         Cosine-squared type spreading.
@@ -1410,7 +1410,7 @@ class CosineSquaredSpreading(_BaseSpreading):
         return c * np.cos(theta) ** 2.0
 
 
-class Cosine2sSpreading(_BaseSpreading):
+class CosineFullSpreading(_BaseSpreading):
     def __init__(self, s, freq_hz=False, degrees=False):
         """
         Cosine-2s type spreading.
