@@ -3120,9 +3120,9 @@ class Test__check_is_similar:
 
 class Test_CosineFullSpreading:
     def test__init__(self):
-        spreading = CosineFullSpreading(1, freq_hz=True, degrees=True)
+        spreading = CosineFullSpreading(123, freq_hz=True, degrees=True)
         assert isinstance(spreading, wr._core._BaseSpreading)
-        assert spreading._s == 1
+        assert spreading._s == 123
         assert spreading._freq_hz is True
         assert spreading._degrees is True
 
@@ -3155,6 +3155,35 @@ class Test_CosineFullSpreading:
         spreading = CosineFullSpreading(s, freq_hz=True, degrees=True)
         assert spreading(f, d) == pytest.approx(spread_expect)
 
+    params__call__radians = [
+        [0, 0, 0, 0.15915494309189535],
+        [1, 0, 0, 0.15915494309189535],
+        [0, 2.0 * np.pi, 0, 0.15915494309189535],
+        [0, -2.0 * np.pi, 0, 0.15915494309189535],
+        [0, np.pi / 4, 0, 0.15915494309189535],
+        [0, -np.pi / 4, 0, 0.15915494309189535],
+        [0, np.pi / 4 + 2 * 360, 0, 0.15915494309189535],
+        [0, 0, 1, 0.3183098861837907],
+        [1, 0, 1, 0.3183098861837907],
+        [0, 2.0 * np.pi, 1, 0.3183098861837907],
+        [0, -2.0 * np.pi, 1, 0.3183098861837907],
+        [0, np.pi / 4, 1, 0.2716944826115336],
+        [0, -np.pi / 4, 1, 0.2716944826115336],
+        [0, np.pi / 4 + 2 * 2.0 * np.pi, 1, 0.2716944826115336],
+        [0, 0, 2, 0.4244131815783876],
+        [1, 0, 2, 0.4244131815783876],
+        [0, 2.0 * np.pi, 2, 0.4244131815783876],
+        [0, -2.0 * np.pi, 2, 0.4244131815783876],
+        [0, np.pi / 4, 2, 0.309207662451413],
+        [0, -np.pi / 4, 2, 0.309207662451413],
+        [0, np.pi / 4 + 2 * 2.0 * np.pi, 2, 0.309207662451413],
+    ]
+
+    @pytest.mark.parametrize("f,d,s,spread_expect", params__call__radians)
+    def test__call__radians(self, f, d, s, spread_expect):
+        spreading = CosineFullSpreading(s, freq_hz=True, degrees=False)
+        assert spreading(f, d) == pytest.approx(spread_expect)
+
     def test_integrate_degrees(self):
         def integrate_spread_fun(spread_fun, a, b):
             f_0 = 1
@@ -3172,3 +3201,11 @@ class Test_CosineFullSpreading:
         for s in (0, 1, 2, 10, 20):
             spreading = CosineFullSpreading(s, freq_hz=True, degrees=False)
             assert integrate_spread_fun(spreading, 0.0, 2.0 * np.pi) == pytest.approx(1)
+
+    def test_independent_of_frequency(self):
+        spreading = CosineFullSpreading(10, freq_hz=True, degrees=True)
+
+        d0 = 45.0
+        spread_out_list = [spreading(fi, d0) for fi in (0, 0.5, 1, 10)]
+
+        assert len(np.unique(np.array(spread_out_list))) == 1
