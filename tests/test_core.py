@@ -1,6 +1,9 @@
 import numpy as np
 import pytest
+from itertools import product
+from scipy.integrate import quad
 
+import waveresponse as wr
 from waveresponse import (
     RAO,
     DirectionalSpectrum,
@@ -9,6 +12,7 @@ from waveresponse import (
     calculate_response,
     complex_to_polar,
     polar_to_complex,
+    CosineFullSpreading,
 )
 from waveresponse._core import _check_is_similar
 
@@ -3112,3 +3116,75 @@ class Test__check_is_similar:
 
         with pytest.raises(ValueError):
             _check_is_similar(grid_a, grid_b, grid_c)
+
+
+class Test_CosineFullSpreading:
+    def test__init__(self):
+        spreading = CosineFullSpreading(1, freq_hz=True, degrees=True)
+        assert isinstance(spreading, wr._core._BaseSpreading)
+        assert spreading._s == 1
+        assert spreading._freq_hz is True
+        assert spreading._degrees is True
+
+    params__call__degrees = [
+        [0, 0, 0, 0.002777777777777778],
+        [1, 0, 0, 0.002777777777777778],
+        [0, 360, 0, 0.002777777777777778],
+        [0, -360, 0, 0.002777777777777778],
+        [0, 45, 0, 0.002777777777777778],
+        [0, -45, 0, 0.002777777777777778],
+        [0, 45 + 2 * 360, 0, 0.002777777777777778],
+        [0, 0, 1, 0.005555555555555556],
+        [1, 0, 1, 0.005555555555555556],
+        [0, 360, 1, 0.005555555555555556],
+        [0, -360, 1, 0.005555555555555556],
+        [0, 45, 1, 0.004741963281073743],
+        [0, -45, 1, 0.004741963281073743],
+        [0, 45 + 2 * 360, 1, 0.004741963281073743],
+        [0, 0, 2, 0.007407407407407408],
+        [1, 0, 2, 0.007407407407407408],
+        [0, 360, 2, 0.007407407407407408],
+        [0, -360, 2, 0.007407407407407408],
+        [0, 45, 2, 0.005396691782172398],
+        [0, -45, 2, 0.005396691782172398],
+        [0, 45 + 2 * 360, 2, 0.005396691782172398],
+    ]
+
+    @pytest.mark.parametrize("f,d,s,spread_expect", params__call__degrees)
+    def test__call__degrees(self, f, d, s, spread_expect):
+        spreading = CosineFullSpreading(s, freq_hz=True, degrees=True)
+        assert spreading(f, d) == pytest.approx(spread_expect)
+
+    def test__call__2(self):
+        freq_list = [0.0, 0.5, 1.0, 10.0]
+        dir_list = [0, 90, 180, 360, 361, -1, -361, 1.2]
+        s_list = [0, 1, 10.0, 20]
+        for f, d, s in product(freq_list, dir_list, s_list):
+            spreading = CosineFullSpreading(s, freq_hz=True, degrees=True)
+            assert spreading(f, d) >= 0.0
+
+    def test__call__3(self):
+        freq_list = [0.0, 0.5, 1.0, 10.0]
+        dir_list = (np.pi / 180.0) * np.array([0, 90, 180, 360, 361, -1, -361, 1.2])
+        s_list = [0, 1, 10.0, 20]
+        for f, d, s in product(freq_list, dir_list, s_list):
+            spreading = CosineFullSpreading(s, freq_hz=False, degrees=False)
+            assert spreading(f, d) >= 0.0
+
+    def test_integrate_degrees(self):
+        def integrate_spread_fun(spread_fun, a, b):
+            f_0 = 1
+            return quad(lambda d: spread_fun(f_0, d), a, b)[0]
+
+        for s in (0, 1, 2, 10, 20):
+            spreading = CosineFullSpreading(s, freq_hz=True, degrees=True)
+            assert integrate_spread_fun(spreading, 0.0, 360.0) == pytest.approx(1)
+
+    def test_integrate_radians(self):
+        def integrate_spread_fun(spread_fun, a, b):
+            f_0 = 1
+            return quad(lambda d: spread_fun(f_0, d), a, b)[0]
+
+        for s in (0, 1, 2, 10, 20):
+            spreading = CosineFullSpreading(s, freq_hz=True, degrees=False)
+            assert integrate_spread_fun(spreading, 0.0, 2.0 * np.pi) == pytest.approx(1)
