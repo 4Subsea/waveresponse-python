@@ -3155,22 +3155,6 @@ class Test_CosineFullSpreading:
         spreading = CosineFullSpreading(s, freq_hz=True, degrees=True)
         assert spreading(f, d) == pytest.approx(spread_expect)
 
-    def test__call__2(self):
-        freq_list = [0.0, 0.5, 1.0, 10.0]
-        dir_list = [0, 90, 180, 360, 361, -1, -361, 1.2]
-        s_list = [0, 1, 10.0, 20]
-        for f, d, s in product(freq_list, dir_list, s_list):
-            spreading = CosineFullSpreading(s, freq_hz=True, degrees=True)
-            assert spreading(f, d) >= 0.0
-
-    def test__call__3(self):
-        freq_list = [0.0, 0.5, 1.0, 10.0]
-        dir_list = (np.pi / 180.0) * np.array([0, 90, 180, 360, 361, -1, -361, 1.2])
-        s_list = [0, 1, 10.0, 20]
-        for f, d, s in product(freq_list, dir_list, s_list):
-            spreading = CosineFullSpreading(s, freq_hz=False, degrees=False)
-            assert spreading(f, d) >= 0.0
-
     def test_integrate_degrees(self):
         def integrate_spread_fun(spread_fun, a, b):
             f_0 = 1
