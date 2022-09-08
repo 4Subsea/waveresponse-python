@@ -3185,8 +3185,8 @@ class Test_CosineFullSpreading:
 
     def test_integrate_degrees(self):
         def integrate_spread_fun(spread_fun, a, b):
-            f_0 = 1
-            return quad(lambda d: spread_fun(f_0, d), a, b)[0]
+            f0 = 1
+            return quad(lambda d: spread_fun(f0, d), a, b)[0]
 
         for s in (0, 1, 2, 10, 20):
             spreading = CosineFullSpreading(s, degrees=True)
@@ -3194,8 +3194,8 @@ class Test_CosineFullSpreading:
 
     def test_integrate_radians(self):
         def integrate_spread_fun(spread_fun, a, b):
-            f_0 = 1
-            return quad(lambda d: spread_fun(f_0, d), a, b)[0]
+            f0 = 1
+            return quad(lambda d: spread_fun(f0, d), a, b)[0]
 
         for s in (0, 1, 2, 10, 20):
             spreading = CosineFullSpreading(s, degrees=False)
