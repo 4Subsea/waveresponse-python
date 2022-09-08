@@ -1383,7 +1383,7 @@ class BaseSpreading:
 class CosineHalfSpreading(BaseSpreading):
     def __init__(self, s=1, degrees=False):
         """
-        Cosine based spreading.
+        Cosine-2s type spreading (half directional range).
 
         Defined as:
 
@@ -1426,7 +1426,7 @@ class CosineHalfSpreading(BaseSpreading):
 class CosineFullSpreading(BaseSpreading):
     def __init__(self, s=1, degrees=False):
         """
-        Cosine-2s type spreading.
+        Cosine-2s type spreading (full directional range).
 
         Defined as:
 
