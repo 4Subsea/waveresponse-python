@@ -1359,9 +1359,9 @@ class BaseSpreading:
 
         if self._degrees:
             direction = (np.pi / 180.0) * direction
-            scale = 1.0 / 180.0
+            scale = 1.0 / 360.0
         else:
-            scale = 1.0 / np.pi
+            scale = 1.0 / (2.0 * np.pi)
 
         return scale * self._spread_fun(frequency, direction % (2.0 * np.pi))
 
@@ -1393,7 +1393,7 @@ class CosineHalfSpreading(BaseSpreading):
 
         where,
 
-            ``C(s) = 2 ** (2 * s + 1) * gamma(s + 1) ** 2 / (2 * gamma(2 * s + 1))``
+            ``C(s) = 2 ** (2 * s + 1) * gamma(s + 1) ** 2 / gamma(2 * s + 1)``
 
         If `theta` is given in 'radians':
 
@@ -1401,7 +1401,7 @@ class CosineHalfSpreading(BaseSpreading):
 
         If `theta` is given in 'degrees':
 
-            ``scale = 1 / 180.0``
+            ``scale = 1 / 360.0``
 
         Note that this spreading is independent of frequency.
 
@@ -1421,7 +1421,7 @@ class CosineHalfSpreading(BaseSpreading):
             return 0
         else:
             s = self._s
-            c = 2 ** (2 * s + 1) * gamma(s + 1) ** 2 / (2 * gamma(2 * s + 1))
+            c = 2 ** (2 * s + 1) * gamma(s + 1) ** 2 / gamma(2 * s + 1)
             return c * np.cos(theta) ** (2.0 * s)
 
 
@@ -1436,7 +1436,7 @@ class CosineFullSpreading(BaseSpreading):
 
         where,
 
-            ``C(s) = 2 ** (2 * s) * gamma(s + 1) ** 2 / (2 * gamma(2 * s + 1))``
+            ``C(s) = 2 ** (2 * s) * gamma(s + 1) ** 2 / gamma(2 * s + 1)``
 
         If `theta` is given in 'radians':
 
@@ -1461,5 +1461,5 @@ class CosineFullSpreading(BaseSpreading):
 
     def _spread_fun(self, _, theta, /):
         s = self._s
-        c = 2 ** (2 * s) * gamma(s + 1) ** 2 / (2 * gamma(2 * s + 1))
+        c = 2 ** (2 * s) * gamma(s + 1) ** 2 / gamma(2 * s + 1)
         return c * np.cos(theta / 2.0) ** (2.0 * s)
