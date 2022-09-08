@@ -846,10 +846,10 @@ class DirectionalSpectrum(Grid):
         )
 
         if freq_hz:
-            self._vals /= 2.0 * np.pi
+            self._vals = 1.0 / (2.0 * np.pi) * self._vals
 
         if degrees:
-            self._vals /= np.pi / 180.0
+            self._vals = 180.0 / np.pi * self._vals
 
         if np.any(np.iscomplex(self._vals)):
             raise ValueError("Spectrum values can not be complex.")
