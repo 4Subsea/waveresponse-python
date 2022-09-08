@@ -3122,7 +3122,7 @@ class Test__check_is_similar:
 class Test_CosineFullSpreading:
     def test__init__(self):
         spreading = CosineFullSpreading(123, degrees=True)
-        assert isinstance(spreading, wr._core._BaseSpreading)
+        assert isinstance(spreading, wr._core.BaseSpreading)
         assert spreading._s == 123
         assert spreading._degrees is True
 
@@ -3214,7 +3214,7 @@ class Test_CosineFullSpreading:
 class Test_CosineHalfSpreading:
     def test__init__(self):
         spreading = CosineHalfSpreading(123, degrees=True)
-        assert isinstance(spreading, wr._core._BaseSpreading)
+        assert isinstance(spreading, wr._core.BaseSpreading)
         assert spreading._s == 123
         assert spreading._degrees is True
 

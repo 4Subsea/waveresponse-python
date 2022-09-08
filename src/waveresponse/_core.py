@@ -1324,7 +1324,7 @@ def calculate_response(
     return rao_squared * wave_body
 
 
-class _BaseSpreading:
+class BaseSpreading:
     def __init__(self, freq_hz=False, degrees=False):
         """
         Base class for spreading functions.
@@ -1380,7 +1380,7 @@ class _BaseSpreading:
         raise NotImplementedError()
 
 
-class CosineHalfSpreading(_BaseSpreading):
+class CosineHalfSpreading(BaseSpreading):
     def __init__(self, s, degrees=False):
         """
         Cosine-squared type spreading.
@@ -1412,7 +1412,7 @@ class CosineHalfSpreading(_BaseSpreading):
         return c * np.cos(theta) ** (2.0 * s)
 
 
-class CosineFullSpreading(_BaseSpreading):
+class CosineFullSpreading(BaseSpreading):
     def __init__(self, s, degrees=False):
         """
         Cosine-2s type spreading.
