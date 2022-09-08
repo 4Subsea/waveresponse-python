@@ -1381,7 +1381,7 @@ class BaseSpreading:
 
 
 class CosineHalfSpreading(BaseSpreading):
-    def __init__(self, s, degrees=False):
+    def __init__(self, s=1, degrees=False):
         """
         Cosine-squared type spreading.
 
@@ -1413,7 +1413,7 @@ class CosineHalfSpreading(BaseSpreading):
 
 
 class CosineFullSpreading(BaseSpreading):
-    def __init__(self, s, degrees=False):
+    def __init__(self, s=1, degrees=False):
         """
         Cosine-2s type spreading.
 
