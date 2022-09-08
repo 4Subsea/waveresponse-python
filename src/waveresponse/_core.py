@@ -938,10 +938,8 @@ class DirectionalSpectrum(Grid):
             If waves are 'coming from' the given directions. If ``False``, 'going towards'
             convention is assumed.
         """
-        freq = np.asarray_chkfinite(freq)
-        dirs = np.asarray_chkfinite(dirs)
-        spectrum1d = np.asarray_chkfinite(spectrum1d)
-        vals = np.tile(spectrum1d.reshape(-1, 1), (1, len(dirs)))
+        spectrum1d = np.asarray_chkfinite(spectrum1d).reshape(-1, 1)
+        vals = np.tile(spectrum1d, (1, len(dirs)))
 
         if degrees:
             period = 360.0
