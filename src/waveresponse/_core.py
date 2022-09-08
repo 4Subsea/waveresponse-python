@@ -1337,6 +1337,7 @@ class BaseSpreading:
         If directions passed to the spreading function will be given in 'degrees'.
         If ``False``, 'radians' is assumed.
     """
+
     def __init__(self, freq_hz=False, degrees=False):
         self._freq_hz = freq_hz
         self._degrees = degrees
@@ -1412,6 +1413,7 @@ class CosineHalfSpreading(BaseSpreading):
         If directions passed to the spreading function will be given in 'degrees'.
         If ``False``, 'radians' is assumed.
     """
+
     def __init__(self, s=1, degrees=False):
         self._s = s
         super().__init__(degrees=degrees)
@@ -1455,6 +1457,7 @@ class CosineFullSpreading(BaseSpreading):
         If directions passed to the spreading function will be given in 'degrees'.
         If ``False``, 'radians' is assumed.
     """
+
     def __init__(self, s=1, degrees=False):
         self._s = s
         super().__init__(degrees=degrees)
