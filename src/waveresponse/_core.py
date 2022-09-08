@@ -1419,10 +1419,10 @@ class CosineHalfSpreading(BaseSpreading):
     def _spread_fun(self, _, theta, /):
         if (np.pi / 2.0) <= theta <= (3.0 * np.pi / 2.0):
             return 0
-        else:
-            s = self._s
-            c = 2 ** (2 * s + 1) * gamma(s + 1) ** 2 / gamma(2 * s + 1)
-            return c * np.cos(theta) ** (2.0 * s)
+
+        s = self._s
+        c = 2 ** (2 * s + 1) * gamma(s + 1) ** 2 / gamma(2 * s + 1)
+        return c * np.cos(theta) ** (2.0 * s)
 
 
 class CosineFullSpreading(BaseSpreading):
