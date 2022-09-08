@@ -1387,13 +1387,13 @@ class CosineHalfSpreading(BaseSpreading):
 
         Defined as:
 
-            ``D(theta) = scale * C(s) * cos(theta) ** (2 * s)`` , for -pi/2 <= theta <= pi/2
+            ``D(theta) = scale * G(s) * cos(theta) ** (2 * s)`` , for -pi/2 <= theta <= pi/2
 
             ``D(theta) = 0`` , otherwise
 
         where,
 
-            ``C(s) = 2 ** (2 * s + 1) * gamma(s + 1) ** 2 / gamma(2 * s + 1)``
+            ``G(s) = 2 ** (2 * s + 1) * gamma(s + 1) ** 2 / gamma(2 * s + 1)``
 
         If `theta` is given in 'radians':
 
@@ -1432,11 +1432,11 @@ class CosineFullSpreading(BaseSpreading):
 
         Defined as:
 
-            ``D(theta) = scale * C(s) * cos(theta / 2) ** (2 * s)``
+            ``D(theta) = scale * G(s) * cos(theta / 2) ** (2 * s)``
 
         where,
 
-            ``C(s) = 2 ** (2 * s) * gamma(s + 1) ** 2 / gamma(2 * s + 1)``
+            ``G(s) = 2 ** (2 * s) * gamma(s + 1) ** 2 / gamma(2 * s + 1)``
 
         If `theta` is given in 'radians':
 
