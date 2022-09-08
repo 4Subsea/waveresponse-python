@@ -4,6 +4,9 @@ The :class:`~waveresponse.RAO` class provides an interface for handling response
 amplitude operators (RAOs). :class:`~waveresponse.RAO` extends :class:`~waveresponse.Grid`,
 and contains RAO values on a two-dimentional frequency/(wave)direction grid.
 
+.. math::
+    H(\omega, \theta)
+
 The :class:`~waveresponse.RAO` class is initialized with a frequency list (1-D array),
 a direction list (1-D array) and corresponding RAO transfer function values as complex
 numbers (2-D array).
