@@ -1411,7 +1411,7 @@ class CosineHalfSpreading(_BaseSpreading):
 
 
 class CosineFullSpreading(_BaseSpreading):
-    def __init__(self, s, freq_hz=False, degrees=False):
+    def __init__(self, s, degrees=False):
         """
         Cosine-2s type spreading.
 
@@ -1427,15 +1427,12 @@ class CosineFullSpreading(_BaseSpreading):
         ----------
         s : int
             Spreading coefficient.
-        freq_hz : bool
-            If frequencies passed to the spreading function will be given in 'Hz'.
-            If ``False``, 'rad/s' is assumed.
         degrees : bool
             If directions passed to the spreading function will be given in 'degrees'.
             If ``False``, 'radians' is assumed.
         """
         self._s = s
-        super().__init__(freq_hz=freq_hz, degrees=degrees)
+        super().__init__(degrees=degrees)
 
     def _spread_fun(self, _, theta, /):
         s = self._s
