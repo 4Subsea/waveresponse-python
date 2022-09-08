@@ -13,6 +13,7 @@ from waveresponse import (
     complex_to_polar,
     polar_to_complex,
     CosineFullSpreading,
+    CosineHalfSpreading,
 )
 from waveresponse._core import _check_is_similar
 
@@ -3203,6 +3204,40 @@ class Test_CosineFullSpreading:
 
     def test_independent_of_frequency(self):
         spreading = CosineFullSpreading(10, degrees=True)
+
+        d0 = 45.0
+        spread_out_list = [spreading(fi, d0) for fi in (0, 0.5, 1, 10)]
+
+        assert len(np.unique(np.array(spread_out_list))) == 1
+
+
+class Test_CosineHalfSpreading:
+    def test__init__(self):
+        spreading = CosineHalfSpreading(123, degrees=True)
+        assert isinstance(spreading, wr._core._BaseSpreading)
+        assert spreading._s == 123
+        assert spreading._degrees is True
+
+    def test_integrate_degrees(self):
+        def integrate(spread_fun, a, b):
+            f0 = 1
+            return quad(lambda d: spread_fun(f0, d), a, b)[0]
+
+        for s in (0, 1, 2, 10, 20):
+            spreading = CosineHalfSpreading(s, degrees=True)
+            assert integrate(spreading, 0.0, 360.0) == pytest.approx(1)
+
+    def test_integrate_radians(self):
+        def integrate(spread_fun, a, b):
+            f0 = 1
+            return quad(lambda d: spread_fun(f0, d), a, b)[0]
+
+        for s in (0, 1, 2, 10, 20):
+            spreading = CosineHalfSpreading(s, degrees=False)
+            assert integrate(spreading, 0.0, 2.0 * np.pi) == pytest.approx(1)
+
+    def test_independent_of_frequency(self):
+        spreading = CosineHalfSpreading(10, degrees=True)
 
         d0 = 45.0
         spread_out_list = [spreading(fi, d0) for fi in (0, 0.5, 1, 10)]
