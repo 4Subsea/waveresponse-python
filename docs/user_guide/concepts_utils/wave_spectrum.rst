@@ -93,6 +93,9 @@ spectrum (1-D array), a directional spreading function and a peak direction:
     .. math::
         D(\omega, \theta) = \kappa(\theta - \theta_p)
 
+    Two standardized (cosine based) spreading functions, :class:`~waveresponse.CosineFullSpreading`
+    and :class:`~waveresponse.CosineHalfSpreading`, are provided by ``waveresponse``.
+
 The :class:`~waveresponse.WaveSpectrum` extends the
 :class:`~waveresponse.DirectionalSpectrum` class with the following:
 

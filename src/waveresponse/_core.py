@@ -1325,19 +1325,19 @@ def calculate_response(
 
 
 class BaseSpreading:
-    def __init__(self, freq_hz=False, degrees=False):
-        """
-        Base class for spreading functions.
+    """
+    Base class for spreading functions.
 
-        Parameters
-        ----------
-        freq_hz : bool
-            If frequencies passed to the spreading function will be given in 'Hz'.
-            If ``False``, 'rad/s' is assumed.
-        degrees : bool
-            If directions passed to the spreading function will be given in 'degrees'.
-            If ``False``, 'radians' is assumed.
-        """
+    Parameters
+    ----------
+    freq_hz : bool
+        If frequencies passed to the spreading function will be given in 'Hz'.
+        If ``False``, 'rad/s' is assumed.
+    degrees : bool
+        If directions passed to the spreading function will be given in 'degrees'.
+        If ``False``, 'radians' is assumed.
+    """
+    def __init__(self, freq_hz=False, degrees=False):
         self._freq_hz = freq_hz
         self._degrees = degrees
 
@@ -1381,38 +1381,38 @@ class BaseSpreading:
 
 
 class CosineHalfSpreading(BaseSpreading):
+    """
+    Cosine-2s type spreading (half directional range).
+
+    Defined as:
+
+        ``D(theta) = scale * G(s) * cos(theta) ** (2 * s)`` , for -pi/2 <= theta <= pi/2
+
+        ``D(theta) = 0`` , otherwise
+
+    where,
+
+        ``G(s) = 2 ** (2 * s + 1) * gamma(s + 1) ** 2 / gamma(2 * s + 1)``
+
+    If `theta` is given in 'radians':
+
+        ``scale = 1.0 / (2.0 * np.pi)``
+
+    If `theta` is given in 'degrees':
+
+        ``scale = 1 / 360.0``
+
+    Note that this spreading is independent of frequency.
+
+    Parameters
+    ----------
+    s : int
+        Spreading coefficient.
+    degrees : bool
+        If directions passed to the spreading function will be given in 'degrees'.
+        If ``False``, 'radians' is assumed.
+    """
     def __init__(self, s=1, degrees=False):
-        """
-        Cosine-2s type spreading (half directional range).
-
-        Defined as:
-
-            ``D(theta) = scale * G(s) * cos(theta) ** (2 * s)`` , for -pi/2 <= theta <= pi/2
-
-            ``D(theta) = 0`` , otherwise
-
-        where,
-
-            ``G(s) = 2 ** (2 * s + 1) * gamma(s + 1) ** 2 / gamma(2 * s + 1)``
-
-        If `theta` is given in 'radians':
-
-            ``scale = 1.0 / (2.0 * np.pi)``
-
-        If `theta` is given in 'degrees':
-
-            ``scale = 1 / 360.0``
-
-        Note that this spreading is independent of frequency.
-
-        Parameters
-        ----------
-        s : int
-            Spreading coefficient.
-        degrees : bool
-            If directions passed to the spreading function will be given in 'degrees'.
-            If ``False``, 'radians' is assumed.
-        """
         self._s = s
         super().__init__(degrees=degrees)
 
@@ -1426,36 +1426,36 @@ class CosineHalfSpreading(BaseSpreading):
 
 
 class CosineFullSpreading(BaseSpreading):
+    """
+    Cosine-2s type spreading (full directional range).
+
+    Defined as:
+
+        ``D(theta) = scale * G(s) * cos(theta / 2) ** (2 * s)``
+
+    where,
+
+        ``G(s) = 2 ** (2 * s) * gamma(s + 1) ** 2 / gamma(2 * s + 1)``
+
+    If `theta` is given in 'radians':
+
+        ``scale = 1.0 / (2.0 * np.pi)``
+
+    If `theta` is given in 'degrees':
+
+        ``scale = 1 / 360.0``
+
+    Note that this spreading is independent of frequency.
+
+    Parameters
+    ----------
+    s : int
+        Spreading coefficient.
+    degrees : bool
+        If directions passed to the spreading function will be given in 'degrees'.
+        If ``False``, 'radians' is assumed.
+    """
     def __init__(self, s=1, degrees=False):
-        """
-        Cosine-2s type spreading (full directional range).
-
-        Defined as:
-
-            ``D(theta) = scale * G(s) * cos(theta / 2) ** (2 * s)``
-
-        where,
-
-            ``G(s) = 2 ** (2 * s) * gamma(s + 1) ** 2 / gamma(2 * s + 1)``
-
-        If `theta` is given in 'radians':
-
-            ``scale = 1.0 / (2.0 * np.pi)``
-
-        If `theta` is given in 'degrees':
-
-            ``scale = 1 / 360.0``
-
-        Note that this spreading is independent of frequency.
-
-        Parameters
-        ----------
-        s : int
-            Spreading coefficient.
-        degrees : bool
-            If directions passed to the spreading function will be given in 'degrees'.
-            If ``False``, 'radians' is assumed.
-        """
         self._s = s
         super().__init__(degrees=degrees)
 
