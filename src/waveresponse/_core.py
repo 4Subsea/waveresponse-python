@@ -1383,19 +1383,30 @@ class BaseSpreading:
 class CosineHalfSpreading(BaseSpreading):
     def __init__(self, s=1, degrees=False):
         """
-        Cosine-squared type spreading.
+        Cosine based spreading.
 
         Defined as:
 
-            ``D(theta) = (2 / pi) * cos(theta) ** 2`` , for -pi/2 <= theta <= pi/2
+            ``D(theta) = scale * C(s) * cos(theta) ** (2 * s)`` , for -pi/2 <= theta <= pi/2
 
             ``D(theta) = 0`` , otherwise
 
+        where,
+
+            ``C(s) = 2 ** (2 * s + 1) * gamma(s + 1) ** 2 / (2 * gamma(2 * s + 1))``
+
+        If `theta` is given in 'radians':
+
+            ``scale = 1.0 / (2.0 * np.pi)``
+
+        If `theta` is given in 'degrees':
+
+            ``scale = 1 / 180.0``
+
+        Note that this spreading is independent of frequency.
+
         Parameters
         ----------
-        freq_hz : bool
-            If frequencies passed to the spreading function will be given in 'Hz'.
-            If ``False``, 'rad/s' is assumed.
         degrees : bool
             If directions passed to the spreading function will be given in 'degrees'.
             If ``False``, 'radians' is assumed.
@@ -1419,11 +1430,21 @@ class CosineFullSpreading(BaseSpreading):
 
         Defined as:
 
-            ``D(theta) = C(s) * cos(theta / 2) ** (2 * s)``
+            ``D(theta) = scale * C(s) * cos(theta / 2) ** (2 * s)``
 
         where,
 
-            ``C(s) = 2 ** (2 * s) * gamma(s + 1) ** 2 / (2 * np.pi * gamma(2 * s + 1))``
+            ``C(s) = (1 / period) * 2 ** (2 * s) * gamma(s + 1) ** 2 / (2 * gamma(2 * s + 1))``
+
+        If `theta` is given in 'radians':
+
+            ``scale = 1.0 / (2.0 * np.pi)``
+
+        If `theta` is given in 'degrees':
+
+            ``scale = 1 / 360.0``
+
+        Note that this spreading is independent of frequency.
 
         Parameters
         ----------
