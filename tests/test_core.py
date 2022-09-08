@@ -1,19 +1,20 @@
+from itertools import product
+
 import numpy as np
 import pytest
-from itertools import product
 from scipy.integrate import quad
 
 import waveresponse as wr
 from waveresponse import (
     RAO,
+    CosineFullSpreading,
+    CosineHalfSpreading,
     DirectionalSpectrum,
     Grid,
     WaveSpectrum,
     calculate_response,
     complex_to_polar,
     polar_to_complex,
-    CosineFullSpreading,
-    CosineHalfSpreading,
 )
 from waveresponse._core import _check_is_similar
 
