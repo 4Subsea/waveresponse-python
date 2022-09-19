@@ -78,3 +78,199 @@ class BaseWave(ABC):
         Override to specify spectrum definition in terms of rad/s.
         """
         raise NotImplementedError()
+
+
+class PiersonMoskowitz(BaseWave):
+    """
+    Pierson-Moskowitz wave spectrum.
+
+    ``S(w) = A/w**5 exp(-B/w**4)``
+
+    where ``A = 0.0081 * g**2`` and ``B = 1.25 * w_p**4``.
+
+    Parameters
+    ----------
+    freq : array-like
+        Sequence of frequencies to use when generating the spectrum.
+    freq_hz : bool
+        Whether the provided frequencies are in rad/s (default) or Hz.
+
+    """
+
+    @staticmethod
+    def _spectrum(freq, A, B):
+        """
+        Base PiersonMaskowitz spectrum definition.
+        """
+        return A / freq ** 5.0 * np.exp(-B / freq ** 4)
+
+    def _A(self, *args):
+        """
+        Spectrum parameter.
+        """
+        return 0.0081 * 9.80665 ** 2
+
+    def _B(self, *args):
+        """
+        Spectrum parameter.
+        """
+        _, tp = args
+        omega_p = 2.0 * np.pi / tp
+        return 1.25 * omega_p ** 4
+
+
+class ModPiersonMoskowitz(PiersonMoskowitz):
+    """
+    Modified Pierson-Moskowitz wave spectrum.
+
+    ``S(w) = A/w**5 exp(-B/w**4)``
+
+    where ``A = 5/16 * Hs**2 * w_p**4`` and ``B = 1.25 * w_p**4``.
+
+    Parameters
+    ----------
+    freq : array-like
+        Sequence of frequencies to use when generating the spectrum.
+    freq_hz : bool
+        Whether the provided frequencies are in rad/s (default) or Hz.
+
+    """
+
+    def _A(self, *args):
+        """
+        Spectrum parameter.
+        """
+        hs, tp = args
+        omega_p = 2.0 * np.pi / tp
+
+        A = 5.0 / 16.0 * hs ** 2.0 * omega_p ** 4.0
+        return A
+
+
+class JONSWAP(ModPiersonMoskowitz):
+    """
+    JONSWAP wave spectrum (derived from modified Pierson-Moskowitz).
+
+    ``S(w) = A/w**5 exp(-B/w**4)``
+
+    where ``A = 5/16 * Hs**2 * w_p**4 * (1 - 0.287*log(gamma)) * gamma**a``
+    and ``B = 1.25 * w_p**4``. Furhtermore,
+
+    ``a = exp(-(w - w_p)**2 / (2 * sigma**2 * wp**2))``,
+
+    ``sigma = 0.07, for w <= wp`` and ``sigma = 0.09, for w > wp``.
+
+    Note that ``gamma`` is user-defined.
+
+    Parameters
+    ----------
+    freq : array-like
+        Sequence of frequencies to use when generating the spectrum.
+    freq_hz : bool
+        Whether the provided frequencies are in rad/s (default) or Hz.
+    gamma : float or callable
+        A scalar value or a callable that accepts hs and tp, and returns
+        a scalar value.
+
+    """
+
+    def __init__(self, freq, freq_hz=False, gamma=1.0):
+        if not callable(gamma):
+            self._gamma = lambda *args: gamma
+        else:
+            self._gamma = gamma
+        super().__init__(freq, freq_hz=freq_hz)
+
+    def _A(self, *args):
+        """
+        Spectrum parameter.
+        """
+        gamma = self._gamma(*args)
+        a = self._a(*args)
+
+        A = super()._A(*args)
+        k = (1.0 - 0.287 * np.log(gamma)) * gamma ** a
+        return A * k
+
+    def _a(self, *args):
+        """
+        Spectrum parameter.
+        """
+        _, tp = args
+        omega_p = 2.0 * np.pi / tp
+        sigma = self._sigma(*args)
+
+        a = np.exp(-(((self._freq - omega_p) / (sigma * omega_p)) ** 2.0) / 2.0)
+        return a
+
+    def _sigma(self, *args):
+        """
+        Spectrum parameter.
+        """
+        _, tp = args
+        omega_p = 2.0 * np.pi / tp
+
+        arg = self._freq <= omega_p
+        sigma = np.empty_like(self._freq)
+        sigma[arg] = 0.07
+        sigma[~arg] = 0.09
+        return sigma
+
+
+class OchiHubble(ModPiersonMoskowitz):
+    """
+    Ochi-Hubble wave spectrum (derived from modified Pierson-Moskowitz).
+
+    ``S(w) = A/w**5 exp(-B/w**4)``
+
+    where ``A = ((4 * q + 1) / 4 * w_p**4)**q * Hs**2 / (4 * gamma(q) * w**(4 * (q - 1)))
+    and ``B = (4 * q + 1) / 4 * w_p**4``.
+
+    where ``q`` is a user-defined shape parameter. Note that ``gamma`` is the
+    "Gamma function".
+
+    Notes
+    -----
+    The special case ``q=1`` corresponds to the Modified Pierson-Moskowitz
+    spectrum.
+
+    Parameters
+    ----------
+    freq : array-like
+        Sequence of frequencies to use when generating the spectrum.
+    freq_hz : bool
+        Whether the provided frequencies are in rad/s (default) or Hz.
+    q : float or callable
+        A scalar value or a callable that accepts hs and tp, and returns
+        a scalar value.
+
+    """
+
+    def __init__(self, freq, freq_hz=False, q=1.0):
+        if not callable(q):
+            self._q = lambda *args: q
+        else:
+            self._q = q
+        super().__init__(freq, freq_hz=freq_hz)
+
+    def _A(self, *args):
+        """
+        Spectrum parameter.
+        """
+        q = self._q(*args)
+
+        hs, tp = args
+        omega_p = 2.0 * np.pi / tp
+        a = ((4.0 * q + 1.0) / 4.0 * omega_p ** 4) ** q
+        A = (a * hs ** 2) / (4 * gammafun(q) * self._freq ** (4 * (q - 1.0)))
+        return A
+
+    def _B(self, *args):
+        """
+        Spectrum parameter.
+        """
+        q = self._q(*args)
+
+        _, tp = args
+        omega_p = 2.0 * np.pi / tp
+        return (4 * q + 1) / 4 * omega_p ** 4
