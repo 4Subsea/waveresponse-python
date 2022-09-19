@@ -79,14 +79,14 @@ class JONSWAP(ModifiedPiersonMoskowitz):
         self._sigma_b = sigma_b
         super().__init__(freq, freq_hz=freq_hz)
 
-    def __call__(self, hs, tp):
+    def __call__(self, hs, tp, freq_hz=None):
         gamma = self._gamma
         omega_p = 2.0 * np.pi / tp
         sigma = self._sigma(omega_p)
         C = 1.0 - 0.287 * np.log(gamma)
         b = np.exp(-0.5 * ((self._freq - omega_p) / (sigma - omega_p)) ** 2)
 
-        freq, spectrum_pm = super().__call__(hs, tp)
+        freq, spectrum_pm = super().__call__(hs, tp, freq_hz=freq_hz)
         return freq, C * spectrum_pm * gamma ** b
 
     def _sigma(self, omega_p):
