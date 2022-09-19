@@ -37,7 +37,11 @@ class ModPiersonMoskowitz_(PiersonMoskowitz_):
 
         ``S(w) = A/w**5 exp(-B/w**4)``
 
-    where ``A = 5/16 * Hs**2 * w_p**4`` and ``B = 5/4 * w_p**4``.
+    where,
+
+        ``A = 5/16 * Hs**2 * w_p**4``,
+
+        ``B = 5/4 * w_p**4``.
     """
     def __call__(self, hs, tp, freq_hz=None):
         omega_p = 2.0 * np.pi / tp
@@ -54,7 +58,7 @@ class JONSWAP_(ModPiersonMoskowitz_):
 
         ``S(w) = C * S_pm(w) * gamma ** b
 
-    where S_pm denotes the Pierson-Moskowitz spectrum,
+    where S_pm denotes the (modified) Pierson-Moskowitz spectrum,
 
         ``S_pm(w) = A/w**5 exp(-B/w**4)``
 
@@ -69,9 +73,7 @@ class JONSWAP_(ModPiersonMoskowitz_):
         ``b = exp(-(w - w_p)**2 / (2 * sigma**2 * wp**2))``,
 
         ``sigma = sigma_a``, for w <= wp
-
         ``sigma = sigma_b``, for w > wp
-
     """
     def __init__(self, freq, freq_hz=False, gamma=1, sigma_a=0.07, sigma_b=0.09):
         self._gamma = gamma
@@ -80,13 +82,11 @@ class JONSWAP_(ModPiersonMoskowitz_):
         super().__init__(freq, freq_hz=freq_hz)
 
     def __call__(self, hs, tp):
-
         gamma = self._gamma
         omega_p = 2.0 * np.pi / tp
         sigma = self._sigma(omega_p)
         C = 1.0 - 0.287 * np.log(gamma)
-        # b = np.exp(-0.5 * ((self._freq - omega_p) / (sigma - omega_p)) ** 2)
-        b = np.exp(-(((self._freq - omega_p) / (sigma * omega_p)) ** 2.0) / 2.0)
+        b = np.exp(-0.5 * ((self._freq - omega_p) / (sigma - omega_p)) ** 2)
 
         freq, spectrum_pm = super().__call__(hs, tp)
         return freq, C * spectrum_pm * gamma ** b
