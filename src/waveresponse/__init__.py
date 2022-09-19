@@ -15,6 +15,7 @@ from ._transform import (
     rigid_transform_surge,
     rigid_transform_sway,
 )
+from ._spectrum1d import JONSWAP, ModifiedPiersonMoskowitz
 
 __version__ = "0.0.1"
 
@@ -25,6 +26,8 @@ __all__ = [
     "CosineHalfSpreading",
     "DirectionalSpectrum",
     "Grid",
+    "JONSWAP",
+    "ModifiedPiersonMoskowitz",
     "polar_to_complex",
     "RAO",
     "rigid_transform",

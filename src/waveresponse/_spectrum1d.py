@@ -29,7 +29,7 @@ class _PiersonMoskowitz:
         return freq / scale, spectrum * scale
 
 
-class _ModPiersonMoskowitz(_PiersonMoskowitz):
+class ModifiedPiersonMoskowitz(_PiersonMoskowitz):
     """
     Modified Pierson-Moskowitz (i.e., Bretschneider) spectrum.
 
@@ -50,7 +50,7 @@ class _ModPiersonMoskowitz(_PiersonMoskowitz):
         return super().__call__(A, B, freq_hz=freq_hz)
 
 
-class JONSWAP(_ModPiersonMoskowitz):
+class JONSWAP(ModifiedPiersonMoskowitz):
     """
     JONSWAP spectrum.
 
