@@ -39,7 +39,7 @@ for generating a 1-D (modified) Pierson-Moskowitz spectrum from a given Hs/Tp co
     import waveresponse as wr
 
 
-    freq = np.arange(0.01, 1, 0.1)   # Hz
+    freq = np.arange(0.01, 1, 0.1)
     spectrum = wr.ModifiedPiersonMoskowitz(freq, freq_hz=True)
 
     hs = 3.5
@@ -74,7 +74,7 @@ JONSWAP spectrum from a given Hs/Tp combination:
     import waveresponse as wr
 
 
-    freq = np.arange(0.01, 1, 0.1)   # Hz
+    freq = np.arange(0.01, 1, 0.1)
     spectrum = wr.JONSWAP(freq, freq_hz=True, gamma=2, sigma_a=0.07, sigma_b=0.09)
 
     hs = 3.5
@@ -136,7 +136,7 @@ object from a 1-D frequency spectrum and a spreading function:
         waves_coming_from=False,
     )
 
-You can even create a composite wave spectrum by adding together two or more wave
+You can also create a composite wave spectrum by adding together two or more wave
 spectrum components. E.g., if you have one swell and one wind wave component:
 
 .. code:: python
