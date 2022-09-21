@@ -16,6 +16,7 @@ class _PiersonMoskowitz:
     freq_hz : bool
         Whether the provided frequencies are in rad/s (default) or Hz.
     """
+
     def __init__(self, freq, freq_hz=False):
         self._freq = np.asarray_chkfinite(freq).copy()
         self._freq_hz = freq_hz
@@ -57,15 +58,15 @@ class _PiersonMoskowitz:
         in terms of Hz and rad/s, respectively.
         """
         freq = self._freq.copy()
-        spectrum = A / freq ** 5.0 * np.exp(-B / freq ** 4)
+        spectrum = A / freq**5.0 * np.exp(-B / freq**4)
 
         if freq_hz is None:
             freq_hz = self._freq_hz
 
         if freq_hz:
-            scale = (2.0 * np.pi)
+            scale = 2.0 * np.pi
         else:
-            scale = 1.
+            scale = 1.0
 
         return freq / scale, spectrum * scale
 
@@ -91,6 +92,7 @@ class ModifiedPiersonMoskowitz(_PiersonMoskowitz):
     --------
     JONSWAP : JONSWAP wave spectrum.
     """
+
     def __call__(self, hs, tp, freq_hz=None):
         """
         Generate wave spectrum given Hs and Tp.
@@ -126,8 +128,8 @@ class ModifiedPiersonMoskowitz(_PiersonMoskowitz):
         """
         omega_p = 2.0 * np.pi / tp
 
-        A = (5.0 / 16.0) * hs ** 2.0 * omega_p ** 4.0
-        B = (5.0 / 4.0) * omega_p ** 4
+        A = (5.0 / 16.0) * hs**2.0 * omega_p**4.0
+        B = (5.0 / 4.0) * omega_p**4
 
         return super().__call__(A, B, freq_hz=freq_hz)
 
@@ -170,6 +172,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
     --------
     ModifiedPiersonMoskowitz : Pierson-Moskowitz (PM) wave spectrum.
     """
+
     def __init__(self, freq, freq_hz=False, gamma=1, sigma_a=0.07, sigma_b=0.09):
         self._gamma = gamma
         self._sigma_a = sigma_a
@@ -216,7 +219,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
         b = np.exp(-0.5 * ((self._freq - omega_p) / (sigma * omega_p)) ** 2)
 
         freq, s_pm = super().__call__(hs, tp, freq_hz=freq_hz)
-        return freq, alpha * s_pm * gamma ** b
+        return freq, alpha * s_pm * gamma**b
 
     def _sigma(self, omega_p):
         """
