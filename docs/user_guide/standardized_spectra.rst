@@ -3,6 +3,10 @@ Standardized wave spectra
 
 Idealized 1-D spectra
 #####################
+Often you do not have access to the true wave spectrum for the area you are interested in.
+Then, it is common to instead use a standardized wave spectrum (which there exists many of).
+``waveresponse`` aims to support the most commonly used spectra, such as the `Pierson-Moskowitz`
+spectrum and the `JONSWAP` spectrum.
 
 Pierson-Moskowitz spectrum
 --------------------------
@@ -21,7 +25,7 @@ The modified Pierson-Moskowits (i.e., Bretschneider) spectrum, :math:`S_{PM}(\om
 
 .. math::
 
-    S_{PM} = \frac{5}{16}H_s^2\omega_p^2\omega^{-5} exp\left(-\frac{5}{4} \left( \frac{\omega_p}{\omega} \right)^4 \right)
+    S_{PM}(\omega) = \frac{5}{16}H_s^2\omega_p^2\omega^{-5} exp\left(-\frac{5}{4} \left( \frac{\omega_p}{\omega} \right)^4 \right)
 
 where :math:`H_s` is the significant wave height and :math:`\omega_p = \frac{2\pi}{Tp}` is the
 angular spectral peak frequency.
@@ -45,11 +49,11 @@ for generating 1-D (modified) Pierson-Moskowitz spectra for given Hs/Tp combinat
 
 JONSWAP spectrum
 ----------------
-The JONSWAP spectrum, :math:`S_{JW}(\omega)`, is given by:
+The JONSWAP spectrum, :math:`S_{J}(\omega)`, is given by:
 
 .. math::
 
-    S_{JW} = \alpha_{\gamma}S_{PM}(\omega)\gamma^{exp\left( -\frac{(\omega - \omega_p)^2}{2\sigma^2\omega_p^2} \right)}
+    S_{J}(\omega) = \alpha_{\gamma}S_{PM}(\omega)\gamma^{exp\left( -\frac{(\omega - \omega_p)^2}{2\sigma^2\omega_p^2} \right)}
 
 where,
 
