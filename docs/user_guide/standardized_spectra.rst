@@ -105,6 +105,33 @@ In general, the spreading function is a function of both frequency, :math:`\omeg
 and direction, :math:`\theta`. However, it is common to use the same spreading
 for all frequencies.
 
+With ``waveresponse`` it is easy to construct a directional :class:`~waveresponse.WaveSpectrum`
+object from a 1-D frequency spectrum and a spreading function:
+
+.. code:: python
+
+    import numpy as np
+    import waveresponse as wr
+
+
+    freq = np.linspace(0.0, 1.0, 50)
+    dirs = np.linspace(0.0, 360.0, endpoint=False)
+    dirp = 45.0
+    hs = 3.5
+    tp = 10.0
+
+    wave = wr.WaveSpectrum.from_spectrum1d(
+        freq,
+        dirs,
+        wr.JONSWAP(freq, freq_hz=True)(hs, tp)[1],
+        wr.CosineFullSpreading(s=2, degrees=True),
+        dirp,
+        freq_hz=True,
+        degrees=True,
+        clockwise=False,
+        waves_coming_from=False,
+    )
+
 
 Cosine-2s based spreading
 -------------------------
