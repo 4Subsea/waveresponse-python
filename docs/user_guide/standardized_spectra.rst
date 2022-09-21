@@ -53,13 +53,13 @@ The JONSWAP spectrum, :math:`S_{JW}(\omega)`, is given by:
 
 where,
 
-    - :math:`S_{PM}(w)` is the Pierson-Moskowitz (PM) spectrum.
-    - :math:`\gamma` is a peak enhancement factor.
-    - :math:`\alpha_{\gamma} = 1 - 0.287 \cdot ln(\gamma)` is a normalizing factor.
-    - :math:`\sigma` is the spectral width parameter:
-        - :math:`\sigma = \sigma_a`, for :math:`\omega <= \omega_p`
-        - :math:`\sigma = \sigma_b`, for :math:`\omega > \omega_p`
-    - :math:`\omega_p = \frac{2\pi}{Tp}` is the angular spectral peak frequency.
+- :math:`S_{PM}(w)` is the Pierson-Moskowitz (PM) spectrum.
+- :math:`\gamma` is a peak enhancement factor.
+- :math:`\alpha_{\gamma} = 1 - 0.287 \cdot ln(\gamma)` is a normalizing factor.
+- :math:`\sigma` is the spectral width parameter:
+    - :math:`\sigma = \sigma_a`, for :math:`\omega <= \omega_p`
+    - :math:`\sigma = \sigma_b`, for :math:`\omega > \omega_p`
+- :math:`\omega_p = \frac{2\pi}{Tp}` is the angular spectral peak frequency.
 
 The :class:`~waveresponse.JONSWAP` class provides functionality for generating 1-D
 JONSWAP spectra for a given Hs/Tp combinations:
@@ -108,5 +108,30 @@ for all frequencies.
 
 Cosine-2s based spreading
 -------------------------
+Standardized spreading functions (denoted :math:`\kappa(\hat{\theta})` here),
+are usually defined such that they have their maximum value at :math:`\hat{\theta} = 0`.
+From these standardized spreading functions, we can obtain a spreading function
+with an arbitrary peak direction, :math:`\theta_p`, by taking:
 
-TODO.
+.. math::
+
+    D(\omega, \theta) = \kappa(\theta - \theta_p)
+
+Cosine-based spreading functions are most common. ``waveresponse`` provides two
+variations of the cosine-based spreading: one that spreads the wave energy over
+the full directional domain, and one that spreads the energy over half the domain.
+
+The :class:`~waveresponse.CosineFullSpreading` class provides directional spreading
+according to:
+
+.. math::
+
+    \kappa(\hat{\theta}) = \frac{2^{2s-1}}{\pi} \frac{\Gamma^2(s+1)}{\Gamma^2(2s+1)} cos^{2s} \left(\frac{\hat{\theta}}{2}\right)
+
+
+The :class:`~waveresponse.CosineHalfSpreading` class provides directional spreading
+according to:
+
+.. math::
+
+    \kappa(\hat{\theta}) = \Gamma(a, b, c)
