@@ -31,7 +31,7 @@ where :math:`H_s` is the significant wave height and :math:`\omega_p = \frac{2\p
 angular spectral peak frequency.
 
 The :class:`~waveresponse.ModifiedPiersonMoskowitz` class provides functionality
-for generating 1-D (modified) Pierson-Moskowitz spectra for given Hs/Tp combinations:
+for generating a 1-D (modified) Pierson-Moskowitz spectrum from a given Hs/Tp combination:
 
 .. code:: python
 
@@ -65,8 +65,8 @@ where,
     - :math:`\sigma = \sigma_b`, for :math:`\omega > \omega_p`
 - :math:`\omega_p = \frac{2\pi}{Tp}` is the angular spectral peak frequency.
 
-The :class:`~waveresponse.JONSWAP` class provides functionality for generating 1-D
-JONSWAP spectra for a given Hs/Tp combinations:
+The :class:`~waveresponse.JONSWAP` class provides functionality for generating a 1-D
+JONSWAP spectrum from a given Hs/Tp combination:
 
 .. code:: python
 
