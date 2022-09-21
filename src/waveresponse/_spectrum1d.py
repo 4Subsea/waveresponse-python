@@ -5,7 +5,7 @@ class PiersonMoskowitz:
     """
     Pierson-Moskowitz (PM) spectrum, given by:
 
-        ``S(w) = A/w**5 exp(-B/w**4)``
+    ``S(w) = A/w**5 exp(-B/w**4)``
 
     where ``A`` and ``B`` are parameters that determine the shape of the spectrum.
 
@@ -75,7 +75,7 @@ class ModifiedPiersonMoskowitz(PiersonMoskowitz):
     """
     Modified Pierson-Moskowitz (i.e., Bretschneider) spectrum, given by:
 
-        ``S(w) = A/w**5 exp(-B/w**4)``
+    ``S(w) = A/w**5 exp(-B/w**4)``
 
     where ``A = 5/16 * Hs**2 * w_p**4`` and ``B = 5/4 * w_p**4``. ``Hs`` is the
     significant wave height, and ``w_p = 2pi / Tp`` is the peak frequency of the
@@ -137,21 +137,21 @@ class JONSWAP(ModifiedPiersonMoskowitz):
     """
     JONSWAP spectrum, given as:
 
-        ``S(w) = alpha * S_pm(w) * gamma ** b``
+    ``S(w) = alpha * S_pm(w) * gamma ** b``
 
     where,
 
-        ``b = exp(-(w - w_p)**2 / (2 * sigma**2 * wp**2))``
+    ``b = exp(-(w - w_p)**2 / (2 * sigma**2 * wp**2))``
 
     and,
 
-        - ``S_pm(w)`` is the Pierson-Moskowitz (PM) spectrum.
-        - ``gamma`` is a peak enhancement factor.
-        - ``alpha = 1 - 0.287 * ln(gamma)`` is a normalizing factor.
-        - ``sigma`` is the spectral width parameter:
-            - ``sigma = simga_a`` for ``w <= wp``
+    - ``S_pm(w)`` is the Pierson-Moskowitz (PM) spectrum.
+    - ``gamma`` is a peak enhancement factor.
+    - ``alpha = 1 - 0.287 * ln(gamma)`` is a normalizing factor.
+    - ``sigma`` is the spectral width parameter:
+        - ``sigma = simga_a`` for ``w <= wp``
             - ``sigma = sigma_b`` for ``w > wp``
-        - ``wp = 2pi/tp`` spectral peak frequency.
+    - ``wp = 2pi/tp`` spectral peak frequency.
 
     Parameters
     ----------
