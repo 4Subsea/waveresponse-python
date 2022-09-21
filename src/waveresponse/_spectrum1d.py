@@ -7,6 +7,14 @@ class _PiersonMoskowitz:
 
         ``S(w) = A/w**5 exp(-B/w**4)``
 
+    where ``A`` and ``B`` are parameters that determine the shape of the spectrum.
+
+    Parameters
+    ----------
+    freq : array-like
+        Sequence of frequencies to use when generating the spectrum.
+    freq_hz : bool
+        Whether the provided frequencies are in rad/s (default) or Hz.
     """
     def __init__(self, freq, freq_hz=False):
         self._freq = np.asarray_chkfinite(freq).copy()
@@ -16,6 +24,38 @@ class _PiersonMoskowitz:
             self._freq *= 2.0 * np.pi
 
     def __call__(self, A, B, freq_hz=None):
+        """
+        Generate wave spectrum given A and B.
+
+        Parameters
+        ----------
+        A : float
+            Spectrum shape parameter.
+        B : float
+            Spectrum shape parameter.
+        freq_hz : bool, optional
+            Whether to return the frequencies and spectrum in terms of rad/s (`True`)
+            or Hz (`False`). If `None` (default), the original units of `freq` is
+            preserved.
+
+        Return
+        ------
+        freq : 1-D array
+            Frequencies corresponding to the spectrum values. Unit is set according
+            to `freq_hz`.
+        spectrum : 1-D array
+            Spectrum values. Unit is set according to `freq_hz`.
+
+        Notes
+        -----
+        The scaling between wave spectrum in terms of Hz and rad/s is defind
+        as:
+
+        ``S(f) = 2*pi*S(w)``
+
+        where ``S(f)`` and ``S(w)`` are the same spectrum but expressed
+        in terms of Hz and rad/s, respectively.
+        """
         freq = self._freq.copy()
         spectrum = A / freq ** 5.0 * np.exp(-B / freq ** 4)
 
@@ -39,8 +79,51 @@ class ModifiedPiersonMoskowitz(_PiersonMoskowitz):
     where ``A = 5/16 * Hs**2 * w_p**4`` and ``B = 5/4 * w_p**4``. ``Hs`` is the
     significant wave height, and ``w_p = 2pi / Tp`` is the peak frequency of the
     spectrum.
+
+    Parameters
+    ----------
+    freq : array-like
+        Sequence of frequencies to use when generating the spectrum.
+    freq_hz : bool
+        Whether the provided frequencies are in rad/s (default) or Hz.
+
+    See Also
+    --------
+    JONSWAP : JONSWAP wave spectrum.
     """
     def __call__(self, hs, tp, freq_hz=None):
+        """
+        Generate wave spectrum given Hs and Tp.
+
+        Parameters
+        ----------
+        hs : float
+            Significant wave height.
+        tp : float
+            Peak wave period.
+        freq_hz : bool, optional
+            Whether to return the frequencies and spectrum in terms of rad/s (`True`)
+            or Hz (`False`). If `None` (default), the original units of `freq` is
+            preserved.
+
+        Return
+        ------
+        freq : 1-D array
+            Frequencies corresponding to the spectrum values. Unit is set according
+            to `freq_hz`.
+        spectrum : 1-D array
+            Spectrum values. Unit is set according to `freq_hz`.
+
+        Notes
+        -----
+        The scaling between wave spectrum in terms of Hz and rad/s is defind
+        as:
+
+        ``S(f) = 2*pi*S(w)``
+
+        where ``S(f)`` and ``S(w)`` are the same spectrum but expressed
+        in terms of Hz and rad/s, respectively.
+        """
         omega_p = 2.0 * np.pi / tp
 
         A = (5.0 / 16.0) * hs ** 2.0 * omega_p ** 4.0
@@ -53,23 +136,39 @@ class JONSWAP(ModifiedPiersonMoskowitz):
     """
     JONSWAP spectrum, given as:
 
-        ``S(w) = alpha * S_pm(w) * gamma ** b
+        ``S(w) = alpha * S_pm(w) * gamma ** b``
 
-    where S_pm denotes the (modified) Pierson-Moskowitz spectrum,
+    where,
 
-        ``S_pm(w) = A/w**5 exp(-B/w**4)``
+        ``b = exp(-(w - w_p)**2 / (2 * sigma**2 * wp**2))``
 
     and,
 
-        ``A = 5/16 * Hs**2 * w_p**4``,
+        - ``S_pm(w)`` is the Pierson-Moskowitz (PM) spectrum.
+        - ``gamma`` is a peak enhancement factor.
+        - ``alpha = 1 - 0.287 * ln(gamma)`` is a normalizing factor.
+        - ``sigma`` is the spectral width parameter:
+            - ``sigma = simga_a`` for ``w <= wp``
+            - ``sigma = sigma_b`` for ``w > wp``
+        - ``wp = 2pi/tp`` spectral peak frequency.
 
-        ``B = 5/4 * w_p**4``,
+    Parameters
+    ----------
+    freq : array-like
+        Sequence of frequencies to use when generating the spectrum.
+    freq_hz : bool
+        Whether the provided frequencies are in rad/s (default) or Hz.
+    gamma : float or callable
+        A scalar value or a callable that accepts hs and tp, and returns a scalar
+        value.
+    sigma_a : float
+        Spectral width parameter.
+    sigma_b : float
+        Spectral width parameter.
 
-        ``alpha = 1 - 0.287 * ln(gamma)``,
-
-        ``b = exp(-(w - w_p)**2 / (2 * sigma**2 * wp**2))``,
-
-        ``sigma = sigma_a`` for w <= wp, and ``sigma = sigma_b`` for w > wp
+    See Also
+    --------
+    ModifiedPiersonMoskowitz : Pierson-Moskowitz (PM) wave spectrum.
     """
     def __init__(self, freq, freq_hz=False, gamma=1, sigma_a=0.07, sigma_b=0.09):
         self._gamma = gamma
@@ -78,14 +177,46 @@ class JONSWAP(ModifiedPiersonMoskowitz):
         super().__init__(freq, freq_hz=freq_hz)
 
     def __call__(self, hs, tp, freq_hz=None):
+        """
+        Generate wave spectrum given Hs and Tp.
+
+        Parameters
+        ----------
+        hs : float
+            Significant wave height.
+        tp : float
+            Peak wave period.
+        freq_hz : bool, optional
+            Whether to return the frequencies and spectrum in terms of rad/s (`True`)
+            or Hz (`False`). If `None` (default), the original units of `freq` is
+            preserved.
+
+        Return
+        ------
+        freq : 1-D array
+            Frequencies corresponding to the spectrum values. Unit is set according
+            to `freq_hz`.
+        spectrum : 1-D array
+            Spectrum values. Unit is set according to `freq_hz`.
+
+        Notes
+        -----
+        The scaling between wave spectrum in terms of Hz and rad/s is defind
+        as:
+
+        ``S(f) = 2*pi*S(w)``
+
+        where ``S(f)`` and ``S(w)`` are the same spectrum but expressed
+        in terms of Hz and rad/s, respectively.
+        """
         gamma = self._gamma
+        alpha = 1.0 - 0.287 * np.log(gamma)
         omega_p = 2.0 * np.pi / tp
         sigma = self._sigma(omega_p)
-        C = 1.0 - 0.287 * np.log(gamma)
         b = np.exp(-0.5 * ((self._freq - omega_p) / (sigma * omega_p)) ** 2)
 
-        freq, spectrum_pm = super().__call__(hs, tp, freq_hz=freq_hz)
-        return freq, C * spectrum_pm * gamma ** b
+        freq, s_pm = super().__call__(hs, tp, freq_hz=freq_hz)
+        return freq, alpha * s_pm * gamma ** b
 
     def _sigma(self, omega_p):
         """
