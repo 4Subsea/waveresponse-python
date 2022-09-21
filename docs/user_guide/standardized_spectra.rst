@@ -4,19 +4,18 @@ Standardized wave spectra
 Idealized 1-D spectra
 #####################
 Often you do not have access to the true wave spectrum for the area you are interested in.
-Then, it is common to instead use a standardized wave spectrum (which there exists many types of).
-``waveresponse`` aims to support the most commonly used standard spectra, such as the `Pierson-Moskowitz`
-spectrum and the `JONSWAP` spectrum.
+Then, it is common to instead use a standardized wave spectrum (which there exists many of).
 
-Pierson-Moskowitz type spectra
-------------------------------
-The Pierson-Moskowits (PM) spectrum, :math:`S_{PM}(\omega)`, is given by:
+Pierson-Moskowitz (PM) type spectra has the following form:
 
 .. math::
 
     S_{PM}(\omega) = \frac{A}{w^5} exp\left(-\frac{B}{\omega^4}\right)
 
-where :math:`A` and :math:`B` are parameters that describe the shape of the spectrum.
+Most standardized wave spectra today are of the PM type (or extends it). The
+`modified Pierson-Moskowitz` spectrum and the `JONSWAP` spectrum are two examples.
+It is common to express the spectrum parameters, :math:`A` and :math:`B`, in terms
+of significant wave height, Hs, and wave peak period, Tp.
 
 
 Modified Pierson-Moskowitz spectrum
