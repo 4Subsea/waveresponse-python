@@ -128,10 +128,14 @@ according to:
 
     \kappa(\hat{\theta}) = \frac{2^{2s-1}}{\pi} \frac{\Gamma^2(s+1)}{\Gamma^2(2s+1)} cos^{2s} \left(\frac{\hat{\theta}}{2}\right)
 
+where :math:`s` is a spreading coefficient, and :math:`\Gamma` is the Gamma function.
+
 
 The :class:`~waveresponse.CosineHalfSpreading` class provides directional spreading
 according to:
 
 .. math::
 
-    \kappa(\hat{\theta}) = \Gamma(a, b, c)
+    \kappa(\hat{\theta}) = \frac{2^{2s}}{\pi} \frac{\Gamma^2(s+1)}{\Gamma^2(2s+1)} cos^{2s} (\hat{\theta})
+
+where :math:`s` is a spreading coefficient, and :math:`\Gamma` is the Gamma function.
