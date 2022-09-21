@@ -127,7 +127,6 @@ class ModifiedPiersonMoskowitz(_PiersonMoskowitz):
         in terms of Hz and rad/s, respectively.
         """
         omega_p = 2.0 * np.pi / tp
-
         A = (5.0 / 16.0) * hs**2.0 * omega_p**4.0
         B = (5.0 / 4.0) * omega_p**4
 
