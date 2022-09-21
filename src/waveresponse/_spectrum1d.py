@@ -3,9 +3,10 @@ import numpy as np
 
 class _PiersonMoskowitz:
     """
-    Pierson-Moskowitz spectrum.
+    Pierson-Moskowitz (PM) spectrum, given by:
 
         ``S(w) = A/w**5 exp(-B/w**4)``
+
     """
     def __init__(self, freq, freq_hz=False):
         self._freq = np.asarray_chkfinite(freq).copy()
@@ -31,15 +32,13 @@ class _PiersonMoskowitz:
 
 class ModifiedPiersonMoskowitz(_PiersonMoskowitz):
     """
-    Modified Pierson-Moskowitz (i.e., Bretschneider) spectrum.
+    Modified Pierson-Moskowitz (i.e., Bretschneider) spectrum, given by:
 
         ``S(w) = A/w**5 exp(-B/w**4)``
 
-    where,
-
-        ``A = 5/16 * Hs**2 * w_p**4``,
-
-        ``B = 5/4 * w_p**4``.
+    where ``A = 5/16 * Hs**2 * w_p**4`` and ``B = 5/4 * w_p**4``. ``Hs`` is the
+    significant wave height, and ``w_p = 2pi / Tp`` is the peak frequency of the
+    spectrum.
     """
     def __call__(self, hs, tp, freq_hz=None):
         omega_p = 2.0 * np.pi / tp
@@ -52,9 +51,9 @@ class ModifiedPiersonMoskowitz(_PiersonMoskowitz):
 
 class JONSWAP(ModifiedPiersonMoskowitz):
     """
-    JONSWAP spectrum.
+    JONSWAP spectrum, given as:
 
-        ``S(w) = C * S_pm(w) * gamma ** b
+        ``S(w) = alpha * S_pm(w) * gamma ** b
 
     where S_pm denotes the (modified) Pierson-Moskowitz spectrum,
 
@@ -66,12 +65,11 @@ class JONSWAP(ModifiedPiersonMoskowitz):
 
         ``B = 5/4 * w_p**4``,
 
-        ``C = 1 - 0.287 * ln(gamma)``,
+        ``alpha = 1 - 0.287 * ln(gamma)``,
 
         ``b = exp(-(w - w_p)**2 / (2 * sigma**2 * wp**2))``,
 
-        ``sigma = sigma_a``, for w <= wp
-        ``sigma = sigma_b``, for w > wp
+        ``sigma = sigma_a`` for w <= wp, and ``sigma = sigma_b`` for w > wp
     """
     def __init__(self, freq, freq_hz=False, gamma=1, sigma_a=0.07, sigma_b=0.09):
         self._gamma = gamma
