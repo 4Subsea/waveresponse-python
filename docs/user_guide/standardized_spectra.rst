@@ -4,12 +4,12 @@ Standardized wave spectra
 Idealized 1-D spectra
 #####################
 Often you do not have access to the true wave spectrum for the area you are interested in.
-Then, it is common to instead use a standardized wave spectrum (which there exists many of).
-``waveresponse`` aims to support the most commonly used spectra, such as the `Pierson-Moskowitz`
+Then, it is common to instead use a standardized wave spectrum (which there exists many types of).
+``waveresponse`` aims to support the most commonly used standard spectra, such as the `Pierson-Moskowitz`
 spectrum and the `JONSWAP` spectrum.
 
-Pierson-Moskowitz spectrum
---------------------------
+Pierson-Moskowitz type spectra
+------------------------------
 The Pierson-Moskowits (PM) spectrum, :math:`S_{PM}(\omega)`, is given by:
 
 .. math::
@@ -21,7 +21,8 @@ where :math:`A` and :math:`B` are parameters that describe the shape of the spec
 
 Modified Pierson-Moskowitz spectrum
 -----------------------------------
-The modified Pierson-Moskowits (i.e., Bretschneider) spectrum, :math:`S_{PM}(\omega)`, is given by:
+The modified Pierson-Moskowits spectrum (also known as Bretschneider),
+:math:`S_{PM}(\omega)`, is given by:
 
 .. math::
 
