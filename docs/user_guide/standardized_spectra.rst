@@ -103,13 +103,7 @@ we get the following requirement for the spreading function for each frequency,
 
 In general, the spreading function is a function of both frequency, :math:`\omega`,
 and direction, :math:`\theta`. However, it is common to use the same spreading
-for all frequencies. Standardized spreading functions (denoted :math:`\kappa` here), are usually
-defined such that they have their maximum value at :math:`\theta = 0`. From these
-standardized spreading functions, we can obtain a spreading function with an
-arbitrary peak direction, :math:`\theta_p`, by:
-
-.. math::
-    D(\omega, \theta) = \kappa(\theta - \theta_p)
+for all frequencies.
 
 
 Cosine-2s based spreading
