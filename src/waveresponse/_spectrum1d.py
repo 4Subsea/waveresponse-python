@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class _PiersonMoskowitz:
+class PiersonMoskowitz:
     """
     Pierson-Moskowitz (PM) spectrum, given by:
 
@@ -71,7 +71,7 @@ class _PiersonMoskowitz:
         return freq / scale, spectrum * scale
 
 
-class ModifiedPiersonMoskowitz(_PiersonMoskowitz):
+class ModifiedPiersonMoskowitz(PiersonMoskowitz):
     """
     Modified Pierson-Moskowitz (i.e., Bretschneider) spectrum, given by:
 
