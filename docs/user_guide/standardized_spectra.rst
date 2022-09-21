@@ -136,6 +136,13 @@ object from a 1-D frequency spectrum and a spreading function:
         waves_coming_from=False,
     )
 
+You can even create a composite wave spectrum by adding together two or more wave
+spectrum components. E.g., if you have one swell and one wind wave component:
+
+.. code:: python
+
+    wave_tot = swell + wind
+
 
 Cosine-2s based spreading
 -------------------------
