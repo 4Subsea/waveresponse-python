@@ -13,14 +13,14 @@ Pierson-Moskowitz (PM) type spectra has the following form:
     S_{PM}(\omega) = \frac{A}{w^5} exp\left(-\frac{B}{\omega^4}\right)
 
 Most standardized wave spectra today are of the PM type (or extends it). The
-`modified Pierson-Moskowitz` spectrum and the `JONSWAP` spectrum are two examples.
+*modified Pierson-Moskowitz* spectrum and the *JONSWAP* spectrum are two examples.
 It is common to express the spectrum parameters, :math:`A` and :math:`B`, in terms
-of significant wave height, Hs, and wave peak period, Tp.
+of the significant wave height, Hs, and the wave peak period, Tp.
 
 
 Modified Pierson-Moskowitz spectrum
 -----------------------------------
-The modified Pierson-Moskowits spectrum (also known as Bretschneider),
+The *modified Pierson-Moskowits* spectrum (also known as Bretschneider),
 :math:`S_{PM}(\omega)`, is given by:
 
 .. math::
@@ -49,7 +49,7 @@ for generating a 1-D (modified) Pierson-Moskowitz spectrum from a given Hs/Tp co
 
 JONSWAP spectrum
 ----------------
-The JONSWAP spectrum, :math:`S_{J}(\omega)`, is given by:
+The *JONSWAP* spectrum, :math:`S_{J}(\omega)`, is given by:
 
 .. math::
 
@@ -124,11 +124,14 @@ object from a 1-D frequency spectrum and a spreading function:
     hs = 3.5
     tp = 10.0
 
+    _, spectrum1d = wr.JONSWAP(freq, freq_hz=True)(hs, tp)
+    spread_fun = wr.CosineFullSpreading(s=2, degrees=True)
+
     wave = wr.WaveSpectrum.from_spectrum1d(
         freq,
         dirs,
-        wr.JONSWAP(freq, freq_hz=True)(hs, tp)[1],
-        wr.CosineFullSpreading(s=2, degrees=True),
+        spectrum1d,
+        spread_fun,
         dirp,
         freq_hz=True,
         degrees=True,
