@@ -3,11 +3,12 @@ import numpy as np
 
 class BasePMSpectrum:
     """
-    Pierson-Moskowitz (PM) spectrum, given by:
+    Base class for handling 1-D Pierson-Moskowtiz (PM) type spectra of the form:
 
     ``S(w) = A/w**5 exp(-B/w**4)``
 
-    where ``A`` and ``B`` are parameters that determine the shape of the spectrum.
+    This class requires that the spectrum parameters, ``A`` and ``B``, can be calculated
+    from the significant wave height, Hs, and the wave peak period, Tp.
 
     Parameters
     ----------
@@ -26,14 +27,14 @@ class BasePMSpectrum:
 
     def __call__(self, hs, tp, freq_hz=None):
         """
-        Generate wave spectrum given A and B.
+        Generate wave spectrum given Hs and Tp.
 
         Parameters
         ----------
-        A : float
-            Spectrum shape parameter.
-        B : float
-            Spectrum shape parameter.
+        hs : float
+            Significant wave height, Hs.
+        tp : float
+            Peak period, Tp.
         freq_hz : bool, optional
             Whether to return the frequencies and spectrum in terms of rad/s (`True`)
             or Hz (`False`). If `None` (default), the original units of `freq` is
