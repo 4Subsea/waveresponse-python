@@ -168,7 +168,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
         sigma = self._sigma(omega_p)
         b = np.exp(-0.5 * ((omega - omega_p) / (sigma * omega_p)) ** 2)
 
-        return alpha * super()._spectrum(omega, hs, tp) * gamma ** b
+        return alpha * super()._spectrum(omega, hs, tp) * gamma**b
 
     def _sigma(self, omega_p):
         """
