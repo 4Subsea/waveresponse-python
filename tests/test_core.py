@@ -1,5 +1,6 @@
 from itertools import product
 
+from unittest.mock import patch
 import numpy as np
 import pytest
 from scipy.integrate import quad
@@ -1174,6 +1175,11 @@ class Test_Grid:
     def test__add__raises_type(self, grid, rao):
         with pytest.raises(TypeError):
             grid + rao
+
+    @patch("waveresponse._core._check_is_similar")
+    def test__add__check_is_similar(self, mock_check_is_similar, grid):
+        grid + grid
+        mock_check_is_similar.assert_called_once_with(grid, grid, exact_type=True)
 
     def test__abs__(self):
         freq_in = np.array([1, 2, 3])
