@@ -109,9 +109,10 @@ class Test_JONSWAP:
         assert isinstance(spectrum, BasePMSpectrum)
         assert isinstance(spectrum, ModifiedPiersonMoskowitz)
         assert spectrum._freq_hz is True
-        assert spectrum._gamma == 3
         assert spectrum._sigma_a == 0.1
         assert spectrum._sigma_b == 0.2
+        assert callable(spectrum._gamma)
+        assert spectrum._gamma(1, 2) == 3
         np.testing.assert_array_almost_equal(spectrum._freq, 2.0 * np.pi * freq)
 
     def test__init___rads(self):
@@ -121,10 +122,21 @@ class Test_JONSWAP:
         assert isinstance(spectrum, BasePMSpectrum)
         assert isinstance(spectrum, ModifiedPiersonMoskowitz)
         assert spectrum._freq_hz is False
-        assert spectrum._gamma == 3
         assert spectrum._sigma_a == 0.1
         assert spectrum._sigma_b == 0.2
+        assert callable(spectrum._gamma)
+        assert spectrum._gamma(1, 2) == 3
         np.testing.assert_array_almost_equal(spectrum._freq, freq)
+
+    def test_gamma_fun(self):
+        freq = np.arange(0.01, 1, 0.01)
+        spectrum = JONSWAP(freq, gamma=lambda hs, tp: hs + tp + 2)
+        assert spectrum._gamma(1, 2) == 5
+
+    def test_gamma_float(self):
+        freq = np.arange(0.01, 1, 0.01)
+        spectrum = JONSWAP(freq, gamma=1.2)
+        assert spectrum._gamma(1, 2) == 1.2
 
     def test_A(self):
         freq = np.arange(0.01, 1, 0.01)

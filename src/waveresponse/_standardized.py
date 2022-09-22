@@ -147,8 +147,8 @@ class JONSWAP(ModifiedPiersonMoskowitz):
     freq_hz : bool
         Whether the provided frequencies are in rad/s (default) or Hz.
     gamma : float or callable
-        A scalar value or a callable that accepts hs and tp, and returns a scalar
-        value.
+        Peak enhancement factor. Single value or a callable that accepts hs and tp,
+        and returns a corresponding enhancement factor (float).
     sigma_a : float
         Spectral width parameter.
     sigma_b : float
@@ -160,13 +160,16 @@ class JONSWAP(ModifiedPiersonMoskowitz):
     """
 
     def __init__(self, freq, freq_hz=False, gamma=1, sigma_a=0.07, sigma_b=0.09):
-        self._gamma = gamma
+        if not callable(gamma):
+            self._gamma = lambda *args: gamma
+        else:
+            self._gamma = gamma
         self._sigma_a = sigma_a
         self._sigma_b = sigma_b
         super().__init__(freq, freq_hz=freq_hz)
 
     def _spectrum(self, omega, hs, tp):
-        gamma = self._gamma
+        gamma = self._gamma(hs, tp)
         alpha = 1.0 - 0.287 * np.log(gamma)
         omega_p = 2.0 * np.pi / tp
         sigma = self._sigma(omega_p)
