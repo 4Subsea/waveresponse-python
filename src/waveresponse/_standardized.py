@@ -70,10 +70,10 @@ class BasePMSpectrum:
 
         return freq / scale, spectrum * scale
 
-    def _spectrum(self, freq, hs, tp):
+    def _spectrum(self, omega, hs, tp):
         A = self._A(hs, tp)
         B = self._B(hs, tp)
-        return A / freq**5.0 * np.exp(-B / freq**4)
+        return A / omega**5.0 * np.exp(-B / omega**4)
 
     def _A(self, hs, tp):
         raise NotImplementedError()
@@ -158,14 +158,14 @@ class JONSWAP(ModifiedPiersonMoskowitz):
         self._sigma_b = sigma_b
         super().__init__(freq, freq_hz=freq_hz)
 
-    def _spectrum(self, freq, hs, tp):
+    def _spectrum(self, omega, hs, tp):
         gamma = self._gamma
         alpha = 1.0 - 0.287 * np.log(gamma)
         omega_p = 2.0 * np.pi / tp
         sigma = self._sigma(omega_p)
-        b = np.exp(-0.5 * ((freq - omega_p) / (sigma * omega_p)) ** 2)
+        b = np.exp(-0.5 * ((omega - omega_p) / (sigma * omega_p)) ** 2)
 
-        return alpha * super()._spectrum(freq, hs, tp) * gamma ** b
+        return alpha * super()._spectrum(omega, hs, tp) * gamma ** b
 
     def _sigma(self, omega_p):
         """
