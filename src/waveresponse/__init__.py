@@ -9,7 +9,7 @@ from ._core import (
     complex_to_polar,
     polar_to_complex,
 )
-from ._standardized import JONSWAP, ModifiedPiersonMoskowitz, BasePMSpectrum
+from ._standardized import JONSWAP, BasePMSpectrum, ModifiedPiersonMoskowitz
 from ._transform import (
     rigid_transform,
     rigid_transform_heave,

@@ -1,12 +1,11 @@
-from pathlib import Path
 import json
+from pathlib import Path
 
 import numpy as np
 import pytest
 from scipy import integrate
 
-from waveresponse import JONSWAP, ModifiedPiersonMoskowitz, BasePMSpectrum
-
+from waveresponse import JONSWAP, BasePMSpectrum, ModifiedPiersonMoskowitz
 
 TEST_PATH = Path(__file__).parent
 
@@ -172,7 +171,9 @@ class Test_JONSWAP:
         sigma_a = 0.07
         sigma_b = 0.09
         freq = np.arange(0.01, 1, 0.01)
-        spectrum = JONSWAP(freq, freq_hz=True, gamma=gamma, sigma_a=sigma_a, sigma_b=sigma_b)
+        spectrum = JONSWAP(
+            freq, freq_hz=True, gamma=gamma, sigma_a=sigma_a, sigma_b=sigma_b
+        )
         freq_out, spectrum_out = spectrum(hs, tp, freq_hz=True)
 
         w_p = 2.0 * np.pi / tp
@@ -188,7 +189,7 @@ class Test_JONSWAP:
         alpha = 1.0 - 0.287 * np.log(gamma)
         b = np.exp(-0.5 * ((w - w_p) / (sigma * w_p)) ** 2)
 
-        spectrum_expect = alpha * A / w**5 * np.exp(-B / w**4) * gamma ** b
+        spectrum_expect = alpha * A / w**5 * np.exp(-B / w**4) * gamma**b
         spectrum_expect *= 2.0 * np.pi
 
         np.testing.assert_array_almost_equal(freq_out, freq)
@@ -201,7 +202,9 @@ class Test_JONSWAP:
         sigma_a = 0.05
         sigma_b = 0.08
         freq = np.arange(0.01, 1, 0.01)
-        spectrum = JONSWAP(freq, freq_hz=True, gamma=gamma, sigma_a=sigma_a, sigma_b=sigma_b)
+        spectrum = JONSWAP(
+            freq, freq_hz=True, gamma=gamma, sigma_a=sigma_a, sigma_b=sigma_b
+        )
         freq_out, spectrum_out = spectrum(hs, tp, freq_hz=True)
 
         w_p = 2.0 * np.pi / tp
@@ -217,7 +220,7 @@ class Test_JONSWAP:
         alpha = 1.0 - 0.287 * np.log(gamma)
         b = np.exp(-0.5 * ((w - w_p) / (sigma * w_p)) ** 2)
 
-        spectrum_expect = alpha * A / w**5 * np.exp(-B / w**4) * gamma ** b
+        spectrum_expect = alpha * A / w**5 * np.exp(-B / w**4) * gamma**b
         spectrum_expect *= 2.0 * np.pi
 
         np.testing.assert_array_almost_equal(freq_out, freq)
@@ -230,7 +233,9 @@ class Test_JONSWAP:
         sigma_a = 0.07
         sigma_b = 0.09
         freq = np.arange(0.01, 1, 0.01)
-        spectrum = JONSWAP(freq, freq_hz=True, gamma=gamma, sigma_a=sigma_a, sigma_b=sigma_b)
+        spectrum = JONSWAP(
+            freq, freq_hz=True, gamma=gamma, sigma_a=sigma_a, sigma_b=sigma_b
+        )
         freq_out, spectrum_out = spectrum(hs, tp, freq_hz=False)
 
         w_p = 2.0 * np.pi / tp
@@ -246,7 +251,7 @@ class Test_JONSWAP:
         alpha = 1.0 - 0.287 * np.log(gamma)
         b = np.exp(-0.5 * ((w - w_p) / (sigma * w_p)) ** 2)
 
-        spectrum_expect = alpha * A / w**5 * np.exp(-B / w**4) * gamma ** b
+        spectrum_expect = alpha * A / w**5 * np.exp(-B / w**4) * gamma**b
 
         np.testing.assert_array_almost_equal(freq_out, 2.0 * np.pi * freq)
         np.testing.assert_array_almost_equal(spectrum_out, spectrum_expect)
