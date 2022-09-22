@@ -1,5 +1,5 @@
 import copy
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 
 import numpy as np
 from scipy.integrate import trapz
@@ -1324,7 +1324,7 @@ def calculate_response(
     return rao_squared * wave_body
 
 
-class BaseSpreading:
+class BaseSpreading(ABC):
     """
     Base class for spreading functions.
 
