@@ -9,7 +9,7 @@ from ._core import (
     complex_to_polar,
     polar_to_complex,
 )
-from ._standardized import JONSWAP, BasePMSpectrum, ModifiedPiersonMoskowitz
+from ._standardized import JONSWAP, BasePMSpectrum, ModifiedPiersonMoskowitz, OchiHubble
 from ._transform import (
     rigid_transform,
     rigid_transform_heave,
@@ -29,6 +29,7 @@ __all__ = [
     "Grid",
     "JONSWAP",
     "ModifiedPiersonMoskowitz",
+    "OchiHubble",
     "polar_to_complex",
     "RAO",
     "rigid_transform",

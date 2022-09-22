@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 import numpy as np
+from scipy.special import gamma as gammafun
 
 
 class BasePMSpectrum(ABC):
@@ -154,6 +155,10 @@ class JONSWAP(ModifiedPiersonMoskowitz):
     sigma_b : float
         Spectral width parameter.
 
+    Notes
+    -----
+    The special case ``gamma=1`` corresponds to the modified Pierson-Moskowitz spectrum.
+
     See Also
     --------
     ModifiedPiersonMoskowitz : Modified Pierson-Moskowitz (PM) wave spectrum.
@@ -186,3 +191,59 @@ class JONSWAP(ModifiedPiersonMoskowitz):
         sigma[arg] = self._sigma_a
         sigma[~arg] = self._sigma_b
         return sigma
+
+
+class OchiHubble(ModifiedPiersonMoskowitz):
+    """
+    Ochi-Hubble wave spectrum (derived from modified Pierson-Moskowitz), given as:
+
+    ``S(w) = A/w**5 exp(-B/w**4)``
+
+    where,
+
+    - ``A = ((4 * q + 1) / 4 * w_p**4)**q * Hs**2 / (4 * gamma(q) * w**(4 * (q - 1)))
+    - ``B = (4 * q + 1) / 4 * w_p**4``.
+
+    and ``q`` is a user-defined shape parameter. Note that ``gamma`` is the "Gamma function".
+
+    Parameters
+    ----------
+    freq : array-like
+        Sequence of frequencies to use when generating the spectrum.
+    freq_hz : bool
+        Whether the provided frequencies are in rad/s (default) or Hz.
+    q : float or callable
+        A scalar value or a callable that accepts hs and tp, and returns
+        a scalar value.
+
+    Notes
+    -----
+    The special case ``q=1`` corresponds to the modified Pierson-Moskowitz spectrum.
+    """
+
+    def __init__(self, freq, freq_hz=False, q=1.0):
+        if not callable(q):
+            self._q = lambda *args: q
+        else:
+            self._q = q
+        super().__init__(freq, freq_hz=freq_hz)
+
+    def _A(self, *args):
+        """
+        Spectrum parameter.
+        """
+        hs, tp = args
+        q = self._q(*args)
+        omega_p = 2.0 * np.pi / tp
+        a = ((4.0 * q + 1.0) / 4.0 * omega_p ** 4) ** q
+        A = (a * hs ** 2) / (4 * gammafun(q) * self._freq ** (4 * (q - 1.0)))
+        return A
+
+    def _B(self, *args):
+        """
+        Spectrum parameter.
+        """
+        _, tp = args
+        q = self._q(*args)
+        omega_p = 2.0 * np.pi / tp
+        return (4 * q + 1) / 4 * omega_p ** 4
