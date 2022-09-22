@@ -151,21 +151,11 @@ one wind spectrum component, you can construct a two-peaked directional wave spe
 
     S_{tot}(\omega, \theta) = S_{swell}(\omega, \theta) + S_{wind}(\omega, \theta)
 
-This can be done by adding together two :class:`~waveresponse.WaveSpectrum` objects:
+This can be done by adding together two different :class:`~waveresponse.WaveSpectrum` objects:
 
 .. code:: python
 
     wave_tot = swell + wind
-
-
-.. If the total wave spectrum
-
-.. You can also create a composite wave spectrum by adding together two or more wave
-.. spectrum components. E.g., if you have one swell and one wind wave component:
-
-.. .. code:: python
-
-..     wave_tot = swell + wind
 
 
 Cosine-2s based spreading
