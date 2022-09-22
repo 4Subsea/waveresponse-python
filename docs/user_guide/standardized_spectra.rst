@@ -101,13 +101,13 @@ the directional spectrum over the directional domain (i.e., [0, 360)  degrees,
 or [0, 2\ :math:`\pi`) radians),
 
 .. math::
-    S(\omega) = \int_0^{2\pi} S(\omega, \theta)
+    S(\omega) = \int_0^{2\pi} S(\omega, \theta) d\theta
 
 we get the following requirement for the spreading function for each frequency,
 :math:`\omega_i`:
 
 .. math::
-    \int_0^{2\pi} D(\omega_i, \theta) = 1
+    \int_0^{2\pi} D(\omega_i, \theta) d\theta = 1
 
 In general, the spreading function is a function of both frequency, :math:`\omega`,
 and direction, :math:`\theta`. However, it is common to use the same spreading

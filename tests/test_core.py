@@ -1,6 +1,7 @@
 from itertools import product
 
 from unittest.mock import patch
+
 import numpy as np
 import pytest
 from scipy.integrate import quad

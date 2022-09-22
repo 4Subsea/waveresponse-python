@@ -156,7 +156,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
 
     See Also
     --------
-    ModifiedPiersonMoskowitz : Pierson-Moskowitz (PM) wave spectrum.
+    ModifiedPiersonMoskowitz : Modified Pierson-Moskowitz (PM) wave spectrum.
     """
 
     def __init__(self, freq, freq_hz=False, gamma=1, sigma_a=0.07, sigma_b=0.09):
