@@ -1,7 +1,9 @@
+from abc import ABC, abstractmethod
+
 import numpy as np
 
 
-class BasePMSpectrum:
+class BasePMSpectrum(ABC):
     """
     Base class for handling 1-D Pierson-Moskowtiz (PM) type spectra of the form:
 
@@ -76,9 +78,11 @@ class BasePMSpectrum:
         B = self._B(hs, tp)
         return A / omega**5.0 * np.exp(-B / omega**4)
 
+    @abstractmethod
     def _A(self, hs, tp):
         raise NotImplementedError()
 
+    @abstractmethod
     def _B(self, hs, tp):
         raise NotImplementedError()
 
