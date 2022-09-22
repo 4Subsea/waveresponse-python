@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 from scipy import integrate
 
-from waveresponse import JONSWAP, BasePMSpectrum, ModifiedPiersonMoskowitz
+from waveresponse import JONSWAP, BasePMSpectrum, ModifiedPiersonMoskowitz, OchiHubble
 
 TEST_PATH = Path(__file__).parent
 
@@ -300,3 +300,27 @@ class Test_JONSWAP:
 
         np.testing.assert_array_almost_equal(freq_out, freq_expected)
         np.testing.assert_array_almost_equal(ps_out, ps_expected, decimal=2)
+
+
+class Test_OchiHubble:
+    def test__init___hz(self):
+        freq = np.arange(0.01, 1, 0.01)
+        spectrum = OchiHubble(freq, freq_hz=True, q=2.0)
+
+        assert isinstance(spectrum, BasePMSpectrum)
+        assert isinstance(spectrum, ModifiedPiersonMoskowitz)
+        assert spectrum._freq_hz is True
+        assert callable(spectrum._q)
+        assert spectrum._q(1, 2) == 2.0
+        np.testing.assert_array_almost_equal(spectrum._freq, 2.0 * np.pi * freq)
+
+    def test__init___rads(self):
+        freq = np.arange(0.01, 1, 0.01)
+        spectrum = OchiHubble(freq, freq_hz=False, q=2.0)
+
+        assert isinstance(spectrum, BasePMSpectrum)
+        assert isinstance(spectrum, ModifiedPiersonMoskowitz)
+        assert spectrum._freq_hz is False
+        assert callable(spectrum._q)
+        assert spectrum._q(1, 2) == 2.0
+        np.testing.assert_array_almost_equal(spectrum._freq, freq)
