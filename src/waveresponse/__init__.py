@@ -9,7 +9,7 @@ from ._core import (
     complex_to_polar,
     polar_to_complex,
 )
-from ._standardized import JONSWAP, ModifiedPiersonMoskowitz
+from ._standardized import JONSWAP, ModifiedPiersonMoskowitz, BasePMSpectrum
 from ._transform import (
     rigid_transform,
     rigid_transform_heave,
@@ -20,6 +20,7 @@ from ._transform import (
 __version__ = "0.0.1"
 
 __all__ = [
+    "BasePMSpectrum",
     "calculate_response",
     "complex_to_polar",
     "CosineFullSpreading",
