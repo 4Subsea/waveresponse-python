@@ -137,7 +137,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
     - ``alpha = 1 - 0.287 * ln(gamma)`` is a normalizing factor.
     - ``sigma`` is the spectral width parameter:
         - ``sigma = simga_a`` for ``w <= wp``
-            - ``sigma = sigma_b`` for ``w > wp``
+        - ``sigma = sigma_b`` for ``w > wp``
     - ``wp = 2pi/tp`` spectral peak frequency.
 
     Parameters
@@ -176,7 +176,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
 
     def _sigma(self, omega_p):
         """
-        Spectrum parameter.
+        Spectral width.
         """
         arg = self._freq <= omega_p
         sigma = np.empty_like(self._freq)
