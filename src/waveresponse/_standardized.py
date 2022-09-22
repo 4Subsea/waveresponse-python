@@ -235,8 +235,8 @@ class OchiHubble(ModifiedPiersonMoskowitz):
         hs, tp = args
         q = self._q(*args)
         omega_p = 2.0 * np.pi / tp
-        a = ((4.0 * q + 1.0) / 4.0 * omega_p ** 4) ** q
-        A = (a * hs ** 2) / (4 * gammafun(q) * self._freq ** (4 * (q - 1.0)))
+        a = ((4.0 * q + 1.0) / 4.0 * omega_p**4) ** q
+        A = (a * hs**2) / (4 * gammafun(q) * self._freq ** (4 * (q - 1.0)))
         return A
 
     def _B(self, *args):
@@ -246,4 +246,4 @@ class OchiHubble(ModifiedPiersonMoskowitz):
         _, tp = args
         q = self._q(*args)
         omega_p = 2.0 * np.pi / tp
-        return (4 * q + 1) / 4 * omega_p ** 4
+        return (4 * q + 1) / 4 * omega_p**4
