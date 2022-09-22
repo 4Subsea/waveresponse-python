@@ -38,7 +38,7 @@ for generating a 1-D (modified) Pierson-Moskowitz spectrum from a given Hs/Tp co
     import waveresponse as wr
 
 
-    freq = np.arange(0.01, 1, 0.1)
+    freq = np.arange(0.01, 1, 0.01)
     spectrum = wr.ModifiedPiersonMoskowitz(freq, freq_hz=True)
 
     hs = 3.5
@@ -78,7 +78,7 @@ JONSWAP spectrum from a given Hs/Tp combination:
     import waveresponse as wr
 
 
-    freq = np.arange(0.01, 1, 0.1)
+    freq = np.arange(0.01, 1, 0.01)
     spectrum = wr.JONSWAP(freq, freq_hz=True, gamma=2, sigma_a=0.07, sigma_b=0.09)
 
     hs = 3.5
@@ -122,11 +122,11 @@ object from a 1-D frequency spectrum and a spreading function:
     import waveresponse as wr
 
 
-    freq = np.linspace(0.0, 1.0, 50)
+    freq = np.arange(0.01, 1, 0.01)
     dirs = np.linspace(0.0, 360.0, endpoint=False)
-    dirp = 45.0
     hs = 3.5
     tp = 10.0
+    dirp = 45.0
 
     _, spectrum1d = wr.JONSWAP(freq, freq_hz=True)(hs, tp)
     spread_fun = wr.CosineFullSpreading(s=2, degrees=True)
