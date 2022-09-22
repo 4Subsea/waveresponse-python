@@ -1172,7 +1172,7 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(out._vals, grid._vals + grid._vals)
 
     def test__add__raises_type(self, grid, rao):
-        with pytest.raises(ValueError):
+        with pytest.raises(TypeError):
             grid + rao
 
     def test__abs__(self):
@@ -3015,7 +3015,7 @@ class Test__check_is_similar:
         grid_a = Grid(freq, dirs, vals_a, degrees=True)
         grid_b = Grid(freq, dirs, vals_b, degrees=True)
         grid_c = RAO(freq, dirs, vals_c, degrees=True)
-        with pytest.raises(ValueError):
+        with pytest.raises(TypeError):
             _check_is_similar(grid_a, grid_b, grid_c, exact_type=True)
 
     def test_raises_convention(self):
