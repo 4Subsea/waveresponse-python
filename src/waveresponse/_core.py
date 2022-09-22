@@ -567,6 +567,32 @@ class Grid:
 
         return new
 
+    def __add__(self, other):
+        """
+        Add values with another Grid object.
+
+        Both grids must have the same frequency/direction coordinates.
+
+        Parameters
+        ----------
+        other : obj
+            Grid object to be added with.
+
+        Returns
+        -------
+        obj :
+            A copy of the object where the values are added with another Grid.
+        """
+        if not isinstance(other, Grid):
+            raise ValueError("Other object is not of type 'waveresponse.Grid'.")
+
+        _check_is_similar(self, other, exact_type=True)
+
+        new = self.copy()
+        new._vals = new._vals + other._vals
+
+        return new
+
     def __abs__(self):
         """
         Return new object where values are converted to absolute values.

@@ -1165,6 +1165,16 @@ class Test_Grid:
         assert isinstance(out, Grid)
         np.testing.assert_array_almost_equal(out._vals, grid._vals * rao._vals)
 
+    def test__add__(self, grid):
+        out = grid + grid
+
+        assert isinstance(out, Grid)
+        np.testing.assert_array_almost_equal(out._vals, grid._vals + grid._vals)
+
+    def test__add__raises_type(self, grid, rao):
+        with pytest.raises(ValueError):
+            grid + rao
+
     def test__abs__(self):
         freq_in = np.array([1, 2, 3])
         dirs_in = np.array([0, 10, 20])
