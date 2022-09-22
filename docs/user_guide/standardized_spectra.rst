@@ -20,8 +20,7 @@ of the significant wave height, Hs, and the wave peak period, Tp.
 
 Modified Pierson-Moskowitz spectrum
 -----------------------------------
-The *modified Pierson-Moskowits* spectrum (also known as Bretschneider),
-:math:`S_{PM}(\omega)`, is given by:
+The *modified Pierson-Moskowits* spectrum (also known as Bretschneider or ISSC) is given by:
 
 .. math::
 
@@ -49,7 +48,7 @@ for generating a 1-D (modified) Pierson-Moskowitz spectrum from a given Hs/Tp co
 
 JONSWAP spectrum
 ----------------
-The *JONSWAP* spectrum, :math:`S_{J}(\omega)`, is given by:
+The *JONSWAP* spectrum is given by:
 
 .. math::
 
