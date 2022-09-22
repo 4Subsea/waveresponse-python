@@ -60,11 +60,8 @@ where,
 - :math:`S_{PM}(w)` is the Pierson-Moskowitz (PM) spectrum.
 - :math:`\gamma` is a peak enhancement factor.
 - :math:`\alpha_{\gamma} = 1 - 0.287 \cdot ln(\gamma)` is a normalizing factor.
-- :math:`\sigma` is the spectral width parameter:
-    - :math:`\sigma = \sigma_a`, for :math:`\omega <= \omega_p`
-    - :math:`\sigma = \sigma_b`, for :math:`\omega > \omega_p`
 - :math:`\omega_p = \frac{2\pi}{Tp}` is the angular spectral peak frequency.
-- :math:`\sigma` is the spectral width parameter:
+- :math:`\sigma` is the spectral width parameter, given by:
 
 .. math::
     \sigma =
