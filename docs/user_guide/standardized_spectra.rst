@@ -177,6 +177,11 @@ according to:
 
 .. math::
 
-    \kappa(\hat{\theta}) = \frac{2^{2s}}{\pi} \frac{\Gamma^2(s+1)}{\Gamma^2(2s+1)} cos^{2s} (\hat{\theta})
+    \kappa(\hat{\theta}) =
+    \begin{cases}
+        \frac{2^{2s}}{\pi} \frac{\Gamma^2(s+1)}{\Gamma^2(2s+1)} cos^{2s} (\hat{\theta}) & \quad \text{if } -\frac{\pi}{2} \leq \hat{\theta} \leq \frac{\pi}{2}\\
+        0 & \quad \text{otherwise}
+    \end{cases}
+
 
 where :math:`s` is a spreading coefficient, and :math:`\Gamma` is the Gamma function.
