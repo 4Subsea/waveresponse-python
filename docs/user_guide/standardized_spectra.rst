@@ -64,6 +64,14 @@ where,
     - :math:`\sigma = \sigma_a`, for :math:`\omega <= \omega_p`
     - :math:`\sigma = \sigma_b`, for :math:`\omega > \omega_p`
 - :math:`\omega_p = \frac{2\pi}{Tp}` is the angular spectral peak frequency.
+- :math:`\sigma` is the spectral width parameter:
+
+.. math::
+    \sigma =
+    \begin{cases}
+        \sigma_a & \quad \text{if } \omega \leq \omega_p\\
+        \sigma_b & \quad \text{if } \omega > \omega_p
+    \end{cases}
 
 The :class:`~waveresponse.JONSWAP` class provides functionality for generating a 1-D
 JONSWAP spectrum from a given Hs/Tp combination:
