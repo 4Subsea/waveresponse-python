@@ -104,11 +104,13 @@ class ModifiedPiersonMoskowitz(BasePMSpectrum):
     JONSWAP : JONSWAP wave spectrum.
     """
 
-    def _A(self, hs, tp):
+    def _A(self, *args):
+        hs, tp = args
         omega_p = 2.0 * np.pi / tp
         return (5.0 / 16.0) * hs**2.0 * omega_p**4.0
 
-    def _B(self, hs, tp):
+    def _B(self, *args):
+        _, tp = args
         omega_p = 2.0 * np.pi / tp
         return (5.0 / 4.0) * omega_p**4
 
