@@ -10,7 +10,7 @@ Pierson-Moskowitz (PM) type spectra has the following form:
 
 .. math::
 
-    S_{PM}(\omega) = \frac{A}{w^5} exp\left(-\frac{B}{\omega^4}\right)
+    S_{PM}(\omega) = \frac{A}{\omega^5} exp\left(-\frac{B}{\omega^4}\right)
 
 Most standardized wave spectra today are of the PM type (or extends it). The
 *modified Pierson-Moskowitz* spectrum and the *JONSWAP* spectrum are two examples.
