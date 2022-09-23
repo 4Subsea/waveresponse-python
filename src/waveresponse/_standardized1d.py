@@ -308,12 +308,14 @@ class OchiHubble(BaseWave1d):
     """
     Ochi-Hubble wave spectrum (derived from modified Pierson-Moskowitz), given as:
 
-    ``S(w) = A/w**5 exp(-B/w**4)``
+    ``S(w) = C / w**(4 * q + 1) * exp(-d / w ** 4)``
 
     where,
 
-    - ``A = ((4 * q + 1) / 4 * w_p**4)**q * Hs**2 / (4 * gamma(q) * w**(4 * (q - 1)))``
-    - ``B = (4 * q + 1) / 4 * w_p**4``.
+    - ``C = (1.0 / 4.0) * (c ** q * hs ** 2) / gamma(q)``
+    - ``c = (4.0 * q + 1.0) * w_p ** 4 / 4.0``
+    - ``d = (4 * q + 1) * w_p ** 4 / 4.0``
+    - ``w_p = 2 * pi / tp``
 
     and ``q`` is a user-defined shape parameter. Note that ``gamma`` is the "Gamma function".
 
@@ -373,8 +375,19 @@ class OchiHubble(BaseWave1d):
         return super().__call__(hs, tp, q=q, freq_hz=freq_hz)
 
     def _spectrum(self, omega, hs, tp, q):
+        args = (hs, tp, q)
+        C = self._C(*args)
+        d = self._d(*args)
+
+        return C / omega**(4 * q + 1) * np.exp(-d / omega ** 4)
+
+    def _C(self, *args):
+        hs, tp, q = args
         omega_p = 2.0 * np.pi / tp
-        a = (4.0 * q + 1.0) * omega_p ** 4 / 4.0
-        A = (1.0 / 4.0) * (a ** q * hs ** 2) / gammafun(q)
-        b = (4 * q + 1) * omega_p ** 4 / 4.0
-        return A / omega**(4 * q + 1) * np.exp(-b / omega ** 4)
+        c = (4.0 * q + 1.0) * omega_p ** 4 / 4.0
+        return (1.0 / 4.0) * (c ** q * hs ** 2) / gammafun(q)
+
+    def _d(self, *args):
+        _, tp, q = args
+        omega_p = 2.0 * np.pi / tp
+        return (4 * q + 1) * omega_p ** 4 / 4.0
