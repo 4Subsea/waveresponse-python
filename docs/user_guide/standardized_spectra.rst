@@ -79,11 +79,11 @@ JONSWAP spectrum from a given Hs/Tp combination:
 
 
     freq = np.arange(0.01, 1, 0.01)
-    spectrum = wr.JONSWAP(freq, freq_hz=True, gamma=2, sigma_a=0.07, sigma_b=0.09)
+    spectrum = wr.JONSWAP(freq, freq_hz=True)
 
     hs = 3.5
     tp = 10.0
-    freq, vals = spectrum(hs, tp)
+    freq, vals = spectrum(hs, tp, gamma=2, sigma_a=0.07, sigma_b=0.09)
 
 .. note::
 
@@ -116,11 +116,11 @@ Ochi-Hubble spectrum from a given Hs/Tp combination:
 
 
     freq = np.arange(0.01, 1, 0.01)
-    spectrum = wr.OchiHubble(freq, freq_hz=True, q=2)
+    spectrum = wr.OchiHubble(freq, freq_hz=True)
 
     hs = 3.5
     tp = 10.0
-    freq, vals = spectrum(hs, tp)
+    freq, vals = spectrum(hs, tp, q=2)
 
 .. note::
 
