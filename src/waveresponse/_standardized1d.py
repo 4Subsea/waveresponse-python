@@ -4,7 +4,7 @@ import numpy as np
 from scipy.special import gamma as gammafun
 
 
-class BaseWave1d(ABC):
+class BaseSpectrum1d(ABC):
     """
     Base class for handling and generating 1-D wave spectra.
     """
@@ -67,7 +67,7 @@ class BaseWave1d(ABC):
         raise NotImplementedError()
 
 
-class BasePMSpectrum(BaseWave1d):
+class BasePMSpectrum(BaseSpectrum1d):
     """
     Base class for handling 1-D Pierson-Moskowtiz (PM) type spectra of the form:
 
@@ -307,7 +307,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
         return sigma
 
 
-class OchiHubble(BaseWave1d):
+class OchiHubble(BaseSpectrum1d):
     """
     Ochi-Hubble wave spectrum, given as:
 

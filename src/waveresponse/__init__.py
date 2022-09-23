@@ -12,7 +12,7 @@ from ._core import (
 from ._standardized1d import (
     JONSWAP,
     BasePMSpectrum,
-    BaseWave1d,
+    BaseSpectrum1d,
     ModifiedPiersonMoskowitz,
     OchiHubble,
 )
@@ -27,7 +27,7 @@ __version__ = "0.0.1"
 
 __all__ = [
     "BasePMSpectrum",
-    "BaseWave1d",
+    "BaseSpectrum1d",
     "calculate_response",
     "complex_to_polar",
     "CosineFullSpreading",
