@@ -88,7 +88,7 @@ JONSWAP spectrum from a given Hs/Tp combination:
 
 Ochi-Hubble spectrum
 --------------------
-The *Ochi-Hubble* spectrum is given by:
+The three-parameter *Ochi-Hubble* spectrum is given by:
 
 .. math::
 
