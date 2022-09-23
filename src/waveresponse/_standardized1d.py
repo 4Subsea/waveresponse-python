@@ -23,13 +23,13 @@ class BaseWave1d(ABC):
         Parameters
         ----------
         *args
-            Spectrum input arguments.
+            Spectrum parameters.
         freq_hz : bool, optional
             Whether to return the frequencies and spectrum in terms of rad/s (`True`)
             or Hz (`False`). If `None` (default), the original units of `freq` is
             preserved.
         **kwargs
-            Spectrum input keyword arguments.
+            Spectrum parameters.
 
         Return
         ------
@@ -41,7 +41,7 @@ class BaseWave1d(ABC):
 
         Notes
         -----
-        The scaling between wave spectrum in terms of Hz and rad/s is defind
+        The scaling between wave spectrum in terms of Hz and rad/s is defined
         as:
 
         ``S(f) = 2*pi*S(w)``
@@ -79,6 +79,12 @@ class BasePMSpectrum(BaseWave1d):
         Sequence of frequencies to use when generating the spectrum.
     freq_hz : bool
         Whether the provided frequencies are in rad/s (default) or Hz.
+
+    See Also
+    --------
+    ModifiedPiersonMoskowitz : Modified Pierson-Moskowitz wave spectrum.
+    JONSWAP : JONSWAP wave spectrum.
+    OchiHubble : Ochi-Hubble (three-parameter) wave spectrum.
     """
 
     def __call__(self, A, B, freq_hz=None):
@@ -106,7 +112,7 @@ class BasePMSpectrum(BaseWave1d):
 
         Notes
         -----
-        The scaling between wave spectrum in terms of Hz and rad/s is defind
+        The scaling between wave spectrum in terms of Hz and rad/s is defined
         as:
 
         ``S(f) = 2*pi*S(w)``
@@ -140,6 +146,7 @@ class ModifiedPiersonMoskowitz(BasePMSpectrum):
     See Also
     --------
     JONSWAP : JONSWAP wave spectrum.
+    OchiHubble : Ochi-Hubble (three-parameter) wave spectrum.
     """
 
     def __call__(self, hs, tp, freq_hz=None):
@@ -167,7 +174,7 @@ class ModifiedPiersonMoskowitz(BasePMSpectrum):
 
         Notes
         -----
-        The scaling between wave spectrum in terms of Hz and rad/s is defind
+        The scaling between wave spectrum in terms of Hz and rad/s is defined
         as:
 
         ``S(f) = 2*pi*S(w)``
@@ -225,7 +232,8 @@ class JONSWAP(ModifiedPiersonMoskowitz):
 
     See Also
     --------
-    ModifiedPiersonMoskowitz : Modified Pierson-Moskowitz (PM) wave spectrum.
+    ModifiedPiersonMoskowitz : Modified Pierson-Moskowitz wave spectrum.
+    OchiHubble : Ochi-Hubble (three-parameter) wave spectrum.
     """
 
     def __call__(self, hs, tp, gamma=1, sigma_a=0.07, sigma_b=0.09, freq_hz=None):
@@ -259,7 +267,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
 
         Notes
         -----
-        The scaling between wave spectrum in terms of Hz and rad/s is defind
+        The scaling between wave spectrum in terms of Hz and rad/s is defined
         as:
 
         ``S(f) = 2*pi*S(w)``
@@ -310,6 +318,11 @@ class OchiHubble(BaseWave1d):
     Notes
     -----
     The special case ``q=1`` corresponds to the modified Pierson-Moskowitz spectrum.
+
+    See Also
+    --------
+    ModifiedPiersonMoskowitz : Modified Pierson-Moskowitz wave spectrum.
+    JONSWAP : JONSWAP wave spectrum.
     """
 
     def __call__(self, hs, tp, q=2, freq_hz=None):
@@ -339,7 +352,7 @@ class OchiHubble(BaseWave1d):
 
         Notes
         -----
-        The scaling between wave spectrum in terms of Hz and rad/s is defind
+        The scaling between wave spectrum in terms of Hz and rad/s is defined
         as:
 
         ``S(f) = 2*pi*S(w)``
