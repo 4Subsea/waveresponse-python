@@ -61,40 +61,9 @@ spectrum (1-D array), a directional spreading function and a peak direction:
         waves_coming_from=False,
     )
 
-Two standardized (cosine based) spreading functions, :class:`~waveresponse.CosineFullSpreading`
-and :class:`~waveresponse.CosineHalfSpreading`, are provided by ``waveresponse``.
-
-.. note::
-    Often you do not have access to a full directional wave spectrum. Then, it is
-    common to instead construct a directional spectrum from a standardized frequency
-    spectrum, :math:`S(\omega)`, and a directional spreading function,
-    :math:`D(\omega, \theta)`:
-
-    .. math::
-        S(\omega, \theta) = S(\omega) D(\omega, \theta)
-
-    Since the frequency spectrum is obtained by integrating
-    the directional spectrum over the directional domain (i.e., [0, 360)  degrees,
-    or [0, 2\ :math:`\pi`) radians),
-
-    .. math::
-        S(\omega) = \int_0^{2\pi} S(\omega, \theta)
-
-    we get the following requirement for the spreading function for each frequency,
-    :math:`\omega_i`:
-
-    .. math::
-        \int_0^{2\pi} D(\omega_i, \theta) = 1
-
-    In general, the spreading function is a function of both frequency, :math:`\omega`,
-    and direction, :math:`\theta`. However, it is common to use the same spreading
-    for all frequencies. Standardized spreading functions (denoted :math:`\kappa` here), are usually
-    defined such that they have their maximum value at :math:`\theta = 0`. From these
-    standardized spreading functions, we can obtain a spreading function with an
-    arbitrary peak direction, :math:`\theta_p`, by:
-
-    .. math::
-        D(\omega, \theta) = \kappa(\theta - \theta_p)
+.. tip::
+    Two standardized (cosine-based) spreading functions, :class:`~waveresponse.CosineFullSpreading`
+    and :class:`~waveresponse.CosineHalfSpreading`, are provided by ``waveresponse``.
 
 The :class:`~waveresponse.WaveSpectrum` extends the
 :class:`~waveresponse.DirectionalSpectrum` class with the following:
