@@ -71,7 +71,7 @@ class BasePMSpectrum(BaseWave1d):
     """
     Base class for handling 1-D Pierson-Moskowtiz (PM) type spectra of the form:
 
-    ``S(w) = A/w**5 exp(-B/w**4)``
+    ``S(w) = A / w ** 5 exp(-B / w ** 4)``
 
     Parameters
     ----------
@@ -130,11 +130,14 @@ class ModifiedPiersonMoskowitz(BasePMSpectrum):
     """
     Modified Pierson-Moskowitz (i.e., Bretschneider) spectrum, given by:
 
-    ``S(w) = A/w**5 exp(-B/w**4)``
+    ``S(w) = A / w ** 5 exp(-B / w ** 4)``
 
-    where ``A = 5/16 * Hs**2 * w_p**4`` and ``B = 5/4 * w_p**4``. ``Hs`` is the
-    significant wave height, and ``w_p = 2pi / Tp`` is the angular spectral peak
-    frequency.
+    where,
+
+    - ``A = 5 / 16 * Hs ** 2 * w_p ** 4``
+    - ``B = 5 / 4 * w_p ** 4``.
+    - ``Hs`` is the significant wave height.
+    - ``w_p = 2pi / Tp`` is the angular spectral peak frequency.
 
     Parameters
     ----------
@@ -207,7 +210,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
 
     where,
 
-    ``b = exp(-(w - w_p)**2 / (2 * sigma**2 * wp**2))``
+    ``b = exp(-(w - w_p) ** 2 / (2 * sigma ** 2 * wp ** 2))``
 
     and,
 
@@ -217,7 +220,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
     - ``sigma`` is the spectral width parameter:
         - ``sigma = simga_a`` for ``w <= wp``
         - ``sigma = sigma_b`` for ``w > wp``
-    - ``wp = 2pi/tp`` spectral peak frequency.
+    - ``wp = 2pi / Tp`` is the angular spectral peak frequency.
 
     Parameters
     ----------
@@ -306,16 +309,17 @@ class JONSWAP(ModifiedPiersonMoskowitz):
 
 class OchiHubble(BaseWave1d):
     """
-    Ochi-Hubble wave spectrum (derived from modified Pierson-Moskowitz), given as:
+    Ochi-Hubble wave spectrum, given as:
 
-    ``S(w) = C / w**(4 * q + 1) * exp(-d / w ** 4)``
+    ``S(w) = C / w ** (4 * q + 1) * exp(-d / w ** 4)``
 
     where,
 
-    - ``C = (1.0 / 4.0) * (c ** q * hs ** 2) / gamma(q)``
+    - ``C = (1.0 / 4.0) * (c ** q * Hs ** 2) / gamma(q)``
     - ``c = (4.0 * q + 1.0) * w_p ** 4 / 4.0``
     - ``d = (4 * q + 1) * w_p ** 4 / 4.0``
-    - ``w_p = 2 * pi / tp``
+    - ``Hs`` is the significant wave height.
+    - ``w_p = 2pi / Tp`` is the angular spectral peak frequency.
 
     and ``q`` is a user-defined shape parameter. Note that ``gamma`` is the "Gamma function".
 
