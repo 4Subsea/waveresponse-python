@@ -85,6 +85,11 @@ JONSWAP spectrum from a given Hs/Tp combination:
     tp = 10.0
     freq, vals = spectrum(hs, tp)
 
+.. note::
+
+    For the special case where :math:`\gamma = 1`, JONSWAP corresponds to the modified Pierson-Moskowitz
+    spectrum.
+
 
 Ochi-Hubble spectrum
 --------------------
@@ -116,6 +121,11 @@ Ochi-Hubble spectrum from a given Hs/Tp combination:
     hs = 3.5
     tp = 10.0
     freq, vals = spectrum(hs, tp)
+
+.. note::
+
+    For the special case where :math:`q = 1`, Ochi-Hubble corresponds to the modified Pierson-Moskowitz
+    spectrum.
 
 
 Ochi-Hubble spectrum2
