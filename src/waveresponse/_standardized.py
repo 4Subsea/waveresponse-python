@@ -4,7 +4,7 @@ import numpy as np
 from scipy.special import gamma as gammafun
 
 
-class BasePMSpectrum(ABC):
+class BasePMSpectrum_(ABC):
     """
     Base class for handling 1-D Pierson-Moskowtiz (PM) type spectra of the form:
 
@@ -88,7 +88,7 @@ class BasePMSpectrum(ABC):
         raise NotImplementedError()
 
 
-class ModifiedPiersonMoskowitz(BasePMSpectrum):
+class ModifiedPiersonMoskowitz_(BasePMSpectrum_):
     """
     Modified Pierson-Moskowitz (i.e., Bretschneider) spectrum, given by:
 
@@ -121,7 +121,7 @@ class ModifiedPiersonMoskowitz(BasePMSpectrum):
         return (5.0 / 4.0) * omega_p**4
 
 
-class JONSWAP(ModifiedPiersonMoskowitz):
+class JONSWAP_(ModifiedPiersonMoskowitz_):
     """
     JONSWAP spectrum, given as:
 
@@ -193,7 +193,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
         return sigma
 
 
-class OchiHubble(ModifiedPiersonMoskowitz):
+class OchiHubble_(ModifiedPiersonMoskowitz_):
     """
     Ochi-Hubble wave spectrum (derived from modified Pierson-Moskowitz), given as:
 

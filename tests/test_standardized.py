@@ -6,7 +6,11 @@ import pandas as pd
 import pytest
 from scipy import integrate
 
-from waveresponse import JONSWAP, BasePMSpectrum, ModifiedPiersonMoskowitz, OchiHubble
+from waveresponse import JONSWAP_ as JONSWAP
+from waveresponse import BasePMSpectrum_ as BasePMSpectrum
+from waveresponse import ModifiedPiersonMoskowitz_ as ModifiedPiersonMoskowitz
+from waveresponse import OchiHubble_ as OchiHubble
+
 
 TEST_PATH = Path(__file__).parent
 
