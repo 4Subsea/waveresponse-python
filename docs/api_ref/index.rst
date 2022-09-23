@@ -19,3 +19,4 @@ functions and methods.
    cosine_half_spreading
    mod_pierson_moskowitz
    jonswap
+   ochi_hubble

@@ -88,12 +88,44 @@ JONSWAP spectrum from a given Hs/Tp combination:
 
 Ochi-Hubble spectrum
 --------------------
+The *Ochi-Hubble* spectrum is given by:
+
+.. math::
+
+    S_{OH}(\omega) = \frac{1}{4} \frac{\left( \frac{4q+1}{4}\omega_{p} \right)^q}{\Gamma(q)}
+    \frac{H_s^2}{\omega^{4q+1}}exp\left( -\frac{4q+1}{4} \left( \frac{\omega_p}{\omega} \right)^4 \right)
+
+where,
+
+- :math:`H_s` is the significant wave height.
+- :math:`\omega_p = \frac{2\pi}{T_p}` is the angular spectral peak frequency.
+- :math:`q` is a spectral shape parameter.
+
+The :class:`~waveresponse.OchiHubble` class provides functionality for generating a 1-D
+Ochi-Hubble spectrum from a given Hs/Tp combination:
+
+.. code:: python
+
+    import numpy as np
+    import waveresponse as wr
+
+
+    freq = np.arange(0.01, 1, 0.01)
+    spectrum = wr.OchiHubble(freq, freq_hz=True, q=2)
+
+    hs = 3.5
+    tp = 10.0
+    freq, vals = spectrum(hs, tp)
+
+
+Ochi-Hubble spectrum2
+---------------------
 The *Ochi-Hubble* spectrum is a 6-parameter spectrum given by:
 
 .. math::
 
     S_{OH}(\omega) = \frac{1}{4} \sum_j \frac{\left( \frac{4q_j+1}{4}\omega_{pj} \right)^{q_j}}{\Gamma(q_j)}
-    \frac{H_s^2}{\omega^{4q_j+1}}exp\left( -\frac{4q_j+1}{4} \left( \frac{\omega_{pj}}{\omega} \right)^4 \right)
+    \frac{H_{sj}^2}{\omega^{4q_j+1}}exp\left( -\frac{4q_j+1}{4} \left( \frac{\omega_{pj}}{\omega} \right)^4 \right)
 
 where the index, :math:`j = 1, 2`, represents a lower and higher frequency component
 respectively. The Ochi-Hubble formulation allows you to set up a double peaked spectrum,

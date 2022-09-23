@@ -201,7 +201,7 @@ class OchiHubble(ModifiedPiersonMoskowitz):
 
     where,
 
-    - ``A = ((4 * q + 1) / 4 * w_p**4)**q * Hs**2 / (4 * gamma(q) * w**(4 * (q - 1)))
+    - ``A = ((4 * q + 1) / 4 * w_p**4)**q * Hs**2 / (4 * gamma(q) * w**(4 * (q - 1)))``
     - ``B = (4 * q + 1) / 4 * w_p**4``.
 
     and ``q`` is a user-defined shape parameter. Note that ``gamma`` is the "Gamma function".
