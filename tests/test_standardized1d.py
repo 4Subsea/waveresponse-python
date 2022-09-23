@@ -36,8 +36,8 @@ class Test_BasePMSpectrum:
         hs = 3.5
         tp = 10.0
         w_p = 2.0 * np.pi / tp
-        A = 5 / 16 * hs ** 2 * w_p ** 4
-        B = 5 / 4 * w_p ** 4
+        A = 5 / 16 * hs**2 * w_p**4
+        B = 5 / 4 * w_p**4
         spectrum_out = spectrum._spectrum(omega, A, B)
 
         spectrum_expect = A / omega**5.0 * np.exp(-B / omega**4)
@@ -52,8 +52,8 @@ class Test_BasePMSpectrum:
         hs = 3.5
         tp = 10.0
         w_p = 2.0 * np.pi / tp
-        A = 5 / 16 * hs ** 2 * w_p ** 4
-        B = 5 / 4 * w_p ** 4
+        A = 5 / 16 * hs**2 * w_p**4
+        B = 5 / 4 * w_p**4
         freq_out, spectrum_out = spectrum(A, B, freq_hz=True)
 
         freq_expect = freq / (2.0 * np.pi)
@@ -71,8 +71,8 @@ class Test_BasePMSpectrum:
         hs = 3.5
         tp = 10.0
         w_p = 2.0 * np.pi / tp
-        A = 5 / 16 * hs ** 2 * w_p ** 4
-        B = 5 / 4 * w_p ** 4
+        A = 5 / 16 * hs**2 * w_p**4
+        B = 5 / 4 * w_p**4
         freq_out, spectrum_out = spectrum(A, B, freq_hz=False)
 
         freq_expect = freq
@@ -89,8 +89,8 @@ class Test_BasePMSpectrum:
         hs = 3.5
         tp = 10.0
         w_p = 2.0 * np.pi / tp
-        A = 5 / 16 * hs ** 2 * w_p ** 4
-        B = 5 / 4 * w_p ** 4
+        A = 5 / 16 * hs**2 * w_p**4
+        B = 5 / 4 * w_p**4
         freq_out, spectrum_out = spectrum(A, B, freq_hz=None)
 
         freq_expect = freq

@@ -17,8 +17,8 @@ from ._standardized import (
 )
 from ._standardized1d import (
     JONSWAP,
-    BaseWave1d,
     BasePMSpectrum,
+    BaseWave1d,
     ModifiedPiersonMoskowitz,
     OchiHubble,
 )
