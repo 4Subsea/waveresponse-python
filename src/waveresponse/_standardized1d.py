@@ -275,14 +275,23 @@ class JONSWAP(ModifiedPiersonMoskowitz):
         where ``S(f)`` and ``S(w)`` are the same spectrum but expressed
         in terms of Hz and rad/s, respectively.
         """
-        alpha = 1.0 - 0.287 * np.log(gamma)
-        omega_p = 2.0 * np.pi / tp
-        sigma = self._sigma(omega_p, sigma_a, sigma_b)
-        b = np.exp(-0.5 * ((self._freq - omega_p) / (sigma * omega_p)) ** 2)
+        args = (hs, tp, gamma, sigma_a, sigma_b)
+        alpha = self._alpha(*args)
+        b = self._b(*args)
 
         freq, spectrum_pm = super().__call__(hs, tp, freq_hz=freq_hz)
 
         return freq, alpha * spectrum_pm * gamma ** b
+
+    def _alpha(self, *args):
+        gamma = args[2]
+        return 1.0 - 0.287 * np.log(gamma)
+
+    def _b(self, *args):
+        _, tp, _, sigma_a, sigma_b = args
+        omega_p = 2.0 * np.pi / tp
+        sigma = self._sigma(omega_p, sigma_a, sigma_b)
+        return np.exp(-0.5 * ((self._freq - omega_p) / (sigma * omega_p)) ** 2)
 
     def _sigma(self, omega_p, sigma_a, sigma_b):
         """
