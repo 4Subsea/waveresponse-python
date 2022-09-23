@@ -63,7 +63,7 @@ class BaseWave1d(ABC):
         return freq / scale, spectrum * scale
 
     @abstractmethod
-    def _spectrum(omega, *args, **kwargs):
+    def _spectrum(self, omega, *args, **kwargs):
         raise NotImplementedError()
 
 
