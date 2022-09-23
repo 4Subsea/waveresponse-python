@@ -189,3 +189,21 @@ class Test_ModifiedPiersonMoskowitz:
         var_hz = integrate.trapz(ps_hz, freq_hz)
 
         assert var_rad == pytest.approx(var_hz)
+
+
+class Test_JONSWAP:
+    def test__init___hz(self):
+        freq = np.arange(0.01, 1, 0.01)
+        spectrum = wr.JONSWAP(freq, freq_hz=True)
+
+        assert isinstance(spectrum, wr.BasePMSpectrum)
+        assert isinstance(spectrum, wr.ModifiedPiersonMoskowitz)
+        np.testing.assert_array_almost_equal(spectrum._freq, 2.0 * np.pi * freq)
+
+    def test__init___rads(self):
+        freq = np.arange(0.01, 1, 0.01)
+        spectrum = wr.JONSWAP(freq, freq_hz=False)
+
+        assert isinstance(spectrum, wr.BasePMSpectrum)
+        assert isinstance(spectrum, wr.ModifiedPiersonMoskowitz)
+        np.testing.assert_array_almost_equal(spectrum._freq, freq)
