@@ -86,6 +86,19 @@ JONSWAP spectrum from a given Hs/Tp combination:
     freq, vals = spectrum(hs, tp)
 
 
+Ochi-Hubble spectrum
+--------------------
+The *Och-Hubble* spectrum is given by:
+
+.. math::
+
+    S_{OH}(\omega) = \frac{1}{4} \sum_j \frac{\left( \frac{4q_j+1}{4}\omega_{pj} \right)^{q_j}}{\Gamma(q_j)}
+    \frac{H_s^2}{\omega^{4q_j+1}}exp\left( -\frac{4q_j+1}{4} \left( \frac{\omega_{pj}}{\omega} \right)^4 \right)
+
+where the index, :math:`j = 1, 2`, represents the lower and higher frequency components
+respectively.
+
+
 Directional spectrum
 ####################
 The directional spectrum is usually standardized in a similar way as the 1-D frequency
