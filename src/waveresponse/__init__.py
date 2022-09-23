@@ -9,12 +9,6 @@ from ._core import (
     complex_to_polar,
     polar_to_complex,
 )
-from ._standardized import (
-    JONSWAP_,
-    BasePMSpectrum_,
-    ModifiedPiersonMoskowitz_,
-    OchiHubble_,
-)
 from ._standardized1d import (
     JONSWAP,
     BasePMSpectrum,
