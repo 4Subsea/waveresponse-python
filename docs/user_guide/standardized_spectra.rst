@@ -6,20 +6,23 @@ Idealized 1-D spectra
 Often you do not have access to the true wave spectrum for the area you are interested in.
 Then, it is common to instead use a standardized wave spectrum (which there exists many of).
 
+Pierson-Moskowitz type spectra
+------------------------------
+
 Pierson-Moskowitz (PM) type spectra has the following form:
 
 .. math::
 
     S_{PM}(\omega) = \frac{A}{\omega^5} exp\left(-\frac{B}{\omega^4}\right)
 
-Most standardized wave spectra today are of the PM type (or extends it). The
+Many of the most common standardized wave spectra today are of the PM type (or extends it). The
 *modified Pierson-Moskowitz* spectrum and the *JONSWAP* spectrum are two examples.
 It is common to express the spectrum parameters, :math:`A` and :math:`B`, in terms
 of the significant wave height, Hs, and the wave peak period, Tp.
 
 
 Modified Pierson-Moskowitz spectrum
------------------------------------
+...................................
 The *modified Pierson-Moskowits* spectrum (also known as Bretschneider or ISSC) is given by:
 
 .. math::
@@ -91,9 +94,12 @@ JONSWAP spectrum from a given Hs/Tp combination:
     spectrum.
 
 
-Ochi-Hubble spectrum
---------------------
-The three-parameter *Ochi-Hubble* spectrum is given by:
+Ochi-Hubble spectra
+-------------------
+
+Three-parameter Ochi-Hubble
+...........................
+The 3-parameter *Ochi-Hubble* spectrum is given by:
 
 .. math::
 
@@ -128,9 +134,9 @@ Ochi-Hubble spectrum from a given Hs/Tp combination:
     spectrum.
 
 
-Ochi-Hubble spectrum2
----------------------
-The *Ochi-Hubble* spectrum is a 6-parameter spectrum given by:
+Six-parameter Ochi-Hubble
+.........................
+The 6-parameter *Ochi-Hubble* spectrum is given by:
 
 .. math::
 
@@ -138,7 +144,7 @@ The *Ochi-Hubble* spectrum is a 6-parameter spectrum given by:
     \frac{H_{sj}^2}{\omega^{4q_j+1}}exp\left( -\frac{4q_j+1}{4} \left( \frac{\omega_{pj}}{\omega} \right)^4 \right)
 
 where the index, :math:`j = 1, 2`, represents a lower and higher frequency component
-respectively. The Ochi-Hubble formulation allows you to set up a double peaked spectrum,
+respectively. This 6-parameter formulation allows you to set up a double peaked spectrum,
 representing sea states that include both a remotely generated swell component (low frequency)
 and a local wind-generated component (high frequency). The Ochi-Hubble spectrum
 takes six parameters (three for each wave component):
@@ -161,15 +167,17 @@ together to form a two-peaked spectrum.
 
 
     freq = np.arange(0.01, 1, 0.01)
-    spectrum = wr.OchiHubble(freq, freq_hz=True, q=2)
+    spectrum = wr.OchiHubble(freq, freq_hz=True)
 
     hs1 = 3.5
     tp1 = 17.0
+    q1 = 2.0
     hs2 = 1.5
     tp2 = 5.0
+    q2 = 2.0
 
-    freq, vals1 = spectrum(hs1, tp1)
-    freq, vals2 = spectrum(hs2, tp2)
+    freq, vals1 = spectrum(hs1, tp1, q=q1)
+    freq, vals2 = spectrum(hs2, tp2, q=q2)
 
     vals_tot = vals1 + vals2
 
