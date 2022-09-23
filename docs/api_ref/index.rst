@@ -15,3 +15,5 @@ functions and methods.
    rigid_transform_surge
    rigid_transform_sway
    rigid_transform_heave
+   cosine_full_spreading
+   cosine_half_spreading

@@ -1,8 +1,10 @@
 import copy
+from abc import ABC, abstractmethod
 
 import numpy as np
 from scipy.integrate import trapz
 from scipy.interpolate import interp2d
+from scipy.special import gamma
 
 
 def complex_to_polar(complex_vals, phase_degrees=False):
@@ -1320,3 +1322,147 @@ def calculate_response(
     wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
 
     return rao_squared * wave_body
+
+
+class BaseSpreading(ABC):
+    """
+    Base class for spreading functions.
+
+    Parameters
+    ----------
+    freq_hz : bool
+        If frequencies passed to the spreading function will be given in 'Hz'.
+        If ``False``, 'rad/s' is assumed.
+    degrees : bool
+        If directions passed to the spreading function will be given in 'degrees'.
+        If ``False``, 'radians' is assumed.
+    """
+
+    def __init__(self, freq_hz=False, degrees=False):
+        self._freq_hz = freq_hz
+        self._degrees = degrees
+
+    def __call__(self, frequency, direction):
+        """
+        Get spreading value for given frequency/direction coordinate.
+
+        Parameters
+        ----------
+        frequency : float
+            Frequency coordinate. Units should be according to the `freq_hz` flag
+            given during initialization.
+        direction : float
+            Direction coordinate. Units should be according to the `degrees` flag
+            given during initialization.
+        """
+        if self._freq_hz:
+            frequency = 2.0 * np.pi * frequency
+
+        if self._degrees:
+            direction = (np.pi / 180.0) * direction
+            scale = 1.0 / 360.0
+        else:
+            scale = 1.0 / (2.0 * np.pi)
+
+        return scale * self._spread_fun(frequency, direction % (2.0 * np.pi))
+
+    @abstractmethod
+    def _spread_fun(self, omega, theta):
+        """
+        Get spreading value for given frequency/direction coordinate.
+
+        Parameters
+        ----------
+        omega : float
+            Frequency coordinate in 'rad/s'.
+        direction : float
+            Direction coordinate in 'radians'.
+        """
+        raise NotImplementedError()
+
+
+class CosineHalfSpreading(BaseSpreading):
+    """
+    Cosine-2s type spreading (half directional range).
+
+    Defined as:
+
+        ``D(theta) = scale * C(s) * cos(theta) ** (2 * s)`` , for -pi/2 <= theta <= pi/2
+
+        ``D(theta) = 0`` , otherwise
+
+    where,
+
+        ``C(s) = 2 ** (2 * s + 1) * gamma(s + 1) ** 2 / gamma(2 * s + 1)``
+
+    If `theta` is given in 'radians':
+
+        ``scale = 1.0 / (2.0 * np.pi)``
+
+    If `theta` is given in 'degrees':
+
+        ``scale = 1 / 360.0``
+
+    Note that this spreading is independent of frequency.
+
+    Parameters
+    ----------
+    s : int
+        Spreading coefficient.
+    degrees : bool
+        If directions passed to the spreading function will be given in 'degrees'.
+        If ``False``, 'radians' is assumed.
+    """
+
+    def __init__(self, s=1, degrees=False):
+        self._s = s
+        super().__init__(degrees=degrees)
+
+    def _spread_fun(self, _, theta, /):
+        if (np.pi / 2.0) <= theta <= (3.0 * np.pi / 2.0):
+            return 0
+
+        s = self._s
+        c = 2 ** (2 * s + 1) * gamma(s + 1) ** 2 / gamma(2 * s + 1)
+        return c * np.cos(theta) ** (2.0 * s)
+
+
+class CosineFullSpreading(BaseSpreading):
+    """
+    Cosine-2s type spreading (full directional range).
+
+    Defined as:
+
+        ``D(theta) = scale * C(s) * cos(theta / 2) ** (2 * s)``
+
+    where,
+
+        ``C(s) = 2 ** (2 * s) * gamma(s + 1) ** 2 / gamma(2 * s + 1)``
+
+    If `theta` is given in 'radians':
+
+        ``scale = 1.0 / (2.0 * np.pi)``
+
+    If `theta` is given in 'degrees':
+
+        ``scale = 1 / 360.0``
+
+    Note that this spreading is independent of frequency.
+
+    Parameters
+    ----------
+    s : int
+        Spreading coefficient.
+    degrees : bool
+        If directions passed to the spreading function will be given in 'degrees'.
+        If ``False``, 'radians' is assumed.
+    """
+
+    def __init__(self, s=1, degrees=False):
+        self._s = s
+        super().__init__(degrees=degrees)
+
+    def _spread_fun(self, _, theta, /):
+        s = self._s
+        c = 2 ** (2 * s) * gamma(s + 1) ** 2 / gamma(2 * s + 1)
+        return c * np.cos(theta / 2.0) ** (2.0 * s)

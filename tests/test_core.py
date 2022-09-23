@@ -1,8 +1,14 @@
+from itertools import product
+
 import numpy as np
 import pytest
+from scipy.integrate import quad
 
+import waveresponse as wr
 from waveresponse import (
     RAO,
+    CosineFullSpreading,
+    CosineHalfSpreading,
     DirectionalSpectrum,
     Grid,
     WaveSpectrum,
@@ -3112,3 +3118,211 @@ class Test__check_is_similar:
 
         with pytest.raises(ValueError):
             _check_is_similar(grid_a, grid_b, grid_c)
+
+
+class Test_CosineFullSpreading:
+    def test__init__(self):
+        spreading = CosineFullSpreading(123, degrees=True)
+        assert isinstance(spreading, wr._core.BaseSpreading)
+        assert spreading._s == 123
+        assert spreading._degrees is True
+
+    params__call__degrees = [
+        [0, 0, 0, 0.002777777777777778],
+        [1, 0, 0, 0.002777777777777778],
+        [0, 360, 0, 0.002777777777777778],
+        [0, -360, 0, 0.002777777777777778],
+        [0, 45, 0, 0.002777777777777778],
+        [0, -45, 0, 0.002777777777777778],
+        [0, 45 + 2 * 360, 0, 0.002777777777777778],
+        [0, 0, 1, 0.005555555555555556],
+        [1, 0, 1, 0.005555555555555556],
+        [0, 360, 1, 0.005555555555555556],
+        [0, -360, 1, 0.005555555555555556],
+        [0, 45, 1, 0.004741963281073743],
+        [0, -45, 1, 0.004741963281073743],
+        [0, 45 + 2 * 360, 1, 0.004741963281073743],
+        [0, 0, 2, 0.007407407407407408],
+        [1, 0, 2, 0.007407407407407408],
+        [0, 360, 2, 0.007407407407407408],
+        [0, -360, 2, 0.007407407407407408],
+        [0, 45, 2, 0.005396691782172398],
+        [0, -45, 2, 0.005396691782172398],
+        [0, 45 + 2 * 360, 2, 0.005396691782172398],
+    ]
+
+    @pytest.mark.parametrize("f,d,s,spread_expect", params__call__degrees)
+    def test__call__degrees(self, f, d, s, spread_expect):
+        spreading = CosineFullSpreading(s, degrees=True)
+        assert spreading(f, d) == pytest.approx(spread_expect)
+
+    params__call__radians = [
+        [0, 0, 0, 0.15915494309189535],
+        [1, 0, 0, 0.15915494309189535],
+        [0, 2.0 * np.pi, 0, 0.15915494309189535],
+        [0, -2.0 * np.pi, 0, 0.15915494309189535],
+        [0, np.pi / 4, 0, 0.15915494309189535],
+        [0, -np.pi / 4, 0, 0.15915494309189535],
+        [0, np.pi / 4 + 2 * 360, 0, 0.15915494309189535],
+        [0, 0, 1, 0.3183098861837907],
+        [1, 0, 1, 0.3183098861837907],
+        [0, 2.0 * np.pi, 1, 0.3183098861837907],
+        [0, -2.0 * np.pi, 1, 0.3183098861837907],
+        [0, np.pi / 4, 1, 0.2716944826115336],
+        [0, -np.pi / 4, 1, 0.2716944826115336],
+        [0, np.pi / 4 + 2 * 2.0 * np.pi, 1, 0.2716944826115336],
+        [0, 0, 2, 0.4244131815783876],
+        [1, 0, 2, 0.4244131815783876],
+        [0, 2.0 * np.pi, 2, 0.4244131815783876],
+        [0, -2.0 * np.pi, 2, 0.4244131815783876],
+        [0, np.pi / 4, 2, 0.309207662451413],
+        [0, -np.pi / 4, 2, 0.309207662451413],
+        [0, np.pi / 4 + 2 * 2.0 * np.pi, 2, 0.309207662451413],
+    ]
+
+    @pytest.mark.parametrize("f,d,s,spread_expect", params__call__radians)
+    def test__call__radians(self, f, d, s, spread_expect):
+        spreading = CosineFullSpreading(s, degrees=False)
+        assert spreading(f, d) == pytest.approx(spread_expect)
+
+    def test_integrate_degrees(self):
+        def integrate(spread_fun, a, b):
+            f0 = 1
+            return quad(lambda d: spread_fun(f0, d), a, b)[0]
+
+        for s in (0, 1, 2, 10, 20):
+            spreading = CosineFullSpreading(s, degrees=True)
+            assert integrate(spreading, 0.0, 360.0) == pytest.approx(1)
+
+    def test_integrate_radians(self):
+        def integrate(spread_fun, a, b):
+            f0 = 1
+            return quad(lambda d: spread_fun(f0, d), a, b)[0]
+
+        for s in (0, 1, 2, 10, 20):
+            spreading = CosineFullSpreading(s, degrees=False)
+            assert integrate(spreading, 0.0, 2.0 * np.pi) == pytest.approx(1)
+
+    def test_independent_of_frequency(self):
+        spreading = CosineFullSpreading(10, degrees=True)
+
+        d0 = 45.0
+        spread_out_list = [spreading(fi, d0) for fi in (0, 0.5, 1, 10)]
+
+        assert len(np.unique(np.array(spread_out_list))) == 1
+
+
+class Test_CosineHalfSpreading:
+    def test__init__(self):
+        spreading = CosineHalfSpreading(123, degrees=True)
+        assert isinstance(spreading, wr._core.BaseSpreading)
+        assert spreading._s == 123
+        assert spreading._degrees is True
+
+    def test_integrate_degrees(self):
+        def integrate(spread_fun, a, b):
+            f0 = 1
+            return quad(lambda d: spread_fun(f0, d), a, b)[0]
+
+        for s in (0, 1, 2, 10, 20):
+            spreading = CosineHalfSpreading(s, degrees=True)
+            assert integrate(spreading, 0.0, 360.0) == pytest.approx(1)
+
+    def test_integrate_radians(self):
+        def integrate(spread_fun, a, b):
+            f0 = 1
+            return quad(lambda d: spread_fun(f0, d), a, b)[0]
+
+        for s in (0, 1, 2, 10, 20):
+            spreading = CosineHalfSpreading(s, degrees=False)
+            assert integrate(spreading, 0.0, 2.0 * np.pi) == pytest.approx(1)
+
+    def test_independent_of_frequency(self):
+        spreading = CosineHalfSpreading(10, degrees=True)
+
+        d0 = 45.0
+        spread_out_list = [spreading(fi, d0) for fi in (0, 0.5, 1, 10)]
+
+        assert len(np.unique(np.array(spread_out_list))) == 1
+
+    params__call__degrees = [
+        [0, 0, 0, 0.005555555555555556],
+        [1, 0, 0, 0.005555555555555556],
+        [0, 360, 0, 0.005555555555555556],
+        [0, -360, 0, 0.005555555555555556],
+        [0, 45, 0, 0.005555555555555556],
+        [0, -45, 0, 0.005555555555555556],
+        [0, 45 + 2 * 360, 0, 0.005555555555555556],
+        [0, 0, 1, 0.011111111111111112],
+        [1, 0, 1, 0.011111111111111112],
+        [0, 360, 1, 0.011111111111111112],
+        [0, -360, 1, 0.011111111111111112],
+        [0, 45, 1, 0.005555555555555557],
+        [0, -45, 1, 0.005555555555555557],
+        [0, 45 + 2 * 360, 1, 0.005555555555555557],
+        [0, 0, 2, 0.014814814814814815],
+        [1, 0, 2, 0.014814814814814815],
+        [0, 360, 2, 0.014814814814814815],
+        [0, -360, 2, 0.014814814814814815],
+        [0, 45, 2, 0.0037037037037037047],
+        [0, -45, 2, 0.0037037037037037047],
+        [0, 45 + 2 * 360, 2, 0.0037037037037037047],
+        [0, 91, 0, 0.0],
+        [0, -91, 0, 0.0],
+        [0, 180, 0, 0.0],
+        [0, -180, 0, 0.0],
+        [0, 91, 1, 0.0],
+        [0, -91, 1, 0.0],
+        [0, 180, 1, 0.0],
+        [0, -180, 1, 0.0],
+        [0, 91, 10, 0.0],
+        [0, -91, 10, 0.0],
+        [0, 180, 10, 0.0],
+        [0, -180, 10, 0.0],
+    ]
+
+    @pytest.mark.parametrize("f,d,s,spread_expect", params__call__degrees)
+    def test__call__degrees(self, f, d, s, spread_expect):
+        spreading = CosineHalfSpreading(s, degrees=True)
+        assert spreading(f, d) == pytest.approx(spread_expect)
+
+    params__call__radians = [
+        [0, 0, 0, 0.3183098861837907],
+        [1, 0, 0, 0.3183098861837907],
+        [0, 2.0 * np.pi, 0, 0.3183098861837907],
+        [0, -2.0 * np.pi, 0, 0.3183098861837907],
+        [0, np.pi / 4, 0, 0.3183098861837907],
+        [0, -np.pi / 4, 0, 0.3183098861837907],
+        [0, (np.pi / 4) + 2 * 2.0 * np.pi, 0, 0.3183098861837907],
+        [0, 0, 1, 0.6366197723675814],
+        [1, 0, 1, 0.6366197723675814],
+        [0, 2.0 * np.pi, 1, 0.6366197723675814],
+        [0, -2.0 * np.pi, 1, 0.6366197723675814],
+        [0, np.pi / 4, 1, 0.31830988618379075],
+        [0, -np.pi / 4, 1, 0.31830988618379075],
+        [0, np.pi / 4 + 2 * 2.0 * np.pi, 1, 0.31830988618379075],
+        [0, 0, 2, 0.8488263631567752],
+        [1, 0, 2, 0.8488263631567752],
+        [0, 2.0 * np.pi, 2, 0.8488263631567752],
+        [0, -2.0 * np.pi, 2, 0.8488263631567752],
+        [0, np.pi / 4, 2, 0.21220659078919385],
+        [0, -np.pi / 4, 2, 0.21220659078919385],
+        [0, np.pi / 4 + 2 * 2.0 * np.pi, 2, 0.21220659078919385],
+        [0, np.pi / 2 + 0.1, 0, 0.0],
+        [0, -np.pi / 2 - 0.1, 0, 0.0],
+        [0, np.pi, 0, 0.0],
+        [0, -np.pi, 0, 0.0],
+        [0, np.pi / 2 + 0.1, 1, 0.0],
+        [0, -np.pi / 2 - 0.1, 1, 0.0],
+        [0, np.pi, 1, 0.0],
+        [0, -np.pi, 1, 0.0],
+        [0, np.pi / 2 + 0.1, 10, 0.0],
+        [0, -np.pi / 2 - 0.1, 10, 0.0],
+        [0, np.pi, 10, 0.0],
+        [0, -np.pi, 10, 0.0],
+    ]
+
+    @pytest.mark.parametrize("f,d,s,spread_expect", params__call__radians)
+    def test__call__radians(self, f, d, s, spread_expect):
+        spreading = CosineHalfSpreading(s, degrees=False)
+        assert spreading(f, d) == pytest.approx(spread_expect)

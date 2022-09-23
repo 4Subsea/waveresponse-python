@@ -61,6 +61,9 @@ spectrum (1-D array), a directional spreading function and a peak direction:
         waves_coming_from=False,
     )
 
+Two standardized (cosine based) spreading functions, :class:`~waveresponse.CosineFullSpreading`
+and :class:`~waveresponse.CosineHalfSpreading`, are provided by ``waveresponse``.
+
 .. note::
     Often you do not have access to a full directional wave spectrum. Then, it is
     common to instead construct a directional spectrum from a standardized frequency
