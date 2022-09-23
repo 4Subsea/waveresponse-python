@@ -9,7 +9,8 @@ from ._core import (
     complex_to_polar,
     polar_to_complex,
 )
-from ._standardized import JONSWAP, BasePMSpectrum, ModifiedPiersonMoskowitz, OchiHubble
+from ._standardized import JONSWAP_, BasePMSpectrum_, ModifiedPiersonMoskowitz_, OchiHubble_
+from ._standardized1d import BasePMSpectrum, ModifiedPiersonMoskowitz, JONSWAP
 from ._transform import (
     rigid_transform,
     rigid_transform_heave,
@@ -27,9 +28,9 @@ __all__ = [
     "CosineHalfSpreading",
     "DirectionalSpectrum",
     "Grid",
-    "JONSWAP",
+    # "JONSWAP",
     "ModifiedPiersonMoskowitz",
-    "OchiHubble",
+    # "OchiHubble",
     "polar_to_complex",
     "RAO",
     "rigid_transform",
