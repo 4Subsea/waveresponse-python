@@ -93,10 +93,10 @@ class BasePMSpectrum(BaseWave1d):
 
         Parameters
         ----------
-        hs : float
-            Significant wave height, Hs.
-        tp : float
-            Peak period, Tp.
+        A : float
+            Spektrum shape parameter.
+        B : float
+            Spektrum shape parameter.
         freq_hz : bool, optional
             Whether to return the frequencies and spectrum in terms of rad/s (`True`)
             or Hz (`False`). If `None` (default), the original units of `freq` is
