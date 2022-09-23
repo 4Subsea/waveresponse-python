@@ -56,7 +56,7 @@ The *JONSWAP* spectrum is given by:
 
 where,
 
-- :math:`S_{PM}(w)` is the Pierson-Moskowitz (PM) spectrum.
+- :math:`S_{PM}(w)` is the modified Pierson-Moskowitz (PM) spectrum.
 - :math:`\gamma` is a peak enhancement factor.
 - :math:`\alpha_{\gamma} = 1 - 0.287 \cdot ln(\gamma)` is a normalizing factor.
 - :math:`\omega_p = \frac{2\pi}{Tp}` is the angular spectral peak frequency.

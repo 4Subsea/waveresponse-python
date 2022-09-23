@@ -284,7 +284,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
 
         freq, spectrum_pm = super().__call__(hs, tp, freq_hz=freq_hz)
 
-        return freq, alpha * spectrum_pm * gamma**b
+        return freq, alpha * spectrum_pm * gamma ** b
 
     def _alpha(self, *args):
         gamma = args[2]
@@ -383,15 +383,15 @@ class OchiHubble(BaseWave1d):
         C = self._C(*args)
         d = self._d(*args)
 
-        return C / omega ** (4 * q + 1) * np.exp(-d / omega**4)
+        return C / omega**(4 * q + 1) * np.exp(-d / omega ** 4)
 
     def _C(self, *args):
         hs, tp, q = args
         omega_p = 2.0 * np.pi / tp
-        c = (4.0 * q + 1.0) * omega_p**4 / 4.0
-        return (1.0 / 4.0) * (c**q * hs**2) / gammafun(q)
+        c = (4.0 * q + 1.0) * omega_p ** 4 / 4.0
+        return (1.0 / 4.0) * (c ** q * hs ** 2) / gammafun(q)
 
     def _d(self, *args):
         _, tp, q = args
         omega_p = 2.0 * np.pi / tp
-        return (4 * q + 1) * omega_p**4 / 4.0
+        return (4 * q + 1) * omega_p ** 4 / 4.0
