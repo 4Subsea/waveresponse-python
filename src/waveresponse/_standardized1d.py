@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 import numpy as np
+from scipy.special import gamma as gammafun
 
 
 class BaseWave1d(ABC):
@@ -286,50 +287,72 @@ class JONSWAP(ModifiedPiersonMoskowitz):
         return sigma
 
 
-# class OchiHubble(ModifiedPiersonMoskowitz):
-#     """
-#     Ochi-Hubble wave spectrum (derived from modified Pierson-Moskowitz), given as:
+class OchiHubble(BaseWave1d):
+    """
+    Ochi-Hubble wave spectrum (derived from modified Pierson-Moskowitz), given as:
 
-#     ``S(w) = A/w**5 exp(-B/w**4)``
+    ``S(w) = A/w**5 exp(-B/w**4)``
 
-#     where,
+    where,
 
-#     - ``A = ((4 * q + 1) / 4 * w_p**4)**q * Hs**2 / (4 * gamma(q) * w**(4 * (q - 1)))``
-#     - ``B = (4 * q + 1) / 4 * w_p**4``.
+    - ``A = ((4 * q + 1) / 4 * w_p**4)**q * Hs**2 / (4 * gamma(q) * w**(4 * (q - 1)))``
+    - ``B = (4 * q + 1) / 4 * w_p**4``.
 
-#     and ``q`` is a user-defined shape parameter. Note that ``gamma`` is the "Gamma function".
+    and ``q`` is a user-defined shape parameter. Note that ``gamma`` is the "Gamma function".
 
-#     Parameters
-#     ----------
-#     freq : array-like
-#         Sequence of frequencies to use when generating the spectrum.
-#     freq_hz : bool
-#         Whether the provided frequencies are in rad/s (default) or Hz.
-#     q : float or callable
-#         A scalar value or a callable that accepts hs and tp, and returns
-#         a scalar value.
+    Parameters
+    ----------
+    freq : array-like
+        Sequence of frequencies to use when generating the spectrum.
+    freq_hz : bool
+        Whether the provided frequencies are in rad/s (default) or Hz.
 
-#     Notes
-#     -----
-#     The special case ``q=1`` corresponds to the modified Pierson-Moskowitz spectrum.
-#     """
+    Notes
+    -----
+    The special case ``q=1`` corresponds to the modified Pierson-Moskowitz spectrum.
+    """
 
-#     def _A(self, *args):
-#         """
-#         Spectrum parameter.
-#         """
-#         hs, tp = args
-#         q = self._q(*args)
-#         omega_p = 2.0 * np.pi / tp
-#         a = ((4.0 * q + 1.0) / 4.0 * omega_p**4) ** q
-#         A = (a * hs**2) / (4 * gammafun(q) * self._freq ** (4 * (q - 1.0)))
-#         return A
+    def __call__(self, hs, tp, q=2, freq_hz=None):
+        """
+        Generate wave spectrum.
 
-#     def _B(self, *args):
-#         """
-#         Spectrum parameter.
-#         """
-#         _, tp = args
-#         q = self._q(*args)
-#         omega_p = 2.0 * np.pi / tp
-#         return (4 * q + 1) / 4 * omega_p**4
+        Parameters
+        ----------
+        hs : float
+            Significant wave height, Hs.
+        tp : float
+            Peak period, Tp.
+        q : float
+            Spectral shape parameter.
+        freq_hz : bool, optional
+            Whether to return the frequencies and spectrum in terms of rad/s (`True`)
+            or Hz (`False`). If `None` (default), the original units of `freq` is
+            preserved.
+
+        Return
+        ------
+        freq : 1-D array
+            Frequencies corresponding to the spectrum values. Unit is set according
+            to `freq_hz`.
+        spectrum : 1-D array
+            Spectrum values. Unit is set according to `freq_hz`.
+
+        Notes
+        -----
+        The scaling between wave spectrum in terms of Hz and rad/s is defind
+        as:
+
+        ``S(f) = 2*pi*S(w)``
+
+        where ``S(f)`` and ``S(w)`` are the same spectrum but expressed
+        in terms of Hz and rad/s, respectively.
+        """
+
+        return super().__call__(hs, tp, q=q, freq_hz=freq_hz)
+
+    def _spectrum(self, omega, hs, tp, q):
+        omega_p = 2.0 * np.pi / tp
+        a = (4.0 * q + 1.0) * omega_p ** 4 / 4.0
+        A = (1.0 / 4.0) * (a ** q * hs ** 2) / gammafun(q)
+        b = (4 * q + 1) * omega_p ** 4 / 4.0
+        return A / omega**(4 * q + 1) * np.exp(-b / omega ** 4)
