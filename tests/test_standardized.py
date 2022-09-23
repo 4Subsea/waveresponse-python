@@ -11,7 +11,6 @@ from waveresponse import BasePMSpectrum_ as BasePMSpectrum
 from waveresponse import ModifiedPiersonMoskowitz_ as ModifiedPiersonMoskowitz
 from waveresponse import OchiHubble_ as OchiHubble
 
-
 TEST_PATH = Path(__file__).parent
 
 
