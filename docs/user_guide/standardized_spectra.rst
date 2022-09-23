@@ -88,16 +88,48 @@ JONSWAP spectrum from a given Hs/Tp combination:
 
 Ochi-Hubble spectrum
 --------------------
-The *Och-Hubble* spectrum is given by:
+The *Ochi-Hubble* spectrum is a 6-parameter spectrum given by:
 
 .. math::
 
     S_{OH}(\omega) = \frac{1}{4} \sum_j \frac{\left( \frac{4q_j+1}{4}\omega_{pj} \right)^{q_j}}{\Gamma(q_j)}
     \frac{H_s^2}{\omega^{4q_j+1}}exp\left( -\frac{4q_j+1}{4} \left( \frac{\omega_{pj}}{\omega} \right)^4 \right)
 
-where the index, :math:`j = 1, 2`, represents the lower and higher frequency components
-respectively.
+where the index, :math:`j = 1, 2`, represents a lower and higher frequency component
+respectively. The Ochi-Hubble formulation allows you to set up a double peaked spectrum,
+representing sea states that include both a remotely generated swell component (low frequency)
+and a local wind-generated component (high frequency). The Ochi-Hubble spectrum
+takes six parameters (three for each wave component):
 
+- :math:`H_{s1}` is the significant wave height for the lower frequency component.
+- :math:`\omega_{p1} = \frac{2\pi}{T_{p1}}` is the angular spectral peak frequency for the lower frequency component.
+- :math:`q_1` is a spectral shape parameter for the lower frequency component.
+- :math:`H_{s2}` is the significant wave height for the higher frequency component.
+- :math:`\omega_{p2} = \frac{2\pi}{T_{p1}}` is the angular spectral peak frequency for the higher frequency component.
+- :math:`q_2` is a spectral shape parameter for the higher frequency component.
+
+The :class:`~waveresponse.OchiHubble` class provides functionality for generating a 1-D
+Ochi-Hubble spectrum component from a given Hs/Tp combination. Two spectra can be added
+together to form a two-peaked spectrum.
+
+.. code:: python
+
+    import numpy as np
+    import waveresponse as wr
+
+
+    freq = np.arange(0.01, 1, 0.01)
+    spectrum = wr.OchiHubble(freq, freq_hz=True, q=2)
+
+    hs1 = 3.5
+    tp1 = 17.0
+    hs2 = 1.5
+    tp2 = 5.0
+
+    freq, vals1 = spectrum(hs1, tp1)
+    freq, vals2 = spectrum(hs2, tp2)
+
+    vals_tot = vals1 + vals2
 
 Directional spectrum
 ####################
