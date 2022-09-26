@@ -106,8 +106,8 @@ The JONSWAP spectrum is expected to be a reasonable model for:
 Ochi-Hubble
 -----------
 The *Ochi-Hubble* spectrum allows you to set up a double-peaked spectrum that represents
-sea states which includes both a remotely generated swell component (with lower frequency energy)
-and a locally generated wind component (with higher frequency energy). The Ochi-Hubble spectrum
+sea states which includes both a remotely generated swell component (with low frequency energy)
+and a locally generated wind component (with high frequency energy). The Ochi-Hubble spectrum
 is described by six parameters (three for each wave component), and is given by:
 
 .. math::
