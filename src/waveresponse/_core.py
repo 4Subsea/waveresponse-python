@@ -98,13 +98,12 @@ def multiply(grid1, grid2, type_=None):
         Grid object.
     grid2 : Grid, RAO, DirectionalSpectrum or WaveSpectrum
         Grid object.
-    type_ : str {"directional_spectrum", "rao", "wave_spectrum", "grid"}
+    type_ : str {"spectrum", "rao", "grid"} (optional)
         Output grid type.
     """
 
     TYPE_MAP = {
-        "directional_spectrum": DirectionalSpectrum,
-        "wave_spectrum": WaveSpectrum,
+        "spectrum": DirectionalSpectrum,
         "rao": RAO,
         "grid": Grid,
     }
