@@ -94,6 +94,12 @@ JONSWAP spectrum from a given Hs/Tp combination:
     For the special case where :math:`\gamma = 1`, JONSWAP corresponds to the modified Pierson-Moskowitz
     spectrum.
 
+The JONSWAP spectrum is expected to be a reasonable model for:
+
+.. math::
+
+    3.6 \leq \frac{T_p}{\sqrt{H_s}} \leq 5
+
 
 Ochi-Hubble
 -----------
