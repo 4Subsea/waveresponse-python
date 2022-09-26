@@ -98,20 +98,20 @@ def multiply(grid1, grid2, type_=None):
         Grid object.
     grid2 : Grid, RAO, DirectionalSpectrum or WaveSpectrum
         Grid object.
-    type_ : str {"spectrum", "rao", "wave_spectrum", "grid"} or None
+    type_ : str {"spectrum", "rao", "wave_spectrum", "grid"}
         Output grid type.
     """
 
+    TYPE_MAP = {
+        "directional_spectrum": DirectionalSpectrum,
+        "wave_spectrum": WaveSpectrum,
+        "rao": RAO,
+        "grid": Grid,
+    }
+
     _check_is_similar(grid1, grid2, exact_type=False)
 
-    if type_ == "spectrum":
-        type_ = DirectionalSpectrum
-    elif type_ == "rao":
-        type_ = RAO
-    elif type_ == "wave":
-        type_ = WaveSpectrum
-    else:
-        type_ = Grid
+    type_ = TYPE_MAP.get(type_, Grid)
 
     freq = grid1._freq
     dirs = grid1._dirs
