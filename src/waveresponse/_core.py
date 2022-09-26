@@ -90,7 +90,7 @@ def _check_is_similar(*grids, exact_type=True):
 
 def multiply(grid1, grid2, type_=None):
     """
-    Multiply (element-wise) two grid objects.
+    Multiply values (element-wise).
 
     Parameters
     ----------
