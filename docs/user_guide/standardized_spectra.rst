@@ -17,8 +17,9 @@ Pierson-Moskowitz (PM) type spectra has the following form:
 
 Many of the most common standardized wave spectra today are of the PM type (or extends it). The
 *modified Pierson-Moskowitz* spectrum and the *JONSWAP* spectrum are two examples.
-It is common to express the spectrum parameters, :math:`A` and :math:`B`, in terms
-of the significant wave height, Hs, and the wave peak period, Tp.
+
+.. It is common to express the spectrum parameters, :math:`A` and :math:`B`, in terms
+.. of the significant wave height, Hs, and the wave peak period, Tp.
 
 
 Modified Pierson-Moskowitz
@@ -97,8 +98,8 @@ JONSWAP spectrum from a given Hs/Tp combination:
 Ochi-Hubble
 -----------
 The *Ochi-Hubble* spectrum allows you to set up a double-peaked spectrum that represents
-sea states which includes both a remotely generated swell component (with low-frequent energy)
-and a locally generated wind component (with high-frequent energy). The Ochi-Hubble spectrum
+sea states which includes both a remotely generated swell component (with lower frequency energy)
+and a locally generated wind component (with higher frequency energy). The Ochi-Hubble spectrum
 is described by six parameters (three for each wave component), and is given by:
 
 .. math::
@@ -176,7 +177,7 @@ In general, the spreading function is a function of both frequency, :math:`\omeg
 and direction, :math:`\theta`. However, it is common to use the same spreading
 for all frequencies.
 
-With ``waveresponse`` it is easy to construct a directional :class:`~waveresponse.WaveSpectrum`
+With ``waveresponse`` it is easy to construct a (directional) :class:`~waveresponse.WaveSpectrum`
 object from a 1-D frequency spectrum and a spreading function:
 
 .. code:: python
