@@ -88,6 +88,48 @@ def _check_is_similar(*grids, exact_type=True):
             raise ValueError("Grid objects have different wave conventions.")
 
 
+def multiply(grid1, grid2, type_=None):
+    """
+    Multiply two grid objects.
+
+    Parameters
+    ----------
+    grid1 : Grid, RAO, DirectionalSpectrum or WaveSpectrum
+        Grid object.
+    grid2 : Grid, RAO, DirectionalSpectrum or WaveSpectrum
+        Grid object.
+    type_ : str {"spectrum", "rao", "wave_spectrum", "grid"} or None
+        Output grid type.
+    """
+
+    _check_is_similar(grid1, grid2, exact_type=False)
+
+    if type_ == "spectrum":
+        type_ = DirectionalSpectrum
+    elif type_ == "rao":
+        type_ = RAO
+    elif type_ == "wave":
+        type_ = WaveSpectrum
+    else:
+        type_ = Grid
+
+    freq = grid1._freq
+    dirs = grid1._dirs
+    vals = np.multiply(grid1._vals, grid2._vals)
+    convention = grid1.wave_convention
+
+    new = Grid(
+        freq,
+        dirs,
+        vals,
+        freq_hz=False,
+        degrees=False,
+        **convention,
+    )
+
+    return type_.from_grid(new)
+
+
 class Grid:
     """
     Two-dimentional frequency/(wave)direction grid.
