@@ -6,8 +6,8 @@ Idealized 1-D spectra
 Often you do not have access to the true wave spectrum for the area you are interested in.
 Then, it is common to instead use a standardized wave spectrum (which there exists many of).
 
-Pierson-Moskowitz type spectra
-------------------------------
+Pierson-Moskowitz
+-----------------
 
 Pierson-Moskowitz (PM) type spectra has the following form:
 
@@ -21,8 +21,8 @@ It is common to express the spectrum parameters, :math:`A` and :math:`B`, in ter
 of the significant wave height, Hs, and the wave peak period, Tp.
 
 
-Modified Pierson-Moskowitz spectrum
-...................................
+Modified Pierson-Moskowitz
+..........................
 The *modified Pierson-Moskowits* spectrum (also known as Bretschneider or ISSC) is given by:
 
 .. math::
@@ -49,8 +49,8 @@ for generating a 1-D (modified) Pierson-Moskowitz spectrum from a given Hs/Tp co
     freq, vals = spectrum(hs, tp)
 
 
-JONSWAP spectrum
-----------------
+JONSWAP
+-------
 The *JONSWAP* spectrum is given by:
 
 .. math::
@@ -94,8 +94,8 @@ JONSWAP spectrum from a given Hs/Tp combination:
     spectrum.
 
 
-Ochi-Hubble spectrum
---------------------
+Ochi-Hubble
+-----------
 The *Ochi-Hubble* spectrum allows you to set up a double-peaked spectrum that represents
 sea states which includes both a remotely generated swell component (with low-frequent energy)
 and a locally generated wind component (with high-frequent energy). The Ochi-Hubble spectrum
