@@ -34,7 +34,8 @@ where :math:`H_s` is the significant wave height and :math:`\omega_p = \frac{2\p
 angular spectral peak frequency.
 
 The :class:`~waveresponse.ModifiedPiersonMoskowitz` class provides functionality
-for generating a 1-D (modified) Pierson-Moskowitz spectrum from a given Hs/Tp combination:
+for generating a 1-D (modified) Pierson-Moskowitz spectrum given two parameters (i.e.,
+:math:`H_s` and :math:`T_p`):
 
 .. code:: python
 
@@ -74,7 +75,8 @@ where,
     \end{cases}
 
 The :class:`~waveresponse.JONSWAP` class provides functionality for generating a 1-D
-JONSWAP spectrum from a given Hs/Tp combination:
+JONSWAP spectrum given five parameters (i.e., :math:`H_s`, :math:`T_p`, :math:`\gamma`,
+:math:`\sigma_a` and :math:`\sigma_b`):
 
 .. code:: python
 
@@ -123,8 +125,8 @@ The index, :math:`j = 1, 2`, represents the lower frequency component (i.e., swe
 and higher frequency component (i.e., wind) respectively.
 
 The :class:`~waveresponse.OchiHubble` class provides functionality for generating a 1-D
-Ochi-Hubble spectrum component from a given Hs/Tp combination. The total spectrum
-is obtained by adding together the two wave components.
+Ochi-Hubble spectrum component given three parameters (i.e., :math:`H_s`, :math:`T_p`
+and :math:`q`). The total spectrum is obtained by adding together the two wave components.
 
 .. code:: python
 
