@@ -4,10 +4,10 @@ from ._core import (
     CosineHalfSpreading,
     DirectionalSpectrum,
     Grid,
-    multiply,
     WaveSpectrum,
     calculate_response,
     complex_to_polar,
+    multiply,
     polar_to_complex,
 )
 from ._standardized1d import (
