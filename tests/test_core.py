@@ -135,6 +135,21 @@ class Test_polar_to_complex:
 
 
 class Test_multiply:
+    def test_rao_and_rao_to_default_grid(self, rao):
+        out = wr.multiply(rao, rao.copy())
+
+        vals_expect = rao._vals * rao._vals
+
+        assert isinstance(out, Grid)
+        assert not isinstance(out, RAO)
+        assert out._freq_hz is False
+        assert out._degrees is False
+        assert out._clockwise == rao._clockwise
+        assert out._waves_coming_from == rao._waves_coming_from
+        np.testing.assert_array_almost_equal(out._freq, rao._freq)
+        np.testing.assert_array_almost_equal(out._dirs, rao._dirs)
+        np.testing.assert_array_almost_equal(out._vals, vals_expect)
+
     def test_grid_and_grid_to_grid(self, grid):
         out = wr.multiply(grid, grid.copy(), output_type="grid")
 
