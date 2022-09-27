@@ -1375,7 +1375,7 @@ def calculate_response(
     rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
     wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
 
-    return rao_squared * wave_body
+    return multiply(rao_squared, wave_body, output_type="directional_spectrum")
 
 
 class BaseSpreading(ABC):
