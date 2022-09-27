@@ -1598,6 +1598,22 @@ class Test_RAO:
         assert rao._degrees is True
         assert rao._phase_degrees is True
 
+    def test__mul__(self, rao):
+        rao_squared = rao * rao
+
+        assert isinstance(rao_squared, RAO)
+        assert rao_squared._freq_hz == rao._freq_hz
+        assert rao_squared._degrees == rao._degrees
+        assert rao_squared._clockwise == rao._clockwise
+        assert rao_squared._waves_coming_from == rao._waves_coming_from
+        np.testing.assert_array_almost_equal(rao_squared._freq, rao._freq)
+        np.testing.assert_array_almost_equal(rao_squared._dirs, rao._dirs)
+        np.testing.assert_array_almost_equal(rao_squared._vals, rao._vals * rao._vals)
+
+    def test__mul__raises_type(self, rao, wave):
+        with pytest.raises(ValueError):
+            rao * wave
+
     def test_conjugate(self, rao):
         rao_conj = rao.conjugate()
 
