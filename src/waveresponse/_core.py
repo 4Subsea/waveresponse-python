@@ -661,22 +661,34 @@ class Grid:
     @property
     def real(self):
         """
-        Return a copy of the object where all values are converted to their real
-        part.
+        Return a new Grid object where all values are converted to their real part.
         """
-        new = self.copy()
-        new._vals = new._vals.real
-        return new
+        freq, dirs, vals = self.grid(freq_hz=self._freq_hz, degrees=self._degrees)
+
+        return Grid(
+            freq,
+            dirs,
+            vals.real,
+            freq_hz=self._freq_hz,
+            degrees=self._degrees,
+            **self.wave_convention,
+        )
 
     @property
     def imag(self):
         """
-        Return a copy of the object where all values are converted to their imaginary
-        part.
+        Return a new Grid object where all values are converted to their imaginary part.
         """
-        new = self.copy()
-        new._vals = new._vals.imag
-        return new
+        freq, dirs, vals = self.grid(freq_hz=self._freq_hz, degrees=self._degrees)
+
+        return Grid(
+            freq,
+            dirs,
+            vals.imag,
+            freq_hz=self._freq_hz,
+            degrees=self._degrees,
+            **self.wave_convention,
+        )
 
 
 class RAO(Grid):
