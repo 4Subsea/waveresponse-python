@@ -188,6 +188,28 @@ class Grid:
                 "and ``M=len(dirs)``."
             )
 
+    @classmethod
+    def from_grid(cls, grid):
+        """
+        Construct from a Grid object.
+
+        Parameters
+        ----------
+        grid : obj
+            Grid object.
+
+        Returns
+        -------
+        cls :
+            Initialized object.
+        """
+        return cls(
+            *grid.grid(freq_hz=grid._freq_hz, degrees=grid._degrees),
+            freq_hz=grid._freq_hz,
+            degrees=grid._degrees,
+            **grid.wave_convention,
+        )
+
     def _check_freq(self, freq):
         """
         Check frequency bins.
@@ -923,34 +945,6 @@ class DirectionalSpectrum(Grid):
             raise ValueError("Spectrum values can not be complex.")
         elif np.any(self._vals < 0.0):
             raise ValueError("Spectrum values must be positive.")
-
-    @classmethod
-    def from_grid(cls, grid):
-        """
-        Construct a ``DirectionalSpectrum`` object from a ``Grid`` object.
-
-        It is assumed that the grid's values represent spectrum density values that
-        correspond to frequency/direction units given during initialization. Note
-        that if you scale the frequency/direction bins of the spectrum, you must
-        also scale the corresponding spectrum density values (since the total energy/integral
-        of the spectrum should be preserved).
-
-        Parameters
-        ----------
-        grid : obj
-            Grid object.
-
-        Returns
-        -------
-        cls :
-            Initialized DirectionalSpectrum object.
-        """
-        return cls(
-            *grid.grid(freq_hz=grid._freq_hz, degrees=grid._degrees),
-            freq_hz=grid._freq_hz,
-            degrees=grid._degrees,
-            **grid.wave_convention,
-        )
 
     @classmethod
     def from_spectrum1d(
