@@ -1310,9 +1310,13 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(grid_squared._dirs, grid._dirs)
         np.testing.assert_array_almost_equal(grid_squared._vals, vals_expect)
 
-    def test__mul__raises_type(self, grid):
+    def test__mul__raises_array(self, grid):
         with pytest.raises(ValueError):
             grid * grid._vals
+
+    def test__mul__raises_type(self, grid, rao):
+        with pytest.raises(ValueError):
+            grid * rao
 
     def test__mul__raises_shape(self):
         freq_in = np.array([1, 2, 3])
@@ -1365,20 +1369,6 @@ class Test_Grid:
         )
         with pytest.raises(ValueError):
             grid * grid3
-
-    def test__mul__dir_spectrum(self, grid, directional_spectrum):
-        out = grid * directional_spectrum
-
-        assert isinstance(out, DirectionalSpectrum)
-        np.testing.assert_array_almost_equal(
-            out._vals, grid._vals * directional_spectrum._vals
-        )
-
-    def test__mul__rao(self, grid, rao):
-        out = grid * rao
-
-        assert isinstance(out, Grid)
-        np.testing.assert_array_almost_equal(out._vals, grid._vals * rao._vals)
 
     def test__add__(self, grid):
         out = grid + grid

@@ -596,9 +596,10 @@ class Grid:
 
     def __mul__(self, other):
         """
-        Multiply values with another Grid object.
+        Multiply values (element-wise).
 
-        Both grids must have the same frequency/direction coordinates.
+        Both grids must have the same frequency/direction coordinates, and the same
+        'wave convention'.
 
         Parameters
         ----------
@@ -608,26 +609,14 @@ class Grid:
         Returns
         -------
         obj :
-            A copy of the object where the values are multiplied with another Grid.
+            A copy of the object where the values are multiplied with values of
+            another grid.
         """
-        if not isinstance(other, Grid):
-            raise ValueError("Other object is not of type 'waveresponse.Grid'.")
 
-        _check_is_similar(self, other, exact_type=False)
+        _check_is_similar(self, other, exact_type=True)
 
-        new = Grid(
-            self._freq,
-            self._dirs,
-            self._vals * other._vals,
-            freq_hz=False,
-            degrees=False,
-            **self.wave_convention,
-        )
-
-        if isinstance(self, DirectionalSpectrum) or isinstance(
-            other, DirectionalSpectrum
-        ):
-            return DirectionalSpectrum.from_grid(new)
+        new = self.copy()
+        new._vals = new._vals * other._vals
 
         return new
 
