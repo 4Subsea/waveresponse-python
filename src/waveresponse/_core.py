@@ -1424,7 +1424,7 @@ class CosineHalfSpreading(BaseSpreading):
 
         s = self._s
         c = 2 ** (2 * s + 1) * gamma(s + 1) ** 2 / gamma(2 * s + 1)
-        return c * np.cos(theta) ** (2.0 * s)
+        return c * (np.cos(theta) ** 2.0) ** s
 
 
 class CosineFullSpreading(BaseSpreading):
