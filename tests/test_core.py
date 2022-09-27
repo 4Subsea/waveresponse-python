@@ -3149,6 +3149,7 @@ class Test_CosineFullSpreading:
         [0, 45, 2, 0.005396691782172398],
         [0, -45, 2, 0.005396691782172398],
         [0, 45 + 2 * 360, 2, 0.005396691782172398],
+        [0, 359, 0.5, 0.004363156988011003],
     ]
 
     @pytest.mark.parametrize("f,d,s,spread_expect", params__call__degrees)
@@ -3178,6 +3179,7 @@ class Test_CosineFullSpreading:
         [0, np.pi / 4, 2, 0.309207662451413],
         [0, -np.pi / 4, 2, 0.309207662451413],
         [0, np.pi / 4 + 2 * 2.0 * np.pi, 2, 0.309207662451413],
+        [0, 7 * np.pi / 4.0, 0.5, 0.23096988312782166],
     ]
 
     @pytest.mark.parametrize("f,d,s,spread_expect", params__call__radians)
