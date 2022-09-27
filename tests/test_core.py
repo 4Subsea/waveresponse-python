@@ -134,6 +134,178 @@ class Test_polar_to_complex:
         np.testing.assert_array_almost_equal(complex_out, complex_expect)
 
 
+class Test_multiply:
+    def test_grid_and_grid_to_grid(self, grid):
+        out = wr.multiply(grid, grid.copy(), output_type="grid")
+
+        vals_expect = grid._vals * grid._vals
+
+        assert isinstance(out, Grid)
+        assert out._freq_hz is False
+        assert out._degrees is False
+        assert out._clockwise == grid._clockwise
+        assert out._waves_coming_from == grid._waves_coming_from
+        np.testing.assert_array_almost_equal(out._freq, grid._freq)
+        np.testing.assert_array_almost_equal(out._dirs, grid._dirs)
+        np.testing.assert_array_almost_equal(out._vals, vals_expect)
+
+    def test_rao_and_wave_to_grid(self, rao, wave):
+        out = wr.multiply(rao, wave, output_type="grid")
+
+        vals_expect = rao._vals * wave._vals
+
+        assert isinstance(out, Grid)
+        assert out._freq_hz is False
+        assert out._degrees is False
+        assert out._clockwise == rao._clockwise
+        assert out._waves_coming_from == rao._waves_coming_from
+        np.testing.assert_array_almost_equal(out._freq, rao._freq)
+        np.testing.assert_array_almost_equal(out._dirs, rao._dirs)
+        np.testing.assert_array_almost_equal(out._vals, vals_expect)
+
+    def test_rao_and_rao_to_rao(self, rao):
+        out = wr.multiply(rao, rao.copy(), output_type="rao")
+
+        vals_expect = rao._vals * rao._vals
+
+        assert isinstance(out, RAO)
+        assert out._freq_hz is False
+        assert out._degrees is False
+        assert out._clockwise == rao._clockwise
+        assert out._waves_coming_from == rao._waves_coming_from
+        np.testing.assert_array_almost_equal(out._freq, rao._freq)
+        np.testing.assert_array_almost_equal(out._dirs, rao._dirs)
+        np.testing.assert_array_almost_equal(out._vals, vals_expect)
+
+    def test_rao_and_rao_to_grid(self, rao):
+        out = wr.multiply(rao, rao.copy(), output_type="grid")
+
+        vals_expect = rao._vals * rao._vals
+
+        assert isinstance(out, Grid)
+        assert not isinstance(out, RAO)
+        assert out._freq_hz is False
+        assert out._degrees is False
+        assert out._clockwise == rao._clockwise
+        assert out._waves_coming_from == rao._waves_coming_from
+        np.testing.assert_array_almost_equal(out._freq, rao._freq)
+        np.testing.assert_array_almost_equal(out._dirs, rao._dirs)
+        np.testing.assert_array_almost_equal(out._vals, vals_expect)
+
+    def test_wave_and_wave_to_wave(self, wave):
+        out = wr.multiply(wave, wave.copy(), output_type="wave_spectrum")
+
+        vals_expect = wave._vals * wave._vals
+
+        assert isinstance(out, WaveSpectrum)
+        assert out._freq_hz is False
+        assert out._degrees is False
+        assert out._clockwise == wave._clockwise
+        assert out._waves_coming_from == wave._waves_coming_from
+        np.testing.assert_array_almost_equal(out._freq, wave._freq)
+        np.testing.assert_array_almost_equal(out._dirs, wave._dirs)
+        np.testing.assert_array_almost_equal(out._vals, vals_expect)
+
+    def test_wave_and_wave_to_dir_spectrum(self, wave):
+        out = wr.multiply(wave, wave.copy(), output_type="directional_spectrum")
+
+        vals_expect = wave._vals * wave._vals
+
+        assert isinstance(out, DirectionalSpectrum)
+        assert not isinstance(out, WaveSpectrum)
+        assert out._freq_hz is False
+        assert out._degrees is False
+        assert out._clockwise == wave._clockwise
+        assert out._waves_coming_from == wave._waves_coming_from
+        np.testing.assert_array_almost_equal(out._freq, wave._freq)
+        np.testing.assert_array_almost_equal(out._dirs, wave._dirs)
+        np.testing.assert_array_almost_equal(out._vals, vals_expect)
+
+    def test_wave_and_wave_to_grid(self, wave):
+        out = wr.multiply(wave, wave.copy(), output_type="grid")
+
+        vals_expect = wave._vals * wave._vals
+
+        assert isinstance(out, Grid)
+        assert not isinstance(out, WaveSpectrum)
+        assert out._freq_hz is False
+        assert out._degrees is False
+        assert out._clockwise == wave._clockwise
+        assert out._waves_coming_from == wave._waves_coming_from
+        np.testing.assert_array_almost_equal(out._freq, wave._freq)
+        np.testing.assert_array_almost_equal(out._dirs, wave._dirs)
+        np.testing.assert_array_almost_equal(out._vals, vals_expect)
+
+    def test_raises_convention(self, grid):
+        grid1 = grid.copy()
+        grid1.set_wave_convention(clockwise=True)
+        grid2 = grid.copy()
+        grid2.set_wave_convention(clockwise=False)
+
+        with pytest.raises(ValueError):
+            wr.multiply(grid1, grid2, output_type="grid")
+
+    def test_raises_freq_coordinates(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.random.random((10, 15))
+        grid1 = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq = np.linspace(0, 1.0, 7)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.random.random((7, 15))
+        grid2 = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        with pytest.raises(ValueError):
+            wr.multiply(grid1, grid2)
+
+    def test_raises_dirs_coordinates(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.random.random((10, 15))
+        grid1 = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 7, endpoint=False)
+        vals = np.random.random((10, 7))
+        grid2 = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        with pytest.raises(ValueError):
+            wr.multiply(grid1, grid2)
+
+
 class Test_Grid:
     def test__init__(self):
         freq = np.linspace(0, 1.0, 10)
