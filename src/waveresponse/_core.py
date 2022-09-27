@@ -583,8 +583,6 @@ class Grid:
         obj :
             A copy of the object where the values are added with another Grid.
         """
-        if not isinstance(other, Grid):
-            raise ValueError("Other object is not of type 'waveresponse.Grid'.")
 
         _check_is_similar(self, other, exact_type=True)
 
