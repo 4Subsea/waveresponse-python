@@ -88,29 +88,30 @@ def _check_is_similar(*grids, exact_type=True):
             raise ValueError("Grid objects have different wave conventions.")
 
 
-def multiply(grid1, grid2, type_=None):
+def multiply(grid1, grid2, output_type="grid"):
     """
     Multiply values (element-wise).
 
     Parameters
     ----------
-    grid1 : Grid, RAO, DirectionalSpectrum or WaveSpectrum
+    grid1 : obj
         Grid object.
-    grid2 : Grid, RAO, DirectionalSpectrum or WaveSpectrum
+    grid2 : obj
         Grid object.
-    type_ : str {"spectrum", "rao", "grid"} (optional)
+    type_ : str {"spectrum", "rao", "grid"}
         Output grid type.
     """
 
     TYPE_MAP = {
-        "spectrum": DirectionalSpectrum,
-        "rao": RAO,
         "grid": Grid,
+        "rao": RAO,
+        "directional_spectrum": DirectionalSpectrum,
+        "wave_spectrum": DirectionalSpectrum,
     }
 
     _check_is_similar(grid1, grid2, exact_type=False)
 
-    type_ = TYPE_MAP.get(type_, Grid)
+    type_ = TYPE_MAP.get(output_type)
 
     freq = grid1._freq
     dirs = grid1._dirs
