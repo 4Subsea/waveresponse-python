@@ -1208,37 +1208,6 @@ class Test_Grid:
         grid + grid
         mock_check_is_similar.assert_called_once_with(grid, grid, exact_type=True)
 
-    def test__abs__(self):
-        freq_in = np.array([1, 2, 3])
-        dirs_in = np.array([0, 10, 20])
-        vals_in = np.array(
-            [
-                [1.0 + 0.0j, 1.0 + 1.0j, 0.0 + 1.0j],
-                [2.0 + 0.0j, 2.0 - 2.0j, 0.0 + 2.0j],
-                [3.0 + 0.0j, 3.0 + 3.0j, 0.0 - 3.0j],
-            ]
-        )
-        grid = Grid(
-            freq_in,
-            dirs_in,
-            vals_in,
-            degrees=True,
-            clockwise=True,
-            waves_coming_from=True,
-        )
-
-        grid_abs = abs(grid)
-
-        vals_expect = np.array(
-            [
-                [1.0, np.sqrt(1.0**2 + 1.0**2), 1.0],
-                [2.0, np.sqrt(2.0**2 + 2.0**2), 2.0],
-                [3.0, np.sqrt(3.0**2 + 3.0**2), 3.0],
-            ]
-        )
-
-        np.testing.assert_array_almost_equal(grid_abs._vals, vals_expect)
-
     def test__repr__(self, grid):
         assert str(grid) == "Grid"
 
@@ -1783,17 +1752,6 @@ class Test_RAO:
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
         np.testing.assert_array_almost_equal(amp_out, amp_expect)
         np.testing.assert_array_almost_equal(phase_out, phase_expect)
-
-    def test__abs__(self, rao):
-        out = np.abs(rao)
-
-        assert isinstance(out, Grid)
-        assert not isinstance(out, RAO)
-        np.testing.assert_array_almost_equal(out._freq, rao._freq)
-        np.testing.assert_array_almost_equal(out._dirs, rao._dirs)
-        np.testing.assert_array_almost_equal(out._vals, np.abs(rao._vals))
-        assert out._clockwise == rao._clockwise
-        assert rao._waves_coming_from == rao._waves_coming_from
 
     def test__repr__(self, rao):
         assert str(rao) == "RAO"

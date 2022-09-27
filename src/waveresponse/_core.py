@@ -655,14 +655,6 @@ class Grid:
 
         return new
 
-    def __abs__(self):
-        """
-        Return new object where values are converted to absolute values.
-        """
-        new = self.copy()
-        new._vals = np.abs(new._vals)
-        return new
-
     def __repr__(self):
         return "Grid"
 
@@ -867,16 +859,6 @@ class RAO(Grid):
         freq, dirs, vals = self.grid(freq_hz=freq_hz, degrees=degrees)
         vals_amp, vals_phase = complex_to_polar(vals, phase_degrees=phase_degrees)
         return freq, dirs, vals_amp, vals_phase
-
-    def __abs__(self):
-        return Grid(
-            self._freq,
-            self._dirs,
-            np.abs(self._vals),
-            freq_hz=False,
-            degrees=False,
-            **self.wave_convention,
-        )
 
     def __repr__(self):
         return "RAO"
