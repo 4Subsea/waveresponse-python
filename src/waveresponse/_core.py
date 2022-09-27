@@ -106,7 +106,7 @@ def multiply(grid1, grid2, output_type="grid"):
         "grid": Grid,
         "rao": RAO,
         "directional_spectrum": DirectionalSpectrum,
-        "wave_spectrum": DirectionalSpectrum,
+        "wave_spectrum": WaveSpectrum,
     }
 
     _check_is_similar(grid1, grid2, exact_type=False)
