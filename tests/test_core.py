@@ -1756,6 +1756,72 @@ class Test_RAO:
     def test__repr__(self, rao):
         assert str(rao) == "RAO"
 
+    def test_real(self):
+        freq_in = np.array([1, 2, 3])
+        dirs_in = np.array([0, 10, 20])
+        vals_in = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
+                [2.0 + 0.0j, 0.0 - 2.0j, -2.0 + 0.0j],
+                [3.0 + 0.0j, 0.0 + 3.0j, -3.0 + 0.0j],
+            ]
+        )
+        rao = RAO(
+            freq_in,
+            dirs_in,
+            vals_in,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        grid_real = rao.real
+
+        vals_expect = np.array(
+            [
+                [1.0, 0.0, -1.0],
+                [2.0, 0.0, -2.0],
+                [3.0, 0.0, -3.0],
+            ]
+        )
+
+        assert isinstance(grid_real, Grid)
+        assert not isinstance(grid_real, RAO)
+        np.testing.assert_array_almost_equal(grid_real._vals, vals_expect)
+
+    def test_imag(self):
+        freq_in = np.array([1, 2, 3])
+        dirs_in = np.array([0, 10, 20])
+        vals_in = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
+                [2.0 + 0.0j, 0.0 - 2.0j, -2.0 + 0.0j],
+                [3.0 + 0.0j, 0.0 + 3.0j, -3.0 + 0.0j],
+            ]
+        )
+        rao = RAO(
+            freq_in,
+            dirs_in,
+            vals_in,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        grid_imag = rao.imag
+
+        vals_expect = np.array(
+            [
+                [0.0, 1.0, 0.0],
+                [0.0, -2.0, 0.0],
+                [0.0, 3.0, 0.0],
+            ]
+        )
+
+        assert isinstance(grid_imag, Grid)
+        assert not isinstance(grid_imag, RAO)
+        np.testing.assert_array_almost_equal(grid_imag._vals, vals_expect)
+
 
 class Test_DirectionalSpectrum:
     def test__init___hz_deg(self):
@@ -2535,6 +2601,72 @@ class Test_DirectionalSpectrum:
         assert spectrum._waves_coming_from == grid._waves_coming_from
         assert spectrum._freq_hz == grid._freq_hz
         assert spectrum._degrees == grid._degrees
+
+    def test_real(self):
+        freq_in = np.array([1, 2, 3])
+        dirs_in = np.array([0, 10, 20])
+        vals_in = np.array(
+            [
+                [1.0, 0.0, 1.0],
+                [2.0, 0.0, 2.0],
+                [3.0, 0.0, 3.0],
+            ]
+        )
+        spectrum = DirectionalSpectrum(
+            freq_in,
+            dirs_in,
+            vals_in,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        grid_real = spectrum.real
+
+        vals_expect = np.array(
+            [
+                [1.0, 0.0, 1.0],
+                [2.0, 0.0, 2.0],
+                [3.0, 0.0, 3.0],
+            ]
+        )
+
+        assert isinstance(grid_real, Grid)
+        assert not isinstance(grid_real, DirectionalSpectrum)
+        np.testing.assert_array_almost_equal(grid_real._vals, vals_expect)
+
+    def test_imag(self):
+        freq_in = np.array([1, 2, 3])
+        dirs_in = np.array([0, 10, 20])
+        vals_in = np.array(
+            [
+                [1.0, 0.0, 1.0],
+                [2.0, 0.0, 2.0],
+                [3.0, 0.0, 3.0],
+            ]
+        )
+        spectrum = DirectionalSpectrum(
+            freq_in,
+            dirs_in,
+            vals_in,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        grid_imag = spectrum.imag
+
+        vals_expect = np.array(
+            [
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 0.0],
+            ]
+        )
+
+        assert isinstance(grid_imag, Grid)
+        assert not isinstance(grid_imag, DirectionalSpectrum)
+        np.testing.assert_array_almost_equal(grid_imag._vals, vals_expect)
 
 
 class Test_WaveSpectrum:
