@@ -13,7 +13,7 @@ a direction list (1-D array) and corresponding grid values (2-D array).
 .. code-block:: python
 
     import numpy as np
-    from waveresponse as wr
+    import waveresponse as wr
 
 
     freq = np.linspace(0.0, 1.0, 50)
@@ -101,9 +101,9 @@ will be done on the grid's values (2-D array).
     # Multiply
     grid_squared = grid * grid
 
-    # Convert to absolute values
-    grid_abs = np.abs(grid)
+    # Add
+    grid_added = grid + grid
 
     # Convert to real or imaginary parts
-    grid_real = np.real(grid)
-    grid_imag = np.imag(grid)
+    grid_real = grid.real
+    grid_imag = grid.imag
