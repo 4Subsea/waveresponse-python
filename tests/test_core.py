@@ -2806,71 +2806,17 @@ class Test_DirectionalSpectrum:
         assert spectrum._freq_hz == grid._freq_hz
         assert spectrum._degrees == grid._degrees
 
-    def test_real(self):
-        freq_in = np.array([1, 2, 3])
-        dirs_in = np.array([0, 10, 20])
-        vals_in = np.array(
-            [
-                [1.0, 0.0, 1.0],
-                [2.0, 0.0, 2.0],
-                [3.0, 0.0, 3.0],
-            ]
-        )
-        spectrum = DirectionalSpectrum(
-            freq_in,
-            dirs_in,
-            vals_in,
-            degrees=True,
-            clockwise=True,
-            waves_coming_from=True,
-        )
+    def test_conjugate_raises(self, directional_spectrum):
+        with pytest.raises(AttributeError):
+            directional_spectrum.conjugate()
 
-        grid_real = spectrum.real
+    def test_real_raises(self, directional_spectrum):
+        with pytest.raises(AttributeError):
+            directional_spectrum.real
 
-        vals_expect = np.array(
-            [
-                [1.0, 0.0, 1.0],
-                [2.0, 0.0, 2.0],
-                [3.0, 0.0, 3.0],
-            ]
-        )
-
-        assert isinstance(grid_real, Grid)
-        assert not isinstance(grid_real, DirectionalSpectrum)
-        np.testing.assert_array_almost_equal(grid_real._vals, vals_expect)
-
-    def test_imag(self):
-        freq_in = np.array([1, 2, 3])
-        dirs_in = np.array([0, 10, 20])
-        vals_in = np.array(
-            [
-                [1.0, 0.0, 1.0],
-                [2.0, 0.0, 2.0],
-                [3.0, 0.0, 3.0],
-            ]
-        )
-        spectrum = DirectionalSpectrum(
-            freq_in,
-            dirs_in,
-            vals_in,
-            degrees=True,
-            clockwise=True,
-            waves_coming_from=True,
-        )
-
-        grid_imag = spectrum.imag
-
-        vals_expect = np.array(
-            [
-                [0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0],
-                [0.0, 0.0, 0.0],
-            ]
-        )
-
-        assert isinstance(grid_imag, Grid)
-        assert not isinstance(grid_imag, DirectionalSpectrum)
-        np.testing.assert_array_almost_equal(grid_imag._vals, vals_expect)
+    def test_imag_raises(self, directional_spectrum):
+        with pytest.raises(AttributeError):
+            directional_spectrum.imag
 
 
 class Test_WaveSpectrum:
