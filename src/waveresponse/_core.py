@@ -109,6 +109,9 @@ def multiply(grid1, grid2, output_type="grid"):
         "wave_spectrum": WaveSpectrum,
     }
 
+    if output_type not in TYPE_MAP:
+        raise ValueError("The given `output_type` is not valid.")
+
     _check_is_similar(grid1, grid2, exact_type=False)
 
     type_ = TYPE_MAP.get(output_type)

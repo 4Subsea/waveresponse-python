@@ -251,6 +251,10 @@ class Test_multiply:
         np.testing.assert_array_almost_equal(out._dirs, wave._dirs)
         np.testing.assert_array_almost_equal(out._vals, vals_expect)
 
+    def test_raises_output_type(self, grid):
+        with pytest.raises(ValueError):
+            wr.multiply(grid, grid.copy(), output_type="invalid-type")
+
     def test_raises_convention(self, grid):
         grid1 = grid.copy()
         grid1.set_wave_convention(clockwise=True)
