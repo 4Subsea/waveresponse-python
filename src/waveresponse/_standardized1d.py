@@ -222,7 +222,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
     - ``S_pm(w)`` is the Pierson-Moskowitz (PM) spectrum.
     - ``gamma`` is a peak enhancement factor.
     - ``alpha = 1 - 0.287 * ln(gamma)`` is a normalizing factor.
-    - ``sigma`` is the spectral width parameter:
+    - ``sigma`` is the spectral width parameter (established from experimental data):
         - ``sigma = 0.07`` for ``w <= wp``
         - ``sigma = 0.09`` for ``w > wp``
     - ``wp = 2pi / Tp`` is the angular spectral peak frequency.
@@ -256,10 +256,6 @@ class JONSWAP(ModifiedPiersonMoskowitz):
             Peak period, Tp.
         gamma : float
             Peak enhancement factor.
-        sigma_a : float
-            Spectral width parameter.
-        sigma_b : float
-            Spectral width parameter.
         freq_hz : bool, optional
             Whether to return the frequencies and spectrum in terms of Hz (`True`)
             or rad/s (`False`). If `None` (default), the original units of `freq` is
