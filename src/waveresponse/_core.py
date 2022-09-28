@@ -144,7 +144,7 @@ def _cast_to_grid(grid):
         *grid.grid(freq_hz=grid._freq_hz, degrees=grid._degrees),
         freq_hz=grid._freq_hz,
         degrees=grid._degrees,
-        **grid.wave_convention
+        **grid.wave_convention,
     )
 
     return new
