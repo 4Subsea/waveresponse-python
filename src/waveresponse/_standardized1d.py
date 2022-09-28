@@ -381,19 +381,16 @@ class OchiHubble(BaseSpectrum1d):
         return super().__call__(hs, tp, q=q, freq_hz=freq_hz)
 
     def _spectrum(self, omega, hs, tp, q):
-        args = (hs, tp, q)
-        C = self._C(*args)
-        d = self._d(*args)
+        C = self._C(hs, tp, q)
+        d = self._d(tp, q)
 
         return C / omega ** (4 * q + 1) * np.exp(-d / omega**4)
 
-    def _C(self, *args):
-        hs, tp, q = args
+    def _C(self, hs, tp, q):
         omega_p = 2.0 * np.pi / tp
         c = (4.0 * q + 1.0) * omega_p**4 / 4.0
         return (1.0 / 4.0) * (c**q * hs**2) / gammafun(q)
 
-    def _d(self, *args):
-        _, tp, q = args
+    def _d(self, tp, q):
         omega_p = 2.0 * np.pi / tp
         return (4 * q + 1) * omega_p**4 / 4.0
