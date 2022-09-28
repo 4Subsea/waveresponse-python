@@ -20,3 +20,4 @@ functions and methods.
    mod_pierson_moskowitz
    jonswap
    ochi_hubble
+   multiply
