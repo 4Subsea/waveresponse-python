@@ -694,6 +694,20 @@ class Grid:
         return new
 
 
+class DisableComplexMixin:
+    @property
+    def imag(self):
+        raise AttributeError(f"'{self}' object has no attribute 'imag'.")
+
+    @property
+    def real(self):
+        raise AttributeError(f"'{self}' object has no attribute 'real'.")
+
+    @property
+    def conjugate(self):
+        raise AttributeError(f"'{self}' object has no attribute 'conjugate'.")
+
+
 class RAO(Grid):
     """
     Response amplitude operator (RAO).
@@ -871,7 +885,7 @@ class RAO(Grid):
         return "RAO"
 
 
-class DirectionalSpectrum(Grid):
+class DirectionalSpectrum(DisableComplexMixin, Grid):
     """
     Directional spectrum.
 
