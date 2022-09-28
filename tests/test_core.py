@@ -1392,6 +1392,13 @@ class Test_Grid:
     def test__repr__(self, grid):
         assert str(grid) == "Grid"
 
+    def test_conjugate(self, grid):
+        grid_conj = grid.conjugate()
+
+        np.testing.assert_array_almost_equal(grid_conj._freq, grid._freq)
+        np.testing.assert_array_almost_equal(grid_conj._dirs, grid._dirs)
+        np.testing.assert_array_almost_equal(grid_conj._vals, grid._vals.conjugate())
+
     def test_real(self):
         freq_in = np.array([1, 2, 3])
         dirs_in = np.array([0, 10, 20])
