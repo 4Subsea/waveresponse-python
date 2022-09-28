@@ -226,12 +226,8 @@ class Test_JONSWAP:
         hs = 3.5
         tp = 7.0
         gamma = 2
-        sigma_a = 0.07
-        sigma_b = 0.09
 
-        freq_out, spectrum_out = spectrum(
-            hs, tp, gamma=gamma, sigma_a=sigma_a, sigma_b=sigma_b, freq_hz=True
-        )
+        freq_out, spectrum_out = spectrum(hs, tp, gamma=gamma, freq_hz=True)
 
         w_p = 2.0 * np.pi / tp
         A = (5.0 / 16.0) * hs**2 * w_p**4
@@ -240,8 +236,8 @@ class Test_JONSWAP:
 
         arg = w <= w_p
         sigma = np.empty_like(w)
-        sigma[arg] = sigma_a
-        sigma[~arg] = sigma_b
+        sigma[arg] = 0.07
+        sigma[~arg] = 0.09
 
         alpha = 1.0 - 0.287 * np.log(gamma)
         b = np.exp(-0.5 * ((w - w_p) / (sigma * w_p)) ** 2)
@@ -259,12 +255,8 @@ class Test_JONSWAP:
         hs = 5.0
         tp = 10.0
         gamma = 3
-        sigma_a = 0.05
-        sigma_b = 0.08
 
-        freq_out, spectrum_out = spectrum(
-            hs, tp, gamma=gamma, sigma_a=sigma_a, sigma_b=sigma_b, freq_hz=True
-        )
+        freq_out, spectrum_out = spectrum(hs, tp, gamma=gamma, freq_hz=True)
 
         w_p = 2.0 * np.pi / tp
         A = (5.0 / 16.0) * hs**2 * w_p**4
@@ -273,8 +265,8 @@ class Test_JONSWAP:
 
         arg = w <= w_p
         sigma = np.empty_like(w)
-        sigma[arg] = sigma_a
-        sigma[~arg] = sigma_b
+        sigma[arg] = 0.07
+        sigma[~arg] = 0.09
 
         alpha = 1.0 - 0.287 * np.log(gamma)
         b = np.exp(-0.5 * ((w - w_p) / (sigma * w_p)) ** 2)
@@ -295,9 +287,7 @@ class Test_JONSWAP:
         sigma_a = 0.07
         sigma_b = 0.09
 
-        freq_out, spectrum_out = spectrum(
-            hs, tp, gamma=gamma, sigma_a=sigma_a, sigma_b=sigma_b, freq_hz=False
-        )
+        freq_out, spectrum_out = spectrum(hs, tp, gamma=gamma, freq_hz=False)
 
         w_p = 2.0 * np.pi / tp
         A = (5.0 / 16.0) * hs**2 * w_p**4
@@ -324,7 +314,7 @@ class Test_JONSWAP:
         tp = 10.0
         omega_p = (2.0 * np.pi) / tp
 
-        sigma = spectrum._sigma(omega_p, 0.07, 0.09)
+        sigma = spectrum._sigma(omega_p)
 
         arg = freq <= omega_p
         sigma_1 = 0.07 * np.ones(sum(arg))
@@ -349,12 +339,10 @@ class Test_JONSWAP:
         spectrum = wr.JONSWAP(freq)
 
         tp = 10.0
-        sigma_a = 0.07
-        sigma_b = 0.09
-        b_out = spectrum._b(tp, sigma_a, sigma_b)
+        b_out = spectrum._b(tp)
 
         omega_p = 2.0 * np.pi / tp
-        sigma = spectrum._sigma(omega_p, sigma_a, sigma_b)
+        sigma = spectrum._sigma(omega_p)
         b_expect = np.exp(-0.5 * ((spectrum._freq - omega_p) / (sigma * omega_p)) ** 2)
 
         np.testing.assert_array_almost_equal(b_out, b_expect)

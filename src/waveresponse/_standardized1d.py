@@ -223,8 +223,8 @@ class JONSWAP(ModifiedPiersonMoskowitz):
     - ``gamma`` is a peak enhancement factor.
     - ``alpha = 1 - 0.287 * ln(gamma)`` is a normalizing factor.
     - ``sigma`` is the spectral width parameter:
-        - ``sigma = simga_a`` for ``w <= wp``
-        - ``sigma = sigma_b`` for ``w > wp``
+        - ``sigma = 0.07`` for ``w <= wp``
+        - ``sigma = 0.09`` for ``w > wp``
     - ``wp = 2pi / Tp`` is the angular spectral peak frequency.
 
     Parameters
@@ -244,7 +244,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
     OchiHubble : Ochi-Hubble (three-parameter) wave spectrum.
     """
 
-    def __call__(self, hs, tp, gamma=1, sigma_a=0.07, sigma_b=0.09, freq_hz=None):
+    def __call__(self, hs, tp, gamma=1, freq_hz=None):
         """
         Generate wave spectrum.
 
@@ -284,7 +284,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
         in terms of Hz and rad/s, respectively.
         """
         alpha = self._alpha(gamma)
-        b = self._b(tp, sigma_a, sigma_b)
+        b = self._b(tp)
 
         freq, spectrum_pm = super().__call__(hs, tp, freq_hz=freq_hz)
 
@@ -293,19 +293,19 @@ class JONSWAP(ModifiedPiersonMoskowitz):
     def _alpha(self, gamma):
         return 1.0 - 0.287 * np.log(gamma)
 
-    def _b(self, tp, sigma_a, sigma_b):
+    def _b(self, tp):
         omega_p = 2.0 * np.pi / tp
-        sigma = self._sigma(omega_p, sigma_a, sigma_b)
+        sigma = self._sigma(omega_p)
         return np.exp(-0.5 * ((self._freq - omega_p) / (sigma * omega_p)) ** 2)
 
-    def _sigma(self, omega_p, sigma_a, sigma_b):
+    def _sigma(self, omega_p):
         """
         Spectral width.
         """
         arg = self._freq <= omega_p
         sigma = np.empty_like(self._freq)
-        sigma[arg] = sigma_a
-        sigma[~arg] = sigma_b
+        sigma[arg] = 0.07
+        sigma[~arg] = 0.09
         return sigma
 
 
