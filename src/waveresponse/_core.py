@@ -135,7 +135,10 @@ def multiply(grid1, grid2, output_type="grid"):
 
 def _cast_to_grid(grid):
     """
-    Cast to Grid type.
+    Cast Grid-like object to ``Grid`` type.
+
+    Note that this type conversion may lead to loss of information/functionality
+    for derived classes.
     """
     new = Grid(
         *grid.grid(freq_hz=grid._freq_hz, degrees=grid._degrees),
