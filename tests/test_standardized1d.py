@@ -337,13 +337,8 @@ class Test_JONSWAP:
         freq = np.arange(0.05, 2.0, 0.05) * 2.0 * np.pi  # rad/s
         spectrum = wr.JONSWAP(freq)
 
-        hs = 3.5
-        tp = 10.0
         gamma = 3.0
-        sigma_a = 0.07
-        sigma_b = 0.09
-        args = (hs, tp, gamma, sigma_a, sigma_b)
-        alpha_out = spectrum._alpha(*args)
+        alpha_out = spectrum._alpha(gamma)
 
         alpha_expect = 1.0 - 0.287 * np.log(gamma)
 
@@ -353,13 +348,10 @@ class Test_JONSWAP:
         freq = np.arange(0.05, 2.0, 0.05) * 2.0 * np.pi  # rad/s
         spectrum = wr.JONSWAP(freq)
 
-        hs = 3.5
         tp = 10.0
-        gamma = 3.0
         sigma_a = 0.07
         sigma_b = 0.09
-        args = (hs, tp, gamma, sigma_a, sigma_b)
-        b_out = spectrum._b(*args)
+        b_out = spectrum._b(tp, sigma_a, sigma_b)
 
         omega_p = 2.0 * np.pi / tp
         sigma = spectrum._sigma(omega_p, sigma_a, sigma_b)
