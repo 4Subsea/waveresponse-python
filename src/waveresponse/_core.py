@@ -133,6 +133,20 @@ def multiply(grid1, grid2, output_type="grid"):
     return type_.from_grid(new)
 
 
+def _cast_to_grid(grid):
+    """
+    Cast to Grid type.
+    """
+    new = Grid(
+        *grid.grid(freq_hz=grid._freq_hz, degrees=grid._degrees),
+        freq_hz=grid._freq_hz,
+        degrees=grid._degrees,
+        **grid.wave_convention
+    )
+
+    return new
+
+
 class Grid:
     """
     Two-dimentional frequency/(wave)direction grid.
@@ -655,32 +669,18 @@ class Grid:
         """
         Return a new Grid object where all values are converted to their real part.
         """
-        freq, dirs, vals = self.grid(freq_hz=self._freq_hz, degrees=self._degrees)
-
-        return Grid(
-            freq,
-            dirs,
-            vals.real,
-            freq_hz=self._freq_hz,
-            degrees=self._degrees,
-            **self.wave_convention,
-        )
+        new = _cast_to_grid(self)
+        new._vals = new._vals.real
+        return new
 
     @property
     def imag(self):
         """
         Return a new Grid object where all values are converted to their imaginary part.
         """
-        freq, dirs, vals = self.grid(freq_hz=self._freq_hz, degrees=self._degrees)
-
-        return Grid(
-            freq,
-            dirs,
-            vals.imag,
-            freq_hz=self._freq_hz,
-            degrees=self._degrees,
-            **self.wave_convention,
-        )
+        new = _cast_to_grid(self)
+        new._vals = new._vals.imag
+        return new
 
 
 class RAO(Grid):
