@@ -194,17 +194,15 @@ class ModifiedPiersonMoskowitz(BasePMSpectrum):
         """
 
         A = self._A(hs, tp)
-        B = self._B(hs, tp)
+        B = self._B(tp)
 
         return super().__call__(A, B, freq_hz=freq_hz)
 
-    def _A(self, *args):
-        hs, tp = args
+    def _A(self, hs, tp):
         omega_p = 2.0 * np.pi / tp
         return (5.0 / 16.0) * hs**2.0 * omega_p**4.0
 
-    def _B(self, *args):
-        _, tp = args
+    def _B(self, tp):
         omega_p = 2.0 * np.pi / tp
         return (5.0 / 4.0) * omega_p**4
 

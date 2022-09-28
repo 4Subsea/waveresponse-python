@@ -134,9 +134,8 @@ class Test_ModifiedPiersonMoskowitz:
         freq = np.arange(0.01, 1, 0.01)
         spectrum = wr.ModifiedPiersonMoskowitz(freq)
 
-        hs = 3.5
         tp = 10.0
-        B_out = spectrum._B(hs, tp)
+        B_out = spectrum._B(tp)
 
         omega_p = 2.0 * np.pi / tp
         B_expect = (5.0 / 4.0) * omega_p**4
