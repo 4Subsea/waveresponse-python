@@ -667,6 +667,14 @@ class Grid:
     def __repr__(self):
         return "Grid"
 
+    def conjugate(self):
+        """
+        Return a copy of the object with complex conjugate values.
+        """
+        new = self.copy()
+        new._vals = new._vals.conjugate()
+        return new
+
     @property
     def real(self):
         """
@@ -800,14 +808,6 @@ class RAO(Grid):
         )
         rao._phase_degrees = phase_degrees
         return rao
-
-    def conjugate(self):
-        """
-        Return a copy of the object with complex conjugate values.
-        """
-        new = self.copy()
-        new._vals = new._vals.conjugate()
-        return new
 
     def differentiate(self, n=1):
         """
