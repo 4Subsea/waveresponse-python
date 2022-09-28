@@ -7,6 +7,13 @@ from scipy.special import gamma as gammafun
 class BaseSpectrum1d(ABC):
     """
     Base class for handling and generating 1-D wave spectra.
+
+    Parameters
+    ----------
+    freq : array-like
+        Sequence of frequencies to use when generating the spectrum.
+    freq_hz : bool
+        Whether the provided frequencies are in rad/s (default) or Hz.
     """
 
     def __init__(self, freq, freq_hz=False):
@@ -25,8 +32,8 @@ class BaseSpectrum1d(ABC):
         *args
             Spectrum parameters.
         freq_hz : bool, optional
-            Whether to return the frequencies and spectrum in terms of rad/s (`True`)
-            or Hz (`False`). If `None` (default), the original units of `freq` is
+            Whether to return the frequencies and spectrum in terms of Hz (`True`)
+            or rad/s (`False`). If `None` (default), the original units of `freq` is
             preserved.
         **kwargs
             Spectrum parameters.
@@ -98,8 +105,8 @@ class BasePMSpectrum(BaseSpectrum1d):
         B : float
             Spektrum shape parameter.
         freq_hz : bool, optional
-            Whether to return the frequencies and spectrum in terms of rad/s (`True`)
-            or Hz (`False`). If `None` (default), the original units of `freq` is
+            Whether to return the frequencies and spectrum in terms of Hz (`True`)
+            or rad/s (`False`). If `None` (default), the original units of `freq` is
             preserved.
 
         Return
@@ -163,8 +170,8 @@ class ModifiedPiersonMoskowitz(BasePMSpectrum):
         tp : float
             Peak period, Tp.
         freq_hz : bool, optional
-            Whether to return the frequencies and spectrum in terms of rad/s (`True`)
-            or Hz (`False`). If `None` (default), the original units of `freq` is
+            Whether to return the frequencies and spectrum in terms of Hz (`True`)
+            or rad/s (`False`). If `None` (default), the original units of `freq` is
             preserved.
 
         Return
@@ -256,8 +263,8 @@ class JONSWAP(ModifiedPiersonMoskowitz):
         sigma_b : float
             Spectral width parameter.
         freq_hz : bool, optional
-            Whether to return the frequencies and spectrum in terms of rad/s (`True`)
-            or Hz (`False`). If `None` (default), the original units of `freq` is
+            Whether to return the frequencies and spectrum in terms of Hz (`True`)
+            or rad/s (`False`). If `None` (default), the original units of `freq` is
             preserved.
 
         Return
@@ -353,8 +360,8 @@ class OchiHubble(BaseSpectrum1d):
         q : float
             Spectral shape parameter.
         freq_hz : bool, optional
-            Whether to return the frequencies and spectrum in terms of rad/s (`True`)
-            or Hz (`False`). If `None` (default), the original units of `freq` is
+            Whether to return the frequencies and spectrum in terms of Hz (`True`)
+            or rad/s (`False`). If `None` (default), the original units of `freq` is
             preserved.
 
         Return
