@@ -28,7 +28,7 @@ The *modified Pierson-Moskowits* spectrum (also known as Bretschneider or ISSC) 
 
 .. math::
 
-    S_{PM}(\omega) = \frac{5}{16}H_s^2\omega_p^2\omega^{-5} exp\left(-\frac{5}{4} \left( \frac{\omega_p}{\omega} \right)^4 \right)
+    S_{PM}(\omega) = \frac{5}{16}H_s^2\omega_p^4\omega^{-5} exp\left(-\frac{5}{4} \left( \frac{\omega_p}{\omega} \right)^4 \right)
 
 where :math:`H_s` is the significant wave height and :math:`\omega_p = \frac{2\pi}{Tp}` is the
 angular spectral peak frequency.
