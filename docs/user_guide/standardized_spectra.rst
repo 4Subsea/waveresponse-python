@@ -63,7 +63,7 @@ where,
 
 - :math:`S_{PM}(w)` is the modified Pierson-Moskowitz (PM) spectrum.
 - :math:`\gamma` is a peak enhancement factor.
-- :math:`\alpha_{\gamma} = 1 - 0.287 \cdot ln(\gamma)` is a normalizing factor.
+- :math:`\alpha_{\gamma}` is a normalizing factor.
 - :math:`\omega_p = \frac{2\pi}{Tp}` is the angular spectral peak frequency.
 - :math:`\sigma` is the spectral width parameter, given by:
 
@@ -74,9 +74,12 @@ where,
         \sigma_b & \quad \text{if } \omega > \omega_p
     \end{cases}
 
+It is common to use :math:`\sigma_a = 0.07` and :math:`\sigma_b = 0.09` (established
+from experimental data). Then, the JONSWAP spectrum simplifies to a three-parameter
+spectrum with :math:`\alpha_{\gamma} = 1 - 0.287 \cdot ln(\gamma)`.
+
 The :class:`~waveresponse.JONSWAP` class provides functionality for generating a 1-D
-JONSWAP spectrum given five parameters (i.e., :math:`H_s`, :math:`T_p`, :math:`\gamma`,
-:math:`\sigma_a` and :math:`\sigma_b`):
+JONSWAP spectrum given three parameters (i.e., :math:`H_s`, :math:`T_p` and :math:`\gamma`):
 
 .. code:: python
 
@@ -89,7 +92,7 @@ JONSWAP spectrum given five parameters (i.e., :math:`H_s`, :math:`T_p`, :math:`\
 
     hs = 3.5
     tp = 10.0
-    freq, vals = spectrum(hs, tp, gamma=2, sigma_a=0.07, sigma_b=0.09)
+    freq, vals = spectrum(hs, tp, gamma=2)
 
 .. note::
 
