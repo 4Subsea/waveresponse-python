@@ -75,8 +75,9 @@ where,
     \end{cases}
 
 It is common to use :math:`\sigma_a = 0.07` and :math:`\sigma_b = 0.09` (established
-from experimental data). Then, the JONSWAP spectrum simplifies to a three-parameter
-spectrum with :math:`\alpha_{\gamma} = 1 - 0.287 \cdot ln(\gamma)`.
+from experimental data). Then, the normalizing factor becomes
+:math:`\alpha_{\gamma} = 1 - 0.287 \cdot ln(\gamma)`, and the JONSWAP spectrum simplifies
+to a three-parameter spectrum described by :math:`H_s`, :math:`T_p` and :math:`\gamma`.
 
 The :class:`~waveresponse.JONSWAP` class provides functionality for generating a 1-D
 JONSWAP spectrum given three parameters (i.e., :math:`H_s`, :math:`T_p` and :math:`\gamma`):
