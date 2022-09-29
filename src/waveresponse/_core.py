@@ -1,5 +1,6 @@
 import copy
 from abc import ABC, abstractmethod
+from numbers import Number
 
 import numpy as np
 from scipy.integrate import trapz
@@ -632,11 +633,13 @@ class Grid:
             A copy of the object where the values are multiplied with values of
             another grid.
         """
-
-        _check_is_similar(self, other, exact_type=True)
-
         new = self.copy()
-        new._vals = new._vals * other._vals
+
+        if isinstance(other, Number):
+            new._vals = new._vals * other
+        else:
+            _check_is_similar(self, other, exact_type=True)
+            new._vals = new._vals * other._vals
 
         return new
 

@@ -1314,6 +1314,10 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(grid_squared._dirs, grid._dirs)
         np.testing.assert_array_almost_equal(grid_squared._vals, vals_expect)
 
+    def test__mul__numeric(self, grid):
+        grid_scaled = grid * 2.0
+        np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * 2.0)
+
     def test__mul__raises_array(self, grid):
         with pytest.raises(TypeError):
             grid * grid._vals
