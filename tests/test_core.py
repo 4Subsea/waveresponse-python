@@ -21,10 +21,20 @@ from waveresponse._core import _check_is_similar
 
 
 @pytest.fixture
-def grid():
+def fixture_coordinates():
+    """
+    Ensure that all grid-like fixtures has these frequency/direction coordinates.
+    This is needed for tests to work.
+    """
     freq = np.linspace(0, 1.0, 10)
     dirs = np.linspace(0, 360.0, 15, endpoint=False)
-    vals = np.random.random((10, 15))
+    return freq, dirs
+
+
+@pytest.fixture
+def grid(fixture_coordinates):
+    freq, dirs = fixture_coordinates
+    vals = np.random.random((len(freq), len(dirs)))
     grid = Grid(
         freq,
         dirs,
@@ -38,11 +48,10 @@ def grid():
 
 
 @pytest.fixture
-def rao():
-    freq = np.linspace(0, 1.0, 10)
-    dirs = np.linspace(0, 360.0, 15, endpoint=False)
-    vals_amp = np.random.random((10, 15))
-    vals_phase = np.random.random((10, 15))
+def rao(fixture_coordinates):
+    freq, dirs = fixture_coordinates
+    vals_amp = np.random.random((len(freq), len(dirs)))
+    vals_phase = np.random.random((len(freq), len(dirs)))
     rao = RAO.from_amp_phase(
         freq,
         dirs,
@@ -58,10 +67,9 @@ def rao():
 
 
 @pytest.fixture
-def directional_spectrum():
-    freq = np.linspace(0, 1.0, 10)
-    dirs = np.linspace(0, 360.0, 15, endpoint=False)
-    vals = np.random.random((10, 15))
+def directional_spectrum(fixture_coordinates):
+    freq, dirs = fixture_coordinates
+    vals = np.random.random((len(freq), len(dirs)))
     spectrum = DirectionalSpectrum(
         freq,
         dirs,
@@ -75,10 +83,9 @@ def directional_spectrum():
 
 
 @pytest.fixture
-def wave():
-    freq = np.linspace(0, 1.0, 10)
-    dirs = np.linspace(0, 360.0, 15, endpoint=False)
-    vals = np.random.random((10, 15))
+def wave(fixture_coordinates):
+    freq, dirs = fixture_coordinates
+    vals = np.random.random((len(freq), len(dirs)))
     wave = WaveSpectrum(
         freq,
         dirs,
@@ -1318,6 +1325,18 @@ class Test_Grid:
         grid_scaled = grid * 2.0
         np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * 2.0)
 
+        grid_scaled = grid * -2.0
+        np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * -2.0)
+
+        grid_scaled = grid * 0.0
+        np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * 0.0)
+
+        grid_scaled = grid * 2
+        np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * 2)
+
+        grid_scaled = grid * (1 + 1j)
+        np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * (1 + 1j))
+
     def test__rmul__numeric(self, grid):
         grid_scaled = 2.0 * grid
         np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * 2.0)
@@ -1401,6 +1420,15 @@ class Test_Grid:
         grid_added = grid + 2.0
         np.testing.assert_array_almost_equal(grid_added._vals, grid._vals + 2.0)
 
+        grid_added = grid + 0.0
+        np.testing.assert_array_almost_equal(grid_added._vals, grid._vals + 0.0)
+
+        grid_added = grid + 2
+        np.testing.assert_array_almost_equal(grid_added._vals, grid._vals + 2)
+
+        grid_added = grid + (1 + 1j)
+        np.testing.assert_array_almost_equal(grid_added._vals, grid._vals + (1 + 1j))
+
     def test__radd__numeric(self, grid):
         grid_added = 2.0 + grid
         np.testing.assert_array_almost_equal(grid_added._vals, grid._vals + 2.0)
@@ -1421,8 +1449,17 @@ class Test_Grid:
             grid - rao
 
     def test__sub__numeric(self, grid):
-        grid_added = grid - 2.0
-        np.testing.assert_array_almost_equal(grid_added._vals, grid._vals - 2.0)
+        grid_subtracted = grid - 2.0
+        np.testing.assert_array_almost_equal(grid_subtracted._vals, grid._vals - 2.0)
+
+        grid_subtracted = grid - 0.0
+        np.testing.assert_array_almost_equal(grid_subtracted._vals, grid._vals - 0.0)
+
+        grid_subtracted = grid - 2
+        np.testing.assert_array_almost_equal(grid_subtracted._vals, grid._vals - 2)
+
+        grid_subtracted = grid - (1 + 1j)
+        np.testing.assert_array_almost_equal(grid_subtracted._vals, grid._vals - (1 + 1j))
 
     def test__rsub__numeric(self, grid):
         grid_subtracted = 2.0 - grid
