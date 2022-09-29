@@ -21,7 +21,7 @@ from waveresponse._core import _check_is_similar
 
 
 @pytest.fixture
-def fixture_coordinates():
+def freq_dirs():
     """
     Ensure that all grid-like fixtures has these frequency/direction coordinates.
     This is needed for tests to work.
@@ -32,8 +32,8 @@ def fixture_coordinates():
 
 
 @pytest.fixture
-def grid(fixture_coordinates):
-    freq, dirs = fixture_coordinates
+def grid(freq_dirs):
+    freq, dirs = freq_dirs
     vals = np.random.random((len(freq), len(dirs)))
     grid = Grid(
         freq,
@@ -48,8 +48,8 @@ def grid(fixture_coordinates):
 
 
 @pytest.fixture
-def rao(fixture_coordinates):
-    freq, dirs = fixture_coordinates
+def rao(freq_dirs):
+    freq, dirs = freq_dirs
     vals_amp = np.random.random((len(freq), len(dirs)))
     vals_phase = np.random.random((len(freq), len(dirs)))
     rao = RAO.from_amp_phase(
@@ -67,8 +67,8 @@ def rao(fixture_coordinates):
 
 
 @pytest.fixture
-def directional_spectrum(fixture_coordinates):
-    freq, dirs = fixture_coordinates
+def directional_spectrum(freq_dirs):
+    freq, dirs = freq_dirs
     vals = np.random.random((len(freq), len(dirs)))
     spectrum = DirectionalSpectrum(
         freq,
@@ -83,8 +83,8 @@ def directional_spectrum(fixture_coordinates):
 
 
 @pytest.fixture
-def wave(fixture_coordinates):
-    freq, dirs = fixture_coordinates
+def wave(freq_dirs):
+    freq, dirs = freq_dirs
     vals = np.random.random((len(freq), len(dirs)))
     wave = WaveSpectrum(
         freq,
