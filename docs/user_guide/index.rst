@@ -10,5 +10,6 @@ will show how to :ref:`calculate response <calculate-response>` using ``waveresp
    :hidden:
 
    concepts_utils/index
-   calculate_response
    rigid_transform
+   standardized_spectra
+   calculate_response

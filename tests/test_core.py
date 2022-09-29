@@ -1,4 +1,5 @@
 from itertools import product
+from unittest.mock import patch
 
 import numpy as np
 import pytest
@@ -1164,6 +1165,21 @@ class Test_Grid:
 
         assert isinstance(out, Grid)
         np.testing.assert_array_almost_equal(out._vals, grid._vals * rao._vals)
+
+    def test__add__(self, grid):
+        out = grid + grid
+
+        assert isinstance(out, Grid)
+        np.testing.assert_array_almost_equal(out._vals, grid._vals + grid._vals)
+
+    def test__add__raises_type(self, grid, rao):
+        with pytest.raises(TypeError):
+            grid + rao
+
+    @patch("waveresponse._core._check_is_similar")
+    def test__add__check_is_similar(self, mock_check_is_similar, grid):
+        grid + grid
+        mock_check_is_similar.assert_called_once_with(grid, grid, exact_type=True)
 
     def test__abs__(self):
         freq_in = np.array([1, 2, 3])
@@ -3005,7 +3021,7 @@ class Test__check_is_similar:
         grid_a = Grid(freq, dirs, vals_a, degrees=True)
         grid_b = Grid(freq, dirs, vals_b, degrees=True)
         grid_c = RAO(freq, dirs, vals_c, degrees=True)
-        with pytest.raises(ValueError):
+        with pytest.raises(TypeError):
             _check_is_similar(grid_a, grid_b, grid_c, exact_type=True)
 
     def test_raises_convention(self):

@@ -17,3 +17,6 @@ functions and methods.
    rigid_transform_heave
    cosine_full_spreading
    cosine_half_spreading
+   mod_pierson_moskowitz
+   jonswap
+   ochi_hubble

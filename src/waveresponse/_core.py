@@ -75,7 +75,7 @@ def _check_is_similar(*grids, exact_type=True):
 
     for grid_i in grids:
         if not isinstance(grid_i, type_):
-            raise ValueError("Object types are not similar.")
+            raise TypeError("Object types are not similar.")
         elif grid_ref._vals.shape != grid_i._vals.shape:
             raise ValueError("Grid objects have different shape.")
         elif np.any(grid_ref._freq != grid_i._freq) or np.any(
@@ -564,6 +564,30 @@ class Grid:
             other, DirectionalSpectrum
         ):
             return DirectionalSpectrum.from_grid(new)
+
+        return new
+
+    def __add__(self, other):
+        """
+        Add values with another Grid object.
+
+        Both grids must have the same frequency/direction coordinates.
+
+        Parameters
+        ----------
+        other : obj
+            Grid object to be added with.
+
+        Returns
+        -------
+        obj :
+            A copy of the object where the values are added with another Grid.
+        """
+
+        _check_is_similar(self, other, exact_type=True)
+
+        new = self.copy()
+        new._vals = new._vals + other._vals
 
         return new
 
