@@ -70,7 +70,10 @@ def _check_is_similar(*grids, exact_type=True):
 
     if exact_type:
         type_ = type(grid_ref)
-        def checker_fun(grid, grid_type): return type(grid) == grid_type
+
+        def checker_fun(grid, grid_type):
+            return type(grid) == grid_type
+
     else:
         type_ = Grid
         checker_fun = isinstance
