@@ -1459,7 +1459,9 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(grid_subtracted._vals, grid._vals - 2)
 
         grid_subtracted = grid - (1 + 1j)
-        np.testing.assert_array_almost_equal(grid_subtracted._vals, grid._vals - (1 + 1j))
+        np.testing.assert_array_almost_equal(
+            grid_subtracted._vals, grid._vals - (1 + 1j)
+        )
 
     def test__rsub__numeric(self, grid):
         grid_subtracted = 2.0 - grid
