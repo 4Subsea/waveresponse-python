@@ -624,8 +624,8 @@ class Grid:
 
         Parameters
         ----------
-        other : obj
-            Grid object to be multiplied with.
+        other : obj or numeric
+            Grid object or number to be multiplied with.
 
         Returns
         -------
@@ -648,19 +648,20 @@ class Grid:
 
     def __add__(self, other):
         """
-        Add values with another Grid object.
+        Add values (element-wise).
 
-        Both grids must have the same frequency/direction coordinates.
+        Both grids must have the same frequency/direction coordinates, and the same
+        'wave convention'.
 
         Parameters
         ----------
-        other : obj
-            Grid object to be added with.
+        other : obj or numeric
+            Grid object or number to be added.
 
         Returns
         -------
         obj :
-            A copy of the object where the values are added with another Grid.
+            A copy of the object where the values are added with another grid's values.
         """
         new = self.copy()
 
@@ -677,19 +678,20 @@ class Grid:
 
     def __sub__(self, other):
         """
-        Subtract values with another Grid object.
+        Subtract values (element-wise).
 
-        Both grids must have the same frequency/direction coordinates.
+        Both grids must have the same frequency/direction coordinates, and the same
+        'wave convention'.
 
         Parameters
         ----------
-        other : obj
-            Grid object to be added with.
+        other : obj or numeric
+            Grid object or number to be subtracted.
 
         Returns
         -------
         obj :
-            A copy of the object where the values are added with another Grid.
+            A copy of the object where the values are subtracted with another grid's values.
         """
         new = self.copy()
 
