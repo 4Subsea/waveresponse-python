@@ -1397,6 +1397,37 @@ class Test_Grid:
         grid + grid
         mock_check_is_similar.assert_called_once_with(grid, grid, exact_type=True)
 
+    def test__add__numeric(self, grid):
+        grid_added = grid + 2.0
+        np.testing.assert_array_almost_equal(grid_added._vals, grid._vals + 2.0)
+
+    def test__radd__numeric(self, grid):
+        grid_added = 2.0 + grid
+        np.testing.assert_array_almost_equal(grid_added._vals, grid._vals + 2.0)
+
+    def test__sub__(self, grid):
+        out = grid - grid
+
+        assert isinstance(out, Grid)
+        np.testing.assert_array_almost_equal(out._vals, grid._vals - grid._vals)
+
+    @patch("waveresponse._core._check_is_similar")
+    def test__sub__check_is_similar(self, mock_check_is_similar, grid):
+        grid - grid
+        mock_check_is_similar.assert_called_once_with(grid, grid, exact_type=True)
+
+    def test__sub__raises_type(self, grid, rao):
+        with pytest.raises(TypeError):
+            grid - rao
+
+    def test__sub__numeric(self, grid):
+        grid_added = grid - 2.0
+        np.testing.assert_array_almost_equal(grid_added._vals, grid._vals - 2.0)
+
+    def test__rsub__numeric(self, grid):
+        grid_subtracted = 2.0 - grid
+        np.testing.assert_array_almost_equal(grid_subtracted._vals, grid._vals - 2.0)
+
     def test__repr__(self, grid):
         assert str(grid) == "Grid"
 

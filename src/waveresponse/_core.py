@@ -662,13 +662,47 @@ class Grid:
         obj :
             A copy of the object where the values are added with another Grid.
         """
-
-        _check_is_similar(self, other, exact_type=True)
-
         new = self.copy()
-        new._vals = new._vals + other._vals
+
+        if isinstance(other, Number):
+            new._vals = new._vals + other
+        else:
+            _check_is_similar(self, other, exact_type=True)
+            new._vals = new._vals + other._vals
 
         return new
+
+    def __radd__(self, other):
+        return self.__add__(other)
+
+    def __sub__(self, other):
+        """
+        Subtract values with another Grid object.
+
+        Both grids must have the same frequency/direction coordinates.
+
+        Parameters
+        ----------
+        other : obj
+            Grid object to be added with.
+
+        Returns
+        -------
+        obj :
+            A copy of the object where the values are added with another Grid.
+        """
+        new = self.copy()
+
+        if isinstance(other, Number):
+            new._vals = new._vals - other
+        else:
+            _check_is_similar(self, other, exact_type=True)
+            new._vals = new._vals - other._vals
+
+        return new
+
+    def __rsub__(self, other):
+        return self.__sub__(other)
 
     def __repr__(self):
         return "Grid"
