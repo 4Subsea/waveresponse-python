@@ -1315,11 +1315,11 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(grid_squared._vals, vals_expect)
 
     def test__mul__raises_array(self, grid):
-        with pytest.raises(ValueError):
+        with pytest.raises(TypeError):
             grid * grid._vals
 
     def test__mul__raises_type(self, grid, rao):
-        with pytest.raises(ValueError):
+        with pytest.raises(TypeError):
             grid * rao
 
     def test__mul__raises_shape(self):
@@ -1364,13 +1364,13 @@ class Test_Grid:
     def test__mul__raises_convention(self, grid):
         grid.set_wave_convention(clockwise=False, waves_coming_from=False)
 
-        grid2 = grid.copy().set_wave_convention(clockwise=True, waves_coming_from=False)
+        grid2 = grid.copy()
+        grid2.set_wave_convention(clockwise=True, waves_coming_from=False)
         with pytest.raises(ValueError):
             grid * grid2
 
-        grid3 = grid.copy().set_wave_convention(
-            clockwise=False, waves_coming_from=False
-        )
+        grid3 = grid.copy()
+        grid3.set_wave_convention(clockwise=False, waves_coming_from=True)
         with pytest.raises(ValueError):
             grid * grid3
 
@@ -1622,7 +1622,7 @@ class Test_RAO:
         np.testing.assert_array_almost_equal(rao_squared._vals, rao._vals * rao._vals)
 
     def test__mul__raises_type(self, rao, wave):
-        with pytest.raises(ValueError):
+        with pytest.raises(TypeError):
             rao * wave
 
     def test_conjugate(self, rao):
