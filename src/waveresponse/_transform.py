@@ -1,6 +1,6 @@
 import numpy as np
 
-from ._core import RAO, _check_is_similar
+from ._core import RAO
 
 
 def rigid_transform(
