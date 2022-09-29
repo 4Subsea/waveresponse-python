@@ -3385,6 +3385,13 @@ class Test__check_is_similar:
         with pytest.raises(TypeError):
             _check_is_similar(grid_a, grid_b, grid_c, exact_type=True)
 
+    def test_raises_exact_type(self, grid, wave):
+        with pytest.raises(TypeError):
+            _check_is_similar(wave, grid)
+
+        with pytest.raises(TypeError):
+            _check_is_similar(grid, wave)
+
     def test_raises_convention(self):
         freq = np.array([0.0, 0.5, 1.0])
         dirs = np.array([0.0, 180.0, 359.0])
