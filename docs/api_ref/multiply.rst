@@ -1,0 +1,4 @@
+multiply
+========
+
+.. autofunction:: waveresponse.multiply

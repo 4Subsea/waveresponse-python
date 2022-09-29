@@ -35,6 +35,9 @@ This function is roughly equivalent to:
 
 .. code-block:: python
 
+    import waveresponse as wr
+
+
     def calculate_response(rao, wave, heading, heading_degrees=False):
         """
         Calculate response spectrum.
@@ -76,7 +79,7 @@ This function is roughly equivalent to:
         rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
         wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
 
-        return rao_squared * wave_body
+        return wr.multiply(rao_squared, wave_body, output_type="directional_spectrum")
 
 The response is returned as a :class:`~waveresponse.DirectionalSpectrum` object,
 and provides useful spectrum operations, such as:

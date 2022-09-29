@@ -88,6 +88,68 @@ def _check_is_similar(*grids, exact_type=True):
             raise ValueError("Grid objects have different wave conventions.")
 
 
+def multiply(grid1, grid2, output_type="grid"):
+    """
+    Multiply values (element-wise).
+
+    Parameters
+    ----------
+    grid1 : obj
+        Grid object.
+    grid2 : obj
+        Grid object.
+    type_ : str {"spectrum", "rao", "grid"}
+        Output grid type.
+    """
+
+    TYPE_MAP = {
+        "grid": Grid,
+        "rao": RAO,
+        "directional_spectrum": DirectionalSpectrum,
+        "wave_spectrum": WaveSpectrum,
+    }
+
+    if output_type not in TYPE_MAP:
+        raise ValueError("The given `output_type` is not valid.")
+
+    _check_is_similar(grid1, grid2, exact_type=False)
+
+    type_ = TYPE_MAP.get(output_type)
+
+    freq = grid1._freq
+    dirs = grid1._dirs
+    vals = np.multiply(grid1._vals, grid2._vals)
+    convention = grid1.wave_convention
+
+    new = Grid(
+        freq,
+        dirs,
+        vals,
+        freq_hz=False,
+        degrees=False,
+        **convention,
+    )
+
+    return type_.from_grid(new)
+
+
+def _cast_to_grid(grid):
+    """
+    Cast Grid-like object to ``Grid`` type.
+
+    Note that this type conversion may lead to loss of information/functionality
+    for derived classes.
+    """
+    new = Grid(
+        *grid.grid(freq_hz=grid._freq_hz, degrees=grid._degrees),
+        freq_hz=grid._freq_hz,
+        degrees=grid._degrees,
+        **grid.wave_convention,
+    )
+
+    return new
+
+
 class Grid:
     """
     Two-dimentional frequency/(wave)direction grid.
@@ -145,6 +207,28 @@ class Grid:
                 "Values must have shape shape (N, M), such that ``N=len(freq)`` "
                 "and ``M=len(dirs)``."
             )
+
+    @classmethod
+    def from_grid(cls, grid):
+        """
+        Construct from a Grid object.
+
+        Parameters
+        ----------
+        grid : obj
+            Grid object.
+
+        Returns
+        -------
+        cls :
+            Initialized object.
+        """
+        return cls(
+            *grid.grid(freq_hz=grid._freq_hz, degrees=grid._degrees),
+            freq_hz=grid._freq_hz,
+            degrees=grid._degrees,
+            **grid.wave_convention,
+        )
 
     def _check_freq(self, freq):
         """
@@ -532,9 +616,10 @@ class Grid:
 
     def __mul__(self, other):
         """
-        Multiply values with another Grid object.
+        Multiply values (element-wise).
 
-        Both grids must have the same frequency/direction coordinates.
+        Both grids must have the same frequency/direction coordinates, and the same
+        'wave convention'.
 
         Parameters
         ----------
@@ -544,26 +629,14 @@ class Grid:
         Returns
         -------
         obj :
-            A copy of the object where the values are multiplied with another Grid.
+            A copy of the object where the values are multiplied with values of
+            another grid.
         """
-        if not isinstance(other, Grid):
-            raise ValueError("Other object is not of type 'waveresponse.Grid'.")
 
-        _check_is_similar(self, other, exact_type=False)
+        _check_is_similar(self, other, exact_type=True)
 
-        new = Grid(
-            self._freq,
-            self._dirs,
-            self._vals * other._vals,
-            freq_hz=False,
-            degrees=False,
-            **self.wave_convention,
-        )
-
-        if isinstance(self, DirectionalSpectrum) or isinstance(
-            other, DirectionalSpectrum
-        ):
-            return DirectionalSpectrum.from_grid(new)
+        new = self.copy()
+        new._vals = new._vals * other._vals
 
         return new
 
@@ -591,36 +664,48 @@ class Grid:
 
         return new
 
-    def __abs__(self):
-        """
-        Return new object where values are converted to absolute values.
-        """
-        new = self.copy()
-        new._vals = np.abs(new._vals)
-        return new
-
     def __repr__(self):
         return "Grid"
+
+    def conjugate(self):
+        """
+        Return a copy of the object with complex conjugate values.
+        """
+        new = self.copy()
+        new._vals = new._vals.conjugate()
+        return new
 
     @property
     def real(self):
         """
-        Return a copy of the object where all values are converted to their real
-        part.
+        Return a new Grid object where all values are converted to their real part.
         """
-        new = self.copy()
+        new = _cast_to_grid(self)
         new._vals = new._vals.real
         return new
 
     @property
     def imag(self):
         """
-        Return a copy of the object where all values are converted to their imaginary
-        part.
+        Return a new Grid object where all values are converted to their imaginary part.
         """
-        new = self.copy()
+        new = _cast_to_grid(self)
         new._vals = new._vals.imag
         return new
+
+
+class DisableComplexMixin:
+    @property
+    def imag(self):
+        raise AttributeError(f"'{self}' object has no attribute 'imag'.")
+
+    @property
+    def real(self):
+        raise AttributeError(f"'{self}' object has no attribute 'real'.")
+
+    @property
+    def conjugate(self):
+        raise AttributeError(f"'{self}' object has no attribute 'conjugate'.")
 
 
 class RAO(Grid):
@@ -738,14 +823,6 @@ class RAO(Grid):
         rao._phase_degrees = phase_degrees
         return rao
 
-    def conjugate(self):
-        """
-        Return a copy of the object with complex conjugate values.
-        """
-        new = self.copy()
-        new._vals = new._vals.conjugate()
-        return new
-
     def differentiate(self, n=1):
         """
         Return the nth derivative of the RAO.
@@ -804,21 +881,11 @@ class RAO(Grid):
         vals_amp, vals_phase = complex_to_polar(vals, phase_degrees=phase_degrees)
         return freq, dirs, vals_amp, vals_phase
 
-    def __abs__(self):
-        return Grid(
-            self._freq,
-            self._dirs,
-            np.abs(self._vals),
-            freq_hz=False,
-            degrees=False,
-            **self.wave_convention,
-        )
-
     def __repr__(self):
         return "RAO"
 
 
-class DirectionalSpectrum(Grid):
+class DirectionalSpectrum(DisableComplexMixin, Grid):
     """
     Directional spectrum.
 
@@ -881,34 +948,6 @@ class DirectionalSpectrum(Grid):
             raise ValueError("Spectrum values can not be complex.")
         elif np.any(self._vals < 0.0):
             raise ValueError("Spectrum values must be positive.")
-
-    @classmethod
-    def from_grid(cls, grid):
-        """
-        Construct a ``DirectionalSpectrum`` object from a ``Grid`` object.
-
-        It is assumed that the grid's values represent spectrum density values that
-        correspond to frequency/direction units given during initialization. Note
-        that if you scale the frequency/direction bins of the spectrum, you must
-        also scale the corresponding spectrum density values (since the total energy/integral
-        of the spectrum should be preserved).
-
-        Parameters
-        ----------
-        grid : obj
-            Grid object.
-
-        Returns
-        -------
-        cls :
-            Initialized DirectionalSpectrum object.
-        """
-        return cls(
-            *grid.grid(freq_hz=grid._freq_hz, degrees=grid._degrees),
-            freq_hz=grid._freq_hz,
-            degrees=grid._degrees,
-            **grid.wave_convention,
-        )
 
     @classmethod
     def from_spectrum1d(
@@ -1345,7 +1384,7 @@ def calculate_response(
     rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
     wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
 
-    return rao_squared * wave_body
+    return multiply(rao_squared, wave_body, output_type="directional_spectrum")
 
 
 class BaseSpreading(ABC):

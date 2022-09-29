@@ -7,6 +7,7 @@ from ._core import (
     WaveSpectrum,
     calculate_response,
     complex_to_polar,
+    multiply,
     polar_to_complex,
 )
 from ._standardized1d import (
@@ -37,6 +38,7 @@ __all__ = [
     "JONSWAP",
     "ModifiedPiersonMoskowitz",
     "OchiHubble",
+    "multiply",
     "polar_to_complex",
     "RAO",
     "rigid_transform",
