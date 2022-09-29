@@ -1318,6 +1318,10 @@ class Test_Grid:
         grid_scaled = grid * 2.0
         np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * 2.0)
 
+    def test__rmul__numeric(self, grid):
+        grid_scaled = 2.0 * grid
+        np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * 2.0)
+
     def test__mul__raises_array(self, grid):
         with pytest.raises(TypeError):
             grid * grid._vals

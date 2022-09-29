@@ -643,6 +643,9 @@ class Grid:
 
         return new
 
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
     def __add__(self, other):
         """
         Add values with another Grid object.
