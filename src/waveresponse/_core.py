@@ -1,5 +1,6 @@
 import copy
 from abc import ABC, abstractmethod
+from numbers import Number
 
 import numpy as np
 from scipy.integrate import trapz
@@ -628,8 +629,8 @@ class Grid:
 
         Parameters
         ----------
-        other : obj
-            Grid object to be multiplied with.
+        other : obj or numeric
+            Grid object or number to be multiplied with.
 
         Returns
         -------
@@ -637,37 +638,78 @@ class Grid:
             A copy of the object where the values are multiplied with values of
             another grid.
         """
-
-        _check_is_similar(self, other, exact_type=True)
-
         new = self.copy()
-        new._vals = new._vals * other._vals
+
+        if isinstance(other, Number):
+            new._vals = new._vals * other
+        else:
+            _check_is_similar(self, other, exact_type=True)
+            new._vals = new._vals * other._vals
 
         return new
 
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
     def __add__(self, other):
         """
-        Add values with another Grid object.
+        Add values (element-wise).
 
-        Both grids must have the same frequency/direction coordinates.
+        Both grids must have the same frequency/direction coordinates, and the same
+        'wave convention'.
 
         Parameters
         ----------
-        other : obj
-            Grid object to be added with.
+        other : obj or numeric
+            Grid object or number to be added.
 
         Returns
         -------
         obj :
-            A copy of the object where the values are added with another Grid.
+            A copy of the object where the values are added with another grid's values.
         """
-
-        _check_is_similar(self, other, exact_type=True)
-
         new = self.copy()
-        new._vals = new._vals + other._vals
+
+        if isinstance(other, Number):
+            new._vals = new._vals + other
+        else:
+            _check_is_similar(self, other, exact_type=True)
+            new._vals = new._vals + other._vals
 
         return new
+
+    def __radd__(self, other):
+        return self.__add__(other)
+
+    def __sub__(self, other):
+        """
+        Subtract values (element-wise).
+
+        Both grids must have the same frequency/direction coordinates, and the same
+        'wave convention'.
+
+        Parameters
+        ----------
+        other : obj or numeric
+            Grid object or number to be subtracted.
+
+        Returns
+        -------
+        obj :
+            A copy of the object where the values are subtracted with another grid's values.
+        """
+        new = self.copy()
+
+        if isinstance(other, Number):
+            new._vals = new._vals - other
+        else:
+            _check_is_similar(self, other, exact_type=True)
+            new._vals = new._vals - other._vals
+
+        return new
+
+    def __rsub__(self, other):
+        return self.__sub__(other)
 
     def __repr__(self):
         return "Grid"

@@ -21,10 +21,20 @@ from waveresponse._core import _check_is_similar
 
 
 @pytest.fixture
-def grid():
+def freq_dirs():
+    """
+    Ensure that all grid-like fixtures has these frequency/direction coordinates.
+    This is needed for tests to work.
+    """
     freq = np.linspace(0, 1.0, 10)
     dirs = np.linspace(0, 360.0, 15, endpoint=False)
-    vals = np.random.random((10, 15))
+    return freq, dirs
+
+
+@pytest.fixture
+def grid(freq_dirs):
+    freq, dirs = freq_dirs
+    vals = np.random.random((len(freq), len(dirs)))
     grid = Grid(
         freq,
         dirs,
@@ -38,11 +48,10 @@ def grid():
 
 
 @pytest.fixture
-def rao():
-    freq = np.linspace(0, 1.0, 10)
-    dirs = np.linspace(0, 360.0, 15, endpoint=False)
-    vals_amp = np.random.random((10, 15))
-    vals_phase = np.random.random((10, 15))
+def rao(freq_dirs):
+    freq, dirs = freq_dirs
+    vals_amp = np.random.random((len(freq), len(dirs)))
+    vals_phase = np.random.random((len(freq), len(dirs)))
     rao = RAO.from_amp_phase(
         freq,
         dirs,
@@ -58,10 +67,9 @@ def rao():
 
 
 @pytest.fixture
-def directional_spectrum():
-    freq = np.linspace(0, 1.0, 10)
-    dirs = np.linspace(0, 360.0, 15, endpoint=False)
-    vals = np.random.random((10, 15))
+def directional_spectrum(freq_dirs):
+    freq, dirs = freq_dirs
+    vals = np.random.random((len(freq), len(dirs)))
     spectrum = DirectionalSpectrum(
         freq,
         dirs,
@@ -75,10 +83,9 @@ def directional_spectrum():
 
 
 @pytest.fixture
-def wave():
-    freq = np.linspace(0, 1.0, 10)
-    dirs = np.linspace(0, 360.0, 15, endpoint=False)
-    vals = np.random.random((10, 15))
+def wave(freq_dirs):
+    freq, dirs = freq_dirs
+    vals = np.random.random((len(freq), len(dirs)))
     wave = WaveSpectrum(
         freq,
         dirs,
@@ -1314,6 +1321,26 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(grid_squared._dirs, grid._dirs)
         np.testing.assert_array_almost_equal(grid_squared._vals, vals_expect)
 
+    def test__mul__numeric(self, grid):
+        grid_scaled = grid * 2.0
+        np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * 2.0)
+
+        grid_scaled = grid * -2.0
+        np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * -2.0)
+
+        grid_scaled = grid * 0.0
+        np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * 0.0)
+
+        grid_scaled = grid * 2
+        np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * 2)
+
+        grid_scaled = grid * (1 + 1j)
+        np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * (1 + 1j))
+
+    def test__rmul__numeric(self, grid):
+        grid_scaled = 2.0 * grid
+        np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * 2.0)
+
     def test__mul__raises_array(self, grid):
         with pytest.raises(TypeError):
             grid * grid._vals
@@ -1388,6 +1415,57 @@ class Test_Grid:
     def test__add__check_is_similar(self, mock_check_is_similar, grid):
         grid + grid
         mock_check_is_similar.assert_called_once_with(grid, grid, exact_type=True)
+
+    def test__add__numeric(self, grid):
+        grid_added = grid + 2.0
+        np.testing.assert_array_almost_equal(grid_added._vals, grid._vals + 2.0)
+
+        grid_added = grid + 0.0
+        np.testing.assert_array_almost_equal(grid_added._vals, grid._vals + 0.0)
+
+        grid_added = grid + 2
+        np.testing.assert_array_almost_equal(grid_added._vals, grid._vals + 2)
+
+        grid_added = grid + (1 + 1j)
+        np.testing.assert_array_almost_equal(grid_added._vals, grid._vals + (1 + 1j))
+
+    def test__radd__numeric(self, grid):
+        grid_added = 2.0 + grid
+        np.testing.assert_array_almost_equal(grid_added._vals, grid._vals + 2.0)
+
+    def test__sub__(self, grid):
+        out = grid - grid
+
+        assert isinstance(out, Grid)
+        np.testing.assert_array_almost_equal(out._vals, grid._vals - grid._vals)
+
+    @patch("waveresponse._core._check_is_similar")
+    def test__sub__check_is_similar(self, mock_check_is_similar, grid):
+        grid - grid
+        mock_check_is_similar.assert_called_once_with(grid, grid, exact_type=True)
+
+    def test__sub__raises_type(self, grid, rao):
+        with pytest.raises(TypeError):
+            grid - rao
+
+    def test__sub__numeric(self, grid):
+        grid_subtracted = grid - 2.0
+        np.testing.assert_array_almost_equal(grid_subtracted._vals, grid._vals - 2.0)
+
+        grid_subtracted = grid - 0.0
+        np.testing.assert_array_almost_equal(grid_subtracted._vals, grid._vals - 0.0)
+
+        grid_subtracted = grid - 2
+        np.testing.assert_array_almost_equal(grid_subtracted._vals, grid._vals - 2)
+
+        grid_subtracted = grid - (1 + 1j)
+        np.testing.assert_array_almost_equal(
+            grid_subtracted._vals, grid._vals - (1 + 1j)
+        )
+
+    def test__rsub__numeric(self, grid):
+        grid_subtracted = 2.0 - grid
+        np.testing.assert_array_almost_equal(grid_subtracted._vals, grid._vals - 2.0)
 
     def test__repr__(self, grid):
         assert str(grid) == "Grid"
