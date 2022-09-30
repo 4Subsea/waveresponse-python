@@ -73,13 +73,15 @@ def rigid_transform_surge(t: np.array, surge: RAO, pitch: RAO, yaw: RAO) -> RAO:
     """
     t = np.asarray_chkfinite(t)
 
-    if len(t) != 3:
+    try:
+        tx, ty, tz = t
+    except ValueError:
         raise ValueError("Translation vector, `t`, should have length 3.")
 
     if not isinstance(surge, RAO):
         raise ValueError("RAO objects must be of type 'waveresponse.RAO'.")
 
-    return surge - t[1] * yaw + t[2] * pitch
+    return surge - ty * yaw + tz * pitch
 
 
 def rigid_transform_sway(t: np.array, sway: RAO, roll: RAO, yaw: RAO) -> RAO:
@@ -107,13 +109,15 @@ def rigid_transform_sway(t: np.array, sway: RAO, roll: RAO, yaw: RAO) -> RAO:
     """
     t = np.asarray_chkfinite(t)
 
-    if len(t) != 3:
+    try:
+        tx, ty, tz = t
+    except ValueError:
         raise ValueError("Translation vector, `t`, should have length 3.")
 
     if not isinstance(sway, RAO):
         raise ValueError("RAO objects must be of type 'waveresponse.RAO'.")
 
-    return sway + t[0] * yaw - t[2] * roll
+    return sway + tx * yaw - tz * roll
 
 
 def rigid_transform_heave(t: np.array, heave: RAO, roll: RAO, pitch: RAO) -> RAO:
@@ -141,10 +145,12 @@ def rigid_transform_heave(t: np.array, heave: RAO, roll: RAO, pitch: RAO) -> RAO
     """
     t = np.asarray_chkfinite(t)
 
-    if len(t) != 3:
+    try:
+        tx, ty, tz = t
+    except ValueError:
         raise ValueError("Translation vector, `t`, should have length 3.")
 
     if not isinstance(heave, RAO):
         raise ValueError("RAO objects must be of type 'waveresponse.RAO'.")
 
-    return heave - t[0] * pitch + t[1] * roll
+    return heave - tx * pitch + ty * roll
