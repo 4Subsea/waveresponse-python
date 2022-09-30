@@ -70,11 +70,16 @@ def _check_is_similar(*grids, exact_type=True):
 
     if exact_type:
         type_ = type(grid_ref)
+
+        def check_type(grid, grid_type):
+            return type(grid) == grid_type
+
     else:
         type_ = Grid
+        check_type = isinstance
 
     for grid_i in grids:
-        if not isinstance(grid_i, type_):
+        if not check_type(grid_i, type_):
             raise TypeError("Object types are not similar.")
         elif grid_ref._vals.shape != grid_i._vals.shape:
             raise ValueError("Grid objects have different shape.")
