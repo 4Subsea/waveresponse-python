@@ -534,6 +534,13 @@ class Grid:
         -------
         array :
             Interpolated grid values.
+
+        Notes
+        -----
+        Apply 'polar' interpolation with caution as phase values are not "unwraped"
+        before interpolation. This may lead to some unexpected artifacts in the
+        results.
+
         """
         freq = np.asarray_chkfinite(freq).reshape(-1)
         dirs = np.asarray_chkfinite(dirs).reshape(-1)
