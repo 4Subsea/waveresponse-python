@@ -17,8 +17,8 @@ def complex_to_polar(complex_vals, phase_degrees=False):
     complex_vals : array-like
         Complex number values.
     phase_degrees : bool
-        Whether the phase angles should be returned in 'degrees'. If ``False``,
-        'radians' is assumed.
+        Whether the phase angles should be returned in 'degrees' (``True``) or
+        'radians' (``False``).
 
     Returns
     -------
@@ -495,8 +495,8 @@ class Grid:
         self,
         freq,
         dirs,
-        freq_hz=True,
-        degrees=True,
+        freq_hz=False,
+        degrees=False,
         complex_convert="rectangular",
         fill_value=0.0,
     ):
@@ -557,8 +557,8 @@ class Grid:
         self,
         freq,
         dirs,
-        freq_hz=True,
-        degrees=True,
+        freq_hz=False,
+        degrees=False,
         complex_convert="rectangular",
         fill_value=0.0,
     ):
@@ -1113,8 +1113,8 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         self,
         freq,
         dirs,
-        freq_hz=True,
-        degrees=True,
+        freq_hz=False,
+        degrees=False,
         fill_value=0.0,
         **kwargs,
     ):
@@ -1289,7 +1289,7 @@ class WaveSpectrum(DirectionalSpectrum):
 
             ``tz = np.sqrt(m0 / m2)``
         """
-        m0 = self.moment(0)
+        m0 = self.moment(0, freq_hz=False)
         m2 = self.moment(2, freq_hz=True)
         return np.sqrt(m0 / m2)
 
