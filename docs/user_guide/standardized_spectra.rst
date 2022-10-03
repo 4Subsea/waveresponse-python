@@ -3,8 +3,9 @@ Standardized wave spectra
 
 Idealized 1-D spectra
 #####################
-Often you do not have access to the true wave spectrum for the area you are interested in.
-Then, it is common to instead use a standardized wave spectrum (which there exists many of).
+It is common practice to approximate the actual wave spectrum with a standardized wave spectrum (which there exists many of).
+``waveresponse`` provides the most common standardized 1D wave spectra.
+
 
 Pierson-Moskowitz
 -----------------
