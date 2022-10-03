@@ -28,8 +28,8 @@ a direction list (1-D array) and corresponding grid values (2-D array).
         degrees=True,
     )
 
-To be able to interpret the (wave) directions and values that are associated with
-a grid, we need some information about the 'wave convention' that is used. Two boolean
+To properly interpret the (wave) directions and values that are associated with
+a grid, we need information about the assumed 'wave convention'. Two boolean
 parameters are needed:
 
 *clockwise*
@@ -52,16 +52,15 @@ These parameters are set during initialization of the grid object:
         waves_coming_from=True,
     )
 
-If you want to convert the grid to a different wave convention, you can achieve
-that by calling the :meth:`~waveresponse.Grid.set_wave_convention` method with the
-desired convention flags.
+The grid can be converted to a different wave convention anytime by calling the
+:meth:`~waveresponse.Grid.set_wave_convention` method with the desired convention flags.
 
 .. code-block:: python
 
     grid.set_wave_convention(clockwise=False, waves_coming_from=True)
 
-Once you have an initialized grid object, the grid's frequency/direction coordinates
-and values can be retrieved by calling the :meth:`~waveresponse.Grid.grid` method.
+The frequency/direction coordinates and values of a The :class:`~waveresponse.Grid` instance
+can be retrieved by calling the :meth:`~waveresponse.Grid.grid` method.
 You must then specify which coordinate units to return by setting the ``freq_hz``
 and ``degrees`` flags.
 
@@ -99,10 +98,16 @@ will be done on the grid's values (2-D array).
 .. code-block:: python
 
     # Multiply
-    grid_squared = grid * grid
+    grid_mul = grid * grid
+    grid_mul_scalar = 2. * grid
 
     # Add
     grid_added = grid + grid
+    grid_added_scalar = grid + 2.
+
+    # Subtract
+    grid_sub = grid - grid
+    grid_sub_scalar = 1. - grid
 
     # Convert to real or imaginary parts
     grid_real = grid.real
