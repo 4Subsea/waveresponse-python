@@ -59,8 +59,8 @@ The grid can be converted to a different wave convention anytime by calling the
 
     grid.set_wave_convention(clockwise=False, waves_coming_from=True)
 
-The frequency/direction coordinates and values of a The :class:`~waveresponse.Grid` instance
-can be retrieved by calling the :meth:`~waveresponse.Grid.grid` method.
+The frequency/direction coordinates and values of the :class:`~waveresponse.Grid`
+instance can be retrieved by calling the :meth:`~waveresponse.Grid.grid` method.
 You must then specify which coordinate units to return by setting the ``freq_hz``
 and ``degrees`` flags.
 
