@@ -65,7 +65,7 @@ spectrum (1-D array), a directional spreading function and a peak direction:
     Two standardized (cosine-based) spreading functions, :class:`~waveresponse.CosineFullSpreading`
     and :class:`~waveresponse.CosineHalfSpreading`, are provided by ``waveresponse``.
 
-The :class:`~waveresponse.WaveSpectrum` extends the
+The :class:`~waveresponse.WaveSpectrum` class extends the
 :class:`~waveresponse.DirectionalSpectrum` class with the following:
 
 Calculate the significant wave height, Hs:

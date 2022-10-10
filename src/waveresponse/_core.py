@@ -104,7 +104,7 @@ def multiply(grid1, grid2, output_type="grid"):
         Grid object.
     grid2 : obj
         Grid object.
-    type_ : str {"spectrum", "rao", "grid"}
+    output_type : str {"grid", "rao", "directional_spectrum", "wave_spectrum"}
         Output grid type.
     """
 

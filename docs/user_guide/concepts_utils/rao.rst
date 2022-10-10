@@ -2,7 +2,7 @@ RAO
 ===
 The :class:`~waveresponse.RAO` class provides an interface for handling response
 amplitude operators (RAOs). :class:`~waveresponse.RAO` extends :class:`~waveresponse.Grid`,
-and contains RAO values on a two-dimentional frequency/(wave)direction grid:
+and contains RAO values on a two-dimentional frequency/(wave)direction grid.
 
 .. math::
     H(\omega, \theta)
