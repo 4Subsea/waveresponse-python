@@ -5,7 +5,8 @@ This section gives an overview of all public ``waveresponse`` objects,
 functions and methods.
 
 
-.. currentmodule:: src.waveresponse
+.. currentmodule:: waveresponse
+
 
 
 .. autosummary::
@@ -13,6 +14,25 @@ functions and methods.
     :template: class.rst
 
     BasePMSpectrum
+    BaseSpectrum1d
+    calculate_response
+    complex_to_polar
+    CosineFullSpreading
+    CosineHalfSpreading
+    DirectionalSpectrum
+    Grid
+    JONSWAP
+    ModifiedPiersonMoskowitz
+    OchiHubble
+    multiply
+    polar_to_complex
+    RAO
+    rigid_transform
+    rigid_transform_heave
+    rigid_transform_surge
+    rigid_transform_sway
+    WaveSpectrum
+
 
 
 
