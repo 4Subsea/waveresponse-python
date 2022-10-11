@@ -56,6 +56,6 @@ deps =
 basepython = python3.9
 commands = sphinx-build -W -b html -d {toxworkdir}/docs_doctree docs {toxworkdir}/docs_out
 deps =
-    sphinx == 4.5
-    pydata-sphinx-theme == 0.8
+    sphinx
+    pydata-sphinx-theme
 """
