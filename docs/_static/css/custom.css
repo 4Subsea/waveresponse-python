@@ -1,48 +1,21 @@
 /* Provided by the Sphinx base theme template at build time */
 @import "../basic.css";
 
-/*****************************************************************************
-* 4Subsea tweaks
-**/
-
-.bd-header.navbar-light#navbar-main .navbar-nav li a.nav-link {
-  padding: 0 0.5rem;
-  color: var(--pst-color-navbar-link)
-}
-
-
-.bd-header.navbar-light#navbar-main .navbar-nav li a.nav-link:hover{
-  color: var(--pst-color-primary)
-}
-
-
-.admonition, div.admonition {
-  background-color: transparent ;
-}
-
-
-h1, h2 {
-  color: var(--pst-color-h1);
-}
-
-.navbar-light .logo__title {
-  color: var(--pst-color-navbar-link);
-}
-
-
-
 :root {
+  
 
   /*****************************************************************************
   * Theme config
   **/
   --pst-header-height: 44px;
 
-
   /*****************************************************************************
   * Font size
   **/
-  --pst-font-size-base: 14px; /* base font size - applied at body / html level */
+  --pst-font-size-base: 18px; /* base font size - applied at body / html level */
+  --pst-font-size-nav: 15px; /* navbar font size */
+  --pst-font-size-breadcrumb: 16px; /* breadcrumb font size */
+  --pst-font-size-logo: 16px; /* breadcrumb font size */
 
   /*****************************************************************************
   * Font family
@@ -59,48 +32,173 @@ h1, h2 {
   Liberation Mono, "Lucida Console", monospace;
 
   --pst-font-family-base: var(--pst-font-family-sansserif-system);
-  --pst-font-family-heading: var(--pst-font-family-serif-system);
+  --pst-font-family-heading: var(--pst-font-family-sansserif-system);
   --pst-font-family-monospace: var(--pst-font-family-monospace-system);
 
   /*****************************************************************************
   * Color
-  * 
-  * Colors are defined in rgb string way, "red, green, blue"
   **/
+  --pst-color-on-background: #333333 !important; /*navbar bg-colour*/
+  --pst-color-background: #ece9e5 !important;
+
   --pst-color-primary: #00A0AF !important; /* headers */
-  --pst-color-text-base: 0, 45, 86 !important;
+  --pst-color-text-base: #49494a !important;
   --pst-color-info: #009DDC !important;
   --pst-color-success: 0, 168, 143;
   --pst-color-warning: 250, 166, 52;
   --pst-color-danger: 237, 23, 79;
 
-  --pst-color-on-background: #333333 !important; /*navbar bg-colour*/
-  --pst-color-text-muted: #F5F5F5 !important; /* Navbar text and inactive sidebar links*/
-  --pst-color-text-muted: #77757A !important ; 
-
-  --pst-color-h1: #002D56 !important;
-  --pst-color-h2: var(--pst-color-h1);
-  --pst-color-h3: var(--pst-color-h1);
-  --pst-color-h4: var(--pst-color-h1);
+  --pst-color-h1: var(--pst-color-primary) !important;
+  --pst-color-h2: var(--pst-color-primary) !important;
+  --pst-color-h3: #49494a !important;
+  --pst-color-h4: var(--pst-color-primary) !important;
   --pst-color-h5: var(--pst-color-text-base);
   --pst-color-h6: var(--pst-color-text-base);
   --pst-color-paragraph: var(--pst-color-text-base);
-  --pst-color-link: var(--pst-color-primary) !important; /*links*/
+  --pst-color-link: #00A0AF !important; /*links*/
   --pst-color-link-hover: #F3776F !important;
-  --pst-color-headerlink: #002D56 !important;;
+  --pst-color-headerlink: #002D56 !important;  
   --pst-color-headerlink-hover: #0032FA !important;
   --pst-color-inline-code: #ED174F !important;
 
+  --pst-color-text-muted: #77757A !important ;    /* Navbar text and inactive sidebar links*/
 
-  --pst-color-active-navigation: var(--pst-color-primary);
-  --pst-color-navbar-link: #F5F5F5 !important;
-  --pst-color-navbar-link-hover: var(--pst-color-active-navigation) !important;
-  --pst-color-navbar-link-active: var(--pst-color-active-navigation);
-
+  --pst-color-active-navigation: red !important;  /*#00A0Af !important;*/
+  --pst-color-navbar-link: #ece9e5 !important;
 
    /*****************************************************************************
   * Admonitions
   **/
   --pst-color-admonition-default: var(--pst-color-info) !important;
   --pst-color-admonition-note: var(--pst-color-info) !important;
+}
+
+/*****************************************************************************
+* 4Subsea tweaks
+**/
+h1, h2 {
+  color: var(--pst-color-h1);
+}
+
+h1 {
+  font-size: 32px;
+}
+h2 {
+  font-size: 22px;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.bd-header {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  justify-content: left;
+  max-height: var(--pst-header-height);
+  white-space: nowrap;
+}
+
+.bd-header .bd-header__inner{
+  margin-top: 5px;
+}
+
+.bd-header .navbar-nav li {
+  font-size: var(--pst-font-size-nav);
+}
+
+.bd-header .navbar-nav li a.nav-link {
+  color: var(--pst-color-navbar-link);
+  }
+
+.bd-header .navbar-nav li a.nav-link:hover {
+  color: var(--pst-color-navbar-link);
+}
+
+.bd-header .navbar-nav:not(#navbar-icon-links) li a.nav-link:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--pst-color-link);
+}
+
+.bd-header .navbar-nav>.active>.nav-link {
+  color: var(--pst-color-navbar-link);
+  font-weight: 400;
+}
+
+.bd-header .navbar-nav .dropdown button {
+  color: var(--pst-color-navbar-link);
+  font-size: var(--pst-font-size-nav);
+}
+
+.navbar-brand {
+  margin-left: 73px;
+  margin-right: 47px;
+}
+
+.navbar-brand img{
+  height: 22px;
+}
+
+.navbar-brand img:hover{
+  height: 32px;
+  border-top: transparent;
+  border-top-style: solid;
+  border-top-width: 2px;
+  padding-top: 3px;
+  border-bottom: var(--pst-color-primary);
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  padding-bottom: 3px;
+}
+
+.logo__title {
+  color: var(--pst-color-navbar-link);
+  font-size: var(--pst-font-size-logo);
+  padding-left: 4px;
+}
+
+.admonition, div.admonition {
+  background-color: transparent ;
+}
+
+.tocsection.sourcelink {
+  display: none;
+}
+
+/* Stuff for breadcrumb lists */
+.breadcrumb {
+  height: var(--pst-header-height);
+  background-color: white;
+  font-size: var(--pst-font-size-breadcrumb);
+  padding-left: 16px;
+  padding-top: 10px;
+
+}
+
+ul.breadcrumb {
+  list-style: none;
+}
+
+.breadcrumb .current_relbar{
+  color:var(--pst-color-text-base);
+}
+
+ul.breadcrumb li {
+  display: inline;
+}
+
+ul.breadcrumb li a:hover {
+  color: var(--pst-color-link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+ul.breadcrumb li+li:before {
+  padding: 5px;
+  color: var(--pst-color-text-base);
+  content: "/\00a0";
 }

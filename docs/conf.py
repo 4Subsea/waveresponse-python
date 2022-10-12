@@ -13,20 +13,22 @@
 import os
 import sys
 from datetime import date
-from importlib import metadata
+
+# from importlib import metadata
 
 sys.path.insert(0, os.path.abspath("../"))
+sys.path.insert(0, os.path.abspath("../src/"))
 
 
 # -- Project information -----------------------------------------------------
-_TEMPLATE_VERSION = "1.0.0"
+_TEMPLATE_VERSION = "2.0.0"
 
 project = "waveresponse"
 copyright = f"{date.today().year}, 4Subsea"
 author = "4Subsea"
 
 # The full version, including alpha/beta/rc tags
-version = "0.0.1"  # metadata.version(project)
+version = "1.0.2"
 release = version
 
 
@@ -36,10 +38,12 @@ release = version
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinx.ext.autosummary",
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
     "sphinx.ext.intersphinx",
 ]
+autosummary_generate = True
 
 # Napoleon settings
 napoleon_google_docstring = False
@@ -48,11 +52,10 @@ napoleon_numpy_docstring = True
 # Intershpinx mapping
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
-    "numpy": ("https://numpy.org/doc/stable", None),
 }
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ["_templates"]
+templates_path = ["_templates/autosummary"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -72,28 +75,26 @@ html_theme = "pydata_sphinx_theme"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
-# html_logo = (
-#     "_static/4insight-logo.svg"  # "_static/Logo 4Subsea horisontal negative.png"
-# )
+
 html_title = "WaveResponse"
+
 html_context = {"default_mode": "light"}
 html_favicon = "_static/favicon.png"
+html_sidebars = {"**": ["sidebar-nav-bs.html"]}
 
 html_theme_options = {
-    "navbar_end": ["navbar-icon-links"],
-    "external_links": [
-        {"name": "4Insight.io", "url": "https://4insight.io"},
-    ],
+    "navbar_end": ["navbar-icon-links.html"],
     "icon_links": [
         {
             "name": "GitHub",
-            "url": "https://github.com/4Subsea/waveresponse-python",
+            "url": "https://github.com/4subsea/fourinsight-xyz",
             "icon": "fab fa-github",
         },
         {
             "name": "PyPI",
-            "url": "https://pypi.org/project/waveresponse",
+            "url": "https://pypi.org/project/fourinsight-xyz",
             "icon": "fas fa-box",
         },
     ],
+    "navbar_align": "left",
 }
