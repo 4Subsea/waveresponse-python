@@ -76,14 +76,14 @@ html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
 html_css_files = ["css/custom.css"]
 
-html_logo = "_static/4insight-logo.svg"
+html_title = "WaveResponse"
 
 html_context = {"default_mode": "light"}
 html_favicon = "_static/favicon.png"
 html_sidebars = {"**": ["sidebar-nav-bs.html"]}
 
 html_theme_options = {
-    "logo": {"link": "http://docs.4insight.io", "text": "DOCUMENTATION"},
+
     "navbar_end": ["navbar-icon-links.html"],
     "icon_links": [
         {
