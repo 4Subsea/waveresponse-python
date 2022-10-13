@@ -87,12 +87,12 @@ html_theme_options = {
     "icon_links": [
         {
             "name": "GitHub",
-            "url": "https://github.com/4subsea/fourinsight-xyz",
+            "url": "https://github.com/4Subsea/waveresponse-python",
             "icon": "fab fa-github",
         },
         {
             "name": "PyPI",
-            "url": "https://pypi.org/project/fourinsight-xyz",
+            "url": "https://pypi.org/project/waveresponse",
             "icon": "fas fa-box",
         },
     ],
