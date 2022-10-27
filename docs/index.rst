@@ -1,7 +1,7 @@
 WaveResponse documentation
 ==========================
 
-``waveresponse`` provides utilities for handling 2-D wave spectra and response amplitude
+``waveresponse`` provides utilities for conveniently handling 2-D wave spectra and response amplitude
 operators (RAOs) using the Python programming language.
 
 The tools you get with ``waveresponse`` are useful for handling wave data and RAO
