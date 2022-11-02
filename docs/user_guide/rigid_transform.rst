@@ -51,7 +51,15 @@ location, *j*, relative to the old location, *i*.
     t = np.array([10.0, 0.0, 0.0])   # (x, y, z) coordinates of j relative to i
 
     # Rigid body transform surge, sway and heave RAOs
-    surge_j, sway_j, heave_j = wr.rigid_transform(t, surge_i, sway_i, heave_i, roll, pitch, yaw)
+    surge_j, sway_j, heave_j = wr.rigid_transform(
+        t,
+        surge_i,
+        sway_i,
+        heave_i,
+        roll,
+        pitch,
+        yaw,
+    )
 
 Alternatively, you can transform the degrees-of-freedom one at a time:
 
