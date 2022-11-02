@@ -9,6 +9,12 @@ from scipy.special import gamma
 
 
 def _robust_modulus(x, periodicity):
+    """
+    Robust modulus operator.
+
+    Similar to ``x % periodicity``, but ensures that it is robust w.r.t. floating
+    point numbers.
+    """
     x = np.asarray_chkfinite(x % periodicity).copy()
     np.nextafter(x, -1, where=(x == periodicity), out=x)
     return x
