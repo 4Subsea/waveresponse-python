@@ -16,7 +16,7 @@ def _robust_modulus(x, periodicity):
 
 def complex_to_polar(complex_vals, phase_degrees=False):
     """
-Convert complex numbers to polar form (i.e., amplitude and phase).
+    Convert complex numbers to polar form (i.e., amplitude and phase).
 
     Parameters
     ----------
