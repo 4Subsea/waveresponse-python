@@ -413,7 +413,7 @@ class Grid:
         if config_new["clockwise"] != config_org["clockwise"]:
             dirs *= -1
 
-        return dirs % periodicity
+        return _robust_modulus(dirs, periodicity)
 
     @staticmethod
     def _sort(dirs, vals):
@@ -456,7 +456,7 @@ class Grid:
             angle = (np.pi / 180.0) * angle
 
         new = self.copy()
-        dirs_new = (new._dirs - angle) % (2.0 * np.pi)
+        dirs_new = _robust_modulus(new._dirs - angle, 2.0 * np.pi)
         new._dirs, new._vals = new._sort(dirs_new, new._vals)
         return new
 
@@ -1075,7 +1075,7 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
 
         for (idx_f, idx_d), val_i in np.ndenumerate(vals):
             f_i = freq[idx_f]
-            d_i = (dirs[idx_d] - dirp) % period
+            d_i = _robust_modulus(dirs[idx_d] - dirp, period)
             vals[idx_f, idx_d] = spread_fun(f_i, d_i) * val_i
 
         return cls(
@@ -1334,7 +1334,7 @@ class WaveSpectrum(DirectionalSpectrum):
         """
         sin = trapz(np.sin(dirs) * spectrum, dirs)
         cos = trapz(np.cos(dirs) * spectrum, dirs)
-        return np.arctan2(sin, cos) % (2.0 * np.pi)
+        return _robust_modulus(np.arctan2(sin, cos), 2.0 * np.pi)
 
     def dirp(self, degrees=None):
         """
@@ -1489,7 +1489,7 @@ class BaseSpreading(ABC):
         else:
             scale = 1.0 / (2.0 * np.pi)
 
-        return scale * self._spread_fun(frequency, direction % (2.0 * np.pi))
+        return scale * self._spread_fun(frequency, _robust_modulus(direction, 2.0 * np.pi))
 
     @abstractmethod
     def _spread_fun(self, omega, theta):
