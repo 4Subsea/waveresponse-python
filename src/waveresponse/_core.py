@@ -9,8 +9,7 @@ from scipy.special import gamma
 
 
 def _robust_modulus(x, periodicity):
-    x = np.asarray_chkfinite(x).copy()
-    x = x % periodicity
+    x = np.asarray_chkfinite(x % periodicity).copy()
     np.nextafter(x, -1, where=(x == periodicity), out=x)
     return x
 
