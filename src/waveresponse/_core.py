@@ -8,6 +8,14 @@ from scipy.interpolate import interp2d
 from scipy.special import gamma
 
 
+def _robust_modulus(x, periodicity):
+    x = np.asarray_chkfinite(x).copy()
+    x = x % periodicity
+    mask = (x == periodicity)
+    np.nextafter(x[mask], -1, out=x[mask])
+    return x
+
+
 def complex_to_polar(complex_vals, phase_degrees=False):
     """
     Convert complex numbers to polar form (i.e., amplitude and phase).
