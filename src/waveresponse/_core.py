@@ -1493,7 +1493,9 @@ class BaseSpreading(ABC):
         else:
             scale = 1.0 / (2.0 * np.pi)
 
-        return scale * self._spread_fun(frequency, _robust_modulus(direction, 2.0 * np.pi))
+        return scale * self._spread_fun(
+            frequency, _robust_modulus(direction, 2.0 * np.pi)
+        )
 
     @abstractmethod
     def _spread_fun(self, omega, theta):
