@@ -15,12 +15,6 @@ equations:
 .. math::
     H_{z_j}(\omega) = H_{z_i}(\omega) - t_xH_{\beta}(\omega) + t_yH_{\alpha}(\omega)
 
-.. where :math:`t_x`, :math:`t_y` and :math:`t_z` are the coordinates of a 'new' location
-.. (*j*), relative to an 'old' location (*i*). :math:`H_x(\omega)` is the surge RAO,
-.. :math:`H_y(\omega)` is the sway RAO, :math:`H_z(\omega)` is the heave RAO,
-.. :math:`H_{\alpha}(\omega)` is the roll RAO, :math:`H_{\beta}(\omega)` is the pitch RAO,
-.. and :math:`H_{\gamma}(\omega)` is the yaw RAO.
-
 where,
 
 * :math:`H_x(\omega)` is the surge RAO,
