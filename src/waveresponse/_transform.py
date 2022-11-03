@@ -78,7 +78,8 @@ def rigid_transform_surge(
     """
     Rigid body transformation of surge RAO.
 
-    Transforms a surge RAO from one location to another on a rigid body according to:
+    Transforms a surge RAO from one location to another by assuming rigid body motion.
+    The rigid body transform is calculated according to:
 
     ``surge_new = surge - ty * yaw + tz * pitch``
 
@@ -132,7 +133,8 @@ def rigid_transform_sway(
     """
     Rigid body transformation of sway RAO.
 
-    Transforms a sway RAO from one location to another on a rigid body according to:
+    Transforms a sway RAO from one location to another by assuming rigid body motion.
+    The rigid body transform is calculated according to:
 
     ``sway_new = sway + tx * yaw - tz * roll``
 
@@ -186,7 +188,8 @@ def rigid_transform_heave(
     """
     Rigid body transformation of heave RAO.
 
-    Transforms a heave RAO from one location to another on a rigid body according to:
+    Transforms a heave RAO from one location to another by assuming rigid body motion.
+    The rigid body transform is calculated according to:
 
     ``heave_new = heave - tx * pitch + ty * roll``
 
