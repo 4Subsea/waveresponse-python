@@ -100,8 +100,8 @@ def rigid_transform_surge(
     degrees : bool
         Weather the rotational degree-of-freedom RAOs (i.e., pitch and yaw) represent
         angles in 'degrees' (default). If ``False``, 'radians' is assumed. If ``degrees=True``,
-        the roll, pitch and yaw RAO amplitudes will be scaled by a factor ``pi/180``
-        before calculating the rigid body transform.
+        the pitch and yaw RAO amplitudes will be scaled by a factor ``pi/180`` before
+        calculating the rigid body transform.
 
     Returns
     -------
@@ -154,8 +154,8 @@ def rigid_transform_sway(
     degrees : bool
         Weather the rotational degree-of-freedom RAOs (i.e., roll and yaw) represent
         angles in 'degrees' (default). If ``False``, 'radians' is assumed. If ``degrees=True``,
-        the roll, pitch and yaw RAO amplitudes will be scaled by a factor ``pi/180``
-        before calculating the rigid body transform.
+        the roll and yaw RAO amplitudes will be scaled by a factor ``pi/180`` before
+        calculating the rigid body transform.
 
     Returns
     -------
@@ -205,10 +205,10 @@ def rigid_transform_heave(
         Roll RAO.
     pitch : obj
         Pitch RAO.
-    rot_degrees : bool
+    degrees : bool
         Weather the rotational degree-of-freedom RAOs (i.e., roll and pitch) represent
         angles in 'degrees' (default). If ``False``, 'radians' is assumed. If ``degrees=True``,
-        the roll, pitch and yaw RAO amplitudes will be scaled by a factor ``pi/180``
+        the roll and pitch RAO amplitudes will be scaled by a factor ``pi/180``
         before calculating the rigid body transform.
 
     Returns
