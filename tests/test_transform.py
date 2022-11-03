@@ -545,6 +545,98 @@ class Test_rigid_transform_sway:
         assert sway_out._clockwise == sway._clockwise
         assert sway_out._waves_coming_from == sway._waves_coming_from
 
+    def test_rot_degrees(self):
+        freq = np.array([0.0, 0.5, 1.0])
+        dirs = np.array([0.0, 180.0])
+
+        vals_sway = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j],
+                [1.0 + 1.0j, 0.0 + 0.0j],
+                [0.0 + 1.0j, 1.0 + 0.0j],
+            ]
+        )
+
+        vals_roll = np.array(
+            [
+                [2.0 + 0.0j, 0.0 + 2.0j],
+                [2.0 + 2.0j, 0.0 + 0.0j],
+                [0.0 + 2.0j, 2.0 + 0.0j],
+            ]
+        )
+
+        vals_yaw = np.array(
+            [
+                [3.0 + 0.0j, 0.0 + 3.0j],
+                [3.0 + 3.0j, 0.0 + 0.0j],
+                [0.0 + 3.0j, 3.0 + 0.0j],
+            ]
+        )
+
+        sway = RAO(freq, dirs, vals_sway, degrees=True)
+        roll = RAO(freq, dirs, vals_roll, degrees=True)
+        yaw = RAO(freq, dirs, vals_yaw, degrees=True)
+
+        t = np.array([40, 50, 60])
+        sway_out = rigid_transform_sway(t, sway, roll, yaw, rot_degrees=True)
+
+        vals_expect = (
+            vals_sway
+            + 40.0 * (np.pi / 180.0) * vals_yaw
+            - 60.0 * (np.pi / 180.0) * vals_roll
+        )
+
+        assert isinstance(sway_out, RAO)
+        np.testing.assert_array_almost_equal(sway_out._freq, sway._freq)
+        np.testing.assert_array_almost_equal(sway_out._dirs, sway._dirs)
+        np.testing.assert_array_almost_equal(sway_out._vals, vals_expect)
+        assert sway_out._clockwise == sway._clockwise
+        assert sway_out._waves_coming_from == sway._waves_coming_from
+
+    def test_rot_radians(self):
+        freq = np.array([0.0, 0.5, 1.0])
+        dirs = np.array([0.0, 180.0])
+
+        vals_sway = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j],
+                [1.0 + 1.0j, 0.0 + 0.0j],
+                [0.0 + 1.0j, 1.0 + 0.0j],
+            ]
+        )
+
+        vals_roll = np.array(
+            [
+                [2.0 + 0.0j, 0.0 + 2.0j],
+                [2.0 + 2.0j, 0.0 + 0.0j],
+                [0.0 + 2.0j, 2.0 + 0.0j],
+            ]
+        )
+
+        vals_yaw = np.array(
+            [
+                [3.0 + 0.0j, 0.0 + 3.0j],
+                [3.0 + 3.0j, 0.0 + 0.0j],
+                [0.0 + 3.0j, 3.0 + 0.0j],
+            ]
+        )
+
+        sway = RAO(freq, dirs, vals_sway, degrees=True)
+        roll = RAO(freq, dirs, vals_roll, degrees=True)
+        yaw = RAO(freq, dirs, vals_yaw, degrees=True)
+
+        t = np.array([40, 50, 60])
+        sway_out = rigid_transform_sway(t, sway, roll, yaw, rot_degrees=False)
+
+        vals_expect = vals_sway + 40.0 * vals_yaw - 60.0 * vals_roll
+
+        assert isinstance(sway_out, RAO)
+        np.testing.assert_array_almost_equal(sway_out._freq, sway._freq)
+        np.testing.assert_array_almost_equal(sway_out._dirs, sway._dirs)
+        np.testing.assert_array_almost_equal(sway_out._vals, vals_expect)
+        assert sway_out._clockwise == sway._clockwise
+        assert sway_out._waves_coming_from == sway._waves_coming_from
+
 
 class Test_rigid_transform_heave:
     def test_rigid_transform_heave(self):
