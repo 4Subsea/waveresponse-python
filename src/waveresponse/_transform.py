@@ -17,7 +17,17 @@ def rigid_transform(
     Rigid body transformation of (surge, sway and heave) RAOs.
 
     Transforms surge, sway and heave RAOs from one location to another by assuming
-    rigid body motion. Note that the rotational degrees-of-freedom (i.e., roll,
+    rigid body motion. The rigid body transforms are calculated according to:
+
+    ``surge_new = surge - ty * yaw + tz * pitch``
+
+    ``sway_new = sway + tx * yaw - tz * roll``
+
+    ``heave_new = heave - tx * pitch + ty * roll``
+
+    where ``t = [tx, ty, tz]`` is the translation vector.
+
+    Note that the rotational degrees-of-freedom (i.e., roll,
     pitch and yaw) does not need transformation, since these are independent of
     location, and thus will be the same for all points on the rigid body.
 
@@ -66,7 +76,11 @@ def rigid_transform_surge(
     """
     Rigid body transformation of surge RAO.
 
-    Transforms a surge RAO from one location to another on a rigid body.
+    Transforms a surge RAO from one location to another on a rigid body according to:
+
+    ``surge_new = surge - ty * yaw + tz * pitch``
+
+    where ``t = [tx, ty, tz]`` is the translation vector.
 
     Parameters
     ----------
@@ -114,7 +128,11 @@ def rigid_transform_sway(
     """
     Rigid body transformation of sway RAO.
 
-    Transforms a sway RAO from one location to another on a rigid body.
+    Transforms a sway RAO from one location to another on a rigid body according to:
+
+    ``sway_new = sway + tx * yaw - tz * roll``
+
+    where ``t = [tx, ty, tz]`` is the translation vector.
 
     Parameters
     ----------
@@ -162,7 +180,11 @@ def rigid_transform_heave(
     """
     Rigid body transformation of heave RAO.
 
-    Transforms a heave RAO from one location to another on a rigid body.
+    Transforms a heave RAO from one location to another on a rigid body according to:
+
+    ``heave_new = heave - tx * pitch + ty * roll``
+
+    where ``t = [tx, ty, tz]`` is the translation vector.
 
     Parameters
     ----------
