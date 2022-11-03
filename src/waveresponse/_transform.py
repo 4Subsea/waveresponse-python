@@ -42,7 +42,7 @@ def rigid_transform(
         Yaw RAO.
     rot_degrees : bool
         Weather the rotational degree-of-freedom RAOs (i.e., roll, pitch and yaw)
-        has amplitudes given in 'deg/m' units. If ``False``, 'rad/m' is assumed.
+        has amplitudes given in 'deg/m' units (default). If ``False``, 'rad/m' is assumed.
 
     Returns
     -------
@@ -83,7 +83,7 @@ def rigid_transform_surge(
         Yaw RAO.
     rot_degrees : bool
         Weather the rotational degree-of-freedom RAOs (i.e., pitch and yaw) has
-        amplitudes given in 'deg/m' units. If ``False``, 'rad/m' is assumed.
+        amplitudes given in 'deg/m' units (default). If ``False``, 'rad/m' is assumed.
 
     Returns
     -------
@@ -131,7 +131,7 @@ def rigid_transform_sway(
         Yaw RAO.
     rot_degrees : bool
         Weather the rotational degree-of-freedom RAOs (i.e., roll and yaw) has
-        amplitudes given in 'deg/m' units. If ``False``, 'rad/m' is assumed.
+        amplitudes given in 'deg/m' units (default). If ``False``, 'rad/m' is assumed.
 
     Returns
     -------
@@ -179,7 +179,7 @@ def rigid_transform_heave(
         Pitch RAO.
     rot_degrees : bool
         Weather the rotational degree-of-freedom RAOs (i.e., roll and pitch) has
-        amplitudes given in 'deg/m' units. If ``False``, 'rad/m' is assumed.
+        amplitudes given in 'deg/m' units (default). If ``False``, 'rad/m' is assumed.
 
     Returns
     -------
