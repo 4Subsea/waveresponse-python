@@ -407,7 +407,7 @@ class Test_rigid_transform_surge:
         assert surge_out._clockwise == surge._clockwise
         assert surge_out._waves_coming_from == surge._waves_coming_from
 
-    def test_rigid_transform_surge_rot_degrees(self):
+    def test_rot_degrees(self):
         freq = np.array([0.0, 0.5, 1.0])
         dirs = np.array([0.0, 180.0])
 
@@ -455,7 +455,7 @@ class Test_rigid_transform_surge:
         assert surge_out._clockwise == surge._clockwise
         assert surge_out._waves_coming_from == surge._waves_coming_from
 
-    def test_rigid_transform_surge_rot_radians(self):
+    def test_rot_radians(self):
         freq = np.array([0.0, 0.5, 1.0])
         dirs = np.array([0.0, 180.0])
 
