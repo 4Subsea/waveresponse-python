@@ -116,7 +116,7 @@ class Test__robust_modulus:
         (0.0, 2.0 * np.pi, 0.0),
         (2.0 * 2.0 * np.pi, 2.0 * np.pi, 0.0),
         (2.0 * 2.0 * np.pi + 0.5, 2.0 * np.pi, 0.5),
-        (350.0 + 10.0, 360.0, 0.0)
+        (350.0 + 10.0, 360.0, 0.0),
     ]
 
     @pytest.mark.parametrize("x,period,out_expect", params_robust_modulus)
