@@ -58,11 +58,11 @@ def rigid_transform(
 
     Returns
     -------
-    surge_new : obj
+    surge_new : RAO
         Surge RAO (rigid body transformed).
-    sway_new : obj
+    sway_new : RAO
         Sway RAO (rigid body transformed).
-    heave_new : obj
+    heave_new : RAO
         Heave RAO (rigid body transformed).
     """
     surge_new = rigid_transform_surge(t, surge, pitch, yaw, degrees=degrees)
@@ -106,7 +106,7 @@ def rigid_transform_surge(
 
     Returns
     -------
-    surge_new : obj
+    surge_new : RAO
         Surge RAO (rigid body transformed).
     """
     t = np.asarray_chkfinite(t)
@@ -161,7 +161,7 @@ def rigid_transform_sway(
 
     Returns
     -------
-    sway_new : obj
+    sway_new : RAO
         Sway RAO (rigid body transformed).
     """
     t = np.asarray_chkfinite(t)
@@ -216,7 +216,7 @@ def rigid_transform_heave(
 
     Returns
     -------
-    heave_new : obj
+    heave_new : RAO
         Heave RAO (rigid body transformed).
     """
     t = np.asarray_chkfinite(t)
