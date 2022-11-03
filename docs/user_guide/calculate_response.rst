@@ -12,11 +12,18 @@ is governed by the following equation:
 .. math::
     S_x(\omega) = \int H_x(\omega, \theta)H_x^{*}(\omega, \theta) S_{\zeta}(\omega, \theta) d\theta
 
-where :math:`S_{\zeta}(\omega, \theta)` is the 2-D wave spectrum, :math:`H_x(\omega, \theta)`
+where :math:`S_{\zeta}(\omega, \theta)` is the 2-D directional wave spectrum, :math:`H_x(\omega, \theta)`
 is the degree-of-freedom's transfer function (i.e., RAO), :math:`H_x^{*}(\omega, \theta)`
 is the complex conjugate version of the transfer function, and :math:`S_x(\omega)`
 is the response spectrum. :math:`\theta` is the relative wave direction, and :math:`\omega`
 is the angular frequency.
+
+.. note::
+    Keep in mind that the wave spectrum and the RAO must be given in compatible
+    units when calculating response according to the above equations. E.e., if the
+    RAO is given in 'rad/m' units, then the wave spectrum must be given in 'm'.
+    And similarly, if the RAO is given in 'rad/rad', the wave spectrum must be given
+    in 'rad'.
 
 With ``waveresponse`` it is easy to estimate a vessel's response spectrum once
 you have an :class:`~waveresponse.RAO` object and a :class:`~waveresponse.WaveSpectrum`
