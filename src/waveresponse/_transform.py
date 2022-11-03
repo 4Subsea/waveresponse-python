@@ -17,8 +17,10 @@ def rigid_transform(
     Parameters
     ----------
     t : array-like
-        Translation vector given as (x, y, z) coordinates. Determines the position
-        of the 'new' location relative to the 'old' location.
+        Translation vector, describing the translation 'from-old-to-new' location
+        on the rigid body. Given as ``(x_new, y_new, z_new) - (x_old, y_old, z_old)``,
+        where ``(x_new, y_new, z_new)`` are coordinates of the 'new' location, and
+        ``(x_old, y_old, z_old)`` are coordinates of the 'old' location.
     surge : obj
         Surge RAO.
     sway : obj
@@ -57,8 +59,10 @@ def rigid_transform_surge(t: np.array, surge: RAO, pitch: RAO, yaw: RAO) -> RAO:
     Parameters
     ----------
     t : array-like
-        Translation vector given as (x, y, z) coordinates. Determines the position
-        of the 'new' location relative to the 'old' location.
+        Translation vector, describing the translation 'from-old-to-new' location
+        on the rigid body. Given as ``(x_new, y_new, z_new) - (x_old, y_old, z_old)``,
+        where ``(x_new, y_new, z_new)`` are coordinates of the 'new' location, and
+        ``(x_old, y_old, z_old)`` are coordinates of the 'old' location.
     surge : obj
         Surge RAO.
     pitch : obj
@@ -93,8 +97,10 @@ def rigid_transform_sway(t: np.array, sway: RAO, roll: RAO, yaw: RAO) -> RAO:
     Parameters
     ----------
     t : array-like
-        Translation vector given as (x, y, z) coordinates. Determines the position
-        of the 'new' location relative to the 'old' location.
+        Translation vector, describing the translation 'from-old-to-new' location
+        on the rigid body. Given as ``(x_new, y_new, z_new) - (x_old, y_old, z_old)``,
+        where ``(x_new, y_new, z_new)`` are coordinates of the 'new' location, and
+        ``(x_old, y_old, z_old)`` are coordinates of the 'old' location.
     sway : obj
         Sway RAO.
     roll : obj
@@ -129,8 +135,10 @@ def rigid_transform_heave(t: np.array, heave: RAO, roll: RAO, pitch: RAO) -> RAO
     Parameters
     ----------
     t : array-like
-        Translation vector given as (x, y, z) coordinates. Determines the position
-        of the 'new' location relative to the 'old' location.
+        Translation vector, describing the translation 'from-old-to-new' location
+        on the rigid body. Given as ``(x_new, y_new, z_new) - (x_old, y_old, z_old)``,
+        where ``(x_new, y_new, z_new)`` are coordinates of the 'new' location, and
+        ``(x_old, y_old, z_old)`` are coordinates of the 'old' location.
     heave : obj
         Heave RAO.
     roll : obj
