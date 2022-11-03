@@ -16,7 +16,7 @@ from waveresponse import (
     complex_to_polar,
     polar_to_complex,
 )
-from waveresponse._core import _check_is_similar
+from waveresponse._core import _check_is_similar, _robust_modulus
 
 
 @pytest.fixture
@@ -96,6 +96,23 @@ def wave(freq_dirs):
     )
 
     return wave
+
+
+class Test__robust_modulus:
+    params_robust_modulus = [
+        (2.5, 2.0, 0.5),
+        (2.0, 2.0, 0.0),
+        (0.0, 2.0, 0.0),
+        (4.0, 2.0, 0.0),
+        (4.5, 2.0, 0.5),
+        # (np.nextafter(2.0 * np.pi, 0), 2.0 * np.pi, 0.0),
+    ]
+
+    @pytest.mark.parametrize("x,period,out_expect", params_robust_modulus)
+    def test__robust_modulus(self, x, period, out_expect):
+        x_mod = _robust_modulus(x, period)
+        assert x_mod == pytest.approx(out_expect)
+        assert x_mod != period
 
 
 class Test_complex_to_polar:
