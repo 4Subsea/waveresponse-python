@@ -52,7 +52,9 @@ def rigid_transform(
         Yaw RAO.
     degrees : bool
         Weather the rotational degree-of-freedom RAOs (i.e., roll, pitch and yaw)
-        has amplitudes given in 'deg/m' units (default). If ``False``, 'rad/m' is assumed.
+        represent angles in 'degrees' (default). If ``False``, 'radians' is assumed. If ``degrees=True``,
+        the roll, pitch and yaw RAO amplitudes will be scaled by a factor ``pi/180``
+        before calculating the rigid body transform.
 
     Returns
     -------
@@ -96,8 +98,10 @@ def rigid_transform_surge(
     yaw : obj
         Yaw RAO.
     degrees : bool
-        Weather the rotational degree-of-freedom RAOs (i.e., pitch and yaw) has
-        amplitudes given in 'deg/m' units (default). If ``False``, 'rad/m' is assumed.
+        Weather the rotational degree-of-freedom RAOs (i.e., pitch and yaw) represent
+        angles in 'degrees' (default). If ``False``, 'radians' is assumed. If ``degrees=True``,
+        the roll, pitch and yaw RAO amplitudes will be scaled by a factor ``pi/180``
+        before calculating the rigid body transform.
 
     Returns
     -------
@@ -148,8 +152,10 @@ def rigid_transform_sway(
     yaw : obj
         Yaw RAO.
     degrees : bool
-        Weather the rotational degree-of-freedom RAOs (i.e., roll and yaw) has
-        amplitudes given in 'deg/m' units (default). If ``False``, 'rad/m' is assumed.
+        Weather the rotational degree-of-freedom RAOs (i.e., roll and yaw) represent
+        angles in 'degrees' (default). If ``False``, 'radians' is assumed. If ``degrees=True``,
+        the roll, pitch and yaw RAO amplitudes will be scaled by a factor ``pi/180``
+        before calculating the rigid body transform.
 
     Returns
     -------
@@ -200,8 +206,10 @@ def rigid_transform_heave(
     pitch : obj
         Pitch RAO.
     rot_degrees : bool
-        Weather the rotational degree-of-freedom RAOs (i.e., roll and pitch) has
-        amplitudes given in 'deg/m' units (default). If ``False``, 'rad/m' is assumed.
+        Weather the rotational degree-of-freedom RAOs (i.e., roll and pitch) represent
+        angles in 'degrees' (default). If ``False``, 'radians' is assumed. If ``degrees=True``,
+        the roll, pitch and yaw RAO amplitudes will be scaled by a factor ``pi/180``
+        before calculating the rigid body transform.
 
     Returns
     -------
