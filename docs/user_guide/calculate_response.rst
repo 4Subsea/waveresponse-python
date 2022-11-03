@@ -21,9 +21,9 @@ is the angular frequency.
 .. note::
     Keep in mind that the wave spectrum and the RAO must be given in compatible
     units when calculating response according to the above equations. E.e., if the
-    RAO is given in 'rad/m' units, then the wave spectrum must be given in 'm'.
-    And similarly, if the RAO is given in 'rad/rad', the wave spectrum must be given
-    in 'rad'.
+    RAO is given in :math:`(rad/m)` units, then the wave spectrum must be given in
+    :math:`m^2/Hz` (or :math:`m^2/(rad/s)`). And similarly, if the RAO is instead
+    given in :math:`(rad/rad)`, then the wave spectrum must be given in :math:`(rad^2/Hz)`.
 
 With ``waveresponse`` it is easy to estimate a vessel's response spectrum once
 you have an :class:`~waveresponse.RAO` object and a :class:`~waveresponse.WaveSpectrum`
