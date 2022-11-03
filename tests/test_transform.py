@@ -12,7 +12,6 @@ from waveresponse import (
 
 
 class Test_rigid_transform:
-
     def test_rigid_transform(self):
         freq = np.array([0.0, 0.5, 1.0])
         dirs = np.array([0.0, 180.0])
@@ -398,6 +397,98 @@ class Test_rigid_transform_surge:
 
         t = np.array([40, 50, 60])
         surge_out = rigid_transform_surge(t, surge, pitch, yaw)
+
+        vals_expect = vals_surge - 50.0 * vals_yaw + 60.0 * vals_pitch
+
+        assert isinstance(surge_out, RAO)
+        np.testing.assert_array_almost_equal(surge_out._freq, surge._freq)
+        np.testing.assert_array_almost_equal(surge_out._dirs, surge._dirs)
+        np.testing.assert_array_almost_equal(surge_out._vals, vals_expect)
+        assert surge_out._clockwise == surge._clockwise
+        assert surge_out._waves_coming_from == surge._waves_coming_from
+
+    def test_rigid_transform_surge_rot_degrees(self):
+        freq = np.array([0.0, 0.5, 1.0])
+        dirs = np.array([0.0, 180.0])
+
+        vals_surge = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j],
+                [1.0 + 1.0j, 0.0 + 0.0j],
+                [0.0 + 1.0j, 1.0 + 0.0j],
+            ]
+        )
+
+        vals_pitch = np.array(
+            [
+                [2.0 + 0.0j, 0.0 + 2.0j],
+                [2.0 + 2.0j, 0.0 + 0.0j],
+                [0.0 + 2.0j, 2.0 + 0.0j],
+            ]
+        )
+
+        vals_yaw = np.array(
+            [
+                [3.0 + 0.0j, 0.0 + 3.0j],
+                [3.0 + 3.0j, 0.0 + 0.0j],
+                [0.0 + 3.0j, 3.0 + 0.0j],
+            ]
+        )
+
+        surge = RAO(freq, dirs, vals_surge, degrees=True)
+        pitch = RAO(freq, dirs, vals_pitch, degrees=True)
+        yaw = RAO(freq, dirs, vals_yaw, degrees=True)
+
+        t = np.array([40, 50, 60])
+        surge_out = rigid_transform_surge(t, surge, pitch, yaw, rot_degrees=True)
+
+        vals_expect = (
+            vals_surge
+            - 50.0 * (np.pi / 180.0) * vals_yaw
+            + 60.0 * (np.pi / 180.0) * vals_pitch
+        )
+
+        assert isinstance(surge_out, RAO)
+        np.testing.assert_array_almost_equal(surge_out._freq, surge._freq)
+        np.testing.assert_array_almost_equal(surge_out._dirs, surge._dirs)
+        np.testing.assert_array_almost_equal(surge_out._vals, vals_expect)
+        assert surge_out._clockwise == surge._clockwise
+        assert surge_out._waves_coming_from == surge._waves_coming_from
+
+    def test_rigid_transform_surge_rot_radians(self):
+        freq = np.array([0.0, 0.5, 1.0])
+        dirs = np.array([0.0, 180.0])
+
+        vals_surge = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j],
+                [1.0 + 1.0j, 0.0 + 0.0j],
+                [0.0 + 1.0j, 1.0 + 0.0j],
+            ]
+        )
+
+        vals_pitch = np.array(
+            [
+                [2.0 + 0.0j, 0.0 + 2.0j],
+                [2.0 + 2.0j, 0.0 + 0.0j],
+                [0.0 + 2.0j, 2.0 + 0.0j],
+            ]
+        )
+
+        vals_yaw = np.array(
+            [
+                [3.0 + 0.0j, 0.0 + 3.0j],
+                [3.0 + 3.0j, 0.0 + 0.0j],
+                [0.0 + 3.0j, 3.0 + 0.0j],
+            ]
+        )
+
+        surge = RAO(freq, dirs, vals_surge, degrees=True)
+        pitch = RAO(freq, dirs, vals_pitch, degrees=True)
+        yaw = RAO(freq, dirs, vals_yaw, degrees=True)
+
+        t = np.array([40, 50, 60])
+        surge_out = rigid_transform_surge(t, surge, pitch, yaw, rot_degrees=False)
 
         vals_expect = vals_surge - 50.0 * vals_yaw + 60.0 * vals_pitch
 
