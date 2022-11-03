@@ -31,9 +31,7 @@ and :math:`H_{\gamma}(\omega)` is the yaw RAO.
 With ``waveresponse`` you can easily transform RAOs from one location to another
 on a rigid body using the :meth:`~waveresponse.rigid_transform` function. You must
 then provide a *translation vector*, `t`, that determines the coordinates of the new
-location, *j*, relative to the old location, *i*. You must also specify the units
-of the provided rotational degrees-of-freedom RAOs; this is done by setting the
-correct ``rot_degrees`` flag.
+location, *j*, relative to the old location, *i*.
 
 .. code-block:: python
 
