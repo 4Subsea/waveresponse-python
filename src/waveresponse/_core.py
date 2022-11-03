@@ -16,8 +16,7 @@ def _robust_modulus(x, periodicity):
     point numbers.
     """
     x = np.asarray_chkfinite(x % periodicity).copy()
-    np.nextafter(x, -1, where=(x == periodicity), out=x)
-    return x
+    return np.nextafter(x, -1, where=(x == periodicity), out=x)
 
 
 def complex_to_polar(complex_vals, phase_degrees=False):
