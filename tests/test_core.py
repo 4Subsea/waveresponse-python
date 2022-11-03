@@ -98,21 +98,30 @@ def wave(freq_dirs):
     return wave
 
 
-class Test__robust_modulus:
-    params_robust_modulus = [
-        (2.5, 2.0, 0.5),
-        (2.0, 2.0, 0.0),
-        (0.0, 2.0, 0.0),
-        (4.0, 2.0, 0.0),
-        (4.5, 2.0, 0.5),
-        # (np.nextafter(2.0 * np.pi, 0), 2.0 * np.pi, 0.0),
-    ]
+params_robust_modulus = [
+    (2.5, 2.0, 0.5),
+    (2.0, 2.0, 0.0),
+    (0.0, 2.0, 0.0),
+    (4.0, 2.0, 0.0),
+    (4.5, 2.0, 0.5),
+    (360.5, 360.0, 0.5),
+    (360.0, 360.0, 0.0),
+    (0.0, 360.0, 0.0),
+    (2.0 * 360.0, 360.0, 0.0),
+    (2.0 * 360.0 + 0.5, 360.0, 0.5),
+    (2.0 * np.pi + 0.5, 2.0 * np.pi, 0.5),
+    (2.0 * np.pi, 2.0 * np.pi, 0.0),
+    (0.0, 2.0 * np.pi, 0.0),
+    (2.0 * 2.0 * np.pi, 2.0 * np.pi, 0.0),
+    (2.0 * 2.0 * np.pi + 0.5, 2.0 * np.pi, 0.5),
+]
 
-    @pytest.mark.parametrize("x,period,out_expect", params_robust_modulus)
-    def test__robust_modulus(self, x, period, out_expect):
-        x_mod = _robust_modulus(x, period)
-        assert x_mod == pytest.approx(out_expect)
-        assert x_mod != period
+
+@pytest.mark.parametrize("x,period,out_expect", params_robust_modulus)
+def test__robust_modulus(x, period, out_expect):
+    x_mod = _robust_modulus(x, period)
+    assert x_mod == pytest.approx(out_expect)
+    assert x_mod != period
 
 
 class Test_complex_to_polar:
