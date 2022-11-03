@@ -39,9 +39,9 @@ where,
 With ``waveresponse`` you can easily transform RAOs from one location to another
 on a rigid body using the :meth:`~waveresponse.rigid_transform` function. You must
 then provide a 'translation vector', `t`, that determines the coordinates of the new
-location, *j*, relative to the old location, *i*. You must also specify the units
-of the provided rotational degrees-of-freedom RAOs; this is done by setting the
-correct ``rot_degrees`` flag.
+location, *j*, relative to the old location, *i*. You must also specify if the provided
+rotational degree-of-freedom RAOs represents angles in *degrees* or in *radians*;
+this is done by setting the correct ``degrees`` boolean flag.
 
 .. code-block:: python
 
@@ -61,6 +61,7 @@ correct ``rot_degrees`` flag.
         roll,
         pitch,
         yaw,
+        degrees=True,
     )
 
 Alternatively, you can transform the degrees-of-freedom one at a time:
