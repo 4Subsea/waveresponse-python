@@ -101,7 +101,7 @@ class Test_rigid_transform:
         assert heave_out._clockwise == heave._clockwise
         assert heave_out._waves_coming_from == heave._waves_coming_from
 
-    def test_rot_degrees(self):
+    def test_degrees(self):
         freq = np.array([0.0, 0.5, 1.0])
         dirs = np.array([0.0, 180.0])
 
@@ -162,7 +162,7 @@ class Test_rigid_transform:
 
         t = np.array([40, 50, 60])
         surge_out, sway_out, heave_out = rigid_transform(
-            t, surge, sway, heave, roll, pitch, yaw, rot_degrees=True
+            t, surge, sway, heave, roll, pitch, yaw, degrees=True
         )
 
         vals_surge_expect = (
@@ -202,7 +202,7 @@ class Test_rigid_transform:
         assert heave_out._clockwise == heave._clockwise
         assert heave_out._waves_coming_from == heave._waves_coming_from
 
-    def test_rot_radians(self):
+    def test_radians(self):
         freq = np.array([0.0, 0.5, 1.0])
         dirs = np.array([0.0, 180.0])
 
@@ -263,7 +263,7 @@ class Test_rigid_transform:
 
         t = np.array([40, 50, 60])
         surge_out, sway_out, heave_out = rigid_transform(
-            t, surge, sway, heave, roll, pitch, yaw, rot_degrees=False
+            t, surge, sway, heave, roll, pitch, yaw, degrees=False
         )
 
         vals_surge_expect = vals_surge - 50.0 * vals_yaw + 60.0 * vals_pitch
@@ -597,7 +597,7 @@ class Test_rigid_transform_surge:
         assert surge_out._clockwise == surge._clockwise
         assert surge_out._waves_coming_from == surge._waves_coming_from
 
-    def test_rot_degrees(self):
+    def test_degrees(self):
         freq = np.array([0.0, 0.5, 1.0])
         dirs = np.array([0.0, 180.0])
 
@@ -630,7 +630,7 @@ class Test_rigid_transform_surge:
         yaw = RAO(freq, dirs, vals_yaw, degrees=True)
 
         t = np.array([40, 50, 60])
-        surge_out = rigid_transform_surge(t, surge, pitch, yaw, rot_degrees=True)
+        surge_out = rigid_transform_surge(t, surge, pitch, yaw, degrees=True)
 
         vals_expect = (
             vals_surge
@@ -645,7 +645,7 @@ class Test_rigid_transform_surge:
         assert surge_out._clockwise == surge._clockwise
         assert surge_out._waves_coming_from == surge._waves_coming_from
 
-    def test_rot_radians(self):
+    def test_radians(self):
         freq = np.array([0.0, 0.5, 1.0])
         dirs = np.array([0.0, 180.0])
 
@@ -678,7 +678,7 @@ class Test_rigid_transform_surge:
         yaw = RAO(freq, dirs, vals_yaw, degrees=True)
 
         t = np.array([40, 50, 60])
-        surge_out = rigid_transform_surge(t, surge, pitch, yaw, rot_degrees=False)
+        surge_out = rigid_transform_surge(t, surge, pitch, yaw, degrees=False)
 
         vals_expect = vals_surge - 50.0 * vals_yaw + 60.0 * vals_pitch
 
@@ -735,7 +735,7 @@ class Test_rigid_transform_sway:
         assert sway_out._clockwise == sway._clockwise
         assert sway_out._waves_coming_from == sway._waves_coming_from
 
-    def test_rot_degrees(self):
+    def test_degrees(self):
         freq = np.array([0.0, 0.5, 1.0])
         dirs = np.array([0.0, 180.0])
 
@@ -768,7 +768,7 @@ class Test_rigid_transform_sway:
         yaw = RAO(freq, dirs, vals_yaw, degrees=True)
 
         t = np.array([40, 50, 60])
-        sway_out = rigid_transform_sway(t, sway, roll, yaw, rot_degrees=True)
+        sway_out = rigid_transform_sway(t, sway, roll, yaw, degrees=True)
 
         vals_expect = (
             vals_sway
@@ -783,7 +783,7 @@ class Test_rigid_transform_sway:
         assert sway_out._clockwise == sway._clockwise
         assert sway_out._waves_coming_from == sway._waves_coming_from
 
-    def test_rot_radians(self):
+    def test_radians(self):
         freq = np.array([0.0, 0.5, 1.0])
         dirs = np.array([0.0, 180.0])
 
@@ -816,7 +816,7 @@ class Test_rigid_transform_sway:
         yaw = RAO(freq, dirs, vals_yaw, degrees=True)
 
         t = np.array([40, 50, 60])
-        sway_out = rigid_transform_sway(t, sway, roll, yaw, rot_degrees=False)
+        sway_out = rigid_transform_sway(t, sway, roll, yaw, degrees=False)
 
         vals_expect = vals_sway + 40.0 * vals_yaw - 60.0 * vals_roll
 
@@ -873,7 +873,7 @@ class Test_rigid_transform_heave:
         assert heave_out._clockwise == heave._clockwise
         assert heave_out._waves_coming_from == heave._waves_coming_from
 
-    def test_rot_degrees(self):
+    def test_degrees(self):
         freq = np.array([0.0, 0.5, 1.0])
         dirs = np.array([0.0, 180.0])
 
@@ -906,7 +906,7 @@ class Test_rigid_transform_heave:
         pitch = RAO(freq, dirs, vals_pitch, degrees=True)
 
         t = np.array([40, 50, 60])
-        heave_out = rigid_transform_heave(t, heave, roll, pitch, rot_degrees=True)
+        heave_out = rigid_transform_heave(t, heave, roll, pitch, degrees=True)
 
         vals_expect = (
             vals_heave
@@ -921,7 +921,7 @@ class Test_rigid_transform_heave:
         assert heave_out._clockwise == heave._clockwise
         assert heave_out._waves_coming_from == heave._waves_coming_from
 
-    def test_rot_radians(self):
+    def test_radians(self):
         freq = np.array([0.0, 0.5, 1.0])
         dirs = np.array([0.0, 180.0])
 
@@ -954,7 +954,7 @@ class Test_rigid_transform_heave:
         pitch = RAO(freq, dirs, vals_pitch, degrees=True)
 
         t = np.array([40, 50, 60])
-        heave_out = rigid_transform_heave(t, heave, roll, pitch, rot_degrees=False)
+        heave_out = rigid_transform_heave(t, heave, roll, pitch, degrees=False)
 
         vals_expect = vals_heave - 40.0 * vals_pitch + 50.0 * vals_roll
 

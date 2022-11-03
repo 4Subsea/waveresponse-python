@@ -11,7 +11,7 @@ def rigid_transform(
     roll: RAO,
     pitch: RAO,
     yaw: RAO,
-    rot_degrees: bool = False,
+    degrees: bool = False,
 ):
     """
     Rigid body transformation of (surge, sway and heave) RAOs.
@@ -50,7 +50,7 @@ def rigid_transform(
         Pitch RAO.
     yaw : obj
         Yaw RAO.
-    rot_degrees : bool
+    degrees : bool
         Weather the rotational degree-of-freedom RAOs (i.e., roll, pitch and yaw)
         has amplitudes given in 'deg/m' units (default). If ``False``, 'rad/m' is assumed.
 
@@ -63,15 +63,15 @@ def rigid_transform(
     heave_new : obj
         Heave RAO (rigid body transformed).
     """
-    surge_new = rigid_transform_surge(t, surge, pitch, yaw, rot_degrees=rot_degrees)
-    sway_new = rigid_transform_sway(t, sway, roll, yaw, rot_degrees=rot_degrees)
-    heave_new = rigid_transform_heave(t, heave, roll, pitch, rot_degrees=rot_degrees)
+    surge_new = rigid_transform_surge(t, surge, pitch, yaw, degrees=degrees)
+    sway_new = rigid_transform_sway(t, sway, roll, yaw, degrees=degrees)
+    heave_new = rigid_transform_heave(t, heave, roll, pitch, degrees=degrees)
 
     return surge_new, sway_new, heave_new
 
 
 def rigid_transform_surge(
-    t: np.array, surge: RAO, pitch: RAO, yaw: RAO, rot_degrees: bool = False
+    t: np.array, surge: RAO, pitch: RAO, yaw: RAO, degrees: bool = False
 ) -> RAO:
     """
     Rigid body transformation of surge RAO.
@@ -95,7 +95,7 @@ def rigid_transform_surge(
         Pitch RAO.
     yaw : obj
         Yaw RAO.
-    rot_degrees : bool
+    degrees : bool
         Weather the rotational degree-of-freedom RAOs (i.e., pitch and yaw) has
         amplitudes given in 'deg/m' units (default). If ``False``, 'rad/m' is assumed.
 
@@ -114,7 +114,7 @@ def rigid_transform_surge(
     if not isinstance(surge, RAO):
         raise ValueError("RAO objects must be of type 'waveresponse.RAO'.")
 
-    if rot_degrees:
+    if degrees:
         rot_scale = np.pi / 180.0
     else:
         rot_scale = 1.0
@@ -123,7 +123,7 @@ def rigid_transform_surge(
 
 
 def rigid_transform_sway(
-    t: np.array, sway: RAO, roll: RAO, yaw: RAO, rot_degrees: bool = False
+    t: np.array, sway: RAO, roll: RAO, yaw: RAO, degrees: bool = False
 ) -> RAO:
     """
     Rigid body transformation of sway RAO.
@@ -147,7 +147,7 @@ def rigid_transform_sway(
         Roll RAO.
     yaw : obj
         Yaw RAO.
-    rot_degrees : bool
+    degrees : bool
         Weather the rotational degree-of-freedom RAOs (i.e., roll and yaw) has
         amplitudes given in 'deg/m' units (default). If ``False``, 'rad/m' is assumed.
 
@@ -166,7 +166,7 @@ def rigid_transform_sway(
     if not isinstance(sway, RAO):
         raise ValueError("RAO objects must be of type 'waveresponse.RAO'.")
 
-    if rot_degrees:
+    if degrees:
         rot_scale = np.pi / 180.0
     else:
         rot_scale = 1.0
@@ -175,7 +175,7 @@ def rigid_transform_sway(
 
 
 def rigid_transform_heave(
-    t: np.array, heave: RAO, roll: RAO, pitch: RAO, rot_degrees: bool = False
+    t: np.array, heave: RAO, roll: RAO, pitch: RAO, degrees: bool = False
 ) -> RAO:
     """
     Rigid body transformation of heave RAO.
@@ -218,7 +218,7 @@ def rigid_transform_heave(
     if not isinstance(heave, RAO):
         raise ValueError("RAO objects must be of type 'waveresponse.RAO'.")
 
-    if rot_degrees:
+    if degrees:
         rot_scale = np.pi / 180.0
     else:
         rot_scale = 1.0
