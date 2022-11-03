@@ -4,7 +4,14 @@ from ._core import RAO
 
 
 def rigid_transform(
-    t: np.array, surge: RAO, sway: RAO, heave: RAO, roll: RAO, pitch: RAO, yaw: RAO
+    t: np.array,
+    surge: RAO,
+    sway: RAO,
+    heave: RAO,
+    roll: RAO,
+    pitch: RAO,
+    yaw: RAO,
+    rot_degrees: bool = False,
 ):
     """
     Rigid body transformation of (surge, sway and heave) RAOs.
@@ -33,6 +40,9 @@ def rigid_transform(
         Pitch RAO.
     yaw : obj
         Yaw RAO.
+    rot_degrees : bool
+        Weather the rotational degree-of-freedom RAOs (i.e., roll, pitch and yaw)
+        has amplitudes given in 'deg/m' units. If ``False``, 'rad/m' is assumed.
 
     Returns
     -------
@@ -43,9 +53,9 @@ def rigid_transform(
     heave_new : obj
         Heave RAO (rigid body transformed).
     """
-    surge_new = rigid_transform_surge(t, surge, pitch, yaw)
-    sway_new = rigid_transform_sway(t, sway, roll, yaw)
-    heave_new = rigid_transform_heave(t, heave, roll, pitch)
+    surge_new = rigid_transform_surge(t, surge, pitch, yaw, rot_degrees=rot_degrees)
+    sway_new = rigid_transform_sway(t, sway, roll, yaw, rot_degrees=rot_degrees)
+    heave_new = rigid_transform_heave(t, heave, roll, pitch, rot_degrees=rot_degrees)
 
     return surge_new, sway_new, heave_new
 
