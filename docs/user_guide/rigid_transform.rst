@@ -37,14 +37,16 @@ where,
     of location, and will be the same for all points on a rigid body.
 
 .. warning::
-    Rigid body transformation (described by the above equations), require that the
-    rotational degree-of-freedom RAOs represent angles in *radians*. Therefore, if you
-    have rotational RAOs in *degrees*, you must first :ref:`convert <convert_raos>`
-    these RAOs to radians before using them in the rigid body transform.
+    Rigid body transformation (described by the above equations), requires that the
+    rotational degree-of-freedom RAOs (i.e., roll, pitch and yaw) represent angles
+    in *radians*. Therefore, if you have rotational RAOs in *degrees*, you must
+    first :ref:`convert <convert_raos>` these RAOs to radians before using them
+    in the rigid body transform.
 
-    Keep in mind that all units must be compatible (w.r.t. the above rigid transfrom equations).
-    E.g., if the heave RAO is given in :math:`m/m`, then the roll and pitch RAOs must be given in :math:`rad/m`,
-    and the translation vector must be given in :math:`m` so that:
+    Keep in mind that all units must be compatible (w.r.t. the rigid transfrom equations).
+    E.g., if the heave RAO is given in :math:`[m/m]`, then the roll and pitch RAOs
+    must be given in :math:`[rad/m]`, and the translation vector must be given in
+    :math:`[m]` so that:
 
     .. math::
         H_{z_j}(\omega) \left[\frac{m}{m}\right] = H_{z_i}(\omega) \left[\frac{m}{m}\right] - t_x \left[m\right] \cdot H_{\beta}(\omega) \left[\frac{rad}{m}\right] + t_y \left[m\right] \cdot H_{\alpha}(\omega) \left[\frac{rad}{m}\right]

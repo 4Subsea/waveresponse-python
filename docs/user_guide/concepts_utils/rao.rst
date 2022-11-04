@@ -122,5 +122,8 @@ values with an appropriate factor:
 .. tip::
     Rigid body transformation of RAOs require that the rotational degree-of-freedom
     RAOs represent angles in *radians*. Then, it can be useful to be able to convert
-    an RAO from e.g. :math:`deg/m` units to :math:`rad/m` units. This is done by a scaling
-    of the RAO values with a factor of :math:`\pi/180`.
+    an RAO from e.g. :math:`[deg/m]` units to :math:`[rad/m]` units. This is done by a scaling
+    of the RAO values with a factor of :math:`\pi/180`:
+
+    .. math::
+        H(\omega) \left[\frac{rad}{m}\right] = \frac{\pi}{180} \left[\frac{rad}{deg}\right] \cdot H(\omega) \left[\frac{deg}{m}\right]
