@@ -18,6 +18,13 @@ is the complex conjugate version of the transfer function, and :math:`S_x(\omega
 is the response spectrum. :math:`\theta` is the relative wave direction, and :math:`\omega`
 is the angular frequency.
 
+.. note::
+    Keep in mind that the wave spectrum and the RAO must be given in compatible
+    units when calculating response according to the above equations. E.e., if the
+    RAO is given in :math:`rad/m` units, then the wave spectrum must be given in
+    :math:`m^2/Hz` (or :math:`m^2/(rad/s)`) units. And similarly, if the RAO is instead
+    given in :math:`rad/rad`, then the wave spectrum must be given in :math:`rad^2/Hz`.
+
 With ``waveresponse`` it is easy to estimate a vessel's response spectrum once
 you have an :class:`~waveresponse.RAO` object and a :class:`~waveresponse.WaveSpectrum`
 object available. A convenience function for calculating response is provided by
