@@ -20,13 +20,11 @@ is the angular frequency.
 
 .. note::
     Keep in mind that the wave spectrum and the RAO must be given in compatible
-    units when calculating response according to the above equations. E.g., if the
-    RAO is given in :math:`[rad/m]` units, then the wave spectrum must be given in
-    :math:`[m^2]` per unit :math:`\omega \cdot \theta`. And similarly, if the RAO
-    is given in :math:`[rad/rad]` units, then the wave spectrum must be given in :math:`[rad^2]`
-    per unit :math:`\omega \cdot \theta`. Note that the :class:`~waveresponse.WaveSpectrum`
-    class will take care of unit scaling w.r.t. frequency, :math:`\omega`, and direction,
-    :math:`\theta`.
+    units when calculating response according to the above equation. E.g., for
+    roll (:math:`\alpha`):
+
+    .. math::
+        S_{\alpha}(\omega) \left[\frac{rad^2}{Hz}\right] = \int_0^{2\pi} H_{\alpha}(\omega, \theta) \left[\frac{rad}{m}\right] \cdot H_{\alpha}^{*}(\omega, \theta) \left[\frac{rad}{m}\right] \cdot S_{\zeta}(\omega, \theta) \left[\frac{m^2}{Hz \cdot rad}\right] d\theta
 
 With ``waveresponse`` it is easy to estimate a vessel's response spectrum once
 you have an :class:`~waveresponse.RAO` object and a :class:`~waveresponse.WaveSpectrum`
