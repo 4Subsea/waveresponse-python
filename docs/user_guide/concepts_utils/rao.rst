@@ -14,7 +14,7 @@ numbers (2-D array).
 .. code-block:: python
 
     import numpy as np
-    from waveresponse as wr
+    import waveresponse as wr
 
 
     freq = np.linspace(0.0, 1.0, 50)
@@ -37,7 +37,7 @@ Alternatively, you can construct an :class:`~waveresponse.RAO` object using ampl
 .. code-block:: python
 
     import numpy as np
-    from waveresponse as wr
+    import waveresponse as wr
 
 
     freq = np.linspace(0.0, 1.0, 50)
