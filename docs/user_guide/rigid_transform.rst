@@ -36,6 +36,12 @@ where,
     on a rigid body. The rotational motions (i.e., roll, pitch and yaw) are independent
     of location, and will be the same for all points on a rigid body.
 
+.. warning::
+    Rigid body transformation (described by the above equations), require that the
+    rotational degree-of-freedom RAOs represent angles in *radians*. Therefore, if you
+    have rotational RAOs in *degrees*, you must first :ref:`convert these RAOs to radians <convert_raos>`
+    before using them in the rigid body transform.
+
 With ``waveresponse`` you can easily transform RAOs from one location to another
 on a rigid body using the :meth:`~waveresponse.rigid_transform` function. You must
 then provide a 'translation vector', `t`, that determines the coordinates of the new
