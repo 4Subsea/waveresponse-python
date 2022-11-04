@@ -92,8 +92,8 @@ the *n*\ th derivative of the original degree-of-freedom:
 
 .. _convert_raos:
 
-Convert RAO units
------------------
+Convert units
+-------------
 
 .. When you do rigid body transformation of RAOs, it is required that the rotational
 .. degree-of-freedom RAOs represents angles in *radians*. 
@@ -103,8 +103,8 @@ Convert RAO units
 .. an RAO from e.g. :math:`deg/m` units to :math:`rad/m` units. This is done by a scaling
 .. of the RAO values with a factor :math:`\pi/180`.
 
-With ``waveresponse`` you can convert an RAO object between different units simply
-by scaling the RAO values with an appropriate factor:
+You can convert an RAO object between different units simply by scaling the RAO's
+values with an appropriate factor:
 
 .. code:: python
 
@@ -123,4 +123,4 @@ by scaling the RAO values with an appropriate factor:
     Rigid body transformation of RAOs require that the rotational degree-of-freedom
     RAOs represent angles in *radians*. Then, it can be useful to be able to convert
     an RAO from e.g. :math:`deg/m` units to :math:`rad/m` units. This is done by a scaling
-    of the RAO values with a factor :math:`\pi/180`.
+    of the RAO values with a factor of :math:`\pi/180`.

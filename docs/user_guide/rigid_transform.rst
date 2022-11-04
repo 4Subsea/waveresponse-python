@@ -46,14 +46,6 @@ where,
     are given in :math:`m/m`, then the rotational RAOs must be given in :math:`rad/m`,
     and the translation vector must be given in :math:`m`. 
 
-    .. And similarly, if the translational RAOs are given in :math:`cm/deg`, then the rotational RAOs must
-    .. be given in :math:`rad/deg`, and the translation vector must be given in :math:`cm`.
-
-    .. Also, the translation vector, :math:`t`, must be given in units that are compatible
-    .. with the translational RAO units. E.g., if the translational RAOs are given in :math:`m/m`,
-    .. then the translation vector must also be given in :math:`m`. And similarly,
-    .. if the translational RAO is given in :math:`cm/rad`, then the 
-
 With ``waveresponse`` you can easily transform RAOs from one location to another
 on a rigid body using the :meth:`~waveresponse.rigid_transform` function. You must
 then provide a 'translation vector', `t`, that determines the coordinates of the new
