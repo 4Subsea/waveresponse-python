@@ -39,8 +39,8 @@ where,
 .. warning::
     Rigid body transformation (described by the above equations), require that the
     rotational degree-of-freedom RAOs represent angles in *radians*. Therefore, if you
-    have rotational RAOs in *degrees*, you must first :ref:`convert these RAOs to radians <convert_raos>`
-    before using them in the rigid body transform.
+    have rotational RAOs in *degrees*, you must first :ref:`convert <convert_raos>`
+    these RAOs to radians before using them in the rigid body transform.
 
     Keep in mind that all units must be compatible. E.g., if the translational RAOs
     are given in :math:`m/m`, then the rotational RAOs must be given in :math:`rad/m`,
