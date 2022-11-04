@@ -28,13 +28,6 @@ is the angular frequency.
     class will take care of unit scaling w.r.t. frequency, :math:`\omega`, and direction,
     :math:`\theta`.
 
-    ..  (or similar). And similarly, if the RAO is instead given in :math:`rad/rad`,
-    .. then the wave spectrum must be given in :math:`rad^2/(Hz \cdot rad)`.
-
-    .. Note that the denominator of the wave spectrum density units is of less importance
-    .. here, since the :class:`~waveresponse.WaveSpectrum` class will take care of
-    .. the spectrum scaling w.r.t. frequency/direction coordinates.
-
 With ``waveresponse`` it is easy to estimate a vessel's response spectrum once
 you have an :class:`~waveresponse.RAO` object and a :class:`~waveresponse.WaveSpectrum`
 object available. A convenience function for calculating response is provided by
