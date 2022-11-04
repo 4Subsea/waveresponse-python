@@ -103,7 +103,7 @@ Convert units
 .. an RAO from e.g. :math:`deg/m` units to :math:`rad/m` units. This is done by a scaling
 .. of the RAO values with a factor :math:`\pi/180`.
 
-You can convert an RAO object between different units simply by scaling the RAO's
+You can convert an :class:`~waveresponse.RAO` object between different units simply by scaling the RAO's
 values with an appropriate factor:
 
 .. code:: python
@@ -111,11 +111,11 @@ values with an appropriate factor:
     import numpy as np
 
 
-    # Convert RAO object from 'deg/m' to 'rad/m'
+    # Convert RAO from 'deg/m' to 'rad/m'
     deg2rad = np.pi / 180.0
     rao = deg2rad * rao
 
-    # Convert RAO object from 'rad/m' to 'deg/m'
+    # Convert RAO from 'rad/m' to 'deg/m'
     rad2deg = 180.0 / np.pi
     rao = rad2deg * rao
 
