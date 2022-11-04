@@ -14,7 +14,7 @@ numbers (2-D array).
 .. code-block:: python
 
     import numpy as np
-    from waveresponse as wr
+    import waveresponse as wr
 
 
     freq = np.linspace(0.0, 1.0, 50)
@@ -37,7 +37,7 @@ Alternatively, you can construct an :class:`~waveresponse.RAO` object using ampl
 .. code-block:: python
 
     import numpy as np
-    from waveresponse as wr
+    import waveresponse as wr
 
 
     freq = np.linspace(0.0, 1.0, 50)
@@ -88,3 +88,42 @@ the *n*\ th derivative of the original degree-of-freedom:
     .. math::
 
         H_{\dot{x}}(\omega) = j\omega H_x(\omega)
+
+
+.. _convert_raos:
+
+Convert units
+-------------
+
+.. When you do rigid body transformation of RAOs, it is required that the rotational
+.. degree-of-freedom RAOs represents angles in *radians*. 
+
+.. Rigid body transformation of RAOs require that the rotational degree-of-freedom
+.. RAOs represent angles in *radians*. Then, it can be useful to be able to convert
+.. an RAO from e.g. :math:`deg/m` units to :math:`rad/m` units. This is done by a scaling
+.. of the RAO values with a factor :math:`\pi/180`.
+
+You can convert an :class:`~waveresponse.RAO` object between different units simply by scaling the RAO's
+values with an appropriate factor:
+
+.. code:: python
+
+    import numpy as np
+
+
+    # Convert RAO from 'deg/m' to 'rad/m'
+    deg2rad = np.pi / 180.0
+    rao = deg2rad * rao
+
+    # Convert RAO from 'rad/m' to 'deg/m'
+    rad2deg = 180.0 / np.pi
+    rao = rad2deg * rao
+
+.. tip::
+    Rigid body transformation of RAOs require that the rotational degree-of-freedom
+    RAOs represent angles in *radians*. Then, it can be useful to be able to convert
+    an RAO from e.g. :math:`[deg/m]` units to :math:`[rad/m]` units. This is done by a scaling
+    of the RAO values with a factor of :math:`\pi/180`:
+
+    .. math::
+        H(\omega) \left[\frac{rad}{m}\right] = \frac{\pi}{180} \left[\frac{rad}{deg}\right] \cdot H(\omega) \left[\frac{deg}{m}\right]
