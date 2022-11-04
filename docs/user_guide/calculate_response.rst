@@ -21,9 +21,9 @@ is the angular frequency.
 .. note::
     Keep in mind that the wave spectrum and the RAO must be given in compatible
     units when calculating response according to the above equations. E.g., if the
-    RAO is given in :math:`rad/m` units, then the wave spectrum must be given in
-    :math:`m^2` per unit :math:`\omega \cdot \theta`. And similarly, if the RAO
-    is given in :math:`rad/rad` units, then the wave spectrum must be given in :math:`rad^2`
+    RAO is given in :math:`[rad/m]` units, then the wave spectrum must be given in
+    :math:`[m^2]` per unit :math:`\omega \cdot \theta`. And similarly, if the RAO
+    is given in :math:`[rad/rad]` units, then the wave spectrum must be given in :math:`[rad^2]`
     per unit :math:`\omega \cdot \theta`. Note that the :class:`~waveresponse.WaveSpectrum`
     class will take care of unit scaling w.r.t. frequency, :math:`\omega`, and direction,
     :math:`\theta`.
