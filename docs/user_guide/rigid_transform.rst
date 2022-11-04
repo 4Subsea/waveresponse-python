@@ -36,7 +36,7 @@ where,
     on a rigid body. The rotational motions (i.e., roll, pitch and yaw) are independent
     of location, and will be the same for all points on a rigid body.
 
-.. warning::
+.. note::
     Rigid body transformation (described by the above equations), requires that the
     rotational degree-of-freedom RAOs (i.e., roll, pitch and yaw) represent angles
     in *radians*. Therefore, if you have rotational RAOs in *degrees*, you must
