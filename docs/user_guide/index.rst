@@ -13,3 +13,4 @@ will show how to :ref:`calculate response <calculate-response>` using ``waveresp
    rigid_transform
    standardized_spectra
    calculate_response
+   units
