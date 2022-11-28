@@ -1,0 +1,25 @@
+name: Make Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_number:
+        description: Version number [MAJOR.MINOR.PATCH]
+        required: true
+        type: string
+
+env:
+  VERSION_NUMBER: v${{ inputs.version_number }}
+
+jobs:
+  make_release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Make release and generate notes
+        run: |
+          gh release create $VERSION_NUMBER --title "$VERSION_NUMBER ($(date +'%d %B %Y'))" --generate-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
