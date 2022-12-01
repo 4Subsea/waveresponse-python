@@ -26,7 +26,7 @@ _TEMPLATE_VERSION = "2.0.0"
 project = "waveresponse"
 copyright = f"{date.today().year}, 4Subsea"
 author = "4Subsea"
-github_repo = "https://github.com/4Subsea/waveresponse-python"
+github_repo = "https://github.com/4Subsea/waveresponse-python/"
 
 # The full version, including alpha/beta/rc tags
 version = metadata.version("waveresponse")
@@ -49,6 +49,7 @@ autosummary_generate = True
 
 
 def linkcode_resolve(domain, info):
+
     if domain != "py":
         return None
     if not info["module"]:
@@ -58,7 +59,12 @@ def linkcode_resolve(domain, info):
 
     for part in info["fullname"].split("."):
         obj = getattr(obj, part)
+
     obj = inspect.unwrap(obj)
+
+    # Inspect cannot find source file for properties
+    if isinstance(obj, property):
+        return None
 
     path = os.path.relpath(inspect.getfile(obj))
     src, lineno = inspect.getsourcelines(obj)
