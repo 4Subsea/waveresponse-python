@@ -87,8 +87,6 @@ jobs:
               i=$((i+1))
               echo -e "$(gh release view $tag --json name --template '{{.name}}\n------------------------------')" >> docs/release_notes.rst
               echo -e "$(gh release view $tag --json body --template '{{.body}}\n')" | sed 's/<!-[^~]*->//g' | sed G >> docs/release_notes.rst
-        
-              echo -e "$(gh release view $tag --json name,body --template '{{ .name }}\n------------------------------\n\n{{ .body }}\n\n')" >> docs/release_notes.rst
             fi
           done
           echo -e "*Note: this list includes only the most recent releases. For full release history, see www.github.com/$REPO_NAME/releases" >> docs/release_notes.rst
