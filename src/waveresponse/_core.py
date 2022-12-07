@@ -186,15 +186,14 @@ def mirror(rao, dof):
         Extended (mirrored) RAO.
     """
 
-    dof_names = ("surge", "sway", "heave", "roll", "pitch", "yaw")
-    freq, dirs, vals = rao.grid(degrees=True)
+    freq, dirs, vals = rao.grid()
 
     if rao._degrees:
         periodicity = 360.0
     else:
         periodicity = 2 * np.pi()
 
-    if dof.lower() not in dof_names:
+    if dof.lower() not in ("surge", "sway", "heave", "roll", "pitch", "yaw"):
         raise ValueError(f"dof must be Surge, Sway, Heave, Roll, Pitch or Yaw")
 
     if not (0.0 <= dirs.all() <= periodicity / 2.0):
