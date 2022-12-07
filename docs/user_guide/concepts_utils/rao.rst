@@ -95,14 +95,6 @@ the *n*\ th derivative of the original degree-of-freedom:
 Convert units
 -------------
 
-.. When you do rigid body transformation of RAOs, it is required that the rotational
-.. degree-of-freedom RAOs represents angles in *radians*. 
-
-.. Rigid body transformation of RAOs require that the rotational degree-of-freedom
-.. RAOs represent angles in *radians*. Then, it can be useful to be able to convert
-.. an RAO from e.g. :math:`deg/m` units to :math:`rad/m` units. This is done by a scaling
-.. of the RAO values with a factor :math:`\pi/180`.
-
 You can convert an :class:`~waveresponse.RAO` object between different units simply by scaling the RAO's
 values with an appropriate factor:
 
@@ -133,10 +125,6 @@ values with an appropriate factor:
 
 Mirror RAOs
 -------------
-
-.. Often, RAOs are provided from 0 to 180 degrees considering symmetry in x-z (surge-heave)
-.. plane. In these cases, it is usefull to mirror the RAO to obtain the full extended
-.. version defined in directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians)
 
 You can mirror an :class:`~waveresponse.RAO` object defined in directional range [0, 180]
 degrees (or [0, :math:`\pi`] radians) to obtain the full extended version defined in range 
