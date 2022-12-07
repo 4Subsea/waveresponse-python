@@ -65,6 +65,7 @@ def rao(freq_dirs):
     )
     return rao
 
+
 @pytest.fixture
 def rao_for_mirroring():
 
@@ -79,6 +80,7 @@ def rao_for_mirroring():
     )
 
     return wr.RAO(freq, dirs, vals, degrees=True)
+
 
 @pytest.fixture
 def directional_spectrum(freq_dirs):
@@ -389,7 +391,6 @@ class Test_multiply:
 
 
 class Test_mirror:
-
     def test_sway(self, rao_for_mirroring):
         rao_out = mirror(rao_for_mirroring, "sway")
         freq_out, dirs_out, vals_out = rao_out.grid()
