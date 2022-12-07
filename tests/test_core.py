@@ -15,6 +15,7 @@ from waveresponse import (
     calculate_response,
     complex_to_polar,
     polar_to_complex,
+    mirror,
 )
 from waveresponse._core import _check_is_similar, _robust_modulus
 
@@ -371,6 +372,157 @@ class Test_multiply:
 
         with pytest.raises(ValueError):
             wr.multiply(grid1, grid2)
+
+
+class Test_mirror:
+    freq = np.linspace(0, 1.0, 3)
+    dirs = np.linspace(0, 180, 3, endpoint=True)
+    vals = np.array(
+        [[ 5.+9.j,  1.-4.j,  3.-2.j],
+        [ 7.-9.j,  2.+2.j, 10.+9.j],
+        [ 6.+1.j,  1.-4.j,  7.+3.j]]
+    )
+
+    rao_in = wr.RAO(
+        freq,
+        dirs,
+        vals,
+        degrees=True
+    )
+
+    def test_sway(self):
+        rao_out = mirror(self.rao_in,'sway')
+        freq_out, dirs_out, vals_out = rao_out.grid()
+
+        freq_expect = self.freq
+        dirs_expect = np.linspace(0, 360, 4, endpoint=False)
+        vals_expect = np.array(
+            [[ 5.+9.j, 1.-4.j, 3.-2.j, -1.+4.j],
+             [ 7.-9.j, 2.+2.j, 10.+9.j, -2.-2.j],
+             [ 6.+1.j, 1.-4.j, 7.+3.j, -1.+4.j]]
+        )
+
+        assert isinstance(rao_out, RAO)
+        assert rao_out._freq_hz == self.rao_in._freq_hz
+        assert rao_out._clockwise == self.rao_in._clockwise
+        assert rao_out._waves_coming_from == self.rao_in._waves_coming_from
+        assert rao_out._degrees == self.rao_in._degrees
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_surge(self):
+        rao_out = mirror(self.rao_in,'surge')
+        freq_out, dirs_out, vals_out = rao_out.grid()
+
+        freq_expect = self.freq
+        dirs_expect = np.linspace(0, 360, 4, endpoint=False)
+        vals_expect = np.array(
+            [[ 5.+9.j, 1.-4.j, 3.-2.j, 1.-4.j],
+             [ 7.-9.j, 2.+2.j, 10.+9.j, 2.+2.j],
+             [ 6.+1.j, 1.-4.j, 7.+3.j, 1.-4.j]]
+        )
+
+        assert isinstance(rao_out, RAO)
+        assert rao_out._freq_hz == self.rao_in._freq_hz
+        assert rao_out._clockwise == self.rao_in._clockwise
+        assert rao_out._waves_coming_from == self.rao_in._waves_coming_from
+        assert rao_out._degrees == self.rao_in._degrees
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_heave(self):
+        rao_out = mirror(self.rao_in,'heave')
+        freq_out, dirs_out, vals_out = rao_out.grid()
+
+        freq_expect = self.freq
+        dirs_expect = np.linspace(0, 360, 4, endpoint=False)
+        vals_expect = np.array(
+            [[ 5.+9.j, 1.-4.j, 3.-2.j, 1.-4.j],
+             [ 7.-9.j, 2.+2.j, 10.+9.j, 2.+2.j],
+             [ 6.+1.j, 1.-4.j, 7.+3.j, 1.-4.j]]
+        )
+
+        assert isinstance(rao_out, RAO)
+        assert rao_out._freq_hz == self.rao_in._freq_hz
+        assert rao_out._clockwise == self.rao_in._clockwise
+        assert rao_out._waves_coming_from == self.rao_in._waves_coming_from
+        assert rao_out._degrees == self.rao_in._degrees
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_pitch(self):
+        rao_out = mirror(self.rao_in,'pitch')
+        freq_out, dirs_out, vals_out = rao_out.grid()
+
+        freq_expect = self.freq
+        dirs_expect = np.linspace(0, 360, 4, endpoint=False)
+        vals_expect = np.array(
+            [[ 5.+9.j, 1.-4.j, 3.-2.j, 1.-4.j],
+             [ 7.-9.j, 2.+2.j, 10.+9.j, 2.+2.j],
+             [ 6.+1.j, 1.-4.j, 7.+3.j, 1.-4.j]]
+        )
+
+        assert isinstance(rao_out, RAO)
+        assert rao_out._freq_hz == self.rao_in._freq_hz
+        assert rao_out._clockwise == self.rao_in._clockwise
+        assert rao_out._waves_coming_from == self.rao_in._waves_coming_from
+        assert rao_out._degrees == self.rao_in._degrees
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_roll(self):
+        rao_out = mirror(self.rao_in,'roll')
+        freq_out, dirs_out, vals_out = rao_out.grid()
+
+        freq_expect = self.freq
+        dirs_expect = np.linspace(0, 360, 4, endpoint=False)
+        vals_expect = np.array(
+            [[ 5.+9.j, 1.-4.j, 3.-2.j, -1.+4.j],
+             [ 7.-9.j, 2.+2.j, 10.+9.j, -2.-2.j],
+             [ 6.+1.j, 1.-4.j, 7.+3.j, -1.+4.j]]
+        )
+
+        assert isinstance(rao_out, RAO)
+        assert rao_out._freq_hz == self.rao_in._freq_hz
+        assert rao_out._clockwise == self.rao_in._clockwise
+        assert rao_out._waves_coming_from == self.rao_in._waves_coming_from
+        assert rao_out._degrees == self.rao_in._degrees
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_yaw(self):
+        rao_out = mirror(self.rao_in,'yaw')
+        freq_out, dirs_out, vals_out = rao_out.grid()
+
+        freq_expect = self.freq
+        dirs_expect = np.linspace(0, 360, 4, endpoint=False)
+        vals_expect = np.array(
+            [[ 5.+9.j, 1.-4.j, 3.-2.j, -1.+4.j],
+             [ 7.-9.j, 2.+2.j, 10.+9.j, -2.-2.j],
+             [ 6.+1.j, 1.-4.j, 7.+3.j, -1.+4.j]]
+        )
+
+        assert isinstance(rao_out, RAO)
+        assert rao_out._freq_hz == self.rao_in._freq_hz
+        assert rao_out._clockwise == self.rao_in._clockwise
+        assert rao_out._waves_coming_from == self.rao_in._waves_coming_from
+        assert rao_out._degrees == self.rao_in._degrees
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_raises_dirs(self,rao):
+        with pytest.raises(ValueError):
+            mirror(rao, 'sway')
+
+    def test_raises_dof(self):
+        with pytest.raises(ValueError):
+            mirror(self.rao_in, 'spin')
 
 
 class Test_Grid:

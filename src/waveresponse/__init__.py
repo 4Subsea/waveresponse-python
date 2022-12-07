@@ -9,6 +9,7 @@ from ._core import (
     complex_to_polar,
     multiply,
     polar_to_complex,
+    mirror
 )
 from ._standardized1d import (
     JONSWAP,
@@ -39,6 +40,7 @@ __all__ = [
     "ModifiedPiersonMoskowitz",
     "OchiHubble",
     "multiply",
+    "mirro",
     "polar_to_complex",
     "RAO",
     "rigid_transform",
