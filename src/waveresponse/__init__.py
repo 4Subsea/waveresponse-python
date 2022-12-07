@@ -40,7 +40,7 @@ __all__ = [
     "ModifiedPiersonMoskowitz",
     "OchiHubble",
     "multiply",
-    "mirro",
+    "mirror",
     "polar_to_complex",
     "RAO",
     "rigid_transform",
