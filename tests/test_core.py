@@ -81,6 +81,7 @@ def rao_for_mirroring_deg():
 
     return wr.RAO(freq, dirs, vals, degrees=True)
 
+
 @pytest.fixture
 def rao_for_mirroring_rad():
 
@@ -95,6 +96,7 @@ def rao_for_mirroring_rad():
     )
 
     return wr.RAO(freq, dirs, vals, degrees=False)
+
 
 @pytest.fixture
 def directional_spectrum(freq_dirs):
@@ -548,7 +550,7 @@ class Test_mirror:
         freq_out, dirs_out, vals_out = rao_out.grid()
 
         freq_expect = rao_for_mirroring_rad.freq()
-        dirs_expect = np.linspace(0, 2*np.pi, 4, endpoint=False)
+        dirs_expect = np.linspace(0, 2 * np.pi, 4, endpoint=False)
         vals_expect = np.array(
             [
                 [5.0 + 9.0j, 1.0 - 4.0j, 3.0 - 2.0j, -1.0 + 4.0j],
