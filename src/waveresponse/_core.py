@@ -199,24 +199,22 @@ def mirror(rao, dof):
     if not (0.0 <= dirs.all() <= periodicity / 2.0):
         raise ValueError(f"RAO must be defined between 0 and 180 (2 pi) degrees (rad).")
 
-    for dir, val in zip(dirs, vals.T):
-        dir_sym = periodicity - dir
-        val = np.reshape(val.copy(), (-1, 1))
+    if dof.lower() in ["sway", "roll", "yaw"]:
+        scale_phase = -1
+    else:
+        scale_phase = 1
 
-        if dir_sym < 360.0 and dir_sym != dir:
-            dirs = np.append(dirs, dir_sym)
-            if dof.lower() in ["sway", "roll", "yaw"]:
-                val *= -1.0
-            vals = np.concatenate((vals, val), axis=1)
+    mirror_mask = (dirs != 0) & (dirs != periodicity / 2)
 
-    sorted_args = np.argsort(dirs)
-    dirs = dirs[sorted_args]
-    vals = vals[:, sorted_args]
+    vals_mirrored = np.concatenate(
+        (vals, scale_phase * vals[:, mirror_mask][::-1]), axis=1
+    )
+    dirs_mirrored = np.concatenate((dirs, periodicity - dirs[mirror_mask][::-1]))
 
     return RAO(
         freq,
-        dirs,
-        vals,
+        dirs_mirrored,
+        vals_mirrored,
         degrees=rao._degrees,
         freq_hz=rao._freq_hz,
         clockwise=rao.wave_convention["clockwise"],
