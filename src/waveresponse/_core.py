@@ -191,7 +191,7 @@ def mirror(rao, dof):
     if rao._degrees:
         periodicity = 360.0
     else:
-        periodicity = 2 * np.pi()
+        periodicity = 2 * np.pi
 
     if dof.lower() not in ("surge", "sway", "heave", "roll", "pitch", "yaw"):
         raise ValueError(f"dof must be Surge, Sway, Heave, Roll, Pitch or Yaw")
