@@ -207,7 +207,7 @@ def mirror(rao, dof):
     mirror_mask = (dirs != 0) & (dirs != periodicity / 2)
 
     vals_mirrored = np.concatenate(
-        (vals, scale_phase * vals[:, mirror_mask][::-1]), axis=1
+        (vals, scale_phase * vals[:, mirror_mask][:, ::-1]), axis=1
     )
     dirs_mirrored = np.concatenate((dirs, periodicity - dirs[mirror_mask][::-1]))
 
