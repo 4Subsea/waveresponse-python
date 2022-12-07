@@ -217,8 +217,7 @@ def mirror(rao, dof):
         vals_mirrored,
         degrees=rao._degrees,
         freq_hz=rao._freq_hz,
-        clockwise=rao.wave_convention["clockwise"],
-        waves_coming_from=rao.wave_convention["waves_coming_from"],
+        **rao.wave_convention,
     )
 
 
