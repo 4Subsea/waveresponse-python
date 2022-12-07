@@ -196,7 +196,7 @@ def mirror(rao, dof):
     if dof.lower() not in ("surge", "sway", "heave", "roll", "pitch", "yaw"):
         raise ValueError(f"dof must be Surge, Sway, Heave, Roll, Pitch or Yaw")
 
-    if (dirs < 0.0).any() or (dirs > periodicity / 2.0).any()
+    if (dirs < 0.0).any() or (dirs > periodicity / 2.0).any():
         raise ValueError(f"RAO must be defined between 0 and 180 (2 pi) degrees (rad).")
 
     if dof.lower() in ["sway", "roll", "yaw"]:
