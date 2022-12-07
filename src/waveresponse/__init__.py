@@ -7,9 +7,9 @@ from ._core import (
     WaveSpectrum,
     calculate_response,
     complex_to_polar,
+    mirror,
     multiply,
     polar_to_complex,
-    mirror
 )
 from ._standardized1d import (
     JONSWAP,

@@ -166,9 +166,10 @@ def _cast_to_grid(grid):
 
     return new
 
+
 def mirror(rao, dof):
     """
-    Mirror an RAO object with symmetry in x-z plane, defined in the directional range 
+    Mirror an RAO object with symmetry in x-z plane, defined in the directional range
     [0, 180] degrees (or [0, numpy.pi] radians).
 
     Parameters
@@ -191,7 +192,7 @@ def mirror(rao, dof):
     if rao._degrees:
         periodicity = 360.0
     else:
-        periodicity = 2*np.pi()
+        periodicity = 2 * np.pi()
 
     if dof.lower() not in dof_names:
         raise ValueError(f"dof must be Surge, Sway, Heave, Roll, Pitch or Yaw")
@@ -199,9 +200,9 @@ def mirror(rao, dof):
     if not (0.0 <= dirs.all() <= periodicity / 2.0):
         raise ValueError(f"RAO must be defined between 0 and 180 (2 pi) degrees (rad).")
 
-    for dir,val in zip(dirs,vals.T):
+    for dir, val in zip(dirs, vals.T):
         dir_sym = periodicity - dir
-        val = np.reshape(val.copy(),(-1,1))
+        val = np.reshape(val.copy(), (-1, 1))
 
         if dir_sym < 360.0 and dir_sym != dir:
             dirs = np.append(dirs, dir_sym)
@@ -214,14 +215,15 @@ def mirror(rao, dof):
     vals = vals[:, sorted_args]
 
     return RAO(
-            freq,
-            dirs,
-            vals,
-            degrees=rao._degrees,
-            freq_hz=rao._freq_hz,
-            clockwise=rao.wave_convention["clockwise"],
-            waves_coming_from=rao.wave_convention["waves_coming_from"]
-        )
+        freq,
+        dirs,
+        vals,
+        degrees=rao._degrees,
+        freq_hz=rao._freq_hz,
+        clockwise=rao.wave_convention["clockwise"],
+        waves_coming_from=rao.wave_convention["waves_coming_from"],
+    )
+
 
 class Grid:
     """
