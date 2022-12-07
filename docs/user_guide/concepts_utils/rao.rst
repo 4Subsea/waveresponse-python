@@ -127,3 +127,33 @@ values with an appropriate factor:
 
     .. math::
         H(\omega) \left[\frac{rad}{m}\right] = \frac{\pi}{180} \left[\frac{rad}{deg}\right] \cdot H(\omega) \left[\frac{deg}{m}\right]
+
+
+.. _mirror_raos:
+
+Mirror RAOs
+-------------
+
+.. Often, RAOs are provided from 0 to 180 degrees considering symmetry in x-z (surge-heave)
+.. plane. In these cases, it is usefull to mirror the RAO to obtain the full extended
+.. version defined in directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians)
+
+You can mirror an :class:`~waveresponse.RAO` object defined in directional range [0, 180]
+degrees (or [0, :math:`\pi`] radians) to obtain the full extended version defined in range 
+[0, 360) degrees (or [0, :math:`2 \pi`) radians).
+
+The :meth:`~waveresponse.mirror` function takes the :class:`~waveresponse.RAO` object and
+the name of the degree-of-freedom as input arguments and returns the mirrored :class:`~waveresponse.RAO`
+object.
+
+.. code:: python
+
+    import waveresponse as wr
+
+    # mirror sway rao
+    full_rao = wr.mirror(rao, 'sway')
+
+.. tip::
+    :class:`~waveresponse.RAO` object must cover the directional range [0, 360) degrees
+    (or [0, 2 * numpy.pi) radians). This is required to calculate the response spectrum,
+    considering that wave spectrum is defined in the full range.
