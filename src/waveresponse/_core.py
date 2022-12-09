@@ -169,20 +169,19 @@ def _cast_to_grid(grid):
 
 def mirror(rao, dof):
     """
-    Mirror an RAO object with symmetry in x-z plane, defined in the directional range
-    [0, 180] degrees (or [0, numpy.pi] radians).
+    Mirrors an RAO object with symmetry in x-z plane, defined in the directional range
+    [0, 180) degrees (or [0, numpy.pi) radians).
 
     Parameters
     ----------
-    rao : RAO object
-        RAO.
-    dof : str
-        Name of the degree of freedom. `surge`, `sway`, `heave`, `roll`, `pitch`, `yaw`
-        are accepted.
+    rao : RAO
+        RAO object.
+    dof : {`surge`, `sway`, `heave`, `roll`, `pitch`, `yaw`}
+        Which degree-of-freedaom the RAO object represents.
 
-    Return
-    ------
-    rao : RAO object
+    Returns
+    -------
+    rao : RAO
         Extended (mirrored) RAO.
     """
 
@@ -194,12 +193,16 @@ def mirror(rao, dof):
         periodicity = 2 * np.pi
 
     if dof.lower() not in ("surge", "sway", "heave", "roll", "pitch", "yaw"):
-        raise ValueError(f"dof must be Surge, Sway, Heave, Roll, Pitch or Yaw")
+        raise ValueError(
+            "`dof` must be 'surge', 'sway', 'heave', 'roll', 'pitch' or 'yaw'"
+        )
 
     if (dirs < 0.0).any() or (dirs > periodicity / 2.0).any():
-        raise ValueError(f"RAO must be defined between 0 and 180 (2 pi) degrees (rad).")
+        raise ValueError(
+            "`rao` must be defined between 0 and 180 degrees (or 0 and 2pi radians)."
+        )
 
-    if dof.lower() in ["sway", "roll", "yaw"]:
+    if dof.lower() in ("sway", "roll", "yaw"):
         scale_phase = -1
     else:
         scale_phase = 1
