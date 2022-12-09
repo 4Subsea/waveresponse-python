@@ -123,25 +123,32 @@ values with an appropriate factor:
 
 .. _mirror_raos:
 
-Mirror RAOs
--------------
+Mirror an RAO about a symmetry plane
+------------------------------------
+If you have an :class:`~waveresponse.RAO` object defined only over half the directional
+domain (i.e., [0, 180) degrees), you may want to mirror this RAO about a symmetry plane
+to obtain an extended version of the RAO which is defined over the full directional domain
+(i.e., [0, 360) degrees). Symmetry mirroring is proveded by the :func:`~waveresponse.mirror`
+function; the function takes an :class:`~waveresponse.RAO` object and a degree-of-freedom
+as input, and outputs a new, extended :class:`~waveresponse.RAO` object.
 
-You can mirror an :class:`~waveresponse.RAO` object defined in directional range [0, 180]
-degrees (or [0, :math:`\pi`] radians) to obtain the full extended version defined in range 
-[0, 360) degrees (or [0, :math:`2 \pi`) radians).
 
-The :meth:`~waveresponse.mirror` function takes the :class:`~waveresponse.RAO` object and
-the name of the degree-of-freedom as input arguments and returns the mirrored :class:`~waveresponse.RAO`
-object.
+.. You can mirror an :class:`~waveresponse.RAO` object defined in directional range [0, 180]
+.. degrees (or [0, :math:`\pi`] radians) to obtain the full extended version defined in range 
+.. [0, 360) degrees (or [0, :math:`2 \pi`) radians).
+
+.. The :meth:`~waveresponse.mirror` function takes the :class:`~waveresponse.RAO` object and
+.. the name of the degree-of-freedom as input arguments and returns the mirrored :class:`~waveresponse.RAO`
+.. object.
 
 .. code:: python
 
     import waveresponse as wr
 
-    # mirror sway rao
-    full_rao = wr.mirror(rao, 'sway')
+    # Mirror sway rao
+    rao_full = wr.mirror(rao_half, 'sway')
 
-.. tip::
-    :class:`~waveresponse.RAO` object must cover the directional range [0, 360) degrees
-    (or [0, 2 * numpy.pi) radians). This is required to calculate the response spectrum,
-    considering that wave spectrum is defined in the full range.
+.. note::
+    When using an :class:`~waveresponse.RAO` object in response estimation, it is
+    important that the :class:`~waveresponse.RAO` is defined over the full directional
+    domain.
