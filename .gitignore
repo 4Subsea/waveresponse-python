@@ -1,3 +1,7 @@
+# Other
+docs/api_ref/*
+!docs/api_ref/index.rst
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
