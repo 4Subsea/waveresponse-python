@@ -565,6 +565,7 @@ class Test_mirror:
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
     def test_raises_dirs(self, rao):
+        # Try to mirror an RAO with directions greater than 180 degrees
         with pytest.raises(ValueError):
             mirror(rao, "sway")
 
