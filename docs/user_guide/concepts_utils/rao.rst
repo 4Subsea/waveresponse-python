@@ -137,7 +137,7 @@ as input, and outputs a new, extended :class:`~waveresponse.RAO` object.
     import waveresponse as wr
 
     # Mirror sway rao
-    rao_full = wr.mirror(rao_half, 'sway')
+    rao_full = wr.mirror(rao, 'sway')
 
 .. note::
     When using an :class:`~waveresponse.RAO` object in response estimation, it is
