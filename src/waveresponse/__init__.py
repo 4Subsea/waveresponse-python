@@ -7,6 +7,7 @@ from ._core import (
     WaveSpectrum,
     calculate_response,
     complex_to_polar,
+    mirror,
     multiply,
     polar_to_complex,
 )
@@ -39,6 +40,7 @@ __all__ = [
     "ModifiedPiersonMoskowitz",
     "OchiHubble",
     "multiply",
+    "mirror",
     "polar_to_complex",
     "RAO",
     "rigid_transform",

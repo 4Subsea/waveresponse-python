@@ -27,6 +27,7 @@ functions and methods.
     multiply
     polar_to_complex
     RAO
+    mirror
     rigid_transform
     rigid_transform_heave
     rigid_transform_surge

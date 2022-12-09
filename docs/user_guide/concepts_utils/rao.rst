@@ -95,14 +95,6 @@ the *n*\ th derivative of the original degree-of-freedom:
 Convert units
 -------------
 
-.. When you do rigid body transformation of RAOs, it is required that the rotational
-.. degree-of-freedom RAOs represents angles in *radians*. 
-
-.. Rigid body transformation of RAOs require that the rotational degree-of-freedom
-.. RAOs represent angles in *radians*. Then, it can be useful to be able to convert
-.. an RAO from e.g. :math:`deg/m` units to :math:`rad/m` units. This is done by a scaling
-.. of the RAO values with a factor :math:`\pi/180`.
-
 You can convert an :class:`~waveresponse.RAO` object between different units simply by scaling the RAO's
 values with an appropriate factor:
 
@@ -127,3 +119,27 @@ values with an appropriate factor:
 
     .. math::
         H(\omega) \left[\frac{rad}{m}\right] = \frac{\pi}{180} \left[\frac{rad}{deg}\right] \cdot H(\omega) \left[\frac{deg}{m}\right]
+
+
+.. _mirror_raos:
+
+Mirror an RAO about a symmetry plane
+------------------------------------
+If you have an :class:`~waveresponse.RAO` object defined only over half the directional
+domain (i.e., [0, 180) degrees), you may want to mirror this RAO about a symmetry plane
+to obtain an extended version of the RAO which is defined over the full directional domain
+(i.e., [0, 360) degrees). Symmetry mirroring is proveded by the :func:`~waveresponse.mirror`
+function; the function takes an :class:`~waveresponse.RAO` object and a degree-of-freedom
+as input, and outputs a new, extended :class:`~waveresponse.RAO` object.
+
+.. code:: python
+
+    import waveresponse as wr
+
+    # Mirror sway rao
+    rao_full = wr.mirror(rao, 'sway')
+
+.. note::
+    When using an :class:`~waveresponse.RAO` object in response estimation, it is
+    important that the :class:`~waveresponse.RAO` is defined over the full directional
+    domain.

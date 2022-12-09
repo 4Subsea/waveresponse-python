@@ -167,6 +167,63 @@ def _cast_to_grid(grid):
     return new
 
 
+def mirror(rao, dof):
+    """
+    Mirrors an RAO object with symmetry in x-z plane, defined in the directional range
+    [0, 180) degrees (or [0, numpy.pi) radians).
+
+    Parameters
+    ----------
+    rao : RAO
+        RAO object.
+    dof : {`surge`, `sway`, `heave`, `roll`, `pitch`, `yaw`}
+        Which degree-of-freedaom the RAO object represents.
+
+    Returns
+    -------
+    rao : RAO
+        Extended (mirrored) RAO.
+    """
+
+    freq, dirs, vals = rao.grid()
+
+    if rao._degrees:
+        periodicity = 360.0
+    else:
+        periodicity = 2 * np.pi
+
+    if dof.lower() not in ("surge", "sway", "heave", "roll", "pitch", "yaw"):
+        raise ValueError(
+            "`dof` must be 'surge', 'sway', 'heave', 'roll', 'pitch' or 'yaw'"
+        )
+
+    if (dirs < 0.0).any() or (dirs > periodicity / 2.0).any():
+        raise ValueError(
+            "`rao` must be defined between 0 and 180 degrees (or 0 and 2pi radians)."
+        )
+
+    if dof.lower() in ("sway", "roll", "yaw"):
+        scale_phase = -1
+    else:
+        scale_phase = 1
+
+    mirror_mask = (dirs != 0) & (dirs != periodicity / 2)
+
+    vals_mirrored = np.concatenate(
+        (vals, scale_phase * vals[:, mirror_mask][:, ::-1]), axis=1
+    )
+    dirs_mirrored = np.concatenate((dirs, periodicity - dirs[mirror_mask][::-1]))
+
+    return RAO(
+        freq,
+        dirs_mirrored,
+        vals_mirrored,
+        degrees=rao._degrees,
+        freq_hz=rao._freq_hz,
+        **rao.wave_convention,
+    )
+
+
 class Grid:
     """
     Two-dimentional frequency/(wave)direction grid.
