@@ -2866,6 +2866,12 @@ class Test_DirectionalSpectrum:
         out = DirectionalSpectrum._full_range_dir(x)
         np.testing.assert_array_almost_equal(out, expect)
 
+    @pytest.mark.parametrize("x,expect", testdata_full_range_dir)
+    def test_full_range_dir_float32(self, x, expect):
+        x = np.asarray(x, dtype="float32")
+        out = DirectionalSpectrum._full_range_dir(x)
+        np.testing.assert_array_almost_equal(out, expect)
+
     def test_var(self):
         y0 = 0.0
         y1 = 2

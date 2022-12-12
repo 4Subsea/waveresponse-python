@@ -1241,10 +1241,12 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
     @staticmethod
     def _full_range_dir(x):
         """Add direction range bounds (0.0 and 2.0 * np.pi)"""
+        range_end = np.nextafter(2.0 * np.pi, 0., dtype=type(x[0]))
+
         if x[0] != 0.0:
             x = np.r_[0.0, x]
-        if x[-1] < (2.0 * np.pi - 1e-8):
-            x = np.r_[x, 2.0 * np.pi - 1e-8]
+        if x[-1] < range_end:
+            x = np.r_[x, range_end]
         return x
 
     def var(self):
