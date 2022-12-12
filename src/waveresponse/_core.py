@@ -260,8 +260,8 @@ class Grid:
         clockwise=False,
         waves_coming_from=True,
     ):
-        self._freq = np.asarray_chkfinite(freq, dtype="float64").copy()
-        self._dirs = np.asarray_chkfinite(dirs, dtype="float64").copy()
+        self._freq = np.asarray_chkfinite(freq).copy()
+        self._dirs = np.asarray_chkfinite(dirs).copy()
         self._vals = np.asarray_chkfinite(vals).copy()
         self._clockwise = clockwise
         self._waves_coming_from = waves_coming_from
