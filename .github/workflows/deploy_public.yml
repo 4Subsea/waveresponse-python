@@ -44,6 +44,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install build sphinx==5.3.0 pydata_sphinx_theme==0.11.0
+          python -m pip install --upgrade myst_parser
 
       - name: Get new version number from input
         id: version_number
@@ -85,11 +86,11 @@ jobs:
             if [[ "$inject" == "True" ]] && [[ $i -le $n_tag ]];
             then
               i=$((i+1))
-              echo -e "$(gh release view $tag --json name --template '{{.name}}\n------------------------------')" >> docs/release_notes.rst
-              echo -e "$(gh release view $tag --json body --template '{{.body}}\n')" | sed 's/<!-[^~]*->//g' | sed G >> docs/release_notes.rst
+              echo -e "$(gh release view $tag --json name --template '{{.name}}\n------------------------------')" >> docs/release_notes.md
+              echo -e "$(gh release view $tag --json body --template '{{.body}}\n')" | sed 's/<!-[^~]*->//g' | sed G >> docs/release_notes.md
             fi
           done
-          echo -e "*Note: this list includes only the most recent releases. For full release history, see www.github.com/$REPO_NAME/releases" >> docs/release_notes.rst
+          echo -e "*Note: this list includes only the most recent releases. For full release history, see www.github.com/$REPO_NAME/releases" >> docs/release_notes.md
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
