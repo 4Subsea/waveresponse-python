@@ -109,7 +109,7 @@ html_favicon = "_static/favicon.png"
 html_sidebars = {"**": ["sidebar-nav-bs.html"]}
 
 html_theme_options = {
-    "logo": {"text":"WaveResponse"},
+    "logo": {"text": "WaveResponse"},
     "navbar_end": ["navbar-icon-links.html"],
     "icon_links": [
         {
