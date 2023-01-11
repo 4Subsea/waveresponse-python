@@ -240,11 +240,9 @@ def mirror(rao, dof, sym_plane="xz"):
         )
 
     if sym_plane.lower() == "xz":
-        # switch_dir = -1
         bounds = (0.0, periodicity / 2.0)
         _check_mirror_xz(dirs, degrees=rao._degrees)
     elif sym_plane.lower() == "yz":
-        # switch_dir = 1
         bounds = (periodicity / 4.0, 3.0 * periodicity / 4.0)
         _check_mirror_yz(dirs, degrees=rao._degrees)
 
