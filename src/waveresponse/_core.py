@@ -183,7 +183,18 @@ def _check_mirror_xz(dirs, degrees=False):
 
 
 def _check_mirror_yz(dirs, degrees=False):
-    pass
+    dirs = np.asarray_chkfinite(dirs).copy()
+
+    if degrees:
+        dirs = dirs * np.pi / 180.0
+
+    sin_dirs = np.cos(dirs)
+    # sin_dirs = sin_dirs[sin_dirs != 0.0]   # exclude zeros for robustness
+
+    if not (sin_dirs >= 0.0).all() or not (sin_dirs >= 0.0).all():
+        raise ValueError(
+            "`rao` must be defined in the range [90, 270] degrees or [270, 90] degrees."
+        )
 
 
 def _sort(dirs, vals):
