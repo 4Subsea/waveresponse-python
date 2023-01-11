@@ -227,6 +227,8 @@ def mirror(rao, dof, sym_plane="xz"):
         Extended (mirrored) RAO.
     """
 
+    sym_plane = sym_plane.lower()
+    dof = dof.lower()
     freq, dirs, vals = rao.grid()
 
     if rao._degrees:
@@ -239,16 +241,16 @@ def mirror(rao, dof, sym_plane="xz"):
             "`dof` must be 'surge', 'sway', 'heave', 'roll', 'pitch' or 'yaw'"
         )
 
-    if sym_plane.lower() == "xz":
-        bounds = (0.0, periodicity / 2.0)
+    if sym_plane == "xz":
         _check_mirror_xz(dirs, degrees=rao._degrees)
-    elif sym_plane.lower() == "yz":
-        bounds = (periodicity / 4.0, 3.0 * periodicity / 4.0)
+        bounds = (0.0, periodicity / 2.0)
+    elif sym_plane == "yz":
         _check_mirror_yz(dirs, degrees=rao._degrees)
+        bounds = (periodicity / 4.0, 3.0 * periodicity / 4.0)
 
-    if sym_plane.lower() == "xz" and dof.lower() in ("sway", "roll", "yaw"):
+    if sym_plane == "xz" and dof in ("sway", "roll", "yaw"):
         scale_phase = -1
-    elif sym_plane.lower() == "yz" and dof.lower() in ("surge", "pitch", "yaw"):
+    elif sym_plane == "yz" and dof in ("surge", "pitch", "yaw"):
         scale_phase = -1
     else:
         scale_phase = 1
@@ -264,7 +266,6 @@ def mirror(rao, dof, sym_plane="xz"):
     vals_mirrored = np.concatenate((vals, vals_folded), axis=1)
     dirs_mirrored = np.concatenate((dirs, dirs_folded))
     dirs_mirrored = _robust_modulus(dirs_mirrored, periodicity)
-
     dirs_mirrored, vals_mirrored = _sort(dirs_mirrored, vals_mirrored)
 
     return RAO(
