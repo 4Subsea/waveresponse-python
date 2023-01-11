@@ -177,7 +177,7 @@ def _check_mirror_xz(dirs, degrees=False):
     sin_dirs = sin_dirs[np.abs(sin_dirs) > 1e-8]   # exclude zeros for robustness
 
     bools_sum = np.sum(sin_dirs >= 0.0)
-    if bools_sum != len(sin_dirs) or bools_sum == 0:
+    if bools_sum != len(sin_dirs) and bools_sum != 0:
         raise ValueError(
             "`rao` must be defined in the range [0, 180] degrees or [180, 360) degrees."
         )
@@ -193,7 +193,7 @@ def _check_mirror_yz(dirs, degrees=False):
     cos_dirs = cos_dirs[np.abs(cos_dirs) > 1e-8]   # exclude zeros for robustness
 
     bools_sum = np.sum(cos_dirs >= 0.0)
-    if bools_sum != len(cos_dirs) or bools_sum == 0:
+    if bools_sum != len(cos_dirs) and bools_sum != 0:
         raise ValueError(
             "`rao` must be defined in the range [90, 270] degrees or [270, 90] degrees."
         )
