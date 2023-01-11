@@ -236,7 +236,7 @@ def mirror(rao, dof, sym_plane="xz"):
     else:
         periodicity = 2 * np.pi
 
-    if dof.lower() not in ("surge", "sway", "heave", "roll", "pitch", "yaw"):
+    if dof not in ("surge", "sway", "heave", "roll", "pitch", "yaw"):
         raise ValueError(
             "`dof` must be 'surge', 'sway', 'heave', 'roll', 'pitch' or 'yaw'"
         )
@@ -258,9 +258,9 @@ def mirror(rao, dof, sym_plane="xz"):
     exclude_bounds_mask = (dirs != bounds[0]) & (dirs != bounds[1])
 
     vals_folded = scale_phase * vals[:, exclude_bounds_mask][:, ::-1]
-    if sym_plane.lower() == "xz":
+    if sym_plane == "xz":
         dirs_folded = -1 * dirs[exclude_bounds_mask][::-1]
-    elif sym_plane.lower() == "yz":
+    elif sym_plane == "yz":
         dirs_folded = -1 * dirs[exclude_bounds_mask][::-1] + periodicity / 2.0
 
     vals_mirrored = np.concatenate((vals, vals_folded), axis=1)
