@@ -175,8 +175,15 @@ def _check_mirror_xz(dirs, degrees=False):
 
     sin_dirs = np.sin(dirs)
     # sin_dirs = sin_dirs[sin_dirs != 0.0]   # exclude zeros for robustness
+    sin_dirs = sin_dirs[np.abs(sin_dirs) > 1e-8]   # exclude zeros for robustness
 
-    if not (sin_dirs >= 0.0).all() or not (sin_dirs >= 0.0).all():
+    # if not (sin_dirs <= 0.0).all() or not (sin_dirs >= 0.0).all():
+    #     raise ValueError(
+    #         "`rao` must be defined in the range [0, 180] degrees or [180, 360) degrees."
+    #     )
+
+    bools_sum = np.sum(sin_dirs >= 0.0)
+    if bools_sum != len(sin_dirs) or bools_sum == 0:
         raise ValueError(
             "`rao` must be defined in the range [0, 180] degrees or [180, 360) degrees."
         )
@@ -188,10 +195,17 @@ def _check_mirror_yz(dirs, degrees=False):
     if degrees:
         dirs = dirs * np.pi / 180.0
 
-    sin_dirs = np.cos(dirs)
+    cos_dirs = np.cos(dirs)
     # sin_dirs = sin_dirs[sin_dirs != 0.0]   # exclude zeros for robustness
+    cos_dirs = cos_dirs[np.abs(cos_dirs) > 1e-8]   # exclude zeros for robustness
 
-    if not (sin_dirs >= 0.0).all() or not (sin_dirs >= 0.0).all():
+    # if not (cos_dirs <= 0.0).all() or not (cos_dirs >= 0.0).all():
+    #     raise ValueError(
+    #         "`rao` must be defined in the range [90, 270] degrees or [270, 90] degrees."
+    #     )
+
+    bools_sum = np.sum(cos_dirs >= 0.0)
+    if bools_sum != len(cos_dirs) or bools_sum == 0:
         raise ValueError(
             "`rao` must be defined in the range [90, 270] degrees or [270, 90] degrees."
         )
@@ -238,11 +252,11 @@ def mirror(rao, dof, sym_plane="xz"):
         )
 
     if sym_plane.lower() == "xz":
-        switch_dir = -1
+        # switch_dir = -1
         bounds = (0.0, periodicity / 2.0)
         _check_mirror_xz(dirs, degrees=rao._degrees)
     elif sym_plane.lower() == "yz":
-        switch_dir = 1
+        # switch_dir = 1
         bounds = (periodicity / 4.0, 3.0 * periodicity / 4.0)
         _check_mirror_yz(dirs, degrees=rao._degrees)
 
@@ -255,12 +269,14 @@ def mirror(rao, dof, sym_plane="xz"):
 
     exclude_bounds_mask = (dirs != bounds[0]) & (dirs != bounds[1])
 
-    vals_mirrored = np.concatenate(
-        (vals, scale_phase * vals[:, exclude_bounds_mask][:, ::-1]), axis=1
-    )
-    dirs_mirrored = np.concatenate(
-        (dirs, switch_dir * dirs[exclude_bounds_mask][::-1] + periodicity)
-    )
+    vals_folded = scale_phase * vals[:, exclude_bounds_mask][:, ::-1]
+    if sym_plane.lower() == "xz":
+        dirs_folded = -1 * dirs[exclude_bounds_mask][::-1]
+    elif sym_plane.lower() == "yz":
+        dirs_folded = -1 * dirs[exclude_bounds_mask][::-1] + periodicity / 2.0
+
+    vals_mirrored = np.concatenate((vals, vals_folded), axis=1)
+    dirs_mirrored = np.concatenate((dirs, dirs_folded))
     dirs_mirrored = _robust_modulus(dirs_mirrored, periodicity)
 
     dirs_mirrored, vals_mirrored = _sort(dirs_mirrored, vals_mirrored)
