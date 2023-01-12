@@ -168,6 +168,7 @@ def _cast_to_grid(grid):
 
 
 def _check_foldable(dirs, degrees=False, sym_plane="xz"):
+    """Checks that directions can be folded about a given symmetry plane"""
     dirs = np.asarray_chkfinite(dirs).copy()
 
     if degrees:
@@ -199,20 +200,27 @@ def _sort(dirs, vals):
 
 def mirror(rao, dof, sym_plane="xz"):
     """
-    Mirrors an RAO object with symmetry in x-z plane, defined in the directional range
-    [0, 180) degrees (or [0, numpy.pi) radians).
+    Mirrors/folds an RAO object about a symmetry plane.
+
+    Requires that the RAO is defined for directions that allows folding with the
+    given symmetry plane. I.e., folding about the xz-plane requires that the RAO
+    is defined for directions in the range [0, 180] degrees or [180, 360] degrees.
+    Similarly, folding about the yz-plane requires that the RAO is defined for directions
+    in the range [90, 270] degrees or [270, 90] degrees.
 
     Parameters
     ----------
     rao : RAO
         RAO object.
-    dof : {`surge`, `sway`, `heave`, `roll`, `pitch`, `yaw`}
+    dof : {'surge', 'sway', 'heave', 'roll', 'pitch', 'yaw'}
         Which degree-of-freedaom the RAO object represents.
+    sym_plane : {'xz', 'yz'}
+        Symmetry plane, determining which plane to mirror the RAO about.
 
     Returns
     -------
     rao : RAO
-        Extended (mirrored) RAO.
+        Extended (mirrored) RAO object.
     """
 
     sym_plane = sym_plane.lower()
