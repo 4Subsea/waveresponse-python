@@ -238,6 +238,8 @@ def mirror(rao, dof, sym_plane="xz"):
         bounds = (periodicity / 4.0, 3.0 * periodicity / 4.0)
         if dof in ("surge", "pitch", "yaw"):
             scale_phase = -1
+    else:
+        raise ValueError("`sym_plane` should be 'xz' or 'yz'")
 
     exclude_bounds = ~np.logical_or(np.isclose(dirs, bounds[0]), np.isclose(dirs, bounds[1]))
     _check_foldable(dirs[exclude_bounds], degrees=rao._degrees, sym_plane=sym_plane)
