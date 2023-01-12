@@ -244,11 +244,11 @@ def mirror(rao, dof, sym_plane="xz"):
     exclude_bounds = ~np.logical_or(np.isclose(dirs, bounds[0]), np.isclose(dirs, bounds[1]))
     _check_foldable(dirs[exclude_bounds], degrees=rao._degrees, sym_plane=sym_plane)
 
-    vals_folded = scale_phase * vals[:, exclude_bounds][:, ::-1]
+    vals_folded = scale_phase * vals[:, exclude_bounds]
     if sym_plane == "xz":
-        dirs_folded = -1 * dirs[exclude_bounds][::-1]
+        dirs_folded = -1 * dirs[exclude_bounds]
     elif sym_plane == "yz":
-        dirs_folded = -1 * dirs[exclude_bounds][::-1] + periodicity / 2.0
+        dirs_folded = -1 * dirs[exclude_bounds] + periodicity / 2.0
 
     vals_mirrored = np.concatenate((vals, vals_folded), axis=1)
     dirs_mirrored = np.concatenate((dirs, dirs_folded))
