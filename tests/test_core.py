@@ -598,8 +598,9 @@ class Test_mirror:
         with pytest.raises(ValueError):
             mirror(rao_for_mirroring, "invalid-dof")
 
-    def test_surge_mirror_twise(self):
-        rao_df = pd.read_csv(TEST_PATH / "testdata" / "rao_surge_symmetric.csv", index_col=0)
+    @pytest.mark.parametrize("dof", ("surge", "sway", "heave", "roll", "pitch", "yaw"))
+    def test_surge_mirror_twise(self, dof):
+        rao_df = pd.read_csv(TEST_PATH / "testdata" / f"rao_{dof}_symmetric.csv", index_col=0)
         freq = rao_df.index.astype(float)
         dirs = rao_df.columns.astype(float)
         vals = rao_df.values.astype(complex)
@@ -621,7 +622,7 @@ class Test_mirror:
             **rao_full.wave_convention,
         )
 
-        rao_mirrored = wr.mirror(wr.mirror(rao_reduced, "surge", sym_plane="xz"), "surge", sym_plane="yz")
+        rao_mirrored = wr.mirror(wr.mirror(rao_reduced, dof, sym_plane="xz"), dof, sym_plane="yz")
 
         freq_out, dirs_out, vals_out = rao_mirrored.grid(freq_hz=False, degrees=False)
         freq_expect, dirs_expect, vals_expect = rao_full.grid(freq_hz=False, degrees=False)
