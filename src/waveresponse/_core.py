@@ -485,7 +485,7 @@ class Grid:
 
         freq_new = freq_org
         dirs_new = self._convert_dirs(dirs_org, config_new, config_org, degrees=False)
-        dirs_new, vals_new = self._sort(dirs_new, vals_org)
+        dirs_new, vals_new = _sort(dirs_new, vals_org)
 
         return freq_new, dirs_new, vals_new
 
@@ -524,15 +524,15 @@ class Grid:
 
         return _robust_modulus(dirs, periodicity)
 
-    @staticmethod
-    def _sort(dirs, vals):
-        """
-        Sort directions and values according to (unsorted) directions.
-        """
-        dirs = np.asarray_chkfinite(dirs)
-        vals = np.asarray_chkfinite(vals)
-        sorted_args = np.argsort(dirs)
-        return dirs[sorted_args], vals[:, sorted_args]
+    # @staticmethod
+    # def _sort(dirs, vals):
+    #     """
+    #     Sort directions and values according to (unsorted) directions.
+    #     """
+    #     dirs = np.asarray_chkfinite(dirs)
+    #     vals = np.asarray_chkfinite(vals)
+    #     sorted_args = np.argsort(dirs)
+    #     return dirs[sorted_args], vals[:, sorted_args]
 
     def copy(self):
         """Return a copy of the object."""
@@ -566,7 +566,7 @@ class Grid:
 
         new = self.copy()
         dirs_new = _robust_modulus(new._dirs - angle, 2.0 * np.pi)
-        new._dirs, new._vals = new._sort(dirs_new, new._vals)
+        new._dirs, new._vals = _sort(dirs_new, new._vals)
         return new
 
     def _interpolate_function(self, complex_convert="rectangular", **kw):
