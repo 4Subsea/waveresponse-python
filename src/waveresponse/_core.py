@@ -524,16 +524,6 @@ class Grid:
 
         return _robust_modulus(dirs, periodicity)
 
-    # @staticmethod
-    # def _sort(dirs, vals):
-    #     """
-    #     Sort directions and values according to (unsorted) directions.
-    #     """
-    #     dirs = np.asarray_chkfinite(dirs)
-    #     vals = np.asarray_chkfinite(vals)
-    #     sorted_args = np.argsort(dirs)
-    #     return dirs[sorted_args], vals[:, sorted_args]
-
     def copy(self):
         """Return a copy of the object."""
         return copy.deepcopy(self)
