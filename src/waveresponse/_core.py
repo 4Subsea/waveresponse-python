@@ -167,34 +167,24 @@ def _cast_to_grid(grid):
     return new
 
 
-def _check_mirror_xz(dirs, degrees=False):
+def _check_foldable(dirs, degrees=False, sym_plane="xz"):
     dirs = np.asarray_chkfinite(dirs).copy()
 
     if degrees:
         dirs = dirs * np.pi / 180.0
 
-    sin_dirs = np.sin(dirs)
+    if sym_plane.lower() == "xz":
+        dirs_bools = np.sin(dirs) >= 0.0
+        error_msg = "`rao` must be defined in the range [0, 180] degrees or [180, 360) degrees."
+    elif sym_plane.lower() == "yz":
+        dirs_bools = np.cos(dirs) >= 0.0
+        error_msg = "`rao` must be defined in the range [90, 270] degrees or [270, 90] degrees."
+    else:
+        raise ValueError()
 
-    bools_sum = np.sum(sin_dirs >= 0.0)
-    if bools_sum != len(sin_dirs) and bools_sum != 0:
-        raise ValueError(
-            "`rao` must be defined in the range [0, 180] degrees or [180, 360) degrees."
-        )
-
-
-def _check_mirror_yz(dirs, degrees=False):
-    dirs = np.asarray_chkfinite(dirs).copy()
-
-    if degrees:
-        dirs = dirs * np.pi / 180.0
-
-    cos_dirs = np.cos(dirs)
-
-    bools_sum = np.sum(cos_dirs >= 0.0)
-    if bools_sum != len(cos_dirs) and bools_sum != 0:
-        raise ValueError(
-            "`rao` must be defined in the range [90, 270] degrees or [270, 90] degrees."
-        )
+    bools_sum = np.sum(dirs_bools)
+    if bools_sum != len(dirs) and bools_sum != 0:
+        raise ValueError(error_msg)
 
 
 def _sort(dirs, vals):
@@ -229,30 +219,28 @@ def mirror(rao, dof, sym_plane="xz"):
     dof = dof.lower()
     freq, dirs, vals = rao.grid()
 
-    if rao._degrees:
-        periodicity = 360.0
-    else:
-        periodicity = 2 * np.pi
-
     if dof not in ("surge", "sway", "heave", "roll", "pitch", "yaw"):
         raise ValueError(
             "`dof` must be 'surge', 'sway', 'heave', 'roll', 'pitch' or 'yaw'"
         )
 
+    if rao._degrees:
+        periodicity = 360.0
+    else:
+        periodicity = 2 * np.pi
+
     scale_phase = 1
     if sym_plane == "xz":
-        check_fun = _check_mirror_xz
         bounds = (0.0, periodicity / 2.0)
         if dof in ("sway", "roll", "yaw"):
             scale_phase = -1
     elif sym_plane == "yz":
-        check_fun = _check_mirror_yz
         bounds = (periodicity / 4.0, 3.0 * periodicity / 4.0)
         if dof in ("surge", "pitch", "yaw"):
             scale_phase = -1
 
     exclude_bounds = ~np.logical_or(np.isclose(dirs, bounds[0]), np.isclose(dirs, bounds[1]))
-    check_fun(dirs[exclude_bounds], degrees=rao._degrees)
+    _check_foldable(dirs[exclude_bounds], degrees=rao._degrees, sym_plane=sym_plane)
 
     vals_folded = scale_phase * vals[:, exclude_bounds][:, ::-1]
     if sym_plane == "xz":
