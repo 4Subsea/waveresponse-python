@@ -1,6 +1,8 @@
 from unittest.mock import patch
+from pathlib import Path
 
 import numpy as np
+import pandas as pd
 import pytest
 from scipy.integrate import quad
 
@@ -18,6 +20,9 @@ from waveresponse import (
     polar_to_complex,
 )
 from waveresponse._core import _check_is_similar, _robust_modulus
+
+
+TEST_PATH = Path(__file__).parent
 
 
 @pytest.fixture
@@ -592,6 +597,38 @@ class Test_mirror:
     def test_raises_dof(self, rao_for_mirroring):
         with pytest.raises(ValueError):
             mirror(rao_for_mirroring, "invalid-dof")
+
+    def test_surge_mirror_twise(self):
+        rao_df = pd.read_csv(TEST_PATH / "testdata" / "rao_surge_symmetric.csv", index_col=0)
+        freq = rao_df.index.astype(float)
+        dirs = rao_df.columns.astype(float)
+        vals = rao_df.values.astype(complex)
+        rao_full = wr.RAO(freq, dirs, vals, freq_hz=False, degrees=False)
+
+        freq, dirs, vals = rao_full.grid(freq_hz=False, degrees=True)
+
+        mask = (dirs >= 180.0) & (dirs <= 270.0)
+        freq_reduced = freq.copy()
+        dirs_reduced = dirs[mask].copy()
+        vals_reduced = vals[:, mask].copy()
+
+        rao_reduced = wr.RAO(
+            freq_reduced,
+            dirs_reduced,
+            vals_reduced,
+            freq_hz=False,
+            degrees=True,
+            **rao_full.wave_convention,
+        )
+
+        rao_mirrored = wr.mirror(wr.mirror(rao_reduced, "surge", sym_plane="xz"), "surge", sym_plane="yz")
+
+        freq_out, dirs_out, vals_out = rao_mirrored.grid(freq_hz=False, degrees=False)
+        freq_expect, dirs_expect, vals_expect = rao_full.grid(freq_hz=False, degrees=False)
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
 
 class Test_Grid:
