@@ -1,11 +1,11 @@
-from unittest.mock import patch
+from itertools import product
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 import pandas as pd
 import pytest
 from scipy.integrate import quad
-from itertools import product
 
 import waveresponse as wr
 from waveresponse import (
@@ -21,7 +21,6 @@ from waveresponse import (
     polar_to_complex,
 )
 from waveresponse._core import _check_is_similar, _robust_modulus
-
 
 TEST_PATH = Path(__file__).parent
 
@@ -610,7 +609,9 @@ class Test_mirror:
         Check that we can reconstruct a full, symmetric RAO by mirroring twise (first
         about the xz-plane, then about the yz-plane)
         """
-        rao_df = pd.read_csv(TEST_PATH / "testdata" / f"rao_{dof}_symmetric.csv", index_col=0)
+        rao_df = pd.read_csv(
+            TEST_PATH / "testdata" / f"rao_{dof}_symmetric.csv", index_col=0
+        )
         freq = rao_df.index.astype(float)
         dirs = rao_df.columns.astype(float)
         vals = rao_df.values.astype(complex)
@@ -632,10 +633,16 @@ class Test_mirror:
             **rao_full.wave_convention,
         )
 
-        rao_mirrored = wr.mirror(wr.mirror(rao_reduced, dof, sym_plane=sym_plane_order[0]), dof, sym_plane=sym_plane_order[1])
+        rao_mirrored = wr.mirror(
+            wr.mirror(rao_reduced, dof, sym_plane=sym_plane_order[0]),
+            dof,
+            sym_plane=sym_plane_order[1],
+        )
 
         freq_out, dirs_out, vals_out = rao_mirrored.grid(freq_hz=False, degrees=False)
-        freq_expect, dirs_expect, vals_expect = rao_full.grid(freq_hz=False, degrees=False)
+        freq_expect, dirs_expect, vals_expect = rao_full.grid(
+            freq_hz=False, degrees=False
+        )
 
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)

@@ -176,10 +176,14 @@ def _check_foldable(dirs, degrees=False, sym_plane="xz"):
 
     if sym_plane.lower() == "xz":
         dirs_bools = np.sin(dirs) >= 0.0
-        error_msg = "`rao` must be defined in the range [0, 180] degrees or [180, 360) degrees."
+        error_msg = (
+            "`rao` must be defined in the range [0, 180] degrees or [180, 360) degrees."
+        )
     elif sym_plane.lower() == "yz":
         dirs_bools = np.cos(dirs) >= 0.0
-        error_msg = "`rao` must be defined in the range [90, 270] degrees or [270, 90] degrees."
+        error_msg = (
+            "`rao` must be defined in the range [90, 270] degrees or [270, 90] degrees."
+        )
     else:
         raise ValueError()
 
@@ -249,7 +253,9 @@ def mirror(rao, dof, sym_plane="xz"):
     else:
         raise ValueError("`sym_plane` should be 'xz' or 'yz'")
 
-    exclude_bounds = ~np.logical_or(np.isclose(dirs, bounds[0]), np.isclose(dirs, bounds[1]))
+    exclude_bounds = ~np.logical_or(
+        np.isclose(dirs, bounds[0]), np.isclose(dirs, bounds[1])
+    )
     _check_foldable(dirs[exclude_bounds], degrees=rao._degrees, sym_plane=sym_plane)
 
     vals_folded = scale_phase * vals[:, exclude_bounds]
