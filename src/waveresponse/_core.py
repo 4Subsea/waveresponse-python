@@ -206,7 +206,7 @@ def mirror(rao, dof, sym_plane="xz"):
     """
     Mirrors/folds an RAO object about a symmetry plane.
 
-    Requires that the RAO is defined for directions that allows folding with the
+    Requires that the RAO is defined for directions that allow folding with the
     given symmetry plane. I.e., folding about the xz-plane requires that the RAO
     is defined for directions in the range [0, 180] degrees or [180, 360] degrees.
     Similarly, folding about the yz-plane requires that the RAO is defined for directions
