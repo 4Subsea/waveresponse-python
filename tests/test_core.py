@@ -599,15 +599,19 @@ class Test_mirror:
             mirror(rao_for_mirroring, "invalid-dof")
 
     @pytest.mark.parametrize("dof", ("surge", "sway", "heave", "roll", "pitch", "yaw"))
-    def test_surge_mirror_twise(self, dof):
+    def test_mirror_twise_xz_yz_third_quadrant(self, dof):
+        """
+        Check that we can reconstruct a full, symmetric RAO by mirroring twise (first
+        about the xz-plane, then about the yz-plane)
+        """
         rao_df = pd.read_csv(TEST_PATH / "testdata" / f"rao_{dof}_symmetric.csv", index_col=0)
         freq = rao_df.index.astype(float)
         dirs = rao_df.columns.astype(float)
         vals = rao_df.values.astype(complex)
         rao_full = wr.RAO(freq, dirs, vals, freq_hz=False, degrees=False)
 
+        # Construct a reduced version of the RAO, defined for dirs in [180, 270]
         freq, dirs, vals = rao_full.grid(freq_hz=False, degrees=True)
-
         mask = (dirs >= 180.0) & (dirs <= 270.0)
         freq_reduced = freq.copy()
         dirs_reduced = dirs[mask].copy()
