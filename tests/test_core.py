@@ -592,7 +592,10 @@ class Test_mirror:
     def test_raises_dirs(self, rao):
         # Try to mirror an RAO with directions greater than 180 degrees
         with pytest.raises(ValueError):
-            mirror(rao, "sway")
+            mirror(rao, "sway", sym_plane="xz")
+
+        with pytest.raises(ValueError):
+            mirror(rao, "sway", sym_plane="yz")
 
     def test_raises_dof(self, rao_for_mirroring):
         with pytest.raises(ValueError):
