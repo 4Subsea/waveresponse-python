@@ -217,14 +217,22 @@ def mirror(rao, dof, sym_plane="xz"):
     rao : RAO
         RAO object.
     dof : {'surge', 'sway', 'heave', 'roll', 'pitch', 'yaw'}
-        Which degree-of-freedaom the RAO object represents.
+        Which degree-of-freedom the RAO object represents.
     sym_plane : {'xz', 'yz'}
-        Symmetry plane, determining which plane to mirror the RAO about.
+        Symmetry plane, determining which axis to mirror the RAO about.
 
     Returns
     -------
     rao : RAO
         Extended (mirrored) RAO object.
+
+    Note
+    ----
+    Mirroring an RAO will shift the phases 180 degrees for some degrees-of-freedom,
+    depending the symmetry plane. For ``sym_plane='xz'``, the phase will be shifted
+    180 degrees for the following degrees-of-freedom: 'sway', 'roll' and 'yaw'.
+    And for ``sym_plane='yz'``, the phase will be shifted 180 degrees for the following
+    degrees-of-freedom: 'surge', 'pitch' and 'yaw'.
     """
 
     sym_plane = sym_plane.lower()
