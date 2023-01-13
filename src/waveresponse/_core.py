@@ -233,6 +233,26 @@ def mirror(rao, dof, sym_plane="xz"):
     180 degrees for the following degrees-of-freedom: 'sway', 'roll' and 'yaw'.
     And for ``sym_plane='yz'``, the phase will be shifted 180 degrees for the following
     degrees-of-freedom: 'surge', 'pitch' and 'yaw'.
+
+    Examples
+    --------
+    If you have an RAO defined only in half the directional domain (e.g., [0, 180] degrees),
+    you can mirror it once about a symmetry plane to obtain the 'full' RAO, defined over
+    the whole directional domain:
+
+    >>> # Symmetry about xz-plane
+    >>> rao_full = wr.mirror(rao, "heave", sym_plane="xz")
+
+    If you have an RAO defined only in one quadrant (e.g., [0, 90] degrees), you
+    can mirror it twise to obtain the 'full' RAO, defined over the whole directional
+    domain:
+
+    >>> # Symmetry about xz- and yz-plane
+    >>> rao_full = wr.mirror(
+    ...     wr.mirror(rao, "heave", sym_plane="xz"),
+    ...     "heave",
+    ...     sym_plane="yz"
+    ... )
     """
 
     sym_plane = sym_plane.lower()
