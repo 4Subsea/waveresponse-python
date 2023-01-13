@@ -606,8 +606,7 @@ class Test_mirror:
     @pytest.mark.parametrize("mask_bounds, sym_plane_order, dof", params_mirror_twise)
     def test_mirror_twise(self, mask_bounds, sym_plane_order, dof):
         """
-        Check that we can reconstruct a full, symmetric RAO by mirroring twise (first
-        about the xz-plane, then about the yz-plane)
+        Check that we can reconstruct a full, symmetric RAO by mirroring twise
         """
         rao_df = pd.read_csv(
             TEST_PATH / "testdata" / f"rao_{dof}_symmetric.csv", index_col=0
