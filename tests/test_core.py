@@ -598,7 +598,7 @@ class Test_mirror:
         with pytest.raises(ValueError):
             mirror(rao_for_mirroring, "invalid-dof")
 
-    mask_bounds = [(0.0, 90.0), (90.0, 180.0), (180.0, 270.0)]
+    mask_bounds = [(0.0, 90.0), (90.0, 180.0), (180.0, 270.0), (270.0, 360.0)]
     sym_plane_order = [("xz", "yz"), ("yz", "xz")]
     dof = ["surge", "sway", "heave", "roll", "pitch", "yaw"]
     params_mirror_twise = product(mask_bounds, sym_plane_order, dof)
@@ -616,9 +616,11 @@ class Test_mirror:
         vals = rao_df.values.astype(complex)
         rao_full = wr.RAO(freq, dirs, vals, freq_hz=False, degrees=False)
 
-        # Construct a reduced version of the RAO, defined for dirs in [180, 270]
+        # Construct a reduced version of the RAO, defined only in the range given by the bounds
         freq, dirs, vals = rao_full.grid(freq_hz=False, degrees=True)
         mask = (dirs >= mask_bounds[0]) & (dirs <= mask_bounds[1])
+        if mask_bounds[1] == 360.0:
+            mask = np.logical_or(mask, dirs == 0.0)
         freq_reduced = freq.copy()
         dirs_reduced = dirs[mask].copy()
         vals_reduced = vals[:, mask].copy()
