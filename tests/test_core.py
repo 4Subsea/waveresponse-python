@@ -606,7 +606,7 @@ class Test_mirror:
     @pytest.mark.parametrize("mask_bounds, sym_plane_order, dof", params_mirror_twise)
     def test_mirror_twise(self, mask_bounds, sym_plane_order, dof):
         """
-        Check that we can reconstruct a full, symmetric RAO by mirroring twise
+        Check that we can reconstruct a 'full', symmetric RAO by mirroring the RAO twise
         """
         rao_df = pd.read_csv(
             TEST_PATH / "testdata" / f"rao_{dof}_symmetric.csv", index_col=0
@@ -616,7 +616,7 @@ class Test_mirror:
         vals = rao_df.values.astype(complex)
         rao_full = wr.RAO(freq, dirs, vals, freq_hz=False, degrees=False)
 
-        # Construct a reduced version of the RAO, defined only in the range given by the bounds
+        # Construct a 'reduced' version of the RAO, defined only in the range given by the bounds
         freq, dirs, vals = rao_full.grid(freq_hz=False, degrees=True)
         mask = (dirs >= mask_bounds[0]) & (dirs <= mask_bounds[1])
         if mask_bounds[1] == 360.0:
@@ -634,6 +634,7 @@ class Test_mirror:
             **rao_full.wave_convention,
         )
 
+        # Mirror the 'reduced' RAO twise to reconstruct the 'full' RAO
         rao_mirrored = wr.mirror(
             wr.mirror(rao_reduced, dof, sym_plane=sym_plane_order[0]),
             dof,
