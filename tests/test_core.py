@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from scipy.integrate import quad
+from itertools import product
 
 import waveresponse as wr
 from waveresponse import (
@@ -598,8 +599,13 @@ class Test_mirror:
         with pytest.raises(ValueError):
             mirror(rao_for_mirroring, "invalid-dof")
 
-    @pytest.mark.parametrize("dof", ("surge", "sway", "heave", "roll", "pitch", "yaw"))
-    def test_mirror_twise_xz_yz_third_quadrant(self, dof):
+    mask_bounds = [(0.0, 90.0), (90.0, 180.0), (180.0, 270.0)]
+    sym_plane_order = [("xz", "yz"), ("yz", "xz")]
+    dof = ["surge", "sway", "heave", "roll", "pitch", "yaw"]
+    params_mirror_twise = product(mask_bounds, sym_plane_order, dof)
+
+    @pytest.mark.parametrize("mask_bounds, sym_plane_order, dof", params_mirror_twise)
+    def test_mirror_twise(self, mask_bounds, sym_plane_order, dof):
         """
         Check that we can reconstruct a full, symmetric RAO by mirroring twise (first
         about the xz-plane, then about the yz-plane)
@@ -612,7 +618,7 @@ class Test_mirror:
 
         # Construct a reduced version of the RAO, defined for dirs in [180, 270]
         freq, dirs, vals = rao_full.grid(freq_hz=False, degrees=True)
-        mask = (dirs >= 180.0) & (dirs <= 270.0)
+        mask = (dirs >= mask_bounds[0]) & (dirs <= mask_bounds[1])
         freq_reduced = freq.copy()
         dirs_reduced = dirs[mask].copy()
         vals_reduced = vals[:, mask].copy()
@@ -626,7 +632,7 @@ class Test_mirror:
             **rao_full.wave_convention,
         )
 
-        rao_mirrored = wr.mirror(wr.mirror(rao_reduced, dof, sym_plane="xz"), dof, sym_plane="yz")
+        rao_mirrored = wr.mirror(wr.mirror(rao_reduced, dof, sym_plane=sym_plane_order[0]), dof, sym_plane=sym_plane_order[1])
 
         freq_out, dirs_out, vals_out = rao_mirrored.grid(freq_hz=False, degrees=False)
         freq_expect, dirs_expect, vals_expect = rao_full.grid(freq_hz=False, degrees=False)
