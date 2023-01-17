@@ -148,7 +148,7 @@ RAO:
     import waveresponse as wr
 
     # Mirror heave rao twise, first about the xz-plane and then about the yz-plane
-    rao_full = wr.mirror(wr.mirror(rao, "heave", sym_plane="xz"), 'heave', sym_plane="yz")
+    rao_full = wr.mirror(wr.mirror(rao, "heave", sym_plane="xz"), "heave", sym_plane="yz")
 
 .. note::
     When using an :class:`~waveresponse.RAO` object in response estimation, it is
