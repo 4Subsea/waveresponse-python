@@ -20,7 +20,7 @@ from waveresponse import (
     mirror,
     polar_to_complex,
 )
-from waveresponse._core import _check_is_similar, _robust_modulus
+from waveresponse._core import _check_foldable, _check_is_similar, _robust_modulus
 
 TEST_PATH = Path(__file__).parent
 
@@ -653,6 +653,152 @@ class Test_mirror:
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+
+class Test__check_foldable:
+
+    check_foldable_valid = [
+        (
+            np.linspace(
+                np.nextafter(0.0, 180.0),
+                np.nextafter(180.0, 0.0),
+                num=10,
+                endpoint=True,
+            ),
+            "xz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(180.0, 360.0),
+                np.nextafter(360.0, 180.0),
+                num=10,
+                endpoint=True,
+            ),
+            "xz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(90.0, 270.0),
+                np.nextafter(270.0, 90.0),
+                num=10,
+                endpoint=True,
+            ),
+            "yz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(0.0, 90.0), np.nextafter(90.0, 0.0), num=10, endpoint=True
+            ),
+            "xz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(0.0, 90.0), np.nextafter(90.0, 0.0), num=10, endpoint=True
+            ),
+            "yz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(90.0, 180.0),
+                np.nextafter(180.0, 90.0),
+                num=10,
+                endpoint=True,
+            ),
+            "xz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(90.0, 180.0),
+                np.nextafter(180.0, 90.0),
+                num=10,
+                endpoint=True,
+            ),
+            "yz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(180.0, 270.0),
+                np.nextafter(270.0, 180.0),
+                num=10,
+                endpoint=True,
+            ),
+            "xz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(180.0, 270.0),
+                np.nextafter(270.0, 180.0),
+                num=10,
+                endpoint=True,
+            ),
+            "yz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(270.0, 360.0),
+                np.nextafter(360.0, 270.0),
+                num=10,
+                endpoint=True,
+            ),
+            "yz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(270.0, 360.0),
+                np.nextafter(360.0, 270.0),
+                num=10,
+                endpoint=True,
+            ),
+            "yz",
+        ),
+    ]
+
+    @pytest.mark.parametrize("dirs, sym_plane", check_foldable_valid)
+    def test_is_foldable(self, dirs, sym_plane):
+        _check_foldable(dirs, degrees=True, sym_plane=sym_plane)
+        _check_foldable(np.radians(dirs), degrees=False, sym_plane=sym_plane)
+
+    check_foldable_invalid = [
+        (
+            np.linspace(
+                np.nextafter(0.0, 180.0),
+                np.nextafter(180.0, 360.0),
+                num=10,
+                endpoint=True,
+            ),
+            "xz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(180.0, 0.0),
+                np.nextafter(360.0, 180.0),
+                num=10,
+                endpoint=True,
+            ),
+            "xz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(90.0, 0.0),
+                np.nextafter(270.0, 360.0),
+                num=10,
+                endpoint=True,
+            ),
+            "yz",
+        ),
+    ]
+
+    @pytest.mark.parametrize("dirs, sym_plane", check_foldable_invalid)
+    def test_not_foldable(self, dirs, sym_plane):
+        with pytest.raises(ValueError):
+            _check_foldable(dirs, degrees=True, sym_plane=sym_plane)
+
+        with pytest.raises(ValueError):
+            _check_foldable(np.radians(dirs), degrees=False, sym_plane=sym_plane)
+
+    def test_dirs_empty(self):
+        with pytest.raises(ValueError):
+            _check_foldable(np.array([]), degrees=True, sym_plane="xz")
 
 
 class Test_Grid:
