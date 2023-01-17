@@ -171,6 +171,9 @@ def _check_foldable(dirs, degrees=False, sym_plane="xz"):
     """Checks that directions can be folded about a given symmetry plane"""
     dirs = np.asarray_chkfinite(dirs).copy()
 
+    if len(dirs) == 0:
+        raise ValueError("`rao` is defined only at the bounds. Nothing to mirror.")
+
     if degrees:
         dirs = dirs * np.pi / 180.0
 
@@ -187,8 +190,7 @@ def _check_foldable(dirs, degrees=False, sym_plane="xz"):
     else:
         raise ValueError()
 
-    bools_sum = np.sum(dirs_bools)
-    if bools_sum != len(dirs) and bools_sum != 0:
+    if not (all(dirs_bools) or all(~dirs_bools)):
         raise ValueError(error_msg)
 
 
@@ -273,9 +275,12 @@ def mirror(rao, dof, sym_plane="xz"):
     else:
         raise ValueError("`sym_plane` should be 'xz' or 'yz'")
 
-    exclude_bounds = ~np.logical_or(
-        np.isclose(dirs, bounds[0]), np.isclose(dirs, bounds[1])
+    lb_0, ub_0 = np.nextafter(bounds[0], (-periodicity, periodicity))
+    lb_1, ub_1 = np.nextafter(bounds[1], (-periodicity, periodicity))
+    exclude_bounds = ((dirs >= ub_0) | (dirs <= lb_0)) & (
+        ((dirs >= ub_1) | (dirs <= lb_1))
     )
+
     _check_foldable(dirs[exclude_bounds], degrees=rao._degrees, sym_plane=sym_plane)
 
     vals_folded = scale_phase * vals[:, exclude_bounds]
