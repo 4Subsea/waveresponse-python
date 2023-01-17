@@ -126,18 +126,29 @@ values with an appropriate factor:
 Mirror an RAO about a symmetry plane
 ------------------------------------
 If you have an :class:`~waveresponse.RAO` object defined only over half the directional
-domain (i.e., [0, 180) degrees), you may want to mirror this RAO about a symmetry plane
+domain (e.g., [0, 180) degrees), you may want to mirror this RAO about a symmetry plane
 to obtain an extended version of the RAO which is defined over the full directional domain
 (i.e., [0, 360) degrees). Symmetry mirroring is proveded by the :func:`~waveresponse.mirror`
-function; the function takes an :class:`~waveresponse.RAO` object and a degree-of-freedom
-as input, and outputs a new, extended :class:`~waveresponse.RAO` object.
+function; the function takes an :class:`~waveresponse.RAO` object, a degree-of-freedom
+and a symmetry plane as input, and outputs a new, extended :class:`~waveresponse.RAO` object:
 
 .. code:: python
 
     import waveresponse as wr
 
-    # Mirror sway rao
-    rao_full = wr.mirror(rao, 'sway')
+    # Mirror heave rao about the xz-plane
+    rao_full = wr.mirror(rao, 'heave', sym_plane="xz")
+
+Similarly, if you have an :class:`~waveresponse.RAO` object defined only in one
+quadrant (e.g., [0, 90] degrees), you can mirror this RAO twise to obtain the 'full'
+RAO:
+
+.. code:: python
+
+    import waveresponse as wr
+
+    # Mirror heave rao twise, first about the xz-plane and then about the yz-plane
+    rao_full = wr.mirror(wr.mirror(rao, "heave", sym_plane="xz"), "heave", sym_plane="yz")
 
 .. note::
     When using an :class:`~waveresponse.RAO` object in response estimation, it is

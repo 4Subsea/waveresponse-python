@@ -167,52 +167,132 @@ def _cast_to_grid(grid):
     return new
 
 
-def mirror(rao, dof):
+def _check_foldable(dirs, degrees=False, sym_plane="xz"):
+    """Checks that directions can be folded about a given symmetry plane"""
+    dirs = np.asarray_chkfinite(dirs).copy()
+
+    if len(dirs) == 0:
+        raise ValueError("`rao` is defined only at the bounds. Nothing to mirror.")
+
+    if degrees:
+        dirs = dirs * np.pi / 180.0
+
+    if sym_plane.lower() == "xz":
+        dirs_bools = np.sin(dirs) >= 0.0
+        error_msg = (
+            "`rao` must be defined in the range [0, 180] degrees or [180, 360) degrees."
+        )
+    elif sym_plane.lower() == "yz":
+        dirs_bools = np.cos(dirs) >= 0.0
+        error_msg = (
+            "`rao` must be defined in the range [90, 270] degrees or [270, 90] degrees."
+        )
+    else:
+        raise ValueError()
+
+    if not (all(dirs_bools) or all(~dirs_bools)):
+        raise ValueError(error_msg)
+
+
+def _sort(dirs, vals):
     """
-    Mirrors an RAO object with symmetry in x-z plane, defined in the directional range
-    [0, 180) degrees (or [0, numpy.pi) radians).
+    Sort directions and values according to (unsorted) directions.
+    """
+    dirs = np.asarray_chkfinite(dirs)
+    vals = np.asarray_chkfinite(vals)
+    sorted_args = np.argsort(dirs)
+    return dirs[sorted_args], vals[:, sorted_args]
+
+
+def mirror(rao, dof, sym_plane="xz"):
+    """
+    Mirrors/folds an RAO object about a symmetry plane.
+
+    Requires that the RAO is defined for directions that allow folding with the
+    given symmetry plane. I.e., folding about the xz-plane requires that the RAO
+    is defined for directions in the range [0, 180] degrees or [180, 360] degrees.
+    Similarly, folding about the yz-plane requires that the RAO is defined for directions
+    in the range [90, 270] degrees or [270, 90] degrees.
 
     Parameters
     ----------
     rao : RAO
         RAO object.
-    dof : {`surge`, `sway`, `heave`, `roll`, `pitch`, `yaw`}
-        Which degree-of-freedaom the RAO object represents.
+    dof : {'surge', 'sway', 'heave', 'roll', 'pitch', 'yaw'}
+        Which degree-of-freedom the RAO object represents.
+    sym_plane : {'xz', 'yz'}
+        Symmetry plane, determining which axis to mirror the RAO about.
 
     Returns
     -------
     rao : RAO
-        Extended (mirrored) RAO.
+        Extended (mirrored) RAO object.
+
+    Examples
+    --------
+    If you have an RAO defined only in half the directional domain (e.g., [0, 180] degrees),
+    you can mirror it once about a symmetry plane to obtain the 'full' RAO, defined over
+    the whole directional domain:
+
+    >>> # Symmetry about xz-plane
+    >>> rao_full = wr.mirror(rao, "heave", sym_plane="xz")
+
+    If you have an RAO defined only in one quadrant (e.g., [0, 90] degrees), you
+    can mirror it twise to obtain the 'full' RAO, defined over the whole directional
+    domain:
+
+    >>> # Symmetry about xz- and yz-plane
+    >>> rao_full = wr.mirror(
+    ...     wr.mirror(rao, "heave", sym_plane="xz"),
+    ...     "heave",
+    ...     sym_plane="yz"
+    ... )
     """
 
+    sym_plane = sym_plane.lower()
+    dof = dof.lower()
     freq, dirs, vals = rao.grid()
+
+    if dof not in ("surge", "sway", "heave", "roll", "pitch", "yaw"):
+        raise ValueError(
+            "`dof` must be 'surge', 'sway', 'heave', 'roll', 'pitch' or 'yaw'"
+        )
 
     if rao._degrees:
         periodicity = 360.0
     else:
         periodicity = 2 * np.pi
 
-    if dof.lower() not in ("surge", "sway", "heave", "roll", "pitch", "yaw"):
-        raise ValueError(
-            "`dof` must be 'surge', 'sway', 'heave', 'roll', 'pitch' or 'yaw'"
-        )
-
-    if (dirs < 0.0).any() or (dirs > periodicity / 2.0).any():
-        raise ValueError(
-            "`rao` must be defined between 0 and 180 degrees (or 0 and 2pi radians)."
-        )
-
-    if dof.lower() in ("sway", "roll", "yaw"):
-        scale_phase = -1
+    scale_phase = 1
+    if sym_plane == "xz":
+        bounds = (0.0, periodicity / 2.0)
+        if dof in ("sway", "roll", "yaw"):
+            scale_phase = -1
+    elif sym_plane == "yz":
+        bounds = (periodicity / 4.0, 3.0 * periodicity / 4.0)
+        if dof in ("surge", "pitch", "yaw"):
+            scale_phase = -1
     else:
-        scale_phase = 1
+        raise ValueError("`sym_plane` should be 'xz' or 'yz'")
 
-    mirror_mask = (dirs != 0) & (dirs != periodicity / 2)
-
-    vals_mirrored = np.concatenate(
-        (vals, scale_phase * vals[:, mirror_mask][:, ::-1]), axis=1
+    lb_0, ub_0 = np.nextafter(bounds[0], (-periodicity, periodicity))
+    lb_1, ub_1 = np.nextafter(bounds[1], (-periodicity, periodicity))
+    exclude_bounds = ((dirs >= ub_0) | (dirs <= lb_0)) & (
+        ((dirs >= ub_1) | (dirs <= lb_1))
     )
-    dirs_mirrored = np.concatenate((dirs, periodicity - dirs[mirror_mask][::-1]))
+
+    _check_foldable(dirs[exclude_bounds], degrees=rao._degrees, sym_plane=sym_plane)
+
+    vals_folded = scale_phase * vals[:, exclude_bounds]
+    if sym_plane == "xz":
+        dirs_folded = -1 * dirs[exclude_bounds]
+    elif sym_plane == "yz":
+        dirs_folded = -1 * dirs[exclude_bounds] + periodicity / 2.0
+
+    vals_mirrored = np.concatenate((vals, vals_folded), axis=1)
+    dirs_mirrored = np.concatenate((dirs, dirs_folded))
+    dirs_mirrored = _robust_modulus(dirs_mirrored, periodicity)
+    dirs_mirrored, vals_mirrored = _sort(dirs_mirrored, vals_mirrored)
 
     return RAO(
         freq,
@@ -436,7 +516,7 @@ class Grid:
 
         freq_new = freq_org
         dirs_new = self._convert_dirs(dirs_org, config_new, config_org, degrees=False)
-        dirs_new, vals_new = self._sort(dirs_new, vals_org)
+        dirs_new, vals_new = _sort(dirs_new, vals_org)
 
         return freq_new, dirs_new, vals_new
 
@@ -475,16 +555,6 @@ class Grid:
 
         return _robust_modulus(dirs, periodicity)
 
-    @staticmethod
-    def _sort(dirs, vals):
-        """
-        Sort directions and values according to (unsorted) directions.
-        """
-        dirs = np.asarray_chkfinite(dirs)
-        vals = np.asarray_chkfinite(vals)
-        sorted_args = np.argsort(dirs)
-        return dirs[sorted_args], vals[:, sorted_args]
-
     def copy(self):
         """Return a copy of the object."""
         return copy.deepcopy(self)
@@ -517,7 +587,7 @@ class Grid:
 
         new = self.copy()
         dirs_new = _robust_modulus(new._dirs - angle, 2.0 * np.pi)
-        new._dirs, new._vals = new._sort(dirs_new, new._vals)
+        new._dirs, new._vals = _sort(dirs_new, new._vals)
         return new
 
     def _interpolate_function(self, complex_convert="rectangular", **kw):

@@ -1,6 +1,9 @@
+from itertools import product
+from pathlib import Path
 from unittest.mock import patch
 
 import numpy as np
+import pandas as pd
 import pytest
 from scipy.integrate import quad
 
@@ -17,7 +20,9 @@ from waveresponse import (
     mirror,
     polar_to_complex,
 )
-from waveresponse._core import _check_is_similar, _robust_modulus
+from waveresponse._core import _check_foldable, _check_is_similar, _robust_modulus
+
+TEST_PATH = Path(__file__).parent
 
 
 @pytest.fixture
@@ -113,6 +118,26 @@ def wave(freq_dirs):
     )
 
     return wave
+
+
+def test_sort():
+    dirs_unsorted = [1, 3, 2, 4]
+    vals_unsorted = [
+        [1, 2, 3, 4],
+        [1, 2, 3, 4],
+    ]
+    dirs_sorted_out, vals_sorted_out = wr._core._sort(dirs_unsorted, vals_unsorted)
+
+    dirs_sorted_expect = np.array([1, 2, 3, 4])
+    vals_sorted_expect = np.array(
+        [
+            [1, 3, 2, 4],
+            [1, 3, 2, 4],
+        ]
+    )
+
+    np.testing.assert_array_almost_equal(dirs_sorted_out, dirs_sorted_expect)
+    np.testing.assert_array_almost_equal(vals_sorted_out, vals_sorted_expect)
 
 
 class Test__robust_modulus:
@@ -567,11 +592,213 @@ class Test_mirror:
     def test_raises_dirs(self, rao):
         # Try to mirror an RAO with directions greater than 180 degrees
         with pytest.raises(ValueError):
-            mirror(rao, "sway")
+            mirror(rao, "sway", sym_plane="xz")
+
+        with pytest.raises(ValueError):
+            mirror(rao, "sway", sym_plane="yz")
 
     def test_raises_dof(self, rao_for_mirroring):
         with pytest.raises(ValueError):
             mirror(rao_for_mirroring, "invalid-dof")
+
+    mask_bounds = [(0.0, 90.0), (90.0, 180.0), (180.0, 270.0), (270.0, 360.0)]
+    sym_plane_order = [("xz", "yz"), ("yz", "xz")]
+    dof = ["surge", "sway", "heave", "roll", "pitch", "yaw"]
+    params_mirror_twise = product(mask_bounds, sym_plane_order, dof)
+
+    @pytest.mark.parametrize("mask_bounds, sym_plane_order, dof", params_mirror_twise)
+    def test_mirror_twise(self, mask_bounds, sym_plane_order, dof):
+        """
+        Check that we can reconstruct a 'full', symmetric RAO by mirroring the RAO twise
+        """
+        rao_df = pd.read_csv(
+            TEST_PATH / "testdata" / f"rao_{dof}_symmetric.csv", index_col=0
+        )
+        freq = rao_df.index.astype(float)
+        dirs = rao_df.columns.astype(float)
+        vals = rao_df.values.astype(complex)
+        rao_full = wr.RAO(freq, dirs, vals, freq_hz=False, degrees=False)
+
+        # Construct a 'reduced' version of the RAO, defined only in the range given
+        # by the bounds
+        freq, dirs, vals = rao_full.grid(freq_hz=False, degrees=True)
+        mask = (dirs >= mask_bounds[0]) & (dirs <= mask_bounds[1])
+        if mask_bounds[1] == 360.0:
+            mask = np.logical_or(mask, dirs == 0.0)
+        freq_reduced = freq.copy()
+        dirs_reduced = dirs[mask].copy()
+        vals_reduced = vals[:, mask].copy()
+
+        rao_reduced = wr.RAO(
+            freq_reduced,
+            dirs_reduced,
+            vals_reduced,
+            freq_hz=False,
+            degrees=True,
+            **rao_full.wave_convention,
+        )
+
+        # Mirror the 'reduced' RAO twise to reconstruct the 'full' RAO
+        rao_mirrored = wr.mirror(
+            wr.mirror(rao_reduced, dof, sym_plane=sym_plane_order[0]),
+            dof,
+            sym_plane=sym_plane_order[1],
+        )
+
+        freq_out, dirs_out, vals_out = rao_mirrored.grid(freq_hz=False, degrees=False)
+        freq_expect, dirs_expect, vals_expect = rao_full.grid(
+            freq_hz=False, degrees=False
+        )
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+
+class Test__check_foldable:
+
+    check_foldable_valid = [
+        (
+            np.linspace(
+                np.nextafter(0.0, 180.0),
+                np.nextafter(180.0, 0.0),
+                num=10,
+                endpoint=True,
+            ),
+            "xz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(180.0, 360.0),
+                np.nextafter(360.0, 180.0),
+                num=10,
+                endpoint=True,
+            ),
+            "xz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(90.0, 270.0),
+                np.nextafter(270.0, 90.0),
+                num=10,
+                endpoint=True,
+            ),
+            "yz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(0.0, 90.0), np.nextafter(90.0, 0.0), num=10, endpoint=True
+            ),
+            "xz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(0.0, 90.0), np.nextafter(90.0, 0.0), num=10, endpoint=True
+            ),
+            "yz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(90.0, 180.0),
+                np.nextafter(180.0, 90.0),
+                num=10,
+                endpoint=True,
+            ),
+            "xz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(90.0, 180.0),
+                np.nextafter(180.0, 90.0),
+                num=10,
+                endpoint=True,
+            ),
+            "yz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(180.0, 270.0),
+                np.nextafter(270.0, 180.0),
+                num=10,
+                endpoint=True,
+            ),
+            "xz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(180.0, 270.0),
+                np.nextafter(270.0, 180.0),
+                num=10,
+                endpoint=True,
+            ),
+            "yz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(270.0, 360.0),
+                np.nextafter(360.0, 270.0),
+                num=10,
+                endpoint=True,
+            ),
+            "yz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(270.0, 360.0),
+                np.nextafter(360.0, 270.0),
+                num=10,
+                endpoint=True,
+            ),
+            "yz",
+        ),
+    ]
+
+    @pytest.mark.parametrize("dirs, sym_plane", check_foldable_valid)
+    def test_is_foldable(self, dirs, sym_plane):
+        _check_foldable(dirs, degrees=True, sym_plane=sym_plane)
+        _check_foldable(np.radians(dirs), degrees=False, sym_plane=sym_plane)
+
+    check_foldable_invalid = [
+        (
+            np.linspace(
+                np.nextafter(0.0, 180.0),
+                np.nextafter(180.0, 360.0),
+                num=10,
+                endpoint=True,
+            ),
+            "xz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(180.0, 0.0),
+                np.nextafter(360.0, 180.0),
+                num=10,
+                endpoint=True,
+            ),
+            "xz",
+        ),
+        (
+            np.linspace(
+                np.nextafter(90.0, 0.0),
+                np.nextafter(270.0, 360.0),
+                num=10,
+                endpoint=True,
+            ),
+            "yz",
+        ),
+    ]
+
+    @pytest.mark.parametrize("dirs, sym_plane", check_foldable_invalid)
+    def test_not_foldable(self, dirs, sym_plane):
+        with pytest.raises(ValueError):
+            _check_foldable(dirs, degrees=True, sym_plane=sym_plane)
+
+        with pytest.raises(ValueError):
+            _check_foldable(np.radians(dirs), degrees=False, sym_plane=sym_plane)
+
+    def test_dirs_empty(self):
+        with pytest.raises(ValueError):
+            _check_foldable(np.array([]), degrees=True, sym_plane="xz")
 
 
 class Test_Grid:
@@ -815,25 +1042,6 @@ class Test_Grid:
         convention_expect = {"clockwise": True, "waves_coming_from": True}
         convention_out = grid.wave_convention
         assert convention_out == convention_expect
-
-    def test__sort(self):
-        dirs_unsorted = [1, 3, 2, 4]
-        vals_unsorted = [
-            [1, 2, 3, 4],
-            [1, 2, 3, 4],
-        ]
-        dirs_sorted_out, vals_sorted_out = Grid._sort(dirs_unsorted, vals_unsorted)
-
-        dirs_sorted_expect = np.array([1, 2, 3, 4])
-        vals_sorted_expect = np.array(
-            [
-                [1, 3, 2, 4],
-                [1, 3, 2, 4],
-            ]
-        )
-
-        np.testing.assert_array_almost_equal(dirs_sorted_out, dirs_sorted_expect)
-        np.testing.assert_array_almost_equal(vals_sorted_out, vals_sorted_expect)
 
     def test__convert_dirs_radians(self):
         dirs_in = np.array([0, np.pi / 4, np.pi / 2, 3.0 * np.pi / 4, np.pi])
