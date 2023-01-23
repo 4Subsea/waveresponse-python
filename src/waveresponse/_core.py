@@ -1444,9 +1444,9 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
 
         where the spectral moments are calculated by integrating over frequency in Hz.
         """
-        m0 = self.moment(0, freq_hz=False)
-        m2 = self.moment(2, freq_hz=False)
-        return 2.0 * np.pi * np.sqrt(m0 / m2)
+        m0 = self.moment(0, freq_hz=True)
+        m2 = self.moment(2, freq_hz=True)
+        return np.sqrt(m0 / m2)
 
 
 class WaveSpectrum(DirectionalSpectrum):
