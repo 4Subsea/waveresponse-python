@@ -390,3 +390,62 @@ class OchiHubble(BaseSpectrum1d):
     def _d(self, tp, q):
         omega_p = 2.0 * np.pi / tp
         return (4 * q + 1) * omega_p**4 / 4.0
+
+
+class Torsethaugen(BasePMSpectrum):
+    """
+    Tosethaugen wave spectrum is given as:
+
+    TBD
+
+    Parameters
+    ----------
+    hs : float
+        Significant wave height, Hs.
+    tp : float
+        Peak period, Tp.
+    freq_hz : bool, optional
+        Whether to return the frequencies and spectrum in terms of Hz (`True`)
+        or rad/s (`False`). If `None` (default), the original units of `freq` is
+        preserved.
+
+    """
+
+    def __call__(self, hs, tp, freq_hz=None):
+        """
+        Generate wave spectrum.
+
+        Parameters
+        ----------
+        hs : float
+            Significant wave height, Hs.
+        tp : float
+            Peak period, Tp.
+        freq_hz : bool, optional
+            Whether to return the frequencies and spectrum in terms of Hz (`True`)
+            or rad/s (`False`). If `None` (default), the original units of `freq` is
+            preserved.
+
+        Return
+        ------
+        freq : 1-D array
+            Frequencies corresponding to the spectrum values. Unit is set according
+            to `freq_hz`.
+        spectrum : 1-D array
+            Spectrum values. Unit is set according to `freq_hz`.
+
+        Notes
+        -----
+        The scaling between wave spectrum in terms of Hz and rad/s is defined
+        as:
+
+        ``S(f) = 2*pi*S(w)``
+
+        where ``S(f)`` and ``S(w)`` are the same spectrum but expressed
+        in terms of Hz and rad/s, respectively.
+        """
+    pass
+
+    def _tpf(self, hs):
+        a_f = 6.6
+        return a_f * hs**(1./3.)
