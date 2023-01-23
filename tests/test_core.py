@@ -3370,6 +3370,78 @@ class Test_DirectionalSpectrum:
         with pytest.raises(AttributeError):
             directional_spectrum.imag
 
+    def test_extreme_float(self):
+        y0 = 0.0
+        y1 = 2
+        a = 7
+        b = 6
+
+        y = np.linspace(y0, y1, 20)
+        x = np.arange(5, 360, 10)
+        v = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
+
+        spectrum = DirectionalSpectrum(y, x, v, freq_hz=True, degrees=True)
+
+        sigma = spectrum.std()
+        tz = spectrum.tz
+
+        T = 360 * 24 * 60.0 ** 2
+        q = 0.99
+        extreme_out = spectrum.extreme(T, q=q)
+
+        extreme_expect = sigma * np.sqrt(2.0 * np.log((T / tz) / np.log(1.0 / q)))
+
+        assert extreme_out == pytest.approx(extreme_expect)
+
+    def test_extreme_list(self):
+        y0 = 0.0
+        y1 = 2
+        a = 7
+        b = 6
+
+        y = np.linspace(y0, y1, 20)
+        x = np.arange(5, 360, 10)
+        v = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
+
+        spectrum = DirectionalSpectrum(y, x, v, freq_hz=True, degrees=True)
+
+        sigma = spectrum.std()
+        tz = spectrum.tz
+
+        T = 360 * 24 * 60.0 ** 2
+        q = [0.1, 0.5, 0.99]
+        extreme_out = spectrum.extreme(T, q=q)
+
+        extreme_expect = [
+            sigma * np.sqrt(2.0 * np.log((T / tz) / np.log(1.0 / q[0]))),
+            sigma * np.sqrt(2.0 * np.log((T / tz) / np.log(1.0 / q[1]))),
+            sigma * np.sqrt(2.0 * np.log((T / tz) / np.log(1.0 / q[2]))),
+        ]
+
+        np.testing.assert_array_almost_equal(extreme_out, extreme_expect)
+
+    def test_extreme_mpm(self):
+        y0 = 0.0
+        y1 = 2
+        a = 7
+        b = 6
+
+        y = np.linspace(y0, y1, 20)
+        x = np.arange(5, 360, 10)
+        v = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
+
+        spectrum = DirectionalSpectrum(y, x, v, freq_hz=True, degrees=True)
+
+        sigma = spectrum.std()
+        tz = spectrum.tz
+
+        T = 360 * 24 * 60.0 ** 2
+        extreme_out = spectrum.extreme(T, q=0.37)
+
+        extreme_expect = sigma * np.sqrt(2.0 * np.log(T / tz))
+
+        assert extreme_out == pytest.approx(extreme_expect, rel=0.01)
+
 
 class Test_WaveSpectrum:
     def test__init__(self):
