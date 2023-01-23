@@ -94,7 +94,7 @@ JONSWAP spectrum given three parameters (i.e., :math:`H_s`, :math:`T_p` and :mat
 
     hs = 3.5
     tp = 10.0
-    freq, vals = spectrum(hs, tp, gamma=2)
+    freq, vals = spectrum(hs, tp, gamma=3.3)
 
 .. note::
 
