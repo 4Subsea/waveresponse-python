@@ -509,6 +509,9 @@ class Test_Torsethaugen:
         with pytest.raises(ValueError):
             _ = spectrum._eps_u(1., 1.)
 
+    def test__rw(self):
+        assert False
+
 
     # def test__call__var(self):
     #     freq = np.arange(0.05, 2.0, 0.05) * 2.0 * np.pi  # rad/s
