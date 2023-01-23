@@ -1433,6 +1433,19 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         m_n = trapz((f**n) * spectrum, f)
         return m_n
 
+    @property
+    def tz(self):
+        """
+        Mean zero-crossing period, Tz, in 'seconds'.
+
+        Calculated from the zeroth- and second-order spectral moments according to:
+
+            ``tz = 2pi * sqrt(m0 / m2)``
+        """
+        m0 = self.moment(0, freq_hz=False)
+        m2 = self.moment(2, freq_hz=False)
+        return 2.0 * np.pi * np.sqrt(m0 / m2)
+
 
 class WaveSpectrum(DirectionalSpectrum):
     def __repr__(self):
@@ -1449,19 +1462,6 @@ class WaveSpectrum(DirectionalSpectrum):
         """
         m0 = self.moment(0)
         return 4.0 * np.sqrt(m0)
-
-    @property
-    def tz(self):
-        """
-        Mean zero-crossing period, Tz, in 'seconds'.
-
-        Calculated from the zeroth- and second-order spectral moments according to:
-
-            ``tz = 2pi * sqrt(m0 / m2)``
-        """
-        m0 = self.moment(0, freq_hz=False)
-        m2 = self.moment(2, freq_hz=False)
-        return 2.0 * np.pi * np.sqrt(m0 / m2)
 
     @property
     def tp(self):
