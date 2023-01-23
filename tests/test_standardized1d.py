@@ -485,6 +485,30 @@ class Test_Torsethaugen:
         with pytest.raises(ValueError):
             _ = spectrum._eps_l(6., 16.)
 
+    @pytest.mark.parametrize(
+        "hs_i, tp_i, eps_u_expected",
+        [
+            (1., 10., 0.1847826086),
+            (5., 15., 0.2708265828),
+            (10., 15., 0.0724191191),
+            (10., 26., 1.),
+
+        ]
+    )
+    def test__eps_u(self, hs_i, tp_i, eps_u_expected):
+        freq = np.arange(0.01, 1., 0.01)
+        spectrum = wr.Torsethaugen(freq, freq_hz=False)
+
+        eps_u_out = spectrum._eps_u(hs_i, tp_i)
+        assert eps_u_out == pytest.approx(eps_u_expected)
+
+    def test__eps_u_raise(self):
+        freq = np.arange(0.01, 1., 0.01)
+        spectrum = wr.Torsethaugen(freq, freq_hz=False)
+
+        with pytest.raises(ValueError):
+            _ = spectrum._eps_u(1., 1.)
+
 
     # def test__call__var(self):
     #     freq = np.arange(0.05, 2.0, 0.05) * 2.0 * np.pi  # rad/s
