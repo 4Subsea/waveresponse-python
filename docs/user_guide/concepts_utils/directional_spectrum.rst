@@ -83,6 +83,7 @@ Calculate extreme values:
 
 .. code-block:: python
 
-    # Calculate extreme values for e.g. a 3-hour realization of the spectrum
-    mpm = spectrum.extreme(3 * 3600, q=0.37)   # most probable maximum (MPM)
-    q90 = spectrum.extreme(3 * 3600, q=0.90)   # 90-th quantile
+    duration = 3 * 3600   # 3 hours
+
+    mpm = spectrum.extreme(duration, q=0.37)   # most probable maximum (MPM)
+    q90 = spectrum.extreme(duration, q=0.90)   # 90-th quantile
