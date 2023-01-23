@@ -72,3 +72,9 @@ method with the desired order, `n`.
     m2 = spectrum.moment(2)
 
     # Etc.
+
+Calculate the mean zero-crossing period, Tz:
+
+.. code-block:: python
+
+    wave.tz
