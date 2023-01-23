@@ -484,3 +484,9 @@ class Torsethaugen(BasePMSpectrum):
         a_10 = 0.7
         eps_l = self._eps_l(hs, tp)
         return a_10 + (1. - a_10) * np.exp(-(eps_l/a_1)**2.)
+
+    def _rs(self, hs, tp):
+        a_2 = 0.3
+        a_20 = 0.6
+        eps_u = self._eps_u(hs, tp)
+        return a_20 + (1. - a_20) * np.exp(-(eps_u/a_2)**2.)
