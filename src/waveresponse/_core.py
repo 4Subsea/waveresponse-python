@@ -1453,15 +1453,15 @@ class WaveSpectrum(DirectionalSpectrum):
     @property
     def tz(self):
         """
-        Mean crossing period, Tz, (sometimes called the mean wave period) in 'seconds'.
+        Mean zero-crossing period, Tz, in 'seconds'.
 
         Calculated from the zeroth- and second-order spectral moments according to:
 
-            ``tz = np.sqrt(m0 / m2)``
+            ``tz = 2pi * np.sqrt(m0 / m2)``
         """
         m0 = self.moment(0, freq_hz=False)
-        m2 = self.moment(2, freq_hz=True)
-        return np.sqrt(m0 / m2)
+        m2 = self.moment(2, freq_hz=False)
+        return 2.0 * np.pi * np.sqrt(m0 / m2)
 
     @property
     def tp(self):
