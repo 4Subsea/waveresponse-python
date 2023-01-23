@@ -1440,7 +1440,9 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
 
         Calculated from the zeroth- and second-order spectral moments according to:
 
-            ``tz = 2pi * sqrt(m0 / m2)``
+            ``tz = sqrt(m0 / m2)``
+
+        where the spectral moments are calculated by integrating over frequency in Hz.
         """
         m0 = self.moment(0, freq_hz=False)
         m2 = self.moment(2, freq_hz=False)
