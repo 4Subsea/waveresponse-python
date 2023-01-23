@@ -1470,10 +1470,11 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
 
         Returns
         -------
-        x : float or array
+        x : array
             Extreme value(s).
         """
-        return self.std * np.sqrt(2.0 * np.log((t / self.tz) / np.log(1.0 / q)))
+        q = np.asarray_chkfinite(q)
+        return self.std() * np.sqrt(2.0 * np.log((t / self.tz) / np.log(1.0 / q)))
 
 
 class WaveSpectrum(DirectionalSpectrum):
