@@ -453,3 +453,7 @@ class Torsethaugen(BasePMSpectrum):
     def _tl(self, hs):
         a_e = 2.
         return a_e * np.sqrt(hs)
+
+    def _tu(self):
+        return 25.
+
