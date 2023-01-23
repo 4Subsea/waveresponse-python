@@ -1445,7 +1445,7 @@ class WaveSpectrum(DirectionalSpectrum):
 
         Calculated from the zeroth-order spectral moment according to:
 
-            ``hs = 4.0 * np.sqrt(m0)``
+            ``hs = 4.0 * sqrt(m0)``
         """
         m0 = self.moment(0)
         return 4.0 * np.sqrt(m0)
