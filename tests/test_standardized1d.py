@@ -543,6 +543,22 @@ class Test_Torsethaugen:
         rs_out = spectrum._rs(hs_i, tp_i)
         assert rs_out == pytest.approx(rs_expected)
 
+    @pytest.mark.parametrize(
+        "hs_i, tp_i, gamma_expected",
+        [
+            (1., 1., 23.897218387),
+            (1., 2., 7.2827588780),
+            (1., 3., 3.6343370500),
+            (2., 1., 43.288552407)
+        ]
+    )
+    def test__gamma(self, hs_i, tp_i, gamma_expected):
+        freq = np.arange(0.01, 1., 0.01)
+        spectrum = wr.Torsethaugen(freq, freq_hz=False)
+
+        rs_out = spectrum._gamma(hs_i, tp_i)
+        assert rs_out == pytest.approx(gamma_expected)
+
     # def test__call__var(self):
     #     freq = np.arange(0.05, 2.0, 0.05) * 2.0 * np.pi  # rad/s
     #     spectrum = wr.JONSWAP(freq)

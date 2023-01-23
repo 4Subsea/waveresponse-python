@@ -444,7 +444,27 @@ class Torsethaugen(BasePMSpectrum):
         where ``S(f)`` and ``S(w)`` are the same spectrum but expressed
         in terms of Hz and rad/s, respectively.
         """
-    pass
+        tpf = self._tpf(hs)
+
+        if tp <= tpf:
+            # wind dominated
+            hs_primary = hs * self._rw(hs, tp)
+            tp_primary = tp
+            gamma_primary = self._gamma(hs_primary, tp_primary)
+
+            hs_secondary = hs * np.sqrt(1. - self._rw(hs, tp)**2)
+            tp_secondary = tpf + 2.0
+            gamma_secondary = 1.
+        else:
+            # swell dominated
+            hs_primary = hs * self._rs(hs, tp)
+            tp_primary = tp
+            gamma_primary = self._gamma(hs_primary, tp_primary) * (1. + 6. * self._eps_u(hs, tp))
+
+            hs_secondary = hs * np.sqrt(1. - self._rs(hs, tp)**2)
+            tp_secondary = 6.6 * hs_secondary**(1./3.)
+            gamma_secondary = 1.
+        return
 
     def _tpf(self, hs):
         a_f = 6.6
@@ -490,3 +510,9 @@ class Torsethaugen(BasePMSpectrum):
         a_20 = 0.6
         eps_u = self._eps_u(hs, tp)
         return a_20 + (1. - a_20) * np.exp(-(eps_u/a_2)**2.)
+
+    def _gamma(self, hs_, tp_):
+        kg = 35.0
+        g = 9.80665
+        s = (2.*np.pi / g) * hs_ / tp_**2.
+        return kg * s**(6./7.)
