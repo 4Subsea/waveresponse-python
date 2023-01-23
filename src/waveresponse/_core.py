@@ -1457,7 +1457,7 @@ class WaveSpectrum(DirectionalSpectrum):
 
         Calculated from the zeroth- and second-order spectral moments according to:
 
-            ``tz = 2pi * np.sqrt(m0 / m2)``
+            ``tz = 2pi * sqrt(m0 / m2)``
         """
         m0 = self.moment(0, freq_hz=False)
         m2 = self.moment(2, freq_hz=False)
