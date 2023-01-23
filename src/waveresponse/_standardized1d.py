@@ -457,3 +457,13 @@ class Torsethaugen(BasePMSpectrum):
     def _tu(self):
         return 25.
 
+    def _eps_l(self, hs, tp):
+        tpf = self._tpf(hs)
+        tl = self._tl(hs)
+
+        eps_l = (tpf - tp) / (tpf - tl)
+
+        if eps_l < 0.:
+            raise ValueError("`eps_l` not defined.")
+
+        return min(eps_l, 1.)
