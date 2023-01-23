@@ -1448,6 +1448,33 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         m2 = self.moment(2, freq_hz=True)
         return np.sqrt(m0 / m2)
 
+    def extreme(self, t, q=0.37):
+        """
+        Compute the q-th quantile extreme value (assuming a Gaussian process).
+
+        The extreme value, ``x``, is calculated according to:
+
+        ``x = sigma * sqrt(2 * ln((t / tz) / ln(1 / q)))
+
+        where ``sigma`` is the standard deviation of the process, ``t`` is the observation
+        time in seconds, and ``q`` the quantile. Setting ``q=0.37`` yields the most
+        probable maximum (MPM).
+
+        Parameters
+        ----------
+        t : float
+            Time/duration in seconds for which the of the process is observed.
+        q : float or array-like
+            Quantile or sequence of quantiles to compute, which must be between 0
+            and 1 (inclusive).
+
+        Returns
+        -------
+        x : float or array
+            Extreme value(s).
+        """
+        return self.std * np.sqrt(2.0 * np.log((t / self.tz) / np.log(1.0 / q)))
+
 
 class WaveSpectrum(DirectionalSpectrum):
     def __repr__(self):
