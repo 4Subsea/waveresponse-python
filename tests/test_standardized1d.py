@@ -438,6 +438,22 @@ class Test_Torsethaugen:
         assert isinstance(spectrum, wr.BasePMSpectrum)
         np.testing.assert_array_almost_equal(spectrum._freq, freq)
 
+    @pytest.mark.parametrize("hs_i, tpf_expected", [(1., 6.6), (8., 13.2)])
+    def test__tpf(self, hs_i, tpf_expected):
+        freq = np.arange(0.01, 1., 0.01)
+        spectrum = wr.Torsethaugen(freq, freq_hz=False)
+
+        tpf_out = spectrum._tpf(hs_i)
+        assert tpf_out == tpf_expected
+
+    @pytest.mark.parametrize("hs_i, tpf_expected", [(1., 2.), (4., 4.), (9., 6.)])
+    def test__tl(self, hs_i, tpf_expected):
+        freq = np.arange(0.01, 1., 0.01)
+        spectrum = wr.Torsethaugen(freq, freq_hz=False)
+
+        tpf_out = spectrum._tl(hs_i)
+        assert tpf_out == tpf_expected
+
     # def test__call__var(self):
     #     freq = np.arange(0.05, 2.0, 0.05) * 2.0 * np.pi  # rad/s
     #     spectrum = wr.JONSWAP(freq)

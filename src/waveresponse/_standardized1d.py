@@ -449,3 +449,7 @@ class Torsethaugen(BasePMSpectrum):
     def _tpf(self, hs):
         a_f = 6.6
         return a_f * hs**(1./3.)
+
+    def _tl(self, hs):
+        a_e = 2.
+        return a_e * np.sqrt(hs)
