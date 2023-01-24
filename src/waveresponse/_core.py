@@ -1477,7 +1477,7 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         -----
         The method computes extreme values for a single-sided process, where only
         the crests (or the troughs) are considered. If you are interested in the
-        extremes of either the crests or the troughs, you must increase the duration
+        extremes of either the crests or the troughs, you must increase the duration, ``t``,
         by a factor of 2.
 
         """
