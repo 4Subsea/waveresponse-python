@@ -1454,31 +1454,30 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
 
         The extreme value, ``x``, is calculated according to:
 
-        ``x = sigma * sqrt(2 * ln((t / tz) / ln(1 / q)))
+        ``x = sigma * sqrt(2 * ln((t / tz) / ln(1 / q)))``
 
         where ``sigma`` is the standard deviation of the process, ``t`` is the duration
-        of the process in seconds, and ``q`` is the quantile. Setting ``q=0.37`` yields
-        the most probable maximum (MPM).
+        of the process, and ``q`` is the quantile. Setting ``q=0.37`` yields the
+        most probable maximum (MPM).
+
+        The extreme value indicates a level which the maximum value of the process
+        amplitudes will be below with a certain probability. Note that the method
+        only computes extreme values for the maxima, and does not consider the minima.
 
         Parameters
         ----------
         t : float
             Time/duration in seconds for which the of the process is observed.
         q : float or array-like
-            Quantile or sequence of quantiles to compute, which must be between 0
-            and 1 (inclusive).
+            Quantile or sequence of quantiles to compute. Must be between 0 and 1
+            (inclusive).
 
         Returns
         -------
         x : float or array
-            Extreme value(s).
-
-        Notes
-        -----
-        The method computes extreme values for a single-sided process, where only
-        the crests (or the troughs) are considered. If you are interested in the
-        extremes of either the crests or the troughs, you must increase the duration, ``t``,
-        by a factor of 2.
+            Extreme value(s). During the given time period, the maximum value of
+            the process amplitudes will be below the returned value with a given
+            probability.
 
         """
         q = np.asarray_chkfinite(q)
