@@ -464,6 +464,9 @@ class Torsethaugen(BasePMSpectrum):
             hs_secondary = hs * np.sqrt(1. - self._rs(hs, tp)**2)
             tp_secondary = 6.6 * hs_secondary**(1./3.)
             gamma_secondary = 1.
+
+        E_primary = (1./16.) * hs_primary**2 * tp_primary
+        E_secondary = (1./16.) * hs_secondary**2 * tp_secondary
         return
 
     def _tpf(self, hs):
@@ -516,3 +519,6 @@ class Torsethaugen(BasePMSpectrum):
         g = 9.80665
         s = (2.*np.pi / g) * hs_ / tp_**2.
         return kg * s**(6./7.)
+
+    def _alpha(self, gamma):
+        return (1. + 1.1 * np.log(gamma)**1.19) / gamma
