@@ -1456,9 +1456,9 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
 
         ``x = sigma * sqrt(2 * ln((t / tz) / ln(1 / q)))
 
-        where ``sigma`` is the standard deviation of the process, ``t`` is the observation
-        time in seconds, and ``q`` the quantile. Setting ``q=0.37`` yields the most
-        probable maximum (MPM).
+        where ``sigma`` is the standard deviation of the process, ``t`` is the duration
+        of the process in seconds, and ``q`` is the quantile. Setting ``q=0.37`` yields
+        the most probable maximum (MPM).
 
         Parameters
         ----------
@@ -1470,8 +1470,16 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
 
         Returns
         -------
-        x : array
+        x : float or array
             Extreme value(s).
+
+        Notes
+        -----
+        The method computes extreme values for a single-sided process, where only
+        the crests (or the troughs) are considered. If you are interested in the
+        extremes of either the crests or the troughs, you must increase the duration
+        by a factor of 2.
+
         """
         q = np.asarray_chkfinite(q)
         return self.std() * np.sqrt(2.0 * np.log((t / self.tz) / np.log(1.0 / q)))
