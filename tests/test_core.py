@@ -3382,7 +3382,7 @@ class Test_DirectionalSpectrum:
         sigma = spectrum.std()
         tz = spectrum.tz
 
-        T = 360 * 24 * 60.0 ** 2
+        T = 360 * 24 * 60.0**2
         q = 0.99
         extreme_out = spectrum.extreme(T, q=q)
 
@@ -3402,7 +3402,7 @@ class Test_DirectionalSpectrum:
         sigma = spectrum.std()
         tz = spectrum.tz
 
-        T = 360 * 24 * 60.0 ** 2
+        T = 360 * 24 * 60.0**2
         q = [0.1, 0.5, 0.99]
         extreme_out = spectrum.extreme(T, q=q)
 
@@ -3426,7 +3426,7 @@ class Test_DirectionalSpectrum:
         sigma = spectrum.std()
         tz = spectrum.tz
 
-        T = 360 * 24 * 60.0 ** 2
+        T = 360 * 24 * 60.0**2
         extreme_out = spectrum.extreme(T, q=0.37)
 
         extreme_expect = sigma * np.sqrt(2.0 * np.log(T / tz))
