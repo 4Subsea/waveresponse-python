@@ -415,7 +415,6 @@ class Torsethaugen(BaseSpectrum1d):
         tpf = self._tpf(hs)
 
         if tp <= tpf:  # wind dominated
-            print("wind")
             hs_primary = hs * self._rw(hs, tp)
             tp_primary = tp
             gamma = self._gamma(hs_primary, tp_primary)
@@ -436,9 +435,6 @@ class Torsethaugen(BaseSpectrum1d):
         omega_p_primary = 2.0 * np.pi / tp_primary
         A_primary = (3.26 / 16.0) * hs_primary**2 * omega_p_primary**3
         B_primary = omega_p_primary**4
-
-        print(1. / tp_primary)
-        print(1. / tp_secondary)
 
         spectrum_primary = (
             self._alpha(gamma)
