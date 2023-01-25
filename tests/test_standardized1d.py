@@ -428,14 +428,14 @@ class Test_Torsethaugen:
         freq = np.arange(0.01, 1, 0.01)
         spectrum = wr.Torsethaugen(freq, freq_hz=True)
 
-        assert isinstance(spectrum, wr.BasePMSpectrum)
+        assert isinstance(spectrum, wr.BaseSpectrum1d)
         np.testing.assert_array_almost_equal(spectrum._freq, 2.0 * np.pi * freq)
 
     def test__init___rads(self):
         freq = np.arange(0.01, 1, 0.01)
         spectrum = wr.Torsethaugen(freq, freq_hz=False)
 
-        assert isinstance(spectrum, wr.BasePMSpectrum)
+        assert isinstance(spectrum, wr.BaseSpectrum1d)
         np.testing.assert_array_almost_equal(spectrum._freq, freq)
 
     @pytest.mark.parametrize("hs_i, tpf_expected", [(1., 6.6), (8., 13.2)])
@@ -573,6 +573,34 @@ class Test_Torsethaugen:
         alpha_out = spectrum._alpha(gamma)
         assert alpha_out == pytest.approx(alpha_expected)
 
+    def test__sigma(self):
+        freq = np.arange(0.05, 2.0, 0.05) * 2.0 * np.pi  # rad/s
+        spectrum = wr.Torsethaugen(freq)
+
+        tp = 10.0
+        omega_p = (2.0 * np.pi) / tp
+
+        sigma = spectrum._sigma(omega_p)
+
+        arg = freq <= omega_p
+        sigma_1 = 0.07 * np.ones(sum(arg))
+        sigma_2 = 0.09 * np.ones(len(arg) - sum(arg))
+
+        np.testing.assert_array_equal(sigma[arg], sigma_1)
+        np.testing.assert_array_equal(sigma[~arg], sigma_2)
+
+    def test__b(self):
+        freq = np.arange(0.05, 2.0, 0.05) * 2.0 * np.pi  # rad/s
+        spectrum = wr.Torsethaugen(freq)
+
+        tp = 10.0
+        b_out = spectrum._b(tp)
+
+        omega_p = 2.0 * np.pi / tp
+        sigma = spectrum._sigma(omega_p)
+        b_expect = np.exp(-0.5 * ((spectrum._freq - omega_p) / (sigma * omega_p)) ** 2)
+
+        np.testing.assert_array_almost_equal(b_out, b_expect)
 
     # def test__call__var(self):
     #     freq = np.arange(0.05, 2.0, 0.05) * 2.0 * np.pi  # rad/s

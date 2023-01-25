@@ -392,7 +392,7 @@ class OchiHubble(BaseSpectrum1d):
         return (4 * q + 1) * omega_p**4 / 4.0
 
 
-class Torsethaugen(BasePMSpectrum):
+class Torsethaugen(BaseSpectrum1d):
     """
     Tosethaugen wave spectrum is given as:
 
@@ -444,41 +444,63 @@ class Torsethaugen(BasePMSpectrum):
         where ``S(f)`` and ``S(w)`` are the same spectrum but expressed
         in terms of Hz and rad/s, respectively.
         """
+        return
+
+    def _spectrum(self, omega, hs, tp, q):
         tpf = self._tpf(hs)
 
         if tp <= tpf:
             # wind dominated
             hs_primary = hs * self._rw(hs, tp)
             tp_primary = tp
-            gamma_primary = self._gamma(hs_primary, tp_primary)
+            gamma = self._gamma(hs_primary, tp_primary)
 
-            hs_secondary = hs * np.sqrt(1. - self._rw(hs, tp)**2)
+            hs_secondary = hs * np.sqrt(1.0 - self._rw(hs, tp) ** 2)
             tp_secondary = tpf + 2.0
-            gamma_secondary = 1.
+
         else:
             # swell dominated
             hs_primary = hs * self._rs(hs, tp)
             tp_primary = tp
-            gamma_primary = self._gamma(hs_primary, tp_primary) * (1. + 6. * self._eps_u(hs, tp))
+            gamma = self._gamma(hs_primary, tp_primary) * (
+                1.0 + 6.0 * self._eps_u(hs, tp)
+            )
 
-            hs_secondary = hs * np.sqrt(1. - self._rs(hs, tp)**2)
-            tp_secondary = 6.6 * hs_secondary**(1./3.)
-            gamma_secondary = 1.
+            hs_secondary = hs * np.sqrt(1.0 - self._rs(hs, tp) ** 2)
+            tp_secondary = 6.6 * hs_secondary ** (1.0 / 3.0)
 
-        E_primary = (1./16.) * hs_primary**2 * tp_primary
-        E_secondary = (1./16.) * hs_secondary**2 * tp_secondary
-        return
+        omega_p_primary = 2.0 * np.pi / tp_primary
+        A_primary = (3.26 / 16.0) * hs_primary**2 * omega_p_primary**3
+        B_primary = omega_p_primary**4
+
+        spectrum_primary = (
+            self._alpha(gamma)
+            * A_primary
+            * omega**4
+            * np.exp(-B_primary / omega**4)
+            * gamma ** self._b(tp_primary)
+        )
+
+        omega_p_secondary = 2.0 * np.pi / tp_secondary
+        A_secondary = (3.26 / 16.0) * hs_secondary**2 * omega_p_secondary**3
+        B_secondary = omega_p_secondary**4
+
+        spectrum_secondary = (
+            A_secondary * omega**4 * np.exp(-B_secondary / omega**4)
+        )
+
+        return spectrum_primary + spectrum_secondary
 
     def _tpf(self, hs):
         a_f = 6.6
-        return a_f * hs**(1./3.)
+        return a_f * hs ** (1.0 / 3.0)
 
     def _tl(self, hs):
-        a_e = 2.
+        a_e = 2.0
         return a_e * np.sqrt(hs)
 
     def _tu(self):
-        return 25.
+        return 25.0
 
     def _eps_l(self, hs, tp):
         tpf = self._tpf(hs)
@@ -486,10 +508,10 @@ class Torsethaugen(BasePMSpectrum):
 
         eps_l = (tpf - tp) / (tpf - tl)
 
-        if eps_l < 0.:
+        if eps_l < 0.0:
             raise ValueError("`eps_l` not defined.")
 
-        return min(eps_l, 1.)
+        return min(eps_l, 1.0)
 
     def _eps_u(self, hs, tp):
         tpf = self._tpf(hs)
@@ -497,28 +519,43 @@ class Torsethaugen(BasePMSpectrum):
 
         eps_u = (tp - tpf) / (tu - tpf)
 
-        if eps_u < 0.:
+        if eps_u < 0.0:
             raise ValueError("`eps_u` not defined.")
 
-        return min(eps_u, 1.)
+        return min(eps_u, 1.0)
 
     def _rw(self, hs, tp):
         a_1 = 0.5
         a_10 = 0.7
         eps_l = self._eps_l(hs, tp)
-        return a_10 + (1. - a_10) * np.exp(-(eps_l/a_1)**2.)
+        return a_10 + (1.0 - a_10) * np.exp(-((eps_l / a_1) ** 2.0))
 
     def _rs(self, hs, tp):
         a_2 = 0.3
         a_20 = 0.6
         eps_u = self._eps_u(hs, tp)
-        return a_20 + (1. - a_20) * np.exp(-(eps_u/a_2)**2.)
+        return a_20 + (1.0 - a_20) * np.exp(-((eps_u / a_2) ** 2.0))
 
     def _gamma(self, hs_, tp_):
         kg = 35.0
         g = 9.80665
-        s = (2.*np.pi / g) * hs_ / tp_**2.
-        return kg * s**(6./7.)
+        s = (2.0 * np.pi / g) * hs_ / tp_**2.0
+        return kg * s ** (6.0 / 7.0)
 
     def _alpha(self, gamma):
-        return (1. + 1.1 * np.log(gamma)**1.19) / gamma
+        return (1.0 + 1.1 * np.log(gamma) ** 1.19) / gamma
+
+    def _b(self, tp):
+        omega_p = 2.0 * np.pi / tp
+        sigma = self._sigma(omega_p)
+        return np.exp(-0.5 * ((self._freq - omega_p) / (sigma * omega_p)) ** 2)
+
+    def _sigma(self, omega_p):
+        """
+        Spectral width.
+        """
+        arg = self._freq <= omega_p
+        sigma = np.empty_like(self._freq)
+        sigma[arg] = 0.07
+        sigma[~arg] = 0.09
+        return sigma
