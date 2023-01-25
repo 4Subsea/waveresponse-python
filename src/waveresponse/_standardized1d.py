@@ -427,8 +427,8 @@ class Torsethaugen(BaseSpectrum1d):
 
     Notes
     -----
-    The Torsethaugen spectrum is implemented as described in ref. [1]. All the
-    intermediate parameters are applied as defined in Table 1 in ref. [1].
+    The Torsethaugen spectrum is implemented as described in ref. [1]_. All the
+    intermediate parameters are applied as defined in Table 1 in ref. [1]_.
 
     See Also
     --------
@@ -438,7 +438,7 @@ class Torsethaugen(BaseSpectrum1d):
 
     References
     ----------
-    [1] Torsethaugen K., Haver S., "Simplified double peak spectral model for ocean waves", ISOPE, 2004.
+    .. [1] Torsethaugen K., Haver S., "Simplified double peak spectral model for ocean waves", ISOPE, 2004.
     """
 
     def _spectrum(self, omega, hs, tp):
