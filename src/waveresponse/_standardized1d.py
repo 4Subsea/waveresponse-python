@@ -394,21 +394,46 @@ class OchiHubble(BaseSpectrum1d):
 
 class Torsethaugen(BaseSpectrum1d):
     """
-    Tosethaugen wave spectrum is given as:
+    Torsethaugen spectrum, given as:
 
-    TBD
+    ``S(w) = alpha * S_1(w; Hs_1, Tp_1) * gamma ** b + S_2(w; Hs_2, Tp_2)``
+
+    where,
+
+    ``S_i(w) = A_i / w ** 4 exp(-B_i / w ** 4)``
+
+    and,
+
+    ``b = exp(-(w - wp_1) ** 2 / (2 * sigma ** 2 * wp_1 ** 2))``
+
+    Furthermore,
+
+    - ``A_i = 3.26 / 16 * Hs_i ** 2 * wp_i ** 3``
+    - ``B_i = wp_i ** 4``.
+    - ``Hs_i`` is the significant wave height of the primary and the secondary system.
+    - ``wp_i = 2pi / Tp_i`` is the angular spectral peak frequency of the primary and the secondary system..
+    - ``gamma`` is a peak enhancement factor.
+    - ``alpha = (1 + 1.1 * log(gamma) ** 1.19) / gamma`` is a normalizing factor.
+    - ``sigma`` is the spectral width parameter (established from experimental data):
+        - ``sigma = 0.07`` for ``w <= wp_1``
+        - ``sigma = 0.09`` for ``w > wp_1``
 
     Parameters
     ----------
-    hs : float
-        Significant wave height, Hs.
-    tp : float
-        Peak period, Tp.
-    freq_hz : bool, optional
-        Whether to return the frequencies and spectrum in terms of Hz (`True`)
-        or rad/s (`False`). If `None` (default), the original units of `freq` is
-        preserved.
+    freq : array-like
+        Sequence of frequencies to use when generating the spectrum.
+    freq_hz : bool
+        Whether the provided frequencies are in rad/s (default) or Hz.
 
+    See Also
+    --------
+    ModifiedPiersonMoskowitz : Modified Pierson-Moskowitz wave spectrum.
+    JONSWAP : JONSWAP wave spectrum.
+    OchiHubble : Ochi-Hubble (three-parameter) wave spectrum.
+
+    References
+    ----------
+    [1] Torsethaugen K., Haver S., "Simplified double peak spectral model for ocean waves", ISOPE, 2004.
     """
 
     def _spectrum(self, omega, hs, tp):
