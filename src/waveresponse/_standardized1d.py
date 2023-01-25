@@ -411,46 +411,11 @@ class Torsethaugen(BaseSpectrum1d):
 
     """
 
-    def __call__(self, hs, tp, freq_hz=None):
-        """
-        Generate wave spectrum.
-
-        Parameters
-        ----------
-        hs : float
-            Significant wave height, Hs.
-        tp : float
-            Peak period, Tp.
-        freq_hz : bool, optional
-            Whether to return the frequencies and spectrum in terms of Hz (`True`)
-            or rad/s (`False`). If `None` (default), the original units of `freq` is
-            preserved.
-
-        Return
-        ------
-        freq : 1-D array
-            Frequencies corresponding to the spectrum values. Unit is set according
-            to `freq_hz`.
-        spectrum : 1-D array
-            Spectrum values. Unit is set according to `freq_hz`.
-
-        Notes
-        -----
-        The scaling between wave spectrum in terms of Hz and rad/s is defined
-        as:
-
-        ``S(f) = 2*pi*S(w)``
-
-        where ``S(f)`` and ``S(w)`` are the same spectrum but expressed
-        in terms of Hz and rad/s, respectively.
-        """
-        return
-
-    def _spectrum(self, omega, hs, tp, q):
+    def _spectrum(self, omega, hs, tp):
         tpf = self._tpf(hs)
 
-        if tp <= tpf:
-            # wind dominated
+        if tp <= tpf:  # wind dominated
+            print("wind")
             hs_primary = hs * self._rw(hs, tp)
             tp_primary = tp
             gamma = self._gamma(hs_primary, tp_primary)
@@ -458,8 +423,7 @@ class Torsethaugen(BaseSpectrum1d):
             hs_secondary = hs * np.sqrt(1.0 - self._rw(hs, tp) ** 2)
             tp_secondary = tpf + 2.0
 
-        else:
-            # swell dominated
+        else:  # swell dominated
             hs_primary = hs * self._rs(hs, tp)
             tp_primary = tp
             gamma = self._gamma(hs_primary, tp_primary) * (
@@ -473,10 +437,13 @@ class Torsethaugen(BaseSpectrum1d):
         A_primary = (3.26 / 16.0) * hs_primary**2 * omega_p_primary**3
         B_primary = omega_p_primary**4
 
+        print(1. / tp_primary)
+        print(1. / tp_secondary)
+
         spectrum_primary = (
             self._alpha(gamma)
             * A_primary
-            * omega**4
+            / omega**4
             * np.exp(-B_primary / omega**4)
             * gamma ** self._b(tp_primary)
         )
@@ -486,7 +453,7 @@ class Torsethaugen(BaseSpectrum1d):
         B_secondary = omega_p_secondary**4
 
         spectrum_secondary = (
-            A_secondary * omega**4 * np.exp(-B_secondary / omega**4)
+            A_secondary / omega**4 * np.exp(-B_secondary / omega**4)
         )
 
         return spectrum_primary + spectrum_secondary
