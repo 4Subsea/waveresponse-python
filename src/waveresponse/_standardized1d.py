@@ -244,7 +244,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
     OchiHubble : Ochi-Hubble (three-parameter) wave spectrum.
     """
 
-    def __call__(self, hs, tp, gamma=1, freq_hz=None):
+    def __call__(self, hs, tp, gamma=3.3, freq_hz=None):
         """
         Generate wave spectrum.
 
@@ -255,7 +255,7 @@ class JONSWAP(ModifiedPiersonMoskowitz):
         tp : float
             Peak period, Tp.
         gamma : float
-            Peak enhancement factor.
+            Peak enhancement factor. Default value is 3.3.
         freq_hz : bool, optional
             Whether to return the frequencies and spectrum in terms of Hz (`True`)
             or rad/s (`False`). If `None` (default), the original units of `freq` is
