@@ -411,7 +411,7 @@ class Torsethaugen(BaseSpectrum1d):
     - ``A_i = 3.26 / 16 * Hs_i ** 2 * wp_i ** 3``
     - ``B_i = wp_i ** 4``.
     - ``Hs_i`` is the significant wave height of the primary and the secondary system.
-    - ``wp_i = 2pi / Tp_i`` is the angular spectral peak frequency of the primary and the secondary system..
+    - ``wp_i = 2pi / Tp_i`` is the angular spectral peak frequency of the primary and the secondary system.
     - ``gamma`` is a peak enhancement factor.
     - ``alpha = (1 + 1.1 * log(gamma) ** 1.19) / gamma`` is a normalizing factor.
     - ``sigma`` is the spectral width parameter (established from experimental data):
@@ -424,6 +424,11 @@ class Torsethaugen(BaseSpectrum1d):
         Sequence of frequencies to use when generating the spectrum.
     freq_hz : bool
         Whether the provided frequencies are in rad/s (default) or Hz.
+
+    Notes
+    -----
+    The Torsethaugen spectrum is implemented as described in ref. [1]. All the
+    intermediate parameters are applied as defined in Table 1 in ref. [1].
 
     See Also
     --------

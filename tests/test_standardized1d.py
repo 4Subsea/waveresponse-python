@@ -438,89 +438,88 @@ class Test_Torsethaugen:
         assert isinstance(spectrum, wr.BaseSpectrum1d)
         np.testing.assert_array_almost_equal(spectrum._freq, freq)
 
-    @pytest.mark.parametrize("hs_i, tpf_expected", [(1., 6.6), (8., 13.2)])
+    @pytest.mark.parametrize("hs_i, tpf_expected", [(1.0, 6.6), (8.0, 13.2)])
     def test__tpf(self, hs_i, tpf_expected):
-        freq = np.arange(0.01, 1., 0.01)
+        freq = np.arange(0.01, 1.0, 0.01)
         spectrum = wr.Torsethaugen(freq, freq_hz=False)
 
         tpf_out = spectrum._tpf(hs_i)
         assert tpf_out == tpf_expected
 
-    @pytest.mark.parametrize("hs_i, tl_expected", [(1., 2.), (4., 4.), (9., 6.)])
+    @pytest.mark.parametrize("hs_i, tl_expected", [(1.0, 2.0), (4.0, 4.0), (9.0, 6.0)])
     def test__tl(self, hs_i, tl_expected):
-        freq = np.arange(0.01, 1., 0.01)
+        freq = np.arange(0.01, 1.0, 0.01)
         spectrum = wr.Torsethaugen(freq, freq_hz=False)
 
         tl_out = spectrum._tl(hs_i)
         assert tl_out == tl_expected
 
     def test__tu(self):
-        freq = np.arange(0.01, 1., 0.01)
+        freq = np.arange(0.01, 1.0, 0.01)
         spectrum = wr.Torsethaugen(freq, freq_hz=False)
 
         tu_out = spectrum._tu()
-        assert tu_out == 25.
+        assert tu_out == 25.0
 
     @pytest.mark.parametrize(
         "hs_i, tp_i, eps_l_expected",
         [
-            (1., 1., 1.),
-            (1., 5., 0.3478260869),
-            (2., 5., 0.6042368556),
-            (6., 10., 0.2809404141),
-            (6., 4., 1.)
-        ]
+            (1.0, 1.0, 1.0),
+            (1.0, 5.0, 0.3478260869),
+            (2.0, 5.0, 0.6042368556),
+            (6.0, 10.0, 0.2809404141),
+            (6.0, 4.0, 1.0),
+        ],
     )
     def test__eps_l(self, hs_i, tp_i, eps_l_expected):
-        freq = np.arange(0.01, 1., 0.01)
+        freq = np.arange(0.01, 1.0, 0.01)
         spectrum = wr.Torsethaugen(freq, freq_hz=False)
 
         eps_l_out = spectrum._eps_l(hs_i, tp_i)
         assert eps_l_out == pytest.approx(eps_l_expected)
 
     def test__eps_l_raise(self):
-        freq = np.arange(0.01, 1., 0.01)
+        freq = np.arange(0.01, 1.0, 0.01)
         spectrum = wr.Torsethaugen(freq, freq_hz=False)
 
         with pytest.raises(ValueError):
-            _ = spectrum._eps_l(6., 16.)
+            _ = spectrum._eps_l(6.0, 16.0)
 
     @pytest.mark.parametrize(
         "hs_i, tp_i, eps_u_expected",
         [
-            (1., 10., 0.1847826086),
-            (5., 15., 0.2708265828),
-            (10., 15., 0.0724191191),
-            (10., 26., 1.),
-
-        ]
+            (1.0, 10.0, 0.1847826086),
+            (5.0, 15.0, 0.2708265828),
+            (10.0, 15.0, 0.0724191191),
+            (10.0, 26.0, 1.0),
+        ],
     )
     def test__eps_u(self, hs_i, tp_i, eps_u_expected):
-        freq = np.arange(0.01, 1., 0.01)
+        freq = np.arange(0.01, 1.0, 0.01)
         spectrum = wr.Torsethaugen(freq, freq_hz=False)
 
         eps_u_out = spectrum._eps_u(hs_i, tp_i)
         assert eps_u_out == pytest.approx(eps_u_expected)
 
     def test__eps_u_raise(self):
-        freq = np.arange(0.01, 1., 0.01)
+        freq = np.arange(0.01, 1.0, 0.01)
         spectrum = wr.Torsethaugen(freq, freq_hz=False)
 
         with pytest.raises(ValueError):
-            _ = spectrum._eps_u(1., 1.)
+            _ = spectrum._eps_u(1.0, 1.0)
 
     @pytest.mark.parametrize(
         "hs_i, tp_i, rw_expected",
         [
-            (1., 1., 0.7054946916),
-            (1., 5., 0.8849065436),
-            (2., 5., 0.7696424130),
-            (6., 10., 0.9187812581),
-            (6., 4., 0.7054946916)
-        ]
+            (1.0, 1.0, 0.7054946916),
+            (1.0, 5.0, 0.8849065436),
+            (2.0, 5.0, 0.7696424130),
+            (6.0, 10.0, 0.9187812581),
+            (6.0, 4.0, 0.7054946916),
+        ],
     )
     def test__rw(self, hs_i, tp_i, rw_expected):
-        freq = np.arange(0.01, 1., 0.01)
+        freq = np.arange(0.01, 1.0, 0.01)
         spectrum = wr.Torsethaugen(freq, freq_hz=False)
 
         rw_out = spectrum._rw(hs_i, tp_i)
@@ -529,15 +528,14 @@ class Test_Torsethaugen:
     @pytest.mark.parametrize(
         "hs_i, tp_i, rs_expected",
         [
-            (1., 10., 0.8737129595),
-            (5., 15., 0.7770615582),
-            (10., 15., 0.9773571191),
-            (10., 26., 0.6000059781),
-
-        ]
+            (1.0, 10.0, 0.8737129595),
+            (5.0, 15.0, 0.7770615582),
+            (10.0, 15.0, 0.9773571191),
+            (10.0, 26.0, 0.6000059781),
+        ],
     )
     def test__rs(self, hs_i, tp_i, rs_expected):
-        freq = np.arange(0.01, 1., 0.01)
+        freq = np.arange(0.01, 1.0, 0.01)
         spectrum = wr.Torsethaugen(freq, freq_hz=False)
 
         rs_out = spectrum._rs(hs_i, tp_i)
@@ -546,14 +544,14 @@ class Test_Torsethaugen:
     @pytest.mark.parametrize(
         "hs_i, tp_i, gamma_expected",
         [
-            (1., 1., 23.897218387),
-            (1., 2., 7.2827588780),
-            (1., 3., 3.6343370500),
-            (2., 1., 43.288552407)
-        ]
+            (1.0, 1.0, 23.897218387),
+            (1.0, 2.0, 7.2827588780),
+            (1.0, 3.0, 3.6343370500),
+            (2.0, 1.0, 43.288552407),
+        ],
     )
     def test__gamma(self, hs_i, tp_i, gamma_expected):
-        freq = np.arange(0.01, 1., 0.01)
+        freq = np.arange(0.01, 1.0, 0.01)
         spectrum = wr.Torsethaugen(freq, freq_hz=False)
 
         rs_out = spectrum._gamma(hs_i, tp_i)
@@ -563,11 +561,11 @@ class Test_Torsethaugen:
         "gamma, alpha_expected",
         [
             (np.exp(1), 2.1 / np.exp(1)),
-            (np.exp(2), (1. + 1.1*2**1.19) / np.exp(2))
-            ]
+            (np.exp(2), (1.0 + 1.1 * 2**1.19) / np.exp(2)),
+        ],
     )
     def test_alpha(self, gamma, alpha_expected):
-        freq = np.arange(0.01, 1., 0.01)
+        freq = np.arange(0.01, 1.0, 0.01)
         spectrum = wr.Torsethaugen(freq, freq_hz=False)
 
         alpha_out = spectrum._alpha(gamma)
@@ -635,9 +633,7 @@ class Test_Torsethaugen:
         as stated in the original paper.
         """
 
-        data = pd.read_json(
-            TEST_PATH / "testdata" / "hs0350_tp0550_torsethaugen.json"
-        )
+        data = pd.read_json(TEST_PATH / "testdata" / "hs0350_tp0550_torsethaugen.json")
         freq_expected = data["freq"].values[1:]
         ps_expected = data["power_spectrum"].values[1:]
 

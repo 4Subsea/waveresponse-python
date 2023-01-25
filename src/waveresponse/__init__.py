@@ -17,7 +17,7 @@ from ._standardized1d import (
     BaseSpectrum1d,
     ModifiedPiersonMoskowitz,
     OchiHubble,
-    Torsethaugen
+    Torsethaugen,
 )
 from ._transform import (
     rigid_transform,
