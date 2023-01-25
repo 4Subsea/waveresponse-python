@@ -455,7 +455,7 @@ class Torsethaugen(BaseSpectrum1d):
         else:  # swell dominated
             hs_primary = hs * self._rs(hs, tp)
             tp_primary = tp
-            gamma = self._gamma(hs_primary, tp_primary) * (
+            gamma = self._gamma(hs, tpf) * (
                 1.0 + 6.0 * self._eps_u(hs, tp)
             )
 
