@@ -987,7 +987,8 @@ class RAO(Grid):
             1-D array of grid frequency coordinates. Positive and monotonically increasing.
         dirs : array-like
             1-D array of grid direction coordinates. Positive and monotonically increasing.
-            Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+            Should be within the directional range [0, 360) degrees (or [0, 2*pi) radians).
+            See Notes.
         amp : array-like (N, M)
             RAO amplitude values associated with the grid. Should be a 2-D array
             of shape (N, M), such that ``N=len(freq)`` and ``M=len(dirs)``.
@@ -1009,8 +1010,19 @@ class RAO(Grid):
             convention is assumed.
 
         Returns
+        -------
         obj :
             Initialized RAO object.
+
+        Notes
+        -----
+        If the RAO is going to be used in response calculation (where the RAO is combined
+        with a wave spectrum to form a response spectrum), it is important that the
+        RAO covers the full directional domain, i.e., [0, 360) degrees, with a sufficient
+        resolution. If the RAO object only partly covers the directional domain, you
+        can consider to use the :func:`mirror` function to 'expand' the RAO with values
+        that are folded about a symmetry plane.
+
         """
         rao_complex = polar_to_complex(amp, phase, phase_degrees=phase_degrees)
 
