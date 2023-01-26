@@ -72,3 +72,20 @@ method with the desired order, `n`.
     m2 = spectrum.moment(2)
 
     # Etc.
+
+Calculate the mean zero-crossing period, Tz:
+
+.. code-block:: python
+
+    spectrum.tz
+
+Calculate extreme values using the :meth:`~waveresponse.DirectionalSpectrum.extreme`
+method. The method takes two arguments: the duration of the process (in seconds),
+and a quantile, ``q``.
+
+.. code-block:: python
+
+    duration = 3 * 3600   # 3 hours
+
+    mpm = spectrum.extreme(duration, q=0.37)   # most probable maximum (MPM)
+    q90 = spectrum.extreme(duration, q=0.99)   # 90-th quantile

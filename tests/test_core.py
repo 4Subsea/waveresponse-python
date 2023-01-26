@@ -3284,6 +3284,24 @@ class Test_DirectionalSpectrum:
         # not exactly same due to error in trapz for higher order functions
         assert m_out == pytest.approx(m_expect, rel=0.1)
 
+    def test_tz(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        freq = np.linspace(f0, f1, 20)
+        dirs = np.arange(5, 360, 10)
+        vals = np.ones((len(freq), len(dirs)))
+        spectrum = DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+        tz_out = spectrum.tz
+
+        m0 = (0.0 - 360.0) * (f0 - f1)
+        m2 = (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3)
+
+        tz_expect = np.sqrt(m0 / m2)
+
+        assert tz_out == pytest.approx(tz_expect, rel=0.1)
+
     def test_from_grid(self):
         freq = np.linspace(0, 1.0, 10)
         dirs = np.linspace(0, 360.0, 15, endpoint=False)
@@ -3351,6 +3369,69 @@ class Test_DirectionalSpectrum:
     def test_imag_raises(self, directional_spectrum):
         with pytest.raises(AttributeError):
             directional_spectrum.imag
+
+    def test_extreme_float(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        freq = np.linspace(f0, f1, 20)
+        dirs = np.arange(5, 360, 10)
+        vals = np.ones((len(freq), len(dirs)))
+        spectrum = wr.DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+        sigma = spectrum.std()
+        tz = spectrum.tz
+
+        T = 360 * 24 * 60.0**2
+        q = 0.99
+        extreme_out = spectrum.extreme(T, q=q)
+
+        extreme_expect = sigma * np.sqrt(2.0 * np.log((T / tz) / np.log(1.0 / q)))
+
+        assert extreme_out == pytest.approx(extreme_expect)
+
+    def test_extreme_list(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        freq = np.linspace(f0, f1, 20)
+        dirs = np.arange(5, 360, 10)
+        vals = np.ones((len(freq), len(dirs)))
+        spectrum = wr.DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+        sigma = spectrum.std()
+        tz = spectrum.tz
+
+        T = 360 * 24 * 60.0**2
+        q = [0.1, 0.5, 0.99]
+        extreme_out = spectrum.extreme(T, q=q)
+
+        extreme_expect = [
+            sigma * np.sqrt(2.0 * np.log((T / tz) / np.log(1.0 / q[0]))),
+            sigma * np.sqrt(2.0 * np.log((T / tz) / np.log(1.0 / q[1]))),
+            sigma * np.sqrt(2.0 * np.log((T / tz) / np.log(1.0 / q[2]))),
+        ]
+
+        np.testing.assert_array_almost_equal(extreme_out, extreme_expect)
+
+    def test_extreme_mpm(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        freq = np.linspace(f0, f1, 20)
+        dirs = np.arange(5, 360, 10)
+        vals = np.ones((len(freq), len(dirs)))
+        spectrum = wr.DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+        sigma = spectrum.std()
+        tz = spectrum.tz
+
+        T = 360 * 24 * 60.0**2
+        extreme_out = spectrum.extreme(T, q=0.37)
+
+        extreme_expect = sigma * np.sqrt(2.0 * np.log(T / tz))
+
+        assert extreme_out == pytest.approx(extreme_expect, rel=1e-3)
 
 
 class Test_WaveSpectrum:
@@ -3427,24 +3508,6 @@ class Test_WaveSpectrum:
         hs_expect = 4.0 * np.sqrt((0.0 - 360.0) * (f0 - f1))
 
         assert hs_out == pytest.approx(hs_expect)
-
-    def test_tz(self):
-        f0 = 0.0
-        f1 = 2.0
-
-        freq = np.linspace(f0, f1, 20)
-        dirs = np.arange(5, 360, 10)
-        vals = np.ones((len(freq), len(dirs)))
-        wave = WaveSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
-
-        tz_out = wave.tz
-
-        m0 = (0.0 - 360.0) * (f0 - f1)
-        m2 = (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3)
-
-        tz_expect = np.sqrt(m0 / m2)
-
-        assert tz_out == pytest.approx(tz_expect, rel=0.1)
 
     def test_tp_hz(self):
         freq = np.linspace(0, 2, 20)

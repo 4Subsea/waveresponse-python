@@ -80,12 +80,6 @@ Calculate the wave peak period, Tp:
 
     wave.tp
 
-Calculate the mean crossing period, Tz:
-
-.. code-block:: python
-
-    wave.tz
-
 Calculate the wave peak direction:
 
 .. code-block:: python

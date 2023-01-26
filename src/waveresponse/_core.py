@@ -1433,6 +1433,56 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         m_n = trapz((f**n) * spectrum, f)
         return m_n
 
+    @property
+    def tz(self):
+        """
+        Mean zero-crossing period, Tz, in 'seconds'.
+
+        Calculated from the zeroth- and second-order spectral moments according to:
+
+            ``tz = sqrt(m0 / m2)``
+
+        where the spectral moments are calculated by integrating over frequency in Hz.
+        """
+        m0 = self.moment(0, freq_hz=True)
+        m2 = self.moment(2, freq_hz=True)
+        return np.sqrt(m0 / m2)
+
+    def extreme(self, t, q=0.37):
+        """
+        Compute the q-th quantile extreme value (assuming a Gaussian process).
+
+        The extreme value, ``x``, is calculated according to:
+
+        ``x = sigma * sqrt(2 * ln((t / tz) / ln(1 / q)))``
+
+        where ``sigma`` is the standard deviation of the process, ``t`` is the duration
+        of the process, and ``q`` is the quantile. Setting ``q=0.37`` yields the
+        most probable maximum (MPM).
+
+        The extreme value indicates a level which the maximum value of the process
+        amplitudes will be below with a certain probability. Note that the method
+        only computes extreme values for the maxima, and does not consider the minima.
+
+        Parameters
+        ----------
+        t : float
+            Time/duration in seconds for which the of the process is observed.
+        q : float or array-like
+            Quantile or sequence of quantiles to compute. Must be between 0 and 1
+            (inclusive).
+
+        Returns
+        -------
+        x : float or array
+            Extreme value(s). During the given time period, the maximum value of
+            the process amplitudes will be below the returned value with a given
+            probability.
+
+        """
+        q = np.asarray_chkfinite(q)
+        return self.std() * np.sqrt(2.0 * np.log((t / self.tz) / np.log(1.0 / q)))
+
 
 class WaveSpectrum(DirectionalSpectrum):
     def __repr__(self):
@@ -1445,23 +1495,10 @@ class WaveSpectrum(DirectionalSpectrum):
 
         Calculated from the zeroth-order spectral moment according to:
 
-            ``hs = 4.0 * np.sqrt(m0)``
+            ``hs = 4.0 * sqrt(m0)``
         """
         m0 = self.moment(0)
         return 4.0 * np.sqrt(m0)
-
-    @property
-    def tz(self):
-        """
-        Mean crossing period, Tz, (sometimes called the mean wave period) in 'seconds'.
-
-        Calculated from the zeroth- and second-order spectral moments according to:
-
-            ``tz = np.sqrt(m0 / m2)``
-        """
-        m0 = self.moment(0, freq_hz=False)
-        m2 = self.moment(2, freq_hz=True)
-        return np.sqrt(m0 / m2)
 
     @property
     def tp(self):
