@@ -79,6 +79,7 @@ napoleon_numpy_docstring = True
 # Intershpinx mapping
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
+    "matplotlib": ("https://matplotlib.org", None),
 }
 
 # Add any paths that contain templates here, relative to this directory.
