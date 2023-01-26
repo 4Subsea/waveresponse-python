@@ -77,7 +77,7 @@ Calculate the mean zero-crossing period, Tz:
 
 .. code-block:: python
 
-    wave.tz
+    spectrum.tz
 
 Calculate extreme values using the :meth:`~waveresponse.DirectionalSpectrum.extreme`
 method. The method takes two arguments: the duration of the process (in seconds),
