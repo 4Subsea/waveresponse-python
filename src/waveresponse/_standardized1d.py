@@ -427,19 +427,19 @@ class Torsethaugen(BaseSpectrum1d):
 
     Notes
     -----
-    The Torsethaugen spectrum is implemented as described in ref. [1]_. All the
-    intermediate parameters are applied as defined in Table 1 in ref. [1]_.
+    The Torsethaugen spectrum is implemented as described in reference [1]_. All the
+    intermediate parameters are applied as defined in Table 1 in reference [1]_.
+
+    References
+    ----------
+    .. [1] Torsethaugen K and Haver S, 2004. Simplified double peak spectral model
+           for ocean waves, Paper No. 2004-JSC-193, ISOPE 2004 Touson, France.
 
     See Also
     --------
     ModifiedPiersonMoskowitz : Modified Pierson-Moskowitz wave spectrum.
     JONSWAP : JONSWAP wave spectrum.
     OchiHubble : Ochi-Hubble (three-parameter) wave spectrum.
-
-    References
-    ----------
-    .. [1] Torsethaugen K and Haver S, 2004. Simplified double peak spectral model for ocean
-           waves, Paper No. 2004-JSC-193, ISOPE 2004 Touson, France.
 
     """
     def __call__(self, hs, tp, freq_hz=None):
