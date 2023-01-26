@@ -63,7 +63,7 @@ These parameters are set during initialization of the grid object:
 
 
         f = np.linspace(0., 0.5, 50)   # Hz
-        d = np.linspace(0., 2.0*np.pi - 1e-8, 50)   # rad
+        d = np.linspace(0., 2.0 * np.pi - 1e-8, 50)   # rad
         v = grid.interpolate(f, d, freq_hz=True, degrees=False)
 
         fig = plt.figure()
