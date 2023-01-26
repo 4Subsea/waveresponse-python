@@ -17,6 +17,7 @@ from ._standardized1d import (
     BaseSpectrum1d,
     ModifiedPiersonMoskowitz,
     OchiHubble,
+    Torsethaugen,
 )
 from ._transform import (
     rigid_transform,
@@ -47,5 +48,6 @@ __all__ = [
     "rigid_transform_heave",
     "rigid_transform_surge",
     "rigid_transform_sway",
+    "Torsethaugen",
     "WaveSpectrum",
 ]

@@ -88,4 +88,4 @@ and a quantile, ``q``.
     duration = 3 * 3600   # 3 hours
 
     mpm = spectrum.extreme(duration, q=0.37)   # most probable maximum (MPM)
-    q90 = spectrum.extreme(duration, q=0.99)   # 90-th quantile
+    q90 = spectrum.extreme(duration, q=0.90)   # 90-th quantile

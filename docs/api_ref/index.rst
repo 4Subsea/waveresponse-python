@@ -24,6 +24,7 @@ functions and methods.
     JONSWAP
     ModifiedPiersonMoskowitz
     OchiHubble
+    Torsethaugen
     multiply
     polar_to_complex
     RAO
