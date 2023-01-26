@@ -52,6 +52,25 @@ These parameters are set during initialization of the grid object:
         waves_coming_from=True,
     )
 
+.. tip::
+    The grid values can be visualized e.g. using :mod:`matplotlib` and a polar plot:
+
+    .. code:: python
+
+        import matplotlib.pyplot as plt
+        from matplotlib import cm
+        import numpy as np
+
+
+        f = np.linspace(0., 0.5, 50)   # Hz
+        d = np.linspace(0., 2.0 * np.pi - 1e-8, 50)   # rad
+        v = grid.interpolate(f, d, freq_hz=True, degrees=False)
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection="polar")
+        ax.contourf(d, f, v, levels=7, cmap=cm.jet)
+        plt.show()
+
 The grid can be converted to a different wave convention anytime by calling the
 :meth:`~waveresponse.Grid.set_wave_convention` method with the desired convention flags.
 
