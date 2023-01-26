@@ -169,7 +169,7 @@ The *Torsethaugen* spectrum allows you to set up a double-peaked spectrum that r
 sea states which includes both a remotely generated swell component (with low frequency energy)
 and a locally generated wind component (with high frequency energy). The spectral spectral model
 was developed based on average measured spectra for Norwegian waters (Haltenbanken and Statfjord).
-The Torsethaugen spectrum is described by two parameter, (i.e. :math:`H_s` and :math:`T_p`) , and
+The Torsethaugen spectrum is described by two parameter (i.e. :math:`H_s` and :math:`T_p`), and
 is given by:
 
 .. math::
@@ -184,7 +184,7 @@ where,
 
 Furthermore,
 
-- :math:`A_i = \frac{3.26}{16} Hs_i^2 \omega_{pi}^3`
+- :math:`A_i = \frac{3.26}{16} H_{si}^2 \omega_{pi}^3`
 - :math:`B_i = \omega_{pi}^4`
 - :math:`H_{si}` is the significant wave height for wave component :math:`i`.
 - :math:`\omega_{pi} = \frac{2\pi}{T_{pi}}` is the angular spectral peak frequency for wave component :math:`i`.
@@ -195,8 +195,8 @@ Furthermore,
 .. math::
     \sigma =
     \begin{cases}
-        \sigma_a & \quad \text{if } \omega \leq \omega_{p_1}\\
-        \sigma_b & \quad \text{if } \omega > \omega_{p_1}
+        \sigma_a & \quad \text{if } \omega \leq \omega_{p1}\\
+        \sigma_b & \quad \text{if } \omega > \omega_{p1}
     \end{cases}
 
 .. note::
