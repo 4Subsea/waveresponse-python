@@ -439,7 +439,43 @@ class Torsethaugen(BaseSpectrum1d):
     References
     ----------
     .. [1] Torsethaugen K., Haver S., "Simplified double peak spectral model for ocean waves", ISOPE, 2004.
+
     """
+    def __call__(self, hs, tp, freq_hz=None):
+        """
+        Generate wave spectrum.
+
+        Parameters
+        ----------
+        hs : float
+            Significant wave height, Hs.
+        tp : float
+            Peak period, Tp.
+        freq_hz : bool, optional
+            Whether to return the frequencies and spectrum in terms of Hz (`True`)
+            or rad/s (`False`). If `None` (default), the original units of `freq` is
+            preserved.
+
+        Return
+        ------
+        freq : 1-D array
+            Frequencies corresponding to the spectrum values. Unit is set according
+            to `freq_hz`.
+        spectrum : 1-D array
+            Spectrum values. Unit is set according to `freq_hz`.
+
+        Notes
+        -----
+        The scaling between wave spectrum in terms of Hz and rad/s is defined
+        as:
+
+        ``S(f) = 2*pi*S(w)``
+
+        where ``S(f)`` and ``S(w)`` are the same spectrum but expressed
+        in terms of Hz and rad/s, respectively.
+        """
+
+        return super().__call__(hs, tp, freq_hz=freq_hz)
 
     def _spectrum(self, omega, hs, tp):
         tpf = self._tpf(hs)
