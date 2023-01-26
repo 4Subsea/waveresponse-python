@@ -163,6 +163,62 @@ and :math:`q`). The total spectrum is obtained by adding together the two wave c
     spectrum.
 
 
+Torsethaugen
+------------
+The *Torsethaugen* spectrum allows you to set up a double-peaked spectrum that represents
+sea states which includes both a remotely generated swell component (with low frequency energy)
+and a locally generated wind component (with high frequency energy). The spectral spectral model
+was developed based on average measured spectra for Norwegian waters (Haltenbanken and Statfjord).
+The Torsethaugen spectrum is described by two parameter, (i.e. :math:`H_s` and :math:`T_p`) , and
+is given by:
+
+    :math:`S(\omega) = \alpha_{\gamma}S_1(\omega; H_{s1}, T_{p1})\gamma^{exp\left( -\frac{(\omega - \omega_{p1})^2}{2\sigma^2\omega_{p1}^2} \right)} + S_2(\omega; H_{s2}, T_{p2})`
+
+    where,
+
+    :math:`S_i(\omega) = \frac{A_{i}}{\omega^4} \exp(-\frac{B_{i}}{\omega^4})`
+
+    Furthermore,
+
+    - :math:`A_i = \frac{3.26}{16} Hs_i^2 \omega_{pi}^3`
+    - :math:`B_i = \omega_{pi}^4`
+    - :math:`H_{si}` is the significant wave height for wave component :math:`i`.
+    - :math:`\omega_{pi} = \frac{2\pi}{T_{pi}}` is the angular spectral peak frequency for wave component :math:`i`.
+    - :math:`\gamma` is a peak enhancement factor.
+    - :math:`\alpha_{\gamma}` is a normalizing factor.
+    - :math:`\sigma` is the spectral width parameter, given by:
+
+    .. math::
+        \sigma =
+        \begin{cases}
+            \sigma_a & \quad \text{if } \omega \leq \omega_{p_1}\\
+            \sigma_b & \quad \text{if } \omega > \omega_{p_1}
+        \end{cases}
+    .. math::
+
+.. note::
+
+    The Torsethaugen spectrum is implemented according to the `original paper <https://www.sintef.no/globalassets/upload/fiskeri_og_havbruk/havbruksteknologi/2004-jsc-193.pdf/>`_
+    by Torsethaugen and Haver published in 2004. Refer to this paper for full implementation
+    details.
+
+The :class:`~waveresponse.Torsethaugen` class provides functionality for generating a 1-D
+Torsethaugen spectrum given two parameters (i.e., :math:`H_s`, :math:`T_p`):
+
+.. code:: python
+
+    import numpy as np
+    import waveresponse as wr
+
+
+    freq = np.arange(0.01, 1, 0.01)
+    spectrum = wr.Torsethaugen(freq, freq_hz=True)
+
+    hs = 3.5
+    tp = 10.0
+    freq, vals = spectrum(hs, tp)
+
+
 Directional spectrum
 ####################
 The directional spectrum is usually standardized in a similar way as the 1-D frequency
