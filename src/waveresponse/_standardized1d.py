@@ -438,7 +438,8 @@ class Torsethaugen(BaseSpectrum1d):
 
     References
     ----------
-    .. [1] Torsethaugen K., Haver S., "Simplified double peak spectral model for ocean waves", ISOPE, 2004.
+    .. [1] Torsethaugen K and Haver S, 2004. Simplified double peak spectral model for ocean
+           waves, Paper No. 2004-JSC-193, ISOPE 2004 Touson, France.
 
     """
     def __call__(self, hs, tp, freq_hz=None):
