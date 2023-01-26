@@ -453,7 +453,7 @@ class Torsethaugen(BaseSpectrum1d):
     _b1 = 2.0
     _a20 = 0.6
     _a2 = 0.3
-    _a3 = 6.
+    _a3 = 6.0
     _g = 9.80665
 
     def __call__(self, hs, tp, freq_hz=None):
@@ -506,9 +506,7 @@ class Torsethaugen(BaseSpectrum1d):
         else:  # swell dominated
             hs_primary = hs * self._rs(hs, tp)
             tp_primary = tp
-            gamma = self._gamma(hs, tpf) * (
-                1.0 + self._a3 * self._eps_u(hs, tp)
-            )
+            gamma = self._gamma(hs, tpf) * (1.0 + self._a3 * self._eps_u(hs, tp))
 
             hs_secondary = hs * np.sqrt(1.0 - self._rs(hs, tp) ** 2)
             tp_secondary = self._af * hs_secondary ** (1.0 / 3.0)
