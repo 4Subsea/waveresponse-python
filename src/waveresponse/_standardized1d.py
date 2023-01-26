@@ -400,7 +400,7 @@ class Torsethaugen(BaseSpectrum1d):
 
     where,
 
-    ``S_i(w) = A_i / w ** 4 exp(-B_i / w ** 4)``
+    ``S_i(w) = A_i / w ** 4 * exp(-B_i / w ** 4)``
 
     and,
 
