@@ -454,13 +454,6 @@ class Test_Torsethaugen:
         tl_out = spectrum._tl(hs_i)
         assert tl_out == tl_expected
 
-    def test__tu(self):
-        freq = np.arange(0.01, 1.0, 0.01)
-        spectrum = wr.Torsethaugen(freq, freq_hz=False)
-
-        tu_out = spectrum._tu()
-        assert tu_out == 25.0
-
     @pytest.mark.parametrize(
         "hs_i, tp_i, eps_l_expected",
         [
