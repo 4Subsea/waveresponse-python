@@ -172,29 +172,32 @@ was developed based on average measured spectra for Norwegian waters (Haltenbank
 The Torsethaugen spectrum is described by two parameter, (i.e. :math:`H_s` and :math:`T_p`) , and
 is given by:
 
-    :math:`S(\omega) = \alpha_{\gamma}S_1(\omega; H_{s1}, T_{p1})\gamma^{exp\left( -\frac{(\omega - \omega_{p1})^2}{2\sigma^2\omega_{p1}^2} \right)} + S_2(\omega; H_{s2}, T_{p2})`
+.. math::
 
-    where,
+    S(\omega) = \alpha_{\gamma}S_1(\omega; H_{s1}, T_{p1})\gamma^{exp\left( -\frac{(\omega - \omega_{p1})^2}{2\sigma^2\omega_{p1}^2} \right)} + S_2(\omega; H_{s2}, T_{p2})
 
-    :math:`S_i(\omega) = \frac{A_{i}}{\omega^4} \exp(-\frac{B_{i}}{\omega^4})`
+where,
 
-    Furthermore,
+.. math::
 
-    - :math:`A_i = \frac{3.26}{16} Hs_i^2 \omega_{pi}^3`
-    - :math:`B_i = \omega_{pi}^4`
-    - :math:`H_{si}` is the significant wave height for wave component :math:`i`.
-    - :math:`\omega_{pi} = \frac{2\pi}{T_{pi}}` is the angular spectral peak frequency for wave component :math:`i`.
-    - :math:`\gamma` is a peak enhancement factor.
-    - :math:`\alpha_{\gamma}` is a normalizing factor.
-    - :math:`\sigma` is the spectral width parameter, given by:
+    S_i(\omega) = \frac{A_{i}}{\omega^4} \exp(-\frac{B_{i}}{\omega^4})
 
-    .. math::
-        \sigma =
-        \begin{cases}
-            \sigma_a & \quad \text{if } \omega \leq \omega_{p_1}\\
-            \sigma_b & \quad \text{if } \omega > \omega_{p_1}
-        \end{cases}
-    .. math::
+Furthermore,
+
+- :math:`A_i = \frac{3.26}{16} Hs_i^2 \omega_{pi}^3`
+- :math:`B_i = \omega_{pi}^4`
+- :math:`H_{si}` is the significant wave height for wave component :math:`i`.
+- :math:`\omega_{pi} = \frac{2\pi}{T_{pi}}` is the angular spectral peak frequency for wave component :math:`i`.
+- :math:`\gamma` is a peak enhancement factor.
+- :math:`\alpha_{\gamma}` is a normalizing factor.
+- :math:`\sigma` is the spectral width parameter, given by:
+
+.. math::
+    \sigma =
+    \begin{cases}
+        \sigma_a & \quad \text{if } \omega \leq \omega_{p_1}\\
+        \sigma_b & \quad \text{if } \omega > \omega_{p_1}
+    \end{cases}
 
 .. note::
 
