@@ -80,12 +80,18 @@ Calculate the mean zero-crossing period, Tz:
     spectrum.tz
 
 Calculate extreme values using the :meth:`~waveresponse.DirectionalSpectrum.extreme`
-method. The method takes two arguments: the duration of the process (in seconds),
-and a quantile, ``q``.
+method. The method takes three arguments: the duration of the process (in seconds),
+the quantile, ``q``, and a boolean flag, ``absmax``, determining whether to compute absolute
+value extremes (or only consider the maxima (`default`)).
 
 .. code-block:: python
 
     duration = 3 * 3600   # 3 hours
 
+    # Extreme maximum
     mpm = spectrum.extreme(duration, q=0.37)   # most probable maximum (MPM)
     q90 = spectrum.extreme(duration, q=0.90)   # 90-th quantile
+
+    # Extreme absolute value maximum (i.e., minima are taken into account)
+    mpm = spectrum.extreme(duration, q=0.37, absmax=True)   # most probable maximum (MPM)
+    q90 = spectrum.extreme(duration, q=0.90, absmax=True)   # 90-th quantile
