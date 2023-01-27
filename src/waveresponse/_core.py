@@ -1468,7 +1468,7 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
             Quantile or sequence of quantiles to compute. Must be between 0 and 1
             (inclusive).
         absmax : bool
-            Weather to compute absolute value extremes (i.e., taking the minima into account).
+            Whether to compute absolute value extremes (i.e., taking the minima into account).
             If ``False`` (default), only the maxima are considered. See Notes.
 
         Returns
