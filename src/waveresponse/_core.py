@@ -1460,10 +1460,6 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         of the process, and ``q`` is the quantile. Setting ``q=0.37`` yields the
         most probable maximum (MPM).
 
-        The extreme value indicates a level which the maximum value of the process
-        amplitudes will be below with a certain probability. Note that the method
-        only computes extreme values for the maxima, and does not consider the minima.
-
         Parameters
         ----------
         t : float
@@ -1473,14 +1469,19 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
             (inclusive).
         absmax : bool
             Weather to compute absolute value extremes (i.e., taking the minima into account).
-            If ``False`` (default), only the maxima are considered.
+            If ``False`` (default), only the maxima are considered. See Notes.
 
         Returns
         -------
         x : float or array
-            Extreme value(s). During the given time period, the maximum value of
-            the process amplitudes will be below the returned value with a given
-            probability.
+            Extreme value(s). During the given time period, the maximum value (or
+            absolute value maximum) of the process amplitudes will be below the
+            returned value with the given probability.
+
+        Notes
+        -----
+        Computing absolute value extremes by setting ``absmax=True`` is equivalent
+        to doubling the duration, ``t``.
 
         """
         if absmax:
