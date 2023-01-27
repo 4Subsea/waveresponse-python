@@ -1448,7 +1448,7 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         m2 = self.moment(2, freq_hz=True)
         return np.sqrt(m0 / m2)
 
-    def extreme(self, t, q=0.37):
+    def extreme(self, t, q=0.37, absmax=False):
         """
         Compute the q-th quantile extreme value (assuming a Gaussian process).
 
@@ -1471,6 +1471,9 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         q : float or array-like
             Quantile or sequence of quantiles to compute. Must be between 0 and 1
             (inclusive).
+        absmax : bool
+            Weather to compute absolute value extremes (i.e., taking the minima into account).
+            If ``False`` (default), only the maxima are considered.
 
         Returns
         -------
@@ -1480,6 +1483,9 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
             probability.
 
         """
+        if absmax:
+            t *= 2.0
+
         q = np.asarray_chkfinite(q)
         return self.std() * np.sqrt(2.0 * np.log((t / self.tz) / np.log(1.0 / q)))
 
