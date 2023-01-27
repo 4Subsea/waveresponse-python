@@ -3433,6 +3433,27 @@ class Test_DirectionalSpectrum:
 
         assert extreme_out == pytest.approx(extreme_expect, rel=1e-3)
 
+    def test_extreme_absmax(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        freq = np.linspace(f0, f1, 20)
+        dirs = np.arange(5, 360, 10)
+        vals = np.ones((len(freq), len(dirs)))
+        spectrum = wr.DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+        sigma = spectrum.std()
+        tz = spectrum.tz
+
+        T = 360 * 24 * 60.0**2
+        q = 0.99
+        extreme_out = spectrum.extreme(T, q=q, absmax=True)
+
+        T_ = 2.0 * T
+        extreme_expect = sigma * np.sqrt(2.0 * np.log((T_ / tz) / np.log(1.0 / q)))
+
+        assert extreme_out == pytest.approx(extreme_expect)
+
 
 class Test_WaveSpectrum:
     def test__init__(self):
