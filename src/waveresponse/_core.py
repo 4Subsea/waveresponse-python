@@ -1776,7 +1776,7 @@ class CosineHalfSpreading(BaseSpreading):
 
     Notes
     -----
-    The spreading function is implemented according to reference [1]_
+    The spreading function is implemented according to reference [1]_.
 
     References
     ----------
@@ -1831,7 +1831,7 @@ class CosineFullSpreading(BaseSpreading):
 
     Notes
     -----
-    The spreading function is implemented according to reference [1]_
+    The spreading function is implemented according to reference [1]_.
 
     References
     ----------
