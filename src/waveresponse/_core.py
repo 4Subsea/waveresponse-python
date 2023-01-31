@@ -37,6 +37,7 @@ def complex_to_polar(complex_vals, phase_degrees=False):
         Amplitudes.
     phase : array
         Phase angles.
+
     """
     complex_vals = np.asarray_chkfinite(complex_vals)
     amp = np.abs(complex_vals)
@@ -1440,9 +1441,20 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
 
         Calculated from the zeroth- and second-order spectral moments according to:
 
-            ``tz = sqrt(m0 / m2)``
+        ``tz = sqrt(m0 / m2)``
 
         where the spectral moments are calculated by integrating over frequency in Hz.
+
+        Notes
+        -----
+        The mean zero-crossing period is calculated according to Equation (8.33)
+        in reference [1].
+
+        References
+        ----------
+        [1] A. Naess and T. Moan, (2013), "Stochastic dynamics of marine structures",
+        Cambridge University Press.
+
         """
         m0 = self.moment(0, freq_hz=True)
         m2 = self.moment(2, freq_hz=True)
