@@ -1429,6 +1429,17 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         -------
         float :
             Spectral moment.
+
+        Notes
+        -----
+        The spectral moment is calculated according to Equation (8.31) and (8.32)
+        in reference [1].
+
+        References
+        ----------
+        [1] A. Naess and T. Moan, (2013), "Stochastic dynamics of marine structures",
+        Cambridge University Press.
+
         """
         f, spectrum = self.spectrum1d(axis=1, freq_hz=freq_hz)
         m_n = trapz((f**n) * spectrum, f)
