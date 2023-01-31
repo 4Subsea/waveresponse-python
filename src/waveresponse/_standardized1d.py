@@ -92,6 +92,17 @@ class BasePMSpectrum(BaseSpectrum1d):
     ModifiedPiersonMoskowitz : Modified Pierson-Moskowitz wave spectrum.
     JONSWAP : JONSWAP wave spectrum.
     OchiHubble : Ochi-Hubble (three-parameter) wave spectrum.
+
+    Notes
+    -----
+    Pierson-Moskowitz type of spectra are implemented according to Equation (8.14)
+    in reference [1]_.
+
+    References
+    ----------
+    .. [1] A. Naess and T. Moan, (2013), "Stochastic dynamics of marine structures",
+        Cambridge University Press.
+
     """
 
     def __call__(self, A, B, freq_hz=None):
@@ -157,6 +168,17 @@ class ModifiedPiersonMoskowitz(BasePMSpectrum):
     --------
     JONSWAP : JONSWAP wave spectrum.
     OchiHubble : Ochi-Hubble (three-parameter) wave spectrum.
+
+    Notes
+    -----
+    The modified Pierson-Moskowitz spectrum is implemented according to Section 8.2.2
+    in reference [1]_.
+
+    References
+    ----------
+    .. [1] A. Naess and T. Moan, (2013), "Stochastic dynamics of marine structures",
+        Cambridge University Press.
+
     """
 
     def __call__(self, hs, tp, freq_hz=None):
