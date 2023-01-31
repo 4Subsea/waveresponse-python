@@ -1773,6 +1773,17 @@ class CosineHalfSpreading(BaseSpreading):
     degrees : bool
         If directions passed to the spreading function will be given in 'degrees'.
         If ``False``, 'radians' is assumed.
+
+    Notes
+    -----
+    The spreading function is implemented according to reference [1]_
+
+    References
+    ----------
+    .. [1] U. S. Army Engineer Waterways Experiment Station, Coastal Engineering Research
+       Center. (1985, June). "Directional wave spectra using cosine-squared and cosine 2s
+       spreading functions". Retrieved January 31, 2023, from
+       https://apps.dtic.mil/sti/pdfs/ADA591687.pdf
     """
 
     def __init__(self, s=1, degrees=False):
@@ -1817,6 +1828,17 @@ class CosineFullSpreading(BaseSpreading):
     degrees : bool
         If directions passed to the spreading function will be given in 'degrees'.
         If ``False``, 'radians' is assumed.
+
+    Notes
+    -----
+    The spreading function is implemented according to reference [1]_
+
+    References
+    ----------
+    .. [1] U. S. Army Engineer Waterways Experiment Station, Coastal Engineering Research
+       Center. (1985, June). "Directional wave spectra using cosine-squared and cosine 2s
+       spreading functions". Retrieved January 31, 2023, from
+       https://apps.dtic.mil/sti/pdfs/ADA591687.pdf
     """
 
     def __init__(self, s=1, degrees=False):
