@@ -1479,6 +1479,15 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
             the process amplitudes will be below the returned value with a given
             probability.
 
+        Notes
+        -----
+        The extreme values are calculated according to Equation (1.46) in reference [1]_.
+
+        References
+        ----------
+        .. [1] A. Naess and T. Moan, (2013), "Stochastic dynamics of marine structures",
+           Cambridge University Press.
+
         """
         q = np.asarray_chkfinite(q)
         return self.std() * np.sqrt(2.0 * np.log((t / self.tz) / np.log(1.0 / q)))
