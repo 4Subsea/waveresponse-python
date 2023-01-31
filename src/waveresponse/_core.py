@@ -1527,7 +1527,17 @@ class WaveSpectrum(DirectionalSpectrum):
 
         Calculated from the zeroth-order spectral moment according to:
 
-            ``hs = 4.0 * sqrt(m0)``
+        ``hs = 4.0 * sqrt(m0)``
+
+        Notes
+        -----
+        The significant wave height is calculated according to equation (2.26) in
+        reference [1].
+
+        References
+        ----------
+        [1] 0. M. Faltinsen, (1990), "Sea loads on ships and offshore structures",
+        Cambridge University Press.
         """
         m0 = self.moment(0)
         return 4.0 * np.sqrt(m0)
