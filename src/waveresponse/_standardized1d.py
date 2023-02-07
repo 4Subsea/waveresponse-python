@@ -354,6 +354,13 @@ class OchiHubble(BaseSpectrum1d):
     -----
     The special case ``q=1`` corresponds to the modified Pierson-Moskowitz spectrum.
 
+    The Ochi-Hubble spectrum is implemented as described in reference [1]_.
+
+    References
+    ----------
+    .. [1] Ochi M K and Hubble E N, 1976. "Six-parameter wave spectra", Proc 15th
+       Coastal Engineering Conference, 301-328.
+
     See Also
     --------
     ModifiedPiersonMoskowitz : Modified Pierson-Moskowitz wave spectrum.
