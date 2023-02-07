@@ -129,6 +129,12 @@ where,
 The index, :math:`j = 1, 2`, represents the lower frequency component (i.e., swell)
 and higher frequency component (i.e., wind) respectively.
 
+.. note::
+
+    The Ochi-Hubble spectrum is implemented according to the `paper <https://icce-ojs-tamu.tdl.org/icce/article/view/3066/2731>`_
+    by M. K. Ochi and E. N. Hubble published in 1976. Refer to this paper for full implementation
+    details.
+
 The :class:`~waveresponse.OchiHubble` class provides functionality for generating a 1-D
 Ochi-Hubble spectrum component given three parameters (i.e., :math:`H_s`, :math:`T_p`
 and :math:`q`). The total spectrum is obtained by adding together the two wave components.
