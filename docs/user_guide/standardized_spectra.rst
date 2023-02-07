@@ -131,7 +131,7 @@ and higher frequency component (i.e., wind) respectively.
 
 .. note::
 
-    The Ochi-Hubble spectrum is implemented according to the `paper <https://icce-ojs-tamu.tdl.org/icce/article/view/3066/2731>`_
+    The Ochi-Hubble spectrum is implemented according to the `orinal paper <https://icce-ojs-tamu.tdl.org/icce/article/view/3066/2731>`_
     by M. K. Ochi and E. N. Hubble published in 1976. Refer to this paper for full implementation
     details.
 
