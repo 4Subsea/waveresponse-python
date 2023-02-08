@@ -1484,11 +1484,14 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         to doubling the duration, ``t``.
 
         """
+
         if absmax:
-            t *= 2.0
+            tz = self.tz / 2.0
+        else:
+            tz = self.tz
 
         q = np.asarray_chkfinite(q)
-        return self.std() * np.sqrt(2.0 * np.log((t / self.tz) / np.log(1.0 / q)))
+        return self.std() * np.sqrt(2.0 * np.log((t / tz) / np.log(1.0 / q)))
 
 
 class WaveSpectrum(DirectionalSpectrum):
