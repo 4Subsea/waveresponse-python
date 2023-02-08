@@ -37,6 +37,7 @@ def complex_to_polar(complex_vals, phase_degrees=False):
         Amplitudes.
     phase : array
         Phase angles.
+
     """
     complex_vals = np.asarray_chkfinite(complex_vals)
     amp = np.abs(complex_vals)
@@ -1428,6 +1429,17 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         -------
         float :
             Spectral moment.
+
+        Notes
+        -----
+        The spectral moment is calculated according to Equation (8.31) and (8.32)
+        in reference [1].
+
+        References
+        ----------
+        [1] A. Naess and T. Moan, (2013), "Stochastic dynamics of marine structures",
+        Cambridge University Press.
+
         """
         f, spectrum = self.spectrum1d(axis=1, freq_hz=freq_hz)
         m_n = trapz((f**n) * spectrum, f)
@@ -1440,9 +1452,20 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
 
         Calculated from the zeroth- and second-order spectral moments according to:
 
-            ``tz = sqrt(m0 / m2)``
+        ``tz = sqrt(m0 / m2)``
 
         where the spectral moments are calculated by integrating over frequency in Hz.
+
+        Notes
+        -----
+        The mean zero-crossing period is calculated according to Equation (8.33)
+        in reference [1].
+
+        References
+        ----------
+        [1] A. Naess and T. Moan, (2013), "Stochastic dynamics of marine structures",
+        Cambridge University Press.
+
         """
         m0 = self.moment(0, freq_hz=True)
         m2 = self.moment(2, freq_hz=True)
@@ -1479,6 +1502,15 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
             the process amplitudes will be below the returned value with a given
             probability.
 
+        Notes
+        -----
+        The extreme values are calculated according to Equation (1.46) in reference [1]_.
+
+        References
+        ----------
+        .. [1] A. Naess and T. Moan, (2013), "Stochastic dynamics of marine structures",
+           Cambridge University Press.
+
         """
         q = np.asarray_chkfinite(q)
         return self.std() * np.sqrt(2.0 * np.log((t / self.tz) / np.log(1.0 / q)))
@@ -1495,7 +1527,17 @@ class WaveSpectrum(DirectionalSpectrum):
 
         Calculated from the zeroth-order spectral moment according to:
 
-            ``hs = 4.0 * sqrt(m0)``
+        ``hs = 4.0 * sqrt(m0)``
+
+        Notes
+        -----
+        The significant wave height is calculated according to equation (2.26) in
+        reference [1].
+
+        References
+        ----------
+        [1] 0. M. Faltinsen, (1990), "Sea loads on ships and offshore structures",
+        Cambridge University Press.
         """
         m0 = self.moment(0)
         return 4.0 * np.sqrt(m0)
@@ -1731,6 +1773,17 @@ class CosineHalfSpreading(BaseSpreading):
     degrees : bool
         If directions passed to the spreading function will be given in 'degrees'.
         If ``False``, 'radians' is assumed.
+
+    Notes
+    -----
+    The spreading function is implemented according to reference [1]_.
+
+    References
+    ----------
+    .. [1] U. S. Army Engineer Waterways Experiment Station, Coastal Engineering Research
+       Center. (1985, June). "Directional wave spectra using cosine-squared and cosine 2s
+       spreading functions". Retrieved January 31, 2023, from
+       https://apps.dtic.mil/sti/pdfs/ADA591687.pdf.
     """
 
     def __init__(self, s=1, degrees=False):
@@ -1775,6 +1828,17 @@ class CosineFullSpreading(BaseSpreading):
     degrees : bool
         If directions passed to the spreading function will be given in 'degrees'.
         If ``False``, 'radians' is assumed.
+
+    Notes
+    -----
+    The spreading function is implemented according to reference [1]_.
+
+    References
+    ----------
+    .. [1] U. S. Army Engineer Waterways Experiment Station, Coastal Engineering Research
+       Center. (1985, June). "Directional wave spectra using cosine-squared and cosine 2s
+       spreading functions". Retrieved January 31, 2023, from
+       https://apps.dtic.mil/sti/pdfs/ADA591687.pdf.
     """
 
     def __init__(self, s=1, degrees=False):

@@ -73,7 +73,6 @@ def rao(freq_dirs):
 
 @pytest.fixture
 def rao_for_mirroring():
-
     freq = np.linspace(0, 1.0, 3)
     dirs = np.linspace(0, 180, 3, endpoint=True)
     vals = np.array(
@@ -141,7 +140,6 @@ def test_sort():
 
 
 class Test__robust_modulus:
-
     params_robust_modulus = [
         (2.5, 2.0, 0.5),
         (2.0, 2.0, 0.0),
@@ -656,7 +654,6 @@ class Test_mirror:
 
 
 class Test__check_foldable:
-
     check_foldable_valid = [
         (
             np.linspace(
@@ -1408,7 +1405,6 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
     def test_interpolate_fill_value(self):
-
         freq = np.array([0, 1, 2])
         dirs = np.array([0, 90, 180, 270])
         vals = np.array(
@@ -1433,7 +1429,6 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
     def test_interpolate_fill_value_None(self):
-
         freq = np.array([0, 1, 2])
         dirs = np.array([0, 90, 180, 270])
         vals = np.array(
