@@ -173,7 +173,7 @@ Torsethaugen
 ------------
 The *Torsethaugen* spectrum allows you to set up a double-peaked spectrum that represents
 sea states which includes both a remotely generated swell component (with low frequency energy)
-and a locally generated wind component (with high frequency energy). The spectral spectral model
+and a locally generated wind component (with high frequency energy). The spectral model
 was developed based on average measured spectra for Norwegian waters (Haltenbanken and Statfjord).
 The Torsethaugen spectrum is described by two parameter (i.e. :math:`H_s` and :math:`T_p`), and
 is given by:

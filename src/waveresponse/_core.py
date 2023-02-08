@@ -1471,7 +1471,7 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         m2 = self.moment(2, freq_hz=True)
         return np.sqrt(m0 / m2)
 
-    def extreme(self, t, q=0.37):
+    def extreme(self, t, q=0.37, absmax=False):
         """
         Compute the q-th quantile extreme value (assuming a Gaussian process).
 
@@ -1483,10 +1483,6 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         of the process, and ``q`` is the quantile. Setting ``q=0.37`` yields the
         most probable maximum (MPM).
 
-        The extreme value indicates a level which the maximum value of the process
-        amplitudes will be below with a certain probability. Note that the method
-        only computes extreme values for the maxima, and does not consider the minima.
-
         Parameters
         ----------
         t : float
@@ -1494,13 +1490,21 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         q : float or array-like
             Quantile or sequence of quantiles to compute. Must be between 0 and 1
             (inclusive).
+        absmax : bool
+            Whether to compute absolute value extremes (i.e., taking the minima into account).
+            If ``False`` (default), only the maxima are considered. See Notes.
 
         Returns
         -------
         x : float or array
-            Extreme value(s). During the given time period, the maximum value of
-            the process amplitudes will be below the returned value with a given
-            probability.
+            Extreme value(s). During the given time period, the maximum value (or
+            absolute value maximum) of the process amplitudes will be below the
+            returned value with the given probability.
+
+        Notes
+        -----
+        Computing absolute value extremes by setting ``absmax=True`` is equivalent
+        to doubling the expected zero-crossing rate, ``fz = 1 / Tz``.
 
         Notes
         -----
@@ -1512,8 +1516,14 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
            Cambridge University Press.
 
         """
+
+        if absmax:
+            tz = self.tz / 2.0
+        else:
+            tz = self.tz
+
         q = np.asarray_chkfinite(q)
-        return self.std() * np.sqrt(2.0 * np.log((t / self.tz) / np.log(1.0 / q)))
+        return self.std() * np.sqrt(2.0 * np.log((t / tz) / np.log(1.0 / q)))
 
 
 class WaveSpectrum(DirectionalSpectrum):
