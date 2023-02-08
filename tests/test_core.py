@@ -3379,12 +3379,12 @@ class Test_DirectionalSpectrum:
         vals = np.ones((len(freq), len(dirs)))
         spectrum = wr.DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
 
-        sigma = spectrum.std()
-        tz = spectrum.tz
-
         T = 360 * 24 * 60.0**2
         q = 0.99
         extreme_out = spectrum.extreme(T, q=q)
+
+        sigma = spectrum.std()
+        tz = spectrum.tz
 
         extreme_expect = sigma * np.sqrt(2.0 * np.log((T / tz) / np.log(1.0 / q)))
 
@@ -3399,12 +3399,12 @@ class Test_DirectionalSpectrum:
         vals = np.ones((len(freq), len(dirs)))
         spectrum = wr.DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
 
-        sigma = spectrum.std()
-        tz = spectrum.tz
-
         T = 360 * 24 * 60.0**2
         q = [0.1, 0.5, 0.99]
         extreme_out = spectrum.extreme(T, q=q)
+
+        sigma = spectrum.std()
+        tz = spectrum.tz
 
         extreme_expect = [
             sigma * np.sqrt(2.0 * np.log((T / tz) / np.log(1.0 / q[0]))),
@@ -3423,11 +3423,11 @@ class Test_DirectionalSpectrum:
         vals = np.ones((len(freq), len(dirs)))
         spectrum = wr.DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
 
-        sigma = spectrum.std()
-        tz = spectrum.tz
-
         T = 360 * 24 * 60.0**2
         extreme_out = spectrum.extreme(T, q=0.37)
+
+        sigma = spectrum.std()
+        tz = spectrum.tz
 
         extreme_expect = sigma * np.sqrt(2.0 * np.log(T / tz))
 
@@ -3442,15 +3442,14 @@ class Test_DirectionalSpectrum:
         vals = np.ones((len(freq), len(dirs)))
         spectrum = wr.DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
 
-        sigma = spectrum.std()
-        tz = spectrum.tz
-
         T = 360 * 24 * 60.0**2
         q = 0.99
         extreme_out = spectrum.extreme(T, q=q, absmax=True)
 
-        T_ = 2.0 * T
-        extreme_expect = sigma * np.sqrt(2.0 * np.log((T_ / tz) / np.log(1.0 / q)))
+        sigma = spectrum.std()
+        tz_absmax = spectrum.tz / 2.0
+
+        extreme_expect = sigma * np.sqrt(2.0 * np.log((T / tz_absmax) / np.log(1.0 / q)))
 
         assert extreme_out == pytest.approx(extreme_expect)
 
