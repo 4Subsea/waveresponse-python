@@ -1481,7 +1481,7 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         Notes
         -----
         Computing absolute value extremes by setting ``absmax=True`` is equivalent
-        to doubling the zero-crossing rate, ``fz = 1 / Tz``.
+        to doubling the expected zero-crossing rate, ``fz = 1 / Tz``.
 
         """
 
