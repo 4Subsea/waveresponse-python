@@ -27,9 +27,7 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/4Subsea/waveresponse-python"
-"Bug Tracker" = "https://github.com/4Subsea/waveresponse-python/issues"
-"Documentation" = "https://docs.4insight.io/waveresponse/python/latest/"
+"Homepage" = "https://github.com/vegardrsolum/waveresponse2-python"
 
 [tool.setuptools.dynamic]
 version = {attr = "waveresponse2.__version__"}
