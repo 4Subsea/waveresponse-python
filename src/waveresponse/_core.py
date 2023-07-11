@@ -1092,8 +1092,8 @@ class RAO(Grid):
             Whether the phase values should follow the 'leading' convention (``True``)
             or the 'lagging' convention (``False``). If ``None``, it defaults to
             the convention given during initialization, or the lagging convention
-            if not specified during initialization. Mathematically, an RAO with
-            phase lead convention is expressed as a complex number of the form
+            if no convention was specified during initialization. Mathematically,
+            an RAO with phase lead convention is expressed as a complex number of the form
             ``A * exp(j * phi)``, whereas an RAO with phase lag convention is expressed
             as ``A * exp(-j * phi)``. If ``None``
         freq_hz : bool
