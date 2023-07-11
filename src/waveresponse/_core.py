@@ -1013,8 +1013,9 @@ class RAO(Grid):
             Whether the phase values follow the 'leading' convention (``True``)
             or the 'lagging' convention (``False``). Mathematically, an RAO with
             phase lead convention is expressed as a complex number of the form
-            ``A * exp(j * phi)``, whereas an RAO with phase lag convention is expressed
-            as ``A * exp(-j * phi)``.
+            ``A * exp(j * phi)``, where ``A`` represents the amplitude and ``phi``
+            represents the phase angle. Whereas an RAO with phase lag convention
+            is expressed as ``A * exp(-j * phi)``.
         freq_hz : bool
             If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
         degrees : bool
@@ -1093,9 +1094,10 @@ class RAO(Grid):
             or the 'lagging' convention (``False``). If ``None``, it defaults to
             the convention given during initialization, or the lagging convention
             if no convention was specified during initialization. Mathematically,
-            an RAO with phase lead convention is expressed as a complex number of the form
-            ``A * exp(j * phi)``, whereas an RAO with phase lag convention is expressed
-            as ``A * exp(-j * phi)``. If ``None``
+            an RAO with phase lead convention is expressed as a complex number of
+            the form ``A * exp(j * phi)``, where ``A`` represents the amplitude and
+            ``phi`` represents the phase angle. Whereas an RAO with phase lag convention
+            is expressed as ``A * exp(-j * phi)``.
         freq_hz : bool
             If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
             Defaults to original units used during initialization.
