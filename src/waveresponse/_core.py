@@ -971,6 +971,7 @@ class RAO(Grid):
             waves_coming_from=waves_coming_from,
         )
         self._phase_degrees = False
+        self._phase_leading = True
 
     @classmethod
     def from_amp_phase(
@@ -1009,7 +1010,7 @@ class RAO(Grid):
             If the RAO phase values are given in 'degrees'. If ``False``, 'radians'
             is assumed.
         phase_leading : bool
-            Whether the phase values follows the 'leading' convention (``True``)
+            Whether the phase values follow the 'leading' convention (``True``)
             or the 'lagging' convention (``False``). Mathematically, an RAO with
             phase lead convention is expressed as a complex number of the form
             ``A * exp(j * phi)``, whereas an RAO with phase lag convention is expressed
@@ -1040,6 +1041,9 @@ class RAO(Grid):
         that are folded about a symmetry plane.
 
         """
+        if not phase_leading:
+            phase = -1 * np.asarray_chkfinite(phase)
+
         rao_complex = polar_to_complex(amp, phase, phase_degrees=phase_degrees)
 
         rao = cls(
@@ -1052,6 +1056,7 @@ class RAO(Grid):
             waves_coming_from=waves_coming_from,
         )
         rao._phase_degrees = phase_degrees
+        rao._phase_leading = phase_leading
         return rao
 
     def differentiate(self, n=1):
@@ -1072,7 +1077,7 @@ class RAO(Grid):
         new._vals = new._vals * ((1j * new._freq.reshape(-1, 1)) ** n)
         return new
 
-    def to_amp_phase(self, phase_degrees=None, freq_hz=None, degrees=None):
+    def to_amp_phase(self, phase_degrees=None, phase_leading=None, freq_hz=None, degrees=None):
         """
         Return the RAO as amplitude and phase values.
 
@@ -1081,6 +1086,14 @@ class RAO(Grid):
         phase_degrees : bool
             If phase values should be returned in 'degrees'. If ``False``, 'radians'
             is used. Defaults to original units used during initialization or ``False``.
+        phase_leading : bool
+            Whether the phase values should follow the 'leading' convention (``True``)
+            or the 'lagging' convention (``False``). If ``None``, it defaults to
+            the convention given during initialization, or the lagging convention
+            if not specified during initialization. Mathematically, an RAO with
+            phase lead convention is expressed as a complex number of the form
+            ``A * exp(j * phi)``, whereas an RAO with phase lag convention is expressed
+            as ``A * exp(-j * phi)``. If ``None``
         freq_hz : bool
             If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
             Defaults to original units used during initialization.
@@ -1107,9 +1120,15 @@ class RAO(Grid):
             degrees = self._degrees
         if phase_degrees is None:
             phase_degrees = self._phase_degrees
+        if phase_leading is None:
+            phase_leading = self._phase_leading
 
         freq, dirs, vals = self.grid(freq_hz=freq_hz, degrees=degrees)
         vals_amp, vals_phase = complex_to_polar(vals, phase_degrees=phase_degrees)
+
+        if not phase_leading:
+            vals_phase = -1 * vals_phase
+
         return freq, dirs, vals_amp, vals_phase
 
     def __repr__(self):
