@@ -1126,10 +1126,14 @@ class RAO(Grid):
             phase_leading = self._phase_leading
 
         freq, dirs, vals = self.grid(freq_hz=freq_hz, degrees=degrees)
-        vals_amp, vals_phase = complex_to_polar(vals, phase_degrees=phase_degrees)
+        vals_amp, vals_phase = complex_to_polar(vals, phase_degrees=False)
 
         if not phase_leading:
             vals_phase = -1 * vals_phase
+            vals_phase = np.where(np.isclose(vals_phase, -np.pi), np.pi, vals_phase)
+
+        if phase_degrees:
+            vals_phase = (180.0 / np.pi) * vals_phase
 
         return freq, dirs, vals_amp, vals_phase
 
