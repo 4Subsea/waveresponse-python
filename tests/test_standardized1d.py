@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 from scipy import integrate
 
-import waveresponse as wr
+import waveresponse2 as wr
 
 TEST_PATH = Path(__file__).parent
 

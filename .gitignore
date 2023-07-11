@@ -1,6 +1,7 @@
 # Other
 docs/api_ref/*
 !docs/api_ref/index.rst
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from waveresponse import (
+from waveresponse2 import (
     RAO,
     Grid,
     rigid_transform,

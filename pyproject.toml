@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "waveresponse"
+name = "waveresponse2"
 authors = [
   { name="4Subsea", email="python@4subsea.com" },
 ]
@@ -32,7 +32,7 @@ dependencies = [
 "Documentation" = "https://docs.4insight.io/waveresponse/python/latest/"
 
 [tool.setuptools.dynamic]
-version = {attr = "waveresponse.__version__"}
+version = {attr = "waveresponse2.__version__"}
 
 [tool.pytest.ini_options]
 pythonpath = [".", "src"]
@@ -47,7 +47,7 @@ envlist =
 
 [testenv]
 commands =
-    pytest --cov=waveresponse --cov-report html:cov_html-{envname} ./tests
+    pytest --cov=waveresponse2 --cov-report html:cov_html-{envname} ./tests
 deps =
     pytest
     pytest-cov

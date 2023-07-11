@@ -23,13 +23,13 @@ sys.path.insert(0, os.path.abspath("../src/"))
 # -- Project information -----------------------------------------------------
 _TEMPLATE_VERSION = "2.0.0"
 
-project = "waveresponse"
+project = "waveresponse2"
 copyright = f"{date.today().year}, 4Subsea"
 author = "4Subsea"
 github_repo = "https://github.com/4Subsea/waveresponse-python/"
 
 # The full version, including alpha/beta/rc tags
-version = metadata.version("waveresponse")
+version = metadata.version("waveresponse2")
 release = version
 
 

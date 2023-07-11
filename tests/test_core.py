@@ -7,8 +7,8 @@ import pandas as pd
 import pytest
 from scipy.integrate import quad
 
-import waveresponse as wr
-from waveresponse import (
+import waveresponse2 as wr
+from waveresponse2 import (
     RAO,
     CosineFullSpreading,
     CosineHalfSpreading,
@@ -20,7 +20,7 @@ from waveresponse import (
     mirror,
     polar_to_complex,
 )
-from waveresponse._core import _check_foldable, _check_is_similar, _robust_modulus
+from waveresponse2._core import _check_foldable, _check_is_similar, _robust_modulus
 
 TEST_PATH = Path(__file__).parent
 
@@ -1856,7 +1856,7 @@ class Test_Grid:
         with pytest.raises(TypeError):
             grid + rao
 
-    @patch("waveresponse._core._check_is_similar")
+    @patch("waveresponse2._core._check_is_similar")
     def test__add__check_is_similar(self, mock_check_is_similar, grid):
         grid + grid
         mock_check_is_similar.assert_called_once_with(grid, grid, exact_type=True)
@@ -1884,7 +1884,7 @@ class Test_Grid:
         assert isinstance(out, Grid)
         np.testing.assert_array_almost_equal(out._vals, grid._vals - grid._vals)
 
-    @patch("waveresponse._core._check_is_similar")
+    @patch("waveresponse2._core._check_is_similar")
     def test__sub__check_is_similar(self, mock_check_is_similar, grid):
         grid - grid
         mock_check_is_similar.assert_called_once_with(grid, grid, exact_type=True)
