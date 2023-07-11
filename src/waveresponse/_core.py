@@ -49,10 +49,18 @@ def polar_to_complex(amp, phase, phase_degrees=False):
     """
     Convert polar coordinates (i.e., amplitude and phase) to complex numbers.
 
+    Given as:
+
+        ``A * exp(j * phi)``
+
+    where, ``A`` is the amplitude and ``phi`` is the phase.
+
     Parameters
     ----------
-    complex_vals : array-like
-        Complex number values.
+    amp : array-like
+        Amplitude values.
+    phase : array-like
+        Phase angle values.
     phase_degrees : bool
         Whether the phase angles are given in 'degrees'. If ``False``, 'radians'
         is assumed.
@@ -71,7 +79,7 @@ def polar_to_complex(amp, phase, phase_degrees=False):
     if amp.shape != phase.shape:
         raise ValueError()
 
-    return amp * (np.cos(phase) + 1j * np.sin(phase))
+    return amp * np.exp(1j * phase)
 
 
 def _check_is_similar(*grids, exact_type=True):
@@ -972,6 +980,7 @@ class RAO(Grid):
         amp,
         phase,
         phase_degrees=False,
+        phase_leading=True,
         freq_hz=True,
         degrees=True,
         clockwise=True,
@@ -999,6 +1008,12 @@ class RAO(Grid):
         phase_degrees : bool
             If the RAO phase values are given in 'degrees'. If ``False``, 'radians'
             is assumed.
+        phase_leading : bool
+            Whether the phase values follows the 'leading' convention (``True``)
+            or the 'lagging' convention (``False``). Mathematically, an RAO with
+            phase lead convention is expressed as a complex number of the form
+            ``A * exp(j * phi)``, whereas an RAO with phase lag convention is expressed
+            as ``A * exp(-j * phi)``.
         freq_hz : bool
             If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
         degrees : bool
