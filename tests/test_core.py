@@ -2018,6 +2018,7 @@ class Test_RAO:
         assert rao._freq_hz is True
         assert rao._degrees is True
         assert rao._phase_degrees is False
+        assert rao._phase_leading is True
 
     def test_from_grid(self):
         freq = np.linspace(0, 1.0, 10)
@@ -2069,6 +2070,7 @@ class Test_RAO:
             amp_in,
             phase_in,
             phase_degrees=False,
+            phase_leading=True,
             freq_hz=True,
             degrees=True,
             clockwise=True,
@@ -2087,6 +2089,7 @@ class Test_RAO:
         assert rao._freq_hz is True
         assert rao._degrees is True
         assert rao._phase_degrees is False
+        assert rao._phase_leading is True
 
     def test_from_amp_phase_deg(self):
         freq_in = np.array([0, 1, 2])
@@ -2131,6 +2134,44 @@ class Test_RAO:
         assert rao._freq_hz is True
         assert rao._degrees is True
         assert rao._phase_degrees is True
+        assert rao._phase_leading is True
+
+    def test_from_amp_phase_lagging(self):
+        freq_in = np.array([0, 1, 2])
+        dirs_in = np.array([0, 45, 90, 135])
+        amp_in = np.array(
+            [
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+            ]
+        )
+        phase_in = np.array(
+            [
+                [0.1, 0.2, 0.3, 0.4],
+                [0.1, 0.2, 0.3, 0.4],
+                [0.1, 0.2, 0.3, 0.4],
+            ]
+        )
+        rao = RAO.from_amp_phase(
+            freq_in,
+            dirs_in,
+            amp_in,
+            phase_in,
+            phase_degrees=False,
+            phase_leading=False,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        vals_expect = amp_in * np.exp(-1j * phase_in)
+
+        np.testing.assert_array_almost_equal(rao._freq, 2.0 * np.pi * freq_in)
+        np.testing.assert_array_almost_equal(rao._dirs, (np.pi / 180.0) * dirs_in)
+        np.testing.assert_array_almost_equal(rao._vals, vals_expect)
+        assert rao._phase_leading is False
 
     def test__mul__(self, rao):
         rao_squared = rao * rao
@@ -2472,6 +2513,53 @@ class Test_RAO:
                 [0.0, np.pi / 2.0, np.pi],
                 [0.0, np.pi / 2.0, np.pi],
                 [0.0, np.pi / 2.0, np.pi],
+            ]
+        )
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(amp_out, amp_expect)
+        np.testing.assert_array_almost_equal(phase_out, phase_expect)
+
+    def test_to_amp_phase_lagging(self):
+        freq_in = np.array([0, 1, 2])
+        dirs_in = np.array([0, 1, 2])
+        vals_in = np.array(
+            [
+                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
+                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
+                [1.0 + 0.0j, 0.0 + 1.0j, -1.0 + 0.0j],
+            ]
+        )
+
+        rao = RAO(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_out, dirs_out, amp_out, phase_out = rao.to_amp_phase(
+            freq_hz=True, degrees=True, phase_degrees=True, phase_leading=False
+        )
+
+        freq_expect = np.array([0, 1, 2])
+        dirs_expect = np.array([0, 1, 2])
+        amp_expect = np.array(
+            [
+                [1.0, 1.0, 1.0],
+                [1.0, 1.0, 1.0],
+                [1.0, 1.0, 1.0],
+            ]
+        )
+        phase_expect = np.array(
+            [
+                [0.0, -90.0, 180.0],
+                [0.0, -90.0, 180.0],
+                [0.0, -90.0, 180.0],
             ]
         )
 

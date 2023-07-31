@@ -51,6 +51,7 @@ Alternatively, you can construct an :class:`~waveresponse.RAO` object using ampl
         amp,
         phase,
         phase_degrees=False,
+        phase_leading=True,
         freq_hz=True,
         degrees=True,
     )
