@@ -1043,7 +1043,7 @@ class RAO(Grid):
 
         """
         if not phase_leading:
-            phase = -1 * np.asarray_chkfinite(phase)
+            phase = -np.asarray_chkfinite(phase)
 
         rao_complex = polar_to_complex(amp, phase, phase_degrees=phase_degrees)
 
@@ -1131,7 +1131,7 @@ class RAO(Grid):
         vals_amp, vals_phase = complex_to_polar(vals, phase_degrees=False)
 
         if not phase_leading:
-            vals_phase = -1 * vals_phase
+            vals_phase = -vals_phase
             vals_phase = np.where(np.isclose(vals_phase, -np.pi), np.pi, vals_phase)
 
         if phase_degrees:
