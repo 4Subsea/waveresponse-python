@@ -33,8 +33,8 @@ a grid, we need information about the assumed 'wave convention'. Two boolean
 parameters are needed:
 
 *clockwise*
-    Describes the direction of positive rotation.
-
+    Describes the direction of positive rotation; ``clockwise=True`` means that the
+    directions follow the right-hand rule with an axis pointing downwards.
 *waves_coming_from*
     Describes the direction in which the waves are propagating.
 
