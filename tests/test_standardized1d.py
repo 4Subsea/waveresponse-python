@@ -182,10 +182,10 @@ class Test_ModifiedPiersonMoskowitz:
         spectrum = wr.ModifiedPiersonMoskowitz(freq)
 
         freq_rad, ps_rad = spectrum(3.5, 10.0, freq_hz=False)
-        var_rad = integrate.trapz(ps_rad, freq_rad)
+        var_rad = integrate.trapezoid(ps_rad, freq_rad)
 
         freq_hz, ps_hz = spectrum(3.5, 10.0, freq_hz=True)
-        var_hz = integrate.trapz(ps_hz, freq_hz)
+        var_hz = integrate.trapezoid(ps_hz, freq_hz)
 
         assert var_rad == pytest.approx(var_hz)
 
@@ -212,10 +212,10 @@ class Test_JONSWAP:
         spectrum = wr.JONSWAP(freq)
 
         freq_rad, ps_rad = spectrum(3.5, 10.0, freq_hz=False)
-        var_rad = integrate.trapz(ps_rad, freq_rad)
+        var_rad = integrate.trapezoid(ps_rad, freq_rad)
 
         freq_hz, ps_hz = spectrum(3.5, 10.0, freq_hz=True)
-        var_hz = integrate.trapz(ps_hz, freq_hz)
+        var_hz = integrate.trapezoid(ps_hz, freq_hz)
 
         assert var_rad == pytest.approx(var_hz)
 
@@ -385,10 +385,10 @@ class Test_OchiHubble:
         spectrum = wr.OchiHubble(freq)
 
         freq_rad, ps_rad = spectrum(3.5, 10.0, freq_hz=False)
-        var_rad = integrate.trapz(ps_rad, freq_rad)
+        var_rad = integrate.trapezoid(ps_rad, freq_rad)
 
         freq_hz, ps_hz = spectrum(3.5, 10.0, freq_hz=True)
-        var_hz = integrate.trapz(ps_hz, freq_hz)
+        var_hz = integrate.trapezoid(ps_hz, freq_hz)
 
         assert var_rad == pytest.approx(var_hz)
 
@@ -598,10 +598,10 @@ class Test_Torsethaugen:
         spectrum = wr.Torsethaugen(freq)
 
         freq_rad, ps_rad = spectrum(3.5, 10.0, freq_hz=False)
-        var_rad = integrate.trapz(ps_rad, freq_rad)
+        var_rad = integrate.trapezoid(ps_rad, freq_rad)
 
         freq_hz, ps_hz = spectrum(3.5, 10.0, freq_hz=True)
-        var_hz = integrate.trapz(ps_hz, freq_hz)
+        var_hz = integrate.trapezoid(ps_hz, freq_hz)
 
         assert var_rad == pytest.approx(var_hz)
 
