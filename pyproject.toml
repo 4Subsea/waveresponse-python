@@ -11,17 +11,17 @@ dynamic = ["version"]
 description = "Vessel motion and wave utilities"
 readme = "README.md"
 license = { file="LICENSE" }
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "License :: OSI Approved :: MIT License",
     "Operating System :: Unix", 
     "Operating System :: Microsoft :: Windows",
 ]
 dependencies = [
-    "numpy",
+    "numpy<2.0.0",
     "pandas",
     "scipy",
 ]
@@ -53,7 +53,7 @@ deps =
     pytest-cov
 
 [testenv:docs]
-basepython = python3.9
+basepython = python3.10
 commands = sphinx-build -W -b html -d {toxworkdir}/docs_doctree docs {toxworkdir}/docs_out
 deps =
     sphinx==5.3.0

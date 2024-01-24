@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: ["3.8", "3.9", "3.10"] 
+        python-version: ["3.9", "3.10", "3.11"] 
 
     steps:
       - uses: actions/checkout@v2
@@ -36,4 +36,4 @@ jobs:
 
       - name: Test doc build with tox
         run: tox -e docs
-        if: ${{ (matrix.python-version == '3.9') && (matrix.os == 'ubuntu-latest')}}
+        if: ${{ (matrix.python-version == '3.10') && (matrix.os == 'ubuntu-latest')}}
