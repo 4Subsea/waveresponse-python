@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from numbers import Number
 
 import numpy as np
-from scipy.integrate import trapz
+from scipy.integrate import trapezoid
 from scipy.interpolate import interp2d
 from scipy.special import gamma
 
@@ -1392,7 +1392,7 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         x = self._full_range_dir(self._dirs)
         y = self._freq
         zz = self.interpolate(y, x, freq_hz=False, degrees=False)
-        return trapz([trapz(zz_x, x) for zz_x in zz], y)
+        return trapezoid([trapezoid(zz_x, x) for zz_x in zz], y)
 
     def std(self):
         """
@@ -1452,7 +1452,7 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         else:
             raise ValueError("'axis' must be 0 or 1.")
 
-        spectrum = np.array([trapz(zz_y, y) for zz_y in zz])
+        spectrum = np.array([trapezoid(zz_y, y) for zz_y in zz])
         return x, spectrum
 
     def moment(self, n, freq_hz=None):
@@ -1484,7 +1484,7 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
 
         """
         f, spectrum = self.spectrum1d(axis=1, freq_hz=freq_hz)
-        m_n = trapz((f**n) * spectrum, f)
+        m_n = trapezoid((f**n) * spectrum, f)
         return m_n
 
     @property
@@ -1618,8 +1618,8 @@ class WaveSpectrum(DirectionalSpectrum):
         spectrum : array-like
             1-D spectrum directional distribution.
         """
-        sin = trapz(np.sin(dirs) * spectrum, dirs)
-        cos = trapz(np.cos(dirs) * spectrum, dirs)
+        sin = trapezoid(np.sin(dirs) * spectrum, dirs)
+        cos = trapezoid(np.cos(dirs) * spectrum, dirs)
         return _robust_modulus(np.arctan2(sin, cos), 2.0 * np.pi)
 
     def dirp(self, degrees=None):

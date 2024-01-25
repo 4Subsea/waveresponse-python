@@ -3346,7 +3346,7 @@ class Test_DirectionalSpectrum:
 
         m_expect = (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3)
 
-        # not exactly same due to error in trapz for higher order functions
+        # not exactly same due to error in trapezoid for higher order functions
         assert m_out == pytest.approx(m_expect, rel=0.1)
 
     def test_moment_m2_rads(self):
@@ -3364,7 +3364,7 @@ class Test_DirectionalSpectrum:
             (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (2.0 * np.pi) ** 2
         )
 
-        # not exactly same due to error in trapz for higher order functions
+        # not exactly same due to error in trapezoid for higher order functions
         assert m_out == pytest.approx(m_expect, rel=0.1)
 
     def test_tz(self):
