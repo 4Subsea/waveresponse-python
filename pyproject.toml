@@ -24,6 +24,7 @@ dependencies = [
     "numpy<2.0.0",
     "pandas",
     "scipy",
+    "pyarrow"
 ]
 
 [project.urls]
