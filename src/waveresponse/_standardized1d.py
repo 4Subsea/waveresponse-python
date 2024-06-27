@@ -556,9 +556,7 @@ class Torsethaugen(BaseSpectrum1d):
         A_secondary = (3.26 / 16.0) * hs_secondary**2 * omega_p_secondary**3
         B_secondary = omega_p_secondary**4
 
-        spectrum_secondary = (
-            A_secondary / omega**4 * np.exp(-B_secondary / omega**4)
-        )
+        spectrum_secondary = A_secondary / omega**4 * np.exp(-B_secondary / omega**4)
 
         return spectrum_primary + spectrum_secondary
 
