@@ -23,7 +23,7 @@ classifiers = [
 dependencies = [
     "numpy<2.0.0",
     "pandas",
-    "scipy",
+    "scipy<1.14.0",
     "pyarrow"
 ]
 
