@@ -653,7 +653,7 @@ class Grid:
         coordinates.
         A 'fill value' is used for extrapolation (i.e. `freq` outside the bounds
         of the provided 2-D grid). Directions are treated as periodic.
-        Parameters 
+        Parameters
         ----------
         freq : array-like
             1-D array of grid frequency coordinates. Positive and monotonically increasing.
@@ -675,15 +675,18 @@ class Grid:
             the provided grid). If ``None``, values outside the frequency domain
             are extrapolated via nearest-neighbor extrapolation. Note that directions
             are treated as periodic (and will not need extrapolation).
+
         Returns
         -------
         array :
             Interpolated grid values.
+
         Notes
         -----
         Apply 'polar' interpolation with caution as phase values are not "unwraped"
         before interpolation. This may lead to some unexpected artifacts in the
         results.
+
         """
         freq = np.asarray_chkfinite(freq).reshape(-1)
         dirs = np.asarray_chkfinite(dirs).reshape(-1)
@@ -703,8 +706,8 @@ class Grid:
             bounds_error=False,
             fill_value=fill_value,
         )
-        xxnew, yynew = np.meshgrid(dirs, freq, indexing="ij", sparse=True)
-        return interp_fun((xxnew, yynew)).T
+        dirsnew, freqnew = np.meshgrid(dirs, freq, indexing="ij", sparse=True)
+        return interp_fun((dirsnew, freqnew)).T
 
     def reshape(
         self,
