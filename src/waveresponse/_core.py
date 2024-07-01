@@ -654,7 +654,7 @@ class Grid:
 
         A 'fill value' is used for extrapolation (i.e. `freq` outside the bounds
         of the provided 2-D grid). Directions are treated as periodic.
-        
+
         Parameters
         ----------
         freq : array-like
