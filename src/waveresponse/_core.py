@@ -687,25 +687,25 @@ class Grid:
         
         if np.all(np.isreal(zp)):
             return RGI((xp, yp), zp.T, **kw)
-        # elif complex_convert.lower() == "polar":
-        #     amp, phase = complex_to_polar(zp, phase_degrees=False)
-        #     interp_amp = RGI(xp, yp, amp.T, **kw)
-        #     interp_phase = RGI(xp, yp, phase.T, **kw)
-        #     return lambda *args, **kwargs: (
-        #         polar_to_complex(
-        #             interp_amp(*args, **kwargs),
-        #             interp_phase(*args, **kwargs),
-        #             phase_degrees=False,
-        #         )
-        #     )
-        # elif complex_convert.lower() == "rectangular":
-        #     interp_real = RectBivariateSpline(xp, yp, np.real(zp.T), **kw)
-        #     interp_imag = RectBivariateSpline(xp, yp, np.imag(zp.T), **kw)
-        #     return lambda *args, **kwargs: (
-        #         interp_real(*args, **kwargs) + 1j * interp_imag(*args, **kwargs)
-        #     )
-        # else:
-        #     raise ValueError("Unknown 'complex_convert' type")
+        elif complex_convert.lower() == "polar":
+            amp, phase = complex_to_polar(zp, phase_degrees=False)
+            interp_amp = RGI((xp, yp), amp.T, **kw)
+            interp_phase = RGI((xp, yp), phase.T, **kw)
+            return lambda *args, **kwargs: (
+                polar_to_complex(
+                    interp_amp(*args, **kwargs),
+                    interp_phase(*args, **kwargs),
+                    phase_degrees=False,
+                )
+            )
+        elif complex_convert.lower() == "rectangular":
+            interp_real = RGI((xp, yp), np.real(zp.T), **kw)
+            interp_imag = RGI((xp, yp), np.imag(zp.T), **kw)
+            return lambda *args, **kwargs: (
+                interp_real(*args, **kwargs) + 1j * interp_imag(*args, **kwargs)
+            )
+        else:
+            raise ValueError("Unknown 'complex_convert' type")
 
     def interpolate_RGI(
         self,
