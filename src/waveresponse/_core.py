@@ -4,7 +4,7 @@ from numbers import Number
 
 import numpy as np
 from scipy.integrate import trapezoid
-from scipy.interpolate import RectBivariateSpline, RegularGridInterpolator as RGI
+from scipy.interpolate import RegularGridInterpolator as RGI
 from scipy.special import gamma
 
 
