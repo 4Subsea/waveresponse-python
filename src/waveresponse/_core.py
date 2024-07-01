@@ -618,11 +618,11 @@ class Grid:
         )
         
         if np.all(np.isreal(zp)):
-            return RectBivariateSpline(xp, yp, zp.T, **kw)
+            return RGI((xp, yp), zp.T, **kw)
         elif complex_convert.lower() == "polar":
             amp, phase = complex_to_polar(zp, phase_degrees=False)
-            interp_amp = RectBivariateSpline(xp, yp, amp.T, **kw)
-            interp_phase = RectBivariateSpline(xp, yp, phase.T, **kw)
+            interp_amp = RGI((xp, yp), amp.T, **kw)
+            interp_phase = RGI((xp, yp), phase.T, **kw)
             return lambda *args, **kwargs: (
                 polar_to_complex(
                     interp_amp(*args, **kwargs),
@@ -631,8 +631,8 @@ class Grid:
                 )
             )
         elif complex_convert.lower() == "rectangular":
-            interp_real = RectBivariateSpline(xp, yp, np.real(zp.T), **kw)
-            interp_imag = RectBivariateSpline(xp, yp, np.imag(zp.T), **kw)
+            interp_real = RGI((xp, yp), np.real(zp.T), **kw)
+            interp_imag = RGI((xp, yp), np.imag(zp.T), **kw)
             return lambda *args, **kwargs: (
                 interp_real(*args, **kwargs) + 1j * interp_imag(*args, **kwargs)
             )
@@ -662,74 +662,6 @@ class Grid:
         self._check_dirs(dirs)
 
         interp_fun = self._interpolate_function(
-            complex_convert=complex_convert, kx = 1, ky = 1,
-        )
-
-        return interp_fun(dirs, freq).T
-    
-    def _interpolate_function_RGI(self, complex_convert="rectangular", **kw):
-        """
-        Interpolation function based on ``scipy.interpolate.interp2d``.
-        """
-        xp = np.concatenate(
-            (self._dirs[-1:] - 2 * np.pi, self._dirs, self._dirs[:1] + 2.0 * np.pi)
-        )
-        
-        yp = self._freq
-        zp = np.concatenate(
-            (
-                self._vals[:, -1:],
-                self._vals,
-                self._vals[:, :1],
-            ),
-            axis=1,
-        )
-        
-        if np.all(np.isreal(zp)):
-            return RGI((xp, yp), zp.T, **kw)
-        elif complex_convert.lower() == "polar":
-            amp, phase = complex_to_polar(zp, phase_degrees=False)
-            interp_amp = RGI((xp, yp), amp.T, **kw)
-            interp_phase = RGI((xp, yp), phase.T, **kw)
-            return lambda *args, **kwargs: (
-                polar_to_complex(
-                    interp_amp(*args, **kwargs),
-                    interp_phase(*args, **kwargs),
-                    phase_degrees=False,
-                )
-            )
-        elif complex_convert.lower() == "rectangular":
-            interp_real = RGI((xp, yp), np.real(zp.T), **kw)
-            interp_imag = RGI((xp, yp), np.imag(zp.T), **kw)
-            return lambda *args, **kwargs: (
-                interp_real(*args, **kwargs) + 1j * interp_imag(*args, **kwargs)
-            )
-        else:
-            raise ValueError("Unknown 'complex_convert' type")
-
-    def interpolate_RGI(
-        self,
-        freq,
-        dirs,
-        freq_hz=False,
-        degrees=False,
-        complex_convert="rectangular",
-        fill_value=0.0,
-    ):
-        
-        freq = np.asarray_chkfinite(freq).reshape(-1)
-        dirs = np.asarray_chkfinite(dirs).reshape(-1)
-
-        if freq_hz:
-            freq = 2.0 * np.pi * freq
-
-        if degrees:
-            dirs = (np.pi / 180.0) * dirs
-
-        self._check_freq(freq)
-        self._check_dirs(dirs)
-
-        interp_fun = self._interpolate_function_RGI(
             complex_convert=complex_convert, method='linear', bounds_error=False, fill_value = fill_value
         )
         xxnew, yynew = np.meshgrid(dirs, freq, indexing='ij', sparse=True)
