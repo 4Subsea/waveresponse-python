@@ -651,8 +651,10 @@ class Grid:
         """
         Interpolate (linear) the grid values to match the given frequency and direction
         coordinates.
+
         A 'fill value' is used for extrapolation (i.e. `freq` outside the bounds
         of the provided 2-D grid). Directions are treated as periodic.
+        
         Parameters
         ----------
         freq : array-like
@@ -706,6 +708,7 @@ class Grid:
             bounds_error=False,
             fill_value=fill_value,
         )
+
         dirsnew, freqnew = np.meshgrid(dirs, freq, indexing="ij", sparse=True)
         return interp_fun((dirsnew, freqnew)).T
 
