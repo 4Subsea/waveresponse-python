@@ -598,7 +598,7 @@ class Grid:
         dirs_new = _robust_modulus(new._dirs - angle, 2.0 * np.pi)
         new._dirs, new._vals = _sort(dirs_new, new._vals)
         return new
-    
+
     def _interpolate_function(self, complex_convert="rectangular", **kw):
         """
         Interpolation function based on ``scipy.interpolate.interp2d``.
@@ -606,7 +606,7 @@ class Grid:
         xp = np.concatenate(
             (self._dirs[-1:] - 2 * np.pi, self._dirs, self._dirs[:1] + 2.0 * np.pi)
         )
-        
+
         yp = self._freq
         zp = np.concatenate(
             (
@@ -616,7 +616,7 @@ class Grid:
             ),
             axis=1,
         )
-        
+
         if np.all(np.isreal(zp)):
             return RGI((xp, yp), zp.T, **kw)
         elif complex_convert.lower() == "polar":
@@ -648,7 +648,6 @@ class Grid:
         complex_convert="rectangular",
         fill_value=0.0,
     ):
-        
         freq = np.asarray_chkfinite(freq).reshape(-1)
         dirs = np.asarray_chkfinite(dirs).reshape(-1)
 
@@ -662,11 +661,14 @@ class Grid:
         self._check_dirs(dirs)
 
         interp_fun = self._interpolate_function(
-            complex_convert=complex_convert, method='linear', bounds_error=False, fill_value = fill_value
+            complex_convert=complex_convert,
+            method="linear",
+            bounds_error=False,
+            fill_value=fill_value,
         )
-        xxnew, yynew = np.meshgrid(dirs, freq, indexing='ij', sparse=True)
+        xxnew, yynew = np.meshgrid(dirs, freq, indexing="ij", sparse=True)
         return interp_fun((xxnew, yynew)).T
-    
+
     def reshape(
         self,
         freq,

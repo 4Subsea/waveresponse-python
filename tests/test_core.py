@@ -1367,7 +1367,7 @@ class Test_Grid:
         vals_expect = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
 
         vals_out = grid.interpolate(y, x, freq_hz=True, degrees=True)
-      
+
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
     def test_interpolate2(self):
@@ -3360,7 +3360,9 @@ class Test_DirectionalSpectrum:
 
         m_out = spectrum.moment(2, freq_hz=False)
 
-        m_expect = (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (2.0 * np.pi) ** 2
+        m_expect = (
+            (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (2.0 * np.pi) ** 2
+        )
 
         # not exactly same due to error in trapezoid for higher order functions
         assert m_out == pytest.approx(m_expect, rel=0.1)
