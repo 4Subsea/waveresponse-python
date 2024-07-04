@@ -21,9 +21,9 @@ classifiers = [
     "Operating System :: Microsoft :: Windows",
 ]
 dependencies = [
-    "numpy<2.0.0",
+    "numpy",
     "pandas",
-    "scipy<1.14.0",
+    "scipy",
     "pyarrow"
 ]
 
