@@ -1400,7 +1400,7 @@ class Test_Grid:
 
         vals_out = grid.interpolate(1.8, 12.1, freq_hz=True, degrees=True)
 
-        vals_expect = np.array([a * 12.1 + b * 1.8])
+        vals_expect = np.array(a * 12.1 + b * 1.8)
 
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 

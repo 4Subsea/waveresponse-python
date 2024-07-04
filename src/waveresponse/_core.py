@@ -4,7 +4,7 @@ from numbers import Number
 
 import numpy as np
 from scipy.integrate import trapezoid
-from scipy.interpolate import interp2d
+from scipy.interpolate import RegularGridInterpolator as RGI
 from scipy.special import gamma
 
 
@@ -601,11 +601,12 @@ class Grid:
 
     def _interpolate_function(self, complex_convert="rectangular", **kw):
         """
-        Interpolation function based on ``scipy.interpolate.interp2d``.
+        Interpolation function based on ``scipy.interpolate.RegularGridInterpolator``.
         """
         xp = np.concatenate(
             (self._dirs[-1:] - 2 * np.pi, self._dirs, self._dirs[:1] + 2.0 * np.pi)
         )
+
         yp = self._freq
         zp = np.concatenate(
             (
@@ -617,11 +618,11 @@ class Grid:
         )
 
         if np.all(np.isreal(zp)):
-            return interp2d(xp, yp, zp, **kw)
+            return RGI((xp, yp), zp.T, **kw)
         elif complex_convert.lower() == "polar":
             amp, phase = complex_to_polar(zp, phase_degrees=False)
-            interp_amp = interp2d(xp, yp, amp, **kw)
-            interp_phase = interp2d(xp, yp, phase, **kw)
+            interp_amp = RGI((xp, yp), amp.T, **kw)
+            interp_phase = RGI((xp, yp), phase.T, **kw)
             return lambda *args, **kwargs: (
                 polar_to_complex(
                     interp_amp(*args, **kwargs),
@@ -630,8 +631,8 @@ class Grid:
                 )
             )
         elif complex_convert.lower() == "rectangular":
-            interp_real = interp2d(xp, yp, np.real(zp), **kw)
-            interp_imag = interp2d(xp, yp, np.imag(zp), **kw)
+            interp_real = RGI((xp, yp), np.real(zp.T), **kw)
+            interp_imag = RGI((xp, yp), np.imag(zp.T), **kw)
             return lambda *args, **kwargs: (
                 interp_real(*args, **kwargs) + 1j * interp_imag(*args, **kwargs)
             )
@@ -702,10 +703,14 @@ class Grid:
         self._check_dirs(dirs)
 
         interp_fun = self._interpolate_function(
-            complex_convert=complex_convert, kind="linear", fill_value=fill_value
+            complex_convert=complex_convert,
+            method="linear",
+            bounds_error=False,
+            fill_value=fill_value,
         )
 
-        return interp_fun(dirs, freq, assume_sorted=True)
+        dirsnew, freqnew = np.meshgrid(dirs, freq, indexing="ij", sparse=True)
+        return interp_fun((dirsnew, freqnew)).T
 
     def reshape(
         self,
