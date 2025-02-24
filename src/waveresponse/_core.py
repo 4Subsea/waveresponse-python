@@ -781,6 +781,40 @@ class Grid:
         new._freq, new._dirs, new._vals = freq_new, dirs_new, vals_new
         return new
 
+    def bandpassed(self, freq_min = None, freq_max = None):
+        """
+        Apply a bandpass filter to keep only the energy between the given frequencies [Hz].
+
+        A new object is returned where the grid is modified such that
+        - the bandpassed frequencies are included
+        - the frequencies outside the bandpass are removed
+
+        """
+
+        freq_hz = self.freq(freq_hz=True)
+
+        if freq_min is None:
+            freq_min = min(freq_hz)
+        if freq_max is None:
+            freq_max = max(freq_hz)
+
+        assert freq_min < freq_max, "freq_min must be less than freq_max"
+        assert freq_min >= min(freq_hz), "freq_min must be greater than or equal to the minimum frequency in the grid"
+        assert freq_max <= max(freq_hz), "freq_max must be less than or equal to the maximum frequency in the grid"
+
+        new_freq = np.unique([*freq_hz, freq_min, freq_max])
+        new_freq.sort()
+        new_freq = new_freq[(new_freq >= freq_min) & (new_freq <= freq_max)]
+
+        return self.reshape(freq = new_freq,
+                            dirs = self.dirs(degrees=True),
+                            freq_hz = True,
+                            degrees = True)
+
+
+
+
+
     def __mul__(self, other):
         """
         Multiply values (element-wise).
