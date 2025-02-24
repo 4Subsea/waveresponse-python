@@ -332,8 +332,9 @@ class Grid:
     degrees : bool
         If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
     clockwise : bool
-        If positive directions are defined to be 'clockwise'. If ``False``, 'counterclockwise'
-        is assumed.
+        If positive directions are defined to be 'clockwise' (``True``) or 'counterclockwise'
+        (``False``). Clockwise means that the directions follow the right-hand rule
+        with an axis pointing downwards.
     waves_coming_from : bool
         If waves are 'coming from' the given directions. If ``False``, 'going towards'
         convention is assumed.
@@ -501,8 +502,9 @@ class Grid:
         Parameters
         ----------
         clockwise : bool
-            If positive directions are defined to be 'clockwise'. If ``False``,
-            'counterclockwise' is assumed.
+            If positive directions are defined to be 'clockwise' (``True``) or
+            'counterclockwise' (``False``). Clockwise means that the directions
+            follow the right-hand rule with an axis pointing downwards.
         waves_coming_from : bool
             If waves are 'coming from' the given directions. If ``False``, 'going towards'
             convention is assumed.
@@ -939,8 +941,9 @@ class RAO(Grid):
     degrees : bool
         If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
     clockwise : bool
-        If positive directions are defined to be 'clockwise'. If ``False``, 'counterclockwise'
-        is assumed.
+        If positive directions are defined to be 'clockwise' (``True``) or 'counterclockwise'
+        (``False``). Clockwise means that the directions follow the right-hand rule
+        with an axis pointing downwards.
     waves_coming_from : bool
         If waves are 'coming from' the given directions. If ``False``, 'going towards'
         convention is assumed.
@@ -1174,8 +1177,9 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
     degrees : bool
         If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
     clockwise : bool
-        If positive directions are defined to be 'clockwise'. If ``False``, 'counterclockwise'
-        is assumed.
+        If positive directions are defined to be 'clockwise' (``True``) or 'counterclockwise'
+        (``False``). Clockwise means that the directions follow the right-hand rule
+        with an axis pointing downwards.
     waves_coming_from : bool
         If waves are 'coming from' the given directions. If ``False``, 'going towards'
         convention is assumed.
