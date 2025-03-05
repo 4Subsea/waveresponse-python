@@ -132,3 +132,19 @@ class WaveSpectrum1d(Spectrum1d):
         """
         m0 = self.moment(0)
         return 4.0 * np.sqrt(m0)
+
+    @property
+    def tp(self):
+        """
+        Wave peak period in 'seconds'.
+
+        The period at which the 'non-directional' wave spectrum, ``S(f)``, has its maximum
+        value.
+        """
+        f, S = self._freq.copy(), self._vals.copy()
+
+        f = f / (2.0 * np.pi)
+        S *= 2.0 * np.pi
+
+        fp = f[np.argmax(S)]
+        return 1.0 / fp
