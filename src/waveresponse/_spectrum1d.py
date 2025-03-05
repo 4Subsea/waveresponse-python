@@ -1,9 +1,10 @@
 import numpy as np
+from scipy.integrate import trapezoid
 
 from ._core import _robust_modulus, DirectionalSpectrum
 
 
-class Spectrum:
+class Spectrum1d:
     def __init__(self, freq, vals, freq_hz=True, clockwise=False, waves_coming_from=True):
         self._freq = np.asarray_chkfinite(freq).copy()
         self._vals = np.asarray_chkfinite(vals).copy()
@@ -62,3 +63,69 @@ class Spectrum:
             clockwise=self._clockwise,
             waves_coming_from=self._waves_coming_from,
         )
+
+    def moment(self, n, freq_hz=None):
+        """
+        Calculate spectral moment (along the frequency domain).
+
+        Parameters
+        ----------
+        n : int
+            Order of the spectral moment.
+        freq_hz : bool
+            If frequencies in 'Hz' should be used. If ``False``, 'rad/s' is used.
+            Defaults to original unit used during initialization.
+
+        Returns
+        -------
+        float :
+            Spectral moment.
+
+        Notes
+        -----
+        The spectral moment is calculated according to Equation (8.31) and (8.32)
+        in reference [1].
+
+        References
+        ----------
+        [1] A. Naess and T. Moan, (2013), "Stochastic dynamics of marine structures",
+        Cambridge University Press.
+
+        """
+
+        freq = self._freq.copy()
+        vals = self._vals.copy()
+
+        if freq_hz is None:
+            freq_hz = self._freq_hz
+
+        if freq_hz:
+            vals *= 2.0 * np.pi
+
+        m_n = trapezoid((freq**n) * vals, self._freq)
+        return m_n
+    
+
+class WaveSpectrum1d(Spectrum1d):
+
+    @property
+    def hs(self):
+        """
+        Significan wave height, Hs.
+
+        Calculated from the zeroth-order spectral moment according to:
+
+        ``hs = 4.0 * sqrt(m0)``
+
+        Notes
+        -----
+        The significant wave height is calculated according to equation (2.26) in
+        reference [1].
+
+        References
+        ----------
+        [1] 0. M. Faltinsen, (1990), "Sea loads on ships and offshore structures",
+        Cambridge University Press.
+        """
+        m0 = self.moment(0)
+        return 4.0 * np.sqrt(m0)
