@@ -25,6 +25,7 @@ from ._transform import (
     rigid_transform_surge,
     rigid_transform_sway,
 )
+from ._spectrum1d import Spectrum
 
 __version__ = "0.0.1"
 
@@ -50,4 +51,5 @@ __all__ = [
     "rigid_transform_sway",
     "Torsethaugen",
     "WaveSpectrum",
+    "Spectrum",
 ]
