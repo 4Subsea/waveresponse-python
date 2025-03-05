@@ -14,6 +14,7 @@ class Spectrum1d:
 
         if freq_hz:
             self._freq = 2.0 * np.pi * self._freq
+            self._vals = self._vals / (2.0 * np.pi)
 
     def freq(self, freq_hz=None):
         """
@@ -36,7 +37,7 @@ class Spectrum1d:
         return freq
     
     def as_directional(self, dirs, spread_fun, dirp, degrees=False):
-        vals = self._vals.reshape(-1, 1)
+        vals = self._vals.copy().reshape(-1, 1)
         freq = self._freq.copy()
 
         vals = np.tile(vals, (1, len(dirs)))
@@ -47,7 +48,8 @@ class Spectrum1d:
             period = 2.0 * np.pi
 
         if self._freq_hz:
-            freq = freq / (2.0 * np.pi) 
+            freq = freq / (2.0 * np.pi)
+            vals = vals * 2.0 * np.pi
 
         for (idx_f, idx_d), val_i in np.ndenumerate(vals):
             f_i = freq[idx_f]
@@ -100,9 +102,10 @@ class Spectrum1d:
             freq_hz = self._freq_hz
 
         if freq_hz:
+            freq = freq / (2.0 * np.pi)
             vals *= 2.0 * np.pi
 
-        m_n = trapezoid((freq**n) * vals, self._freq)
+        m_n = trapezoid((freq**n) * vals, freq)
         return m_n
     
 
