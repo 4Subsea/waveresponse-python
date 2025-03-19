@@ -1271,6 +1271,7 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
             vals = vals1d
         else:
             dirs = dirp + np.linspace(0.0, period, n_dirs, endpoint=False)
+            dirs = sorted(_robust_modulus(dirs, period))
             vals = np.tile(vals1d, (1, n_dirs))
             for (idx_f, idx_d), val_i in np.ndenumerate(vals):
                 f_i = freq[idx_f]
