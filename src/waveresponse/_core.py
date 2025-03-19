@@ -1,7 +1,6 @@
 import copy
 from abc import ABC, abstractmethod
 from numbers import Number
-import warnings
 
 import numpy as np
 from scipy.integrate import trapezoid
@@ -1260,7 +1259,12 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
             period = 2.0 * np.pi
 
         if n_dirs == 1:
+            if scaling == "density":
+                raise ValueError(
+                    "Can not use 'density' scaling with a single direction. Use 'spectrum' scaling instead."
+                )
             dirs = np.array([dirp])
+            scaling = "spectrum"
         else:
             dirs = dirp + np.linspace(0.0, period, n_dirs, endpoint=False)
             dirs = np.sort(_robust_modulus(dirs, period))
