@@ -1253,16 +1253,17 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         freq = np.asarray_chkfinite(freq).reshape(-1).copy()
         vals = np.asarray_chkfinite(vals).reshape(len(freq), 1).copy()
 
+        if n_dirs == 1 and scaling == "density":
+            raise ValueError(
+                "Can not use 'density' scaling with a single direction. Use 'spectrum' scaling instead."
+            )
+
         if degrees:
             period = 360.0
         else:
             period = 2.0 * np.pi
 
         if n_dirs == 1:
-            if scaling == "density":
-                raise ValueError(
-                    "Can not use 'density' scaling with a single direction. Use 'spectrum' scaling instead."
-                )
             dirs = np.array([dirp])
         else:
             dirs = dirp + np.linspace(0.0, period, n_dirs, endpoint=False)
