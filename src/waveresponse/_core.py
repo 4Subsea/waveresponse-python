@@ -104,9 +104,9 @@ def _check_is_similar(*grids, exact_type=True):
             raise TypeError("Object types are not similar.")
         elif grid_ref._vals.shape != grid_i._vals.shape:
             raise ValueError("Grid objects have different shape.")
-        elif not np.allclose(grid_ref._freq, grid_i._freq) or not np.allclose(
-            grid_ref._dirs, grid_i._dirs
-        ):
+        elif not np.allclose(
+            grid_ref._freq, grid_i._freq, atol=1e-8, rtol=0.0
+        ) or not np.allclose(grid_ref._dirs, grid_i._dirs, atol=1e-8, rtol=0.0):
             raise ValueError(
                 "Grid objects have different frequency/direction coordinates."
             )
