@@ -1216,7 +1216,7 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         if freq_hz:
             self._vals = 1.0 / (2.0 * np.pi) * self._vals
 
-        if degrees:
+        if degrees and self._scaling == "density":
             self._vals = 180.0 / np.pi * self._vals
 
         if scaling not in ("spectrum", "density"):
