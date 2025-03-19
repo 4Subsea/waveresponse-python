@@ -1250,7 +1250,7 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         scaling="spectrum",
     ):
         freq = np.asarray_chkfinite(freq).reshape(-1).copy()
-        vals1d = np.asarray_chkfinite(vals).reshape(len(freq), 1).copy()
+        vals = np.asarray_chkfinite(vals).reshape(len(freq), 1).copy()
 
         if degrees:
             period = 360.0
@@ -1258,21 +1258,11 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
             period = 2.0 * np.pi
 
         if n_dirs == 1:
-            if spreading:
-                warnings.warn(
-                    "Spreading is ignored when the number of directions is 1."
-                )
-            if scaling == "density":
-                warnings.warn(
-                    "Density scaling not supported with 1 direction. 'spectrum' scaling is used instead."
-                )
-                scaling = "density"
             dirs = np.array([dirp])
-            vals = vals1d
         else:
             dirs = dirp + np.linspace(0.0, period, n_dirs, endpoint=False)
             dirs = sorted(_robust_modulus(dirs, period))
-            vals = np.tile(vals1d, (1, n_dirs))
+            vals = np.tile(vals, (1, n_dirs))
             for (idx_f, idx_d), val_i in np.ndenumerate(vals):
                 f_i = freq[idx_f]
                 d_i = _robust_modulus(dirs[idx_d] - dirp, period)
