@@ -1508,9 +1508,11 @@ class Test_Grid:
         vals_phase_cos_expect = RGI((xp, yp), np.cos(vp_phase).T)((x_, y_)).T
         vals_phase_sin_expect = RGI((xp, yp), np.sin(vp_phase).T)((x_, y_)).T
 
-        vals_expect = vals_amp_expect * (
-            vals_phase_cos_expect + 1j * vals_phase_sin_expect
-        ) / np.abs(vals_phase_cos_expect + 1j * vals_phase_sin_expect)
+        vals_expect = (
+            vals_amp_expect
+            * (vals_phase_cos_expect + 1j * vals_phase_sin_expect)
+            / np.abs(vals_phase_cos_expect + 1j * vals_phase_sin_expect)
+        )
 
         vals_out = grid.interpolate(
             y, x, freq_hz=True, degrees=True, complex_convert="polar"
@@ -1698,9 +1700,11 @@ class Test_Grid:
         vals_phase_cos_expect = RGI((xp, yp), np.cos(vp_phase).T)((x_, y_)).T
         vals_phase_sin_expect = RGI((xp, yp), np.sin(vp_phase).T)((x_, y_)).T
 
-        vals_expect = vals_amp_expect * (
-            vals_phase_cos_expect + 1j * vals_phase_sin_expect
-        ) / np.abs(vals_phase_cos_expect + 1j * vals_phase_sin_expect)
+        vals_expect = (
+            vals_amp_expect
+            * (vals_phase_cos_expect + 1j * vals_phase_sin_expect)
+            / np.abs(vals_phase_cos_expect + 1j * vals_phase_sin_expect)
+        )
 
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
