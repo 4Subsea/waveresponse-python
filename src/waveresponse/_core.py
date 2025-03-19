@@ -1261,12 +1261,13 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
             dirs = np.array([dirp])
         else:
             dirs = dirp + np.linspace(0.0, period, n_dirs, endpoint=False)
-            dirs = sorted(_robust_modulus(dirs, period))
+            dirs = np.sort(_robust_modulus(dirs, period))
             vals = np.tile(vals, (1, n_dirs))
-            for (idx_f, idx_d), val_i in np.ndenumerate(vals):
-                f_i = freq[idx_f]
-                d_i = _robust_modulus(dirs[idx_d] - dirp, period)
-                vals[idx_f, idx_d] = spreading(f_i, d_i) * val_i
+            for i, f_i in enumerate(freq):
+                spread_i = spreading(f_i, _robust_modulus(dirs - dirp, period))
+                if scaling == "spectrum":
+                    spread_i = spread_i / np.sum(spread_i)
+                vals[i] = spread_i * vals[i]
 
         return cls(
             freq,
