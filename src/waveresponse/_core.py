@@ -1200,7 +1200,9 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         degrees=False,
         clockwise=False,
         waves_coming_from=True,
+        scaling="spectrum",
     ):
+        self._scaling = scaling.lower()
         super().__init__(
             freq,
             dirs,
@@ -1217,10 +1219,20 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         if degrees:
             self._vals = 180.0 / np.pi * self._vals
 
+        if scaling not in ("spectrum", "density"):
+            raise ValueError("Unknown scaling type. Must be 'spectrum' or 'density'.")
+
         if np.any(np.iscomplex(self._vals)):
             raise ValueError("Spectrum values can not be complex.")
         elif np.any(self._vals < 0.0):
             raise ValueError("Spectrum values must be positive.")
+
+    @property
+    def scaling(self):
+        """
+        Return the spectrum's scaling convention.
+        """
+        return self._scaling
 
     @classmethod
     def from_spectrum1d(
