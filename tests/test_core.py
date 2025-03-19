@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from scipy.integrate import quad
+from scipy.interpolate import RegularGridInterpolator as RGI
 
 import waveresponse as wr
 from waveresponse import (
@@ -1498,16 +1499,19 @@ class Test_Grid:
         vp = vp_amp * (np.cos(vp_phase) + 1j * np.sin(vp_phase))
         grid = Grid(yp, xp, vp, freq_hz=True, degrees=True)
 
-        y = np.linspace(0.5, 1.0, 20)
-        x = np.linspace(5.0, 15.0, 10)
+        y = np.linspace(0.0, 2.0, 200)
+        x = np.linspace(0.0, 359.0, 100)
         vals_amp_expect = np.array(
             [[a_amp * x_i + b_amp * y_i for x_i in x] for y_i in y]
         )
-        vals_phase_expect = np.array(
-            [[a_phase * x_i + b_phase * y_i for x_i in x] for y_i in y]
-        )
-        vals_expect = vals_amp_expect * (
-            np.cos(vals_phase_expect) + 1j * np.sin(vals_phase_expect)
+        x_, y_ = np.meshgrid(x, y, indexing="ij", sparse=True)
+        vals_phase_cos_expect = RGI((xp, yp), np.cos(vp_phase).T)((x_, y_)).T
+        vals_phase_sin_expect = RGI((xp, yp), np.sin(vp_phase).T)((x_, y_)).T
+
+        vals_expect = (
+            vals_amp_expect
+            * (vals_phase_cos_expect + 1j * vals_phase_sin_expect)
+            / np.abs(vals_phase_cos_expect + 1j * vals_phase_sin_expect)
         )
 
         vals_out = grid.interpolate(
@@ -1692,11 +1696,14 @@ class Test_Grid:
         vals_amp_expect = np.array(
             [[a_amp * x_i + b_amp * y_i for x_i in x] for y_i in y]
         )
-        vals_phase_expect = np.array(
-            [[a_phase * x_i + b_phase * y_i for x_i in x] for y_i in y]
-        )
-        vals_expect = vals_amp_expect * (
-            np.cos(vals_phase_expect) + 1j * np.sin(vals_phase_expect)
+        x_, y_ = np.meshgrid(x, y, indexing="ij", sparse=True)
+        vals_phase_cos_expect = RGI((xp, yp), np.cos(vp_phase).T)((x_, y_)).T
+        vals_phase_sin_expect = RGI((xp, yp), np.sin(vp_phase).T)((x_, y_)).T
+
+        vals_expect = (
+            vals_amp_expect
+            * (vals_phase_cos_expect + 1j * vals_phase_sin_expect)
+            / np.abs(vals_phase_cos_expect + 1j * vals_phase_sin_expect)
         )
 
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
