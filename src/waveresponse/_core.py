@@ -623,12 +623,13 @@ class Grid:
             return RGI((xp, yp), zp.T, **kw)
         elif complex_convert.lower() == "polar":
             amp, phase = complex_to_polar(zp, phase_degrees=False)
+            phase_complex = np.cos(phase) + 1j * np.sin(phase)
             interp_amp = RGI((xp, yp), amp.T, **kw)
-            interp_phase = RGI((xp, yp), phase.T, **kw)
+            interp_phase = RGI((xp, yp), phase_complex.T, **kw)
             return lambda *args, **kwargs: (
                 polar_to_complex(
                     interp_amp(*args, **kwargs),
-                    interp_phase(*args, **kwargs),
+                    np.angle(interp_phase(*args, **kwargs)),
                     phase_degrees=False,
                 )
             )

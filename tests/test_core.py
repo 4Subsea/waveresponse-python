@@ -1498,8 +1498,8 @@ class Test_Grid:
         vp = vp_amp * (np.cos(vp_phase) + 1j * np.sin(vp_phase))
         grid = Grid(yp, xp, vp, freq_hz=True, degrees=True)
 
-        y = np.linspace(0.5, 1.0, 20)
-        x = np.linspace(5.0, 15.0, 10)
+        y = np.linspace(0.0, 2.0, 200)
+        x = np.linspace(0.0, 359.0, 100)
         vals_amp_expect = np.array(
             [[a_amp * x_i + b_amp * y_i for x_i in x] for y_i in y]
         )
