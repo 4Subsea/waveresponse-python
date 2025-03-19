@@ -1,6 +1,7 @@
 import copy
 from abc import ABC, abstractmethod
 from numbers import Number
+import warnings
 
 import numpy as np
 from scipy.integrate import trapezoid
@@ -1233,6 +1234,44 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         Return the spectrum's scaling convention.
         """
         return self._scaling
+
+    @classmethod
+    def from_nondirectional(
+        cls,
+        freq,
+        vals,
+        dirp,
+        n_dirs=1,
+        spreading=None,
+        freq_hz=False,
+        degrees=False,
+        clockwise=False,
+        waves_coming_from=True,
+        scaling="spectrum",
+    ):
+        freq = np.asarray_chkfinite(freq).reshape(-1).copy()
+        vals1d = np.asarray_chkfinite(vals).reshape(len(freq)).copy()
+
+        if n_dirs == 1:
+            if spreading:
+                warnings.warn(
+                    "Spreading is ignored when the number of directions is 1."
+                )
+            dirs = np.array([dirp])
+            vals = vals1d.reshape(-1, 1)
+        else:
+            pass
+
+        return cls(
+            freq,
+            dirs,
+            vals,
+            freq_hz=freq_hz,
+            degrees=degrees,
+            clockwise=clockwise,
+            waves_coming_from=waves_coming_from,
+            scaling=scaling,
+        )
 
     @classmethod
     def from_spectrum1d(
