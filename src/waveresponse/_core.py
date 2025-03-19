@@ -1264,7 +1264,6 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
                     "Can not use 'density' scaling with a single direction. Use 'spectrum' scaling instead."
                 )
             dirs = np.array([dirp])
-            scaling = "spectrum"
         else:
             dirs = dirp + np.linspace(0.0, period, n_dirs, endpoint=False)
             dirs = np.sort(_robust_modulus(dirs, period))
