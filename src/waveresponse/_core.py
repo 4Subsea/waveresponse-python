@@ -408,6 +408,8 @@ class Grid:
         """
         Check direction bins.
         """
+        if len(dirs) == 1:
+            return
         if np.any(dirs[:-1] >= dirs[1:]) or dirs[0] < 0 or dirs[-1] >= 2.0 * np.pi:
             raise ValueError(
                 "Directions must be positive, monotonically increasing, and "
