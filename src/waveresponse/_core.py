@@ -1188,7 +1188,7 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         If 'spectrum', the values are assumed to represent energy per frequency bin.
         Otherwise, if 'density', the values are assumed to represent energy per
         frequency and direction bin. Note that in both cases, the values are assumed
-        to represent energy density in the frequency domain. Defaults to 'spectrum'.
+        to represent energy density in the frequency domain. Defaults to 'density'.
     """
 
     def __init__(
@@ -1200,7 +1200,7 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         degrees=False,
         clockwise=False,
         waves_coming_from=True,
-        scaling="spectrum",
+        scaling="density",
     ):
         self._scaling = scaling.lower()
         super().__init__(
