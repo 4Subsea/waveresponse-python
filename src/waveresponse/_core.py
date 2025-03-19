@@ -288,7 +288,7 @@ def mirror(rao, dof, sym_plane="xz"):
     lb_0, ub_0 = np.nextafter(bounds[0], (-periodicity, periodicity))
     lb_1, ub_1 = np.nextafter(bounds[1], (-periodicity, periodicity))
     exclude_bounds = ((dirs >= ub_0) | (dirs <= lb_0)) & (
-        ((dirs >= ub_1) | (dirs <= lb_1))
+        (dirs >= ub_1) | (dirs <= lb_1)
     )
 
     _check_foldable(dirs[exclude_bounds], degrees=rao._degrees, sym_plane=sym_plane)
@@ -1250,17 +1250,32 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         scaling="spectrum",
     ):
         freq = np.asarray_chkfinite(freq).reshape(-1).copy()
-        vals1d = np.asarray_chkfinite(vals).reshape(len(freq)).copy()
+        vals1d = np.asarray_chkfinite(vals).reshape(len(freq), 1).copy()
+
+        if degrees:
+            period = 360.0
+        else:
+            period = 2.0 * np.pi
 
         if n_dirs == 1:
             if spreading:
                 warnings.warn(
                     "Spreading is ignored when the number of directions is 1."
                 )
+            if scaling == "density":
+                warnings.warn(
+                    "Density scaling not supported with 1 direction. 'spectrum' scaling is used instead."
+                )
+                scaling = "density"
             dirs = np.array([dirp])
-            vals = vals1d.reshape(-1, 1)
+            vals = vals1d
         else:
-            pass
+            dirs = dirp + np.linspace(0.0, period, n_dirs, endpoint=False)
+            vals = np.tile(vals1d, (1, n_dirs))
+            for (idx_f, idx_d), val_i in np.ndenumerate(vals):
+                f_i = freq[idx_f]
+                d_i = _robust_modulus(dirs[idx_d] - dirp, period)
+                vals[idx_f, idx_d] = spreading(f_i, d_i) * val_i
 
         return cls(
             freq,
