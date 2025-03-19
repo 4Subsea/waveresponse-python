@@ -1183,6 +1183,12 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
     waves_coming_from : bool
         If waves are 'coming from' the given directions. If ``False``, 'going towards'
         convention is assumed.
+    scaling : {'spectrum', 'density'}, default='spectrum'
+        Specifies the spectrum's scaling convention over the directional domain.
+        If 'spectrum', the values are assumed to represent energy per frequency bin.
+        Otherwise, if 'density', the values are assumed to represent energy per
+        frequency and direction bin. Note that in both cases, the values are assumed
+        to represent energy density in the frequency domain. Defaults to 'spectrum'.
     """
 
     def __init__(
