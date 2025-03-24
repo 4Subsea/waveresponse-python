@@ -2737,14 +2737,22 @@ class Test_DirectionalSpectrum:
         with pytest.raises(ValueError):
             DirectionalSpectrum(freq, dirs, values, freq_hz=True, degrees=True)
 
-    def test__init__raises_vals_neg(self):
+    def test__init__vals_neg_ok(self):
         freq = np.arange(0.05, 1, 0.1)
         dirs = np.arange(5.0, 360.0, 10.0)
         vals = np.random.random(size=(len(freq), len(dirs)))
         vals[0, 1] *= -1
 
-        with pytest.raises(ValueError):
-            DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+        _ = DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+    def test__init__vals_complex_ok(self):
+        freq = np.arange(0.05, 1, 0.1)
+        dirs = np.arange(5.0, 360.0, 10.0)
+        vals = np.random.random(size=(len(freq), len(dirs)))
+        vals = vals + 1j * vals
+
+        _ = DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
 
     def test__init__raises_freq_neg(self):
         freq = np.arange(-0.05, 1, 0.1)
@@ -3288,6 +3296,21 @@ class Test_DirectionalSpectrum:
 
         assert m_out == pytest.approx(m_expect)
 
+    def test_moment_m0_hz_complex(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        yp = np.linspace(f0, f1, 20)
+        xp = np.arange(5, 360, 10)
+        vp = np.ones((len(yp), len(xp))) + 1j * np.ones((len(yp), len(xp)))
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        m_out = spectrum.moment(0, freq_hz=True)
+
+        m_expect = (0.0 - 360.0) * (f0 - f1) + 1j * (0.0 - 360.0) * (f0 - f1)
+
+        assert m_out == pytest.approx(m_expect)
+
     def test_moment_m0_rads(self):
         f0 = 0.0
         f1 = 2.0
@@ -3300,6 +3323,21 @@ class Test_DirectionalSpectrum:
         m_out = spectrum.moment(0, freq_hz=False)
 
         m_expect = (0.0 - 360.0) * (f0 - f1)
+
+        assert m_out == pytest.approx(m_expect)
+
+    def test_moment_m0_rads_complex(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        yp = np.linspace(f0, f1, 20)
+        xp = np.arange(5, 360, 10)
+        vp = np.ones((len(yp), len(xp))) + 1j * np.ones((len(yp), len(xp)))
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        m_out = spectrum.moment(0, freq_hz=False)
+
+        m_expect = (0.0 - 360.0) * (f0 - f1) + 1j * (0.0 - 360.0) * (f0 - f1)
 
         assert m_out == pytest.approx(m_expect)
 
@@ -3318,6 +3356,21 @@ class Test_DirectionalSpectrum:
 
         assert m_out == pytest.approx(m_expect)
 
+    def test_moment_m1_hz_comlex(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        yp = np.linspace(f0, f1, 20)
+        xp = np.arange(5, 360, 10)
+        vp = np.ones((len(yp), len(xp))) + 1j * np.ones((len(yp), len(xp)))
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        m_out = spectrum.moment(1, freq_hz=True)
+
+        m_expect = (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2) + 1j * (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2)
+
+        assert m_out == pytest.approx(m_expect)
+
     def test_moment_m1_rads(self):
         f0 = 0.0
         f1 = 2.0
@@ -3330,6 +3383,21 @@ class Test_DirectionalSpectrum:
         m_out = spectrum.moment(1, freq_hz=False)
 
         m_expect = (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2) * (2.0 * np.pi)
+
+        assert m_out == pytest.approx(m_expect)
+
+    def test_moment_m1_rads_complex(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        yp = np.linspace(f0, f1, 20)
+        xp = np.arange(5, 360, 10)
+        vp = np.ones((len(yp), len(xp))) + 1j * np.ones((len(yp), len(xp)))
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        m_out = spectrum.moment(1, freq_hz=False)
+
+        m_expect = (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2) * (2.0 * np.pi) + 1j * (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2) * (2.0 * np.pi)
 
         assert m_out == pytest.approx(m_expect)
 
@@ -3349,6 +3417,22 @@ class Test_DirectionalSpectrum:
         # not exactly same due to error in trapezoid for higher order functions
         assert m_out == pytest.approx(m_expect, rel=0.1)
 
+    def test_moment_m2_hz_complex(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        yp = np.linspace(f0, f1, 20)
+        xp = np.arange(5, 360, 10)
+        vp = np.ones((len(yp), len(xp))) + 1j * np.ones((len(yp), len(xp)))
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        m_out = spectrum.moment(2, freq_hz=True)
+
+        m_expect = (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) + 1j*(1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3)
+
+        # not exactly same due to error in trapezoid for higher order functions
+        assert m_out == pytest.approx(m_expect, rel=0.1)
+
     def test_moment_m2_rads(self):
         f0 = 0.0
         f1 = 2.0
@@ -3361,6 +3445,22 @@ class Test_DirectionalSpectrum:
         m_out = spectrum.moment(2, freq_hz=False)
 
         m_expect = (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (2.0 * np.pi) ** 2
+
+        # not exactly same due to error in trapezoid for higher order functions
+        assert m_out == pytest.approx(m_expect, rel=0.1)
+
+    def test_moment_m2_rads_complex(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        yp = np.linspace(f0, f1, 20)
+        xp = np.arange(5, 360, 10)
+        vp = np.ones((len(yp), len(xp))) + 1j * np.ones((len(yp), len(xp)))
+        spectrum = DirectionalSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
+
+        m_out = spectrum.moment(2, freq_hz=False)
+
+        m_expect = (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (2.0 * np.pi) ** 2 + 1j * (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (2.0 * np.pi) ** 2
 
         # not exactly same due to error in trapezoid for higher order functions
         assert m_out == pytest.approx(m_expect, rel=0.1)
@@ -3382,6 +3482,30 @@ class Test_DirectionalSpectrum:
         tz_expect = np.sqrt(m0 / m2)
 
         assert tz_out == pytest.approx(tz_expect, rel=0.1)
+
+    def test_tz_raises_complex(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        freq = np.linspace(f0, f1, 20)
+        dirs = np.arange(5, 360, 10)
+        vals = np.ones((len(freq), len(dirs))) + 1j * np.ones((len(freq), len(dirs)))
+        spectrum = DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+        with pytest.raises(ValueError):
+            _ = spectrum.tz
+
+    def test_tz_raises_neg(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        freq = np.linspace(f0, f1, 20)
+        dirs = np.arange(5, 360, 10)
+        vals = -np.ones((len(freq), len(dirs)))
+        spectrum = DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+        with pytest.raises(ValueError):
+            _ = spectrum.tz
 
     def test_from_grid(self):
         freq = np.linspace(0, 1.0, 10)
@@ -3439,18 +3563,6 @@ class Test_DirectionalSpectrum:
         assert spectrum._freq_hz == grid._freq_hz
         assert spectrum._degrees == grid._degrees
 
-    def test_conjugate_raises(self, directional_spectrum):
-        with pytest.raises(AttributeError):
-            directional_spectrum.conjugate()
-
-    def test_real_raises(self, directional_spectrum):
-        with pytest.raises(AttributeError):
-            directional_spectrum.real
-
-    def test_imag_raises(self, directional_spectrum):
-        with pytest.raises(AttributeError):
-            directional_spectrum.imag
-
     def test_extreme_float(self):
         f0 = 0.0
         f1 = 2.0
@@ -3470,6 +3582,34 @@ class Test_DirectionalSpectrum:
         extreme_expect = sigma * np.sqrt(2.0 * np.log((T / tz) / np.log(1.0 / q)))
 
         assert extreme_out == pytest.approx(extreme_expect)
+
+    def test_extreme_raises_complex(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        freq = np.linspace(f0, f1, 20)
+        dirs = np.arange(5, 360, 10)
+        vals = np.ones((len(freq), len(dirs))) + 1j*np.ones((len(freq), len(dirs)))
+        spectrum = wr.DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+        T = 360 * 24 * 60.0**2
+        q = 0.99
+        with pytest.raises(ValueError):
+            _ = spectrum.extreme(T, q=q)
+
+    def test_extreme_raises_neg(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        freq = np.linspace(f0, f1, 20)
+        dirs = np.arange(5, 360, 10)
+        vals = -np.ones((len(freq), len(dirs)))
+        spectrum = wr.DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+        T = 360 * 24 * 60.0**2
+        q = 0.99
+        with pytest.raises(ValueError):
+            _ = spectrum.extreme(T, q=q)
 
     def test_extreme_list(self):
         f0 = 0.0
@@ -3595,8 +3735,38 @@ class Test_WaveSpectrum:
         assert spectrum._freq_hz == grid._freq_hz
         assert spectrum._degrees == grid._degrees
 
+    def test__init__raises_vals_neg(self):
+        freq = np.arange(0.05, 1, 0.1)
+        dirs = np.arange(5.0, 360.0, 10.0)
+        vals = np.random.random(size=(len(freq), len(dirs)))
+        vals[0, 1] *= -1
+
+        with pytest.raises(ValueError):
+            WaveSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+    def test__init__raises_vals_complex(self):
+        freq = np.arange(0.05, 1, 0.1)
+        dirs = np.arange(5.0, 360.0, 10.0)
+        vals = np.random.random(size=(len(freq), len(dirs)))
+        vals = vals + 1j*vals
+
+        with pytest.raises(ValueError):
+            WaveSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
     def test__repr__(self, wave):
         assert str(wave) == "WaveSpectrum"
+
+    def test_conjugate_raises(self, wave):
+        with pytest.raises(AttributeError):
+            wave.conjugate()
+
+    def test_real_raises(self, wave):
+        with pytest.raises(AttributeError):
+            wave.real
+
+    def test_imag_raises(self, wave):
+        with pytest.raises(AttributeError):
+            wave.imag
 
     def test_hs(self):
         f0 = 0.0
