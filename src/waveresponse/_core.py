@@ -1515,7 +1515,9 @@ class DirectionalSpectrum(Grid):
 
         """
         if np.iscomplex(self._vals).any() or (self._vals < 0.0).any():
-            raise ValueError("Mean zero-crossing period is only defined for positive real-valued spectra.")
+            raise ValueError(
+                "Mean zero-crossing period is only defined for positive real-valued spectra."
+            )
 
         m0 = self.moment(0, freq_hz=True)
         m2 = self.moment(2, freq_hz=True)
@@ -1612,6 +1614,7 @@ class WaveSpectrum(DisableComplexMixin, DirectionalSpectrum):
         If waves are 'coming from' the given directions. If ``False``, 'going towards'
         convention is assumed.
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

@@ -2753,7 +2753,6 @@ class Test_DirectionalSpectrum:
 
         _ = DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
 
-
     def test__init__raises_freq_neg(self):
         freq = np.arange(-0.05, 1, 0.1)
         dirs = np.arange(5.0, 360.0, 10.0)
@@ -3367,7 +3366,9 @@ class Test_DirectionalSpectrum:
 
         m_out = spectrum.moment(1, freq_hz=True)
 
-        m_expect = (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2) + 1j * (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2)
+        m_expect = (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2) + 1j * (
+            1.0 / 2.0
+        ) * (0.0 - 360.0) * (f0**2 - f1**2)
 
         assert m_out == pytest.approx(m_expect)
 
@@ -3397,7 +3398,9 @@ class Test_DirectionalSpectrum:
 
         m_out = spectrum.moment(1, freq_hz=False)
 
-        m_expect = (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2) * (2.0 * np.pi) + 1j * (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2) * (2.0 * np.pi)
+        m_expect = (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2) * (
+            2.0 * np.pi
+        ) + 1j * (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2) * (2.0 * np.pi)
 
         assert m_out == pytest.approx(m_expect)
 
@@ -3428,7 +3431,9 @@ class Test_DirectionalSpectrum:
 
         m_out = spectrum.moment(2, freq_hz=True)
 
-        m_expect = (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) + 1j*(1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3)
+        m_expect = (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) + 1j * (
+            1.0 / 3.0
+        ) * (0.0 - 360.0) * (f0**3 - f1**3)
 
         # not exactly same due to error in trapezoid for higher order functions
         assert m_out == pytest.approx(m_expect, rel=0.1)
@@ -3460,7 +3465,11 @@ class Test_DirectionalSpectrum:
 
         m_out = spectrum.moment(2, freq_hz=False)
 
-        m_expect = (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (2.0 * np.pi) ** 2 + 1j * (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (2.0 * np.pi) ** 2
+        m_expect = (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (
+            2.0 * np.pi
+        ) ** 2 + 1j * (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (
+            2.0 * np.pi
+        ) ** 2
 
         # not exactly same due to error in trapezoid for higher order functions
         assert m_out == pytest.approx(m_expect, rel=0.1)
@@ -3589,7 +3598,7 @@ class Test_DirectionalSpectrum:
 
         freq = np.linspace(f0, f1, 20)
         dirs = np.arange(5, 360, 10)
-        vals = np.ones((len(freq), len(dirs))) + 1j*np.ones((len(freq), len(dirs)))
+        vals = np.ones((len(freq), len(dirs))) + 1j * np.ones((len(freq), len(dirs)))
         spectrum = wr.DirectionalSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
 
         T = 360 * 24 * 60.0**2
@@ -3748,7 +3757,7 @@ class Test_WaveSpectrum:
         freq = np.arange(0.05, 1, 0.1)
         dirs = np.arange(5.0, 360.0, 10.0)
         vals = np.random.random(size=(len(freq), len(dirs)))
-        vals = vals + 1j*vals
+        vals = vals + 1j * vals
 
         with pytest.raises(ValueError):
             WaveSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
