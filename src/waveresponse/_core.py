@@ -1151,7 +1151,7 @@ class RAO(Grid):
         return "RAO"
 
 
-class DirectionalSpectrum(DisableComplexMixin, Grid):
+class DirectionalSpectrum(Grid):
     """
     Directional spectrum.
 
@@ -1210,11 +1210,6 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
 
         if degrees:
             self._vals = 180.0 / np.pi * self._vals
-
-        if np.any(np.iscomplex(self._vals)):
-            raise ValueError("Spectrum values can not be complex.")
-        elif np.any(self._vals < 0.0):
-            raise ValueError("Spectrum values must be positive.")
 
     @classmethod
     def from_spectrum1d(
@@ -1499,7 +1494,8 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
     @property
     def tz(self):
         """
-        Mean zero-crossing period, Tz, in 'seconds'.
+        Mean zero-crossing period, Tz, in 'seconds'. Only applicable for
+        positive real-valued spectra.
 
         Calculated from the zeroth- and second-order spectral moments according to:
 
@@ -1518,13 +1514,20 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         Cambridge University Press.
 
         """
+        if np.iscomplex(self._vals).any() or (self._vals < 0.0).any():
+            raise ValueError(
+                "Mean zero-crossing period is only defined for positive real-valued spectra."
+            )
+
         m0 = self.moment(0, freq_hz=True)
         m2 = self.moment(2, freq_hz=True)
+
         return np.sqrt(m0 / m2)
 
     def extreme(self, t, q=0.37, absmax=False):
         """
         Compute the q-th quantile extreme value (assuming a Gaussian process).
+        Only applicable for positive real-valued spectra.
 
         The extreme value, ``x``, is calculated according to:
 
@@ -1577,7 +1580,49 @@ class DirectionalSpectrum(DisableComplexMixin, Grid):
         return self.std() * np.sqrt(2.0 * np.log((t / tz) / np.log(1.0 / q)))
 
 
-class WaveSpectrum(DirectionalSpectrum):
+class WaveSpectrum(DisableComplexMixin, DirectionalSpectrum):
+    """
+    Wave spectrum.
+
+    The ``WaveSpectrum`` class extends the :class:`~waveresponse.DirectionalSpectrum`
+    class, and is a two-dimentional frequency/(wave)direction grid. The spectrum values
+    represents spectrum density. Only real and positive values allowed.
+
+    Proper scaling is performed such that the total "energy" is kept constant at
+    all times.
+
+
+    Parameters
+    ----------
+    freq : array-like
+        1-D array of grid frequency coordinates. Positive and monotonically increasing.
+    dirs : array-like
+        1-D array of grid direction coordinates. Positive and monotonically increasing.
+        Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+    vals : array-like (N, M)
+        Spectrum density values associated with the grid. Should be a 2-D array
+        of shape (N, M), such that ``N=len(freq)`` and ``M=len(dirs)``.
+    freq_hz : bool
+        If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+    degrees : bool
+        If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
+    clockwise : bool
+        If positive directions are defined to be 'clockwise' (``True``) or 'counterclockwise'
+        (``False``). Clockwise means that the directions follow the right-hand rule
+        with an axis pointing downwards.
+    waves_coming_from : bool
+        If waves are 'coming from' the given directions. If ``False``, 'going towards'
+        convention is assumed.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if np.any(np.iscomplex(self._vals)):
+            raise ValueError("Spectrum values can not be complex.")
+        elif np.any(self._vals < 0.0):
+            raise ValueError("Spectrum values must be positive.")
+
     def __repr__(self):
         return "WaveSpectrum"
 
