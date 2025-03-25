@@ -287,7 +287,7 @@ def mirror(rao, dof, sym_plane="xz"):
     lb_0, ub_0 = np.nextafter(bounds[0], (-periodicity, periodicity))
     lb_1, ub_1 = np.nextafter(bounds[1], (-periodicity, periodicity))
     exclude_bounds = ((dirs >= ub_0) | (dirs <= lb_0)) & (
-        ((dirs >= ub_1) | (dirs <= lb_1))
+        (dirs >= ub_1) | (dirs <= lb_1)
     )
 
     _check_foldable(dirs[exclude_bounds], degrees=rao._degrees, sym_plane=sym_plane)
@@ -311,6 +311,455 @@ def mirror(rao, dof, sym_plane="xz"):
         freq_hz=rao._freq_hz,
         **rao.wave_convention,
     )
+
+
+class _BaseGrid:
+    """
+    Two-dimentional frequency/(wave)direction grid.
+
+    Parameters
+    ----------
+    freq : array-like
+        1-D array of grid frequency coordinates. Positive and monotonically increasing.
+    dirs : array-like
+        1-D array of grid direction coordinates. Positive and monotonically increasing.
+        Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+    vals : array-like (N, M)
+        Values associated with the grid. Should be a 2-D array of shape (N, M),
+        such that ``N=len(freq)`` and ``M=len(dirs)``.
+    freq_hz : bool
+        If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+    degrees : bool
+        If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
+    clockwise : bool
+        If positive directions are defined to be 'clockwise' (``True``) or 'counterclockwise'
+        (``False``). Clockwise means that the directions follow the right-hand rule
+        with an axis pointing downwards.
+    waves_coming_from : bool
+        If waves are 'coming from' the given directions. If ``False``, 'going towards'
+        convention is assumed.
+    """
+
+    def __init__(
+        self,
+        freq,
+        dirs,
+        vals,
+        freq_hz=False,
+        degrees=False,
+        clockwise=False,
+        waves_coming_from=True,
+    ):
+        self._freq = np.asarray_chkfinite(freq).ravel().copy()
+        self._dirs = np.asarray_chkfinite(dirs).ravel().copy()
+        self._vals = (
+            np.asarray_chkfinite(vals)
+            .reshape((len(self._freq), len(self._dirs)))
+            .copy()
+        )
+        self._clockwise = clockwise
+        self._waves_coming_from = waves_coming_from
+        self._freq_hz = freq_hz
+        self._degrees = degrees
+
+        if freq_hz:
+            self._freq = 2.0 * np.pi * self._freq
+
+        if degrees:
+            self._dirs = (np.pi / 180.0) * self._dirs
+
+        self._check_freq(self._freq)
+        self._check_dirs(self._dirs)
+
+    def __repr__(self):
+        return "Grid"
+
+    @classmethod
+    def from_grid(cls, grid):
+        """
+        Construct from a Grid-like object.
+
+        Parameters
+        ----------
+        grid : obj
+            Grid object.
+
+        Returns
+        -------
+        cls :
+            Initialized object.
+        """
+        return cls(
+            *grid.grid(freq_hz=grid._freq_hz, degrees=grid._degrees),
+            freq_hz=grid._freq_hz,
+            degrees=grid._degrees,
+            **grid.wave_convention,
+        )
+
+    def _check_freq(self, freq):
+        """
+        Check frequency bins.
+        """
+        if np.any(freq[:-1] >= freq[1:]) or freq[0] < 0:
+            raise ValueError(
+                "Frequencies must be positive and monotonically increasing."
+            )
+
+    def _check_dirs(self, dirs):
+        """
+        Check direction bins.
+        """
+        if np.any(dirs[:-1] >= dirs[1:]) or dirs[0] < 0 or dirs[-1] >= 2.0 * np.pi:
+            raise ValueError(
+                "Directions must be positive, monotonically increasing, and "
+                "be [0., 360.) degs (or [0., 2*pi) rads)."
+            )
+
+    def freq(self, freq_hz=None):
+        """
+        Frequency coordinates.
+
+        Parameters
+        ----------
+        freq_hz : bool
+            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
+            Defaults to original units used during initialization.
+        """
+        freq = self._freq.copy()
+
+        if freq_hz is None:
+            freq_hz = self._freq_hz
+
+        if freq_hz:
+            freq = 1.0 / (2.0 * np.pi) * freq
+
+        return freq
+
+    def dirs(self, degrees=None):
+        """
+        Direction coordinates.
+
+        Parameters
+        ----------
+        degrees : bool
+            If directions should be returned in 'degrees'. If ``False``, 'radians'
+            is used. Defaults to original units used during initialization.
+        """
+        dirs = self._dirs.copy()
+
+        if degrees is None:
+            degrees = self._degrees
+
+        if degrees:
+            dirs = (180.0 / np.pi) * dirs
+
+        return dirs
+
+    def grid(self, freq_hz=None, degrees=None):
+        """
+        Return a copy of the object's frequency/direction coordinates and corresponding
+        grid values.
+
+        Parameters
+        ----------
+        freq_hz : bool
+            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
+            Defaults to original units used during initialization.
+        degrees : bool
+            If directions should be returned in 'degrees'. If ``False``, 'radians'
+            is used. Defaults to original units used during initialization.
+
+        Returns
+        -------
+        freq : array
+            1-D array of grid frequency coordinates.
+        dirs : array
+            1-D array of grid direction coordinates.
+        vals : array (N, M)
+            Grid values as 2-D array of shape (N, M), such that ``N=len(freq)``
+            and ``M=len(dirs)``.
+        """
+        freq = self.freq(freq_hz=freq_hz)
+        dirs = self.dirs(degrees=degrees)
+        vals = self._vals.copy()
+
+        return freq, dirs, vals
+
+    @property
+    def wave_convention(self):
+        """
+        Wave direction convention.
+        """
+        return {
+            "clockwise": self._clockwise,
+            "waves_coming_from": self._waves_coming_from,
+        }
+
+    def set_wave_convention(self, clockwise=True, waves_coming_from=True):
+        """
+        Set wave direction convention.
+
+        Directions and values will be converted (in-place) to the given convention.
+
+        Parameters
+        ----------
+        clockwise : bool
+            If positive directions are defined to be 'clockwise' (``True``) or
+            'counterclockwise' (``False``). Clockwise means that the directions
+            follow the right-hand rule with an axis pointing downwards.
+        waves_coming_from : bool
+            If waves are 'coming from' the given directions. If ``False``, 'going towards'
+            convention is assumed.
+        """
+        conv_org = self.wave_convention
+        conv_new = {"clockwise": clockwise, "waves_coming_from": waves_coming_from}
+        self._freq, self._dirs, self._vals = self._convert(
+            self._freq, self._dirs, self._vals, conv_new, conv_org
+        )
+        self._clockwise = conv_new["clockwise"]
+        self._waves_coming_from = conv_new["waves_coming_from"]
+
+    def _convert(self, freq, dirs, vals, config_new, config_org):
+        """
+        Convert grid from one wave convention to another.
+        """
+        freq_org = np.asarray_chkfinite(freq).copy()
+        dirs_org = np.asarray_chkfinite(dirs).copy()
+        vals_org = np.asarray_chkfinite(vals).copy()
+
+        freq_new = freq_org
+        dirs_new = self._convert_dirs(dirs_org, config_new, config_org, degrees=False)
+        dirs_new, vals_new = _sort(dirs_new, vals_org)
+
+        return freq_new, dirs_new, vals_new
+
+    @staticmethod
+    def _convert_dirs(dirs, config_new, config_org, degrees=False):
+        """
+        Convert wave directions from one convention to another.
+
+        Parameters
+        ----------
+        dirs : float or array-like
+            Wave directions in 'radians' expressed according to 'original' convention.
+        config_new : dict
+            New wave direction convention.
+        config_org : dict
+            Original wave direction convention.
+        degrees : bool
+            If directions are given in 'degrees'. If ``False``, 'radians' is assumed.
+
+        Return
+        ------
+        dirs : numpy.array
+            Wave directions in 'radians' expressed according to 'new' convention.
+        """
+        dirs = np.asarray_chkfinite(dirs).copy()
+
+        if degrees:
+            periodicity = 360.0
+        else:
+            periodicity = 2.0 * np.pi
+
+        if config_new["waves_coming_from"] != config_org["waves_coming_from"]:
+            dirs -= periodicity / 2
+        if config_new["clockwise"] != config_org["clockwise"]:
+            dirs *= -1
+
+        return _robust_modulus(dirs, periodicity)
+
+    def copy(self):
+        """Return a copy of the object."""
+        return copy.deepcopy(self)
+
+    def rotate(self, angle, degrees=False):
+        """
+        Rotate the underlying grid coordinate system a given angle.
+
+        All directions are converted so that:
+
+            dirs_new = dirs_old - angle
+
+        Note that the direction of positive rotation follows the set 'wave convention'.
+
+        Parameters
+        ----------
+        angle : float
+            Rotation angle.
+        degrees : bool
+            Whether the rotation angle is given in 'degrees'. If ``False``, 'radians'
+            is assumed.
+
+        Returns
+        -------
+        obj :
+            A copy of the object where the underlying coordinate system is rotated.
+        """
+        if degrees:
+            angle = (np.pi / 180.0) * angle
+
+        new = self.copy()
+        dirs_new = _robust_modulus(new._dirs - angle, 2.0 * np.pi)
+        new._dirs, new._vals = _sort(dirs_new, new._vals)
+        return new
+
+    def _interpolate_function(self, complex_convert="rectangular", **kw):
+        """
+        Interpolation function based on ``scipy.interpolate.RegularGridInterpolator``.
+        """
+        xp = np.concatenate(
+            (self._dirs[-1:] - 2 * np.pi, self._dirs, self._dirs[:1] + 2.0 * np.pi)
+        )
+
+        yp = self._freq
+        zp = np.concatenate(
+            (
+                self._vals[:, -1:],
+                self._vals,
+                self._vals[:, :1],
+            ),
+            axis=1,
+        )
+
+        if np.all(np.isreal(zp)):
+            return RGI((xp, yp), zp.T, **kw)
+        elif complex_convert.lower() == "polar":
+            amp, phase = complex_to_polar(zp, phase_degrees=False)
+            phase_complex = np.cos(phase) + 1j * np.sin(phase)
+            interp_amp = RGI((xp, yp), amp.T, **kw)
+            interp_phase = RGI((xp, yp), phase_complex.T, **kw)
+            return lambda *args, **kwargs: (
+                polar_to_complex(
+                    interp_amp(*args, **kwargs),
+                    np.angle(interp_phase(*args, **kwargs)),
+                    phase_degrees=False,
+                )
+            )
+        elif complex_convert.lower() == "rectangular":
+            interp_real = RGI((xp, yp), np.real(zp.T), **kw)
+            interp_imag = RGI((xp, yp), np.imag(zp.T), **kw)
+            return lambda *args, **kwargs: (
+                interp_real(*args, **kwargs) + 1j * interp_imag(*args, **kwargs)
+            )
+        else:
+            raise ValueError("Unknown 'complex_convert' type")
+
+    def __mul__(self, other):
+        """
+        Multiply values (element-wise).
+
+        Both grids must have the same frequency/direction coordinates, and the same
+        'wave convention'.
+
+        Parameters
+        ----------
+        other : obj or numeric
+            Grid object or number to be multiplied with.
+
+        Returns
+        -------
+        obj :
+            A copy of the object where the values are multiplied with values of
+            another grid.
+        """
+        new = self.copy()
+
+        if isinstance(other, Number):
+            new._vals = new._vals * other
+        else:
+            _check_is_similar(self, other, exact_type=True)
+            new._vals = new._vals * other._vals
+
+        return new
+
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
+    def __add__(self, other):
+        """
+        Add values (element-wise).
+
+        Both grids must have the same frequency/direction coordinates, and the same
+        'wave convention'.
+
+        Parameters
+        ----------
+        other : obj or numeric
+            Grid object or number to be added.
+
+        Returns
+        -------
+        obj :
+            A copy of the object where the values are added with another grid's values.
+        """
+        new = self.copy()
+
+        if isinstance(other, Number):
+            new._vals = new._vals + other
+        else:
+            _check_is_similar(self, other, exact_type=True)
+            new._vals = new._vals + other._vals
+
+        return new
+
+    def __radd__(self, other):
+        return self.__add__(other)
+
+    def __sub__(self, other):
+        """
+        Subtract values (element-wise).
+
+        Both grids must have the same frequency/direction coordinates, and the same
+        'wave convention'.
+
+        Parameters
+        ----------
+        other : obj or numeric
+            Grid object or number to be subtracted.
+
+        Returns
+        -------
+        obj :
+            A copy of the object where the values are subtracted with another grid's values.
+        """
+        new = self.copy()
+
+        if isinstance(other, Number):
+            new._vals = new._vals - other
+        else:
+            _check_is_similar(self, other, exact_type=True)
+            new._vals = new._vals - other._vals
+
+        return new
+
+    def __rsub__(self, other):
+        return self.__sub__(other)
+
+    def conjugate(self):
+        """
+        Return a copy of the object with complex conjugate values.
+        """
+        new = self.copy()
+        new._vals = new._vals.conjugate()
+        return new
+
+    @property
+    def real(self):
+        """
+        Return a new Grid object where all values are converted to their real part.
+        """
+        new = _cast_to_grid(self)
+        new._vals = new._vals.real
+        return new
+
+    @property
+    def imag(self):
+        """
+        Return a new Grid object where all values are converted to their imaginary part.
+        """
+        new = _cast_to_grid(self)
+        new._vals = new._vals.imag
+        return new
 
 
 class Grid:
