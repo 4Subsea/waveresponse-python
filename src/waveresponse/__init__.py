@@ -1,5 +1,6 @@
 from ._core import (
     RAO,
+    BinGrid,
     CosineFullSpreading,
     CosineHalfSpreading,
     DirectionalSpectrum,
@@ -37,6 +38,7 @@ __all__ = [
     "CosineHalfSpreading",
     "DirectionalSpectrum",
     "Grid",
+    "BinGrid",
     "JONSWAP",
     "ModifiedPiersonMoskowitz",
     "OchiHubble",
