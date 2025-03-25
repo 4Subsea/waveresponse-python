@@ -957,7 +957,7 @@ class GridBin(_BaseGrid):
         fill_value=0.0,
     ):
         """
-        Reshape the grid to match the given frequency/direction coordinates. Grid
+        Reshape the grid to match the given frequency coordinates. Grid
         values will be interpolated (linear).
 
         Parameters
