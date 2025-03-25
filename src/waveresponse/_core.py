@@ -1145,7 +1145,7 @@ class RAO(Grid):
         return "RAO"
 
 
-class _FreqSpectrumMixin:
+class _SpectrumMixin:
     """
     Mixin class for nondirectional frequency spectrum operations.
     """
@@ -1370,7 +1370,7 @@ class _FreqSpectrumMixin:
         return self.std() * np.sqrt(2.0 * np.log((t / tz) / np.log(1.0 / q)))
 
 
-class DirectionalSpectrum(_FreqSpectrumMixin, Grid):
+class DirectionalSpectrum(_SpectrumMixin, Grid):
     """
     Directional spectrum.
 
