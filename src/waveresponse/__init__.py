@@ -1,10 +1,10 @@
 from ._core import (
     RAO,
+    BinGrid,
     CosineFullSpreading,
     CosineHalfSpreading,
     DirectionalSpectrum,
     Grid,
-    BinGrid,
     WaveSpectrum,
     calculate_response,
     complex_to_polar,

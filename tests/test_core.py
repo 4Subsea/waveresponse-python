@@ -11,11 +11,11 @@ from scipy.interpolate import RegularGridInterpolator as RGI
 import waveresponse as wr
 from waveresponse import (
     RAO,
+    BinGrid,
     CosineFullSpreading,
     CosineHalfSpreading,
     DirectionalSpectrum,
     Grid,
-    BinGrid,
     WaveSpectrum,
     calculate_response,
     mirror,
