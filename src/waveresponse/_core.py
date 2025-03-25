@@ -1430,6 +1430,9 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
         if degrees:
             self._vals = 180.0 / np.pi * self._vals
 
+    def __repr__(self):
+        return "DirectionalSpectrum"
+
     def _freq_spectrum(self, freq_hz=None):
         """
         Integrate the spectrum over the directional domain to obtain the non-directional
@@ -1536,9 +1539,6 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
             clockwise=clockwise,
             waves_coming_from=waves_coming_from,
         )
-
-    def __repr__(self):
-        return "DirectionalSpectrum"
 
     def grid(self, freq_hz=False, degrees=False):
         """
