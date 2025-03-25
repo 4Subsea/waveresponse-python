@@ -1145,6 +1145,156 @@ class RAO(Grid):
         return "RAO"
 
 
+class _FreqSpectrumMixin:
+    """
+    Mixin class for nondirectional frequency spectrum operations.
+    """
+
+    @abstractmethod
+    def _nondirectional(self, freq_hz=None):
+        """
+        Non-directional spectrum.
+
+        Parameters
+        ----------
+        freq_hz : bool
+            If frequencies in 'Hz' should be used. If ``False``, 'rad/s' is used.
+            Defaults to original unit used during initialization.
+
+        Returns
+        -------
+        f : array
+            1-D array of frequency coordinates in 'Hz' or 'rad/s'.
+        s : array
+            1-D array of spectral density values in 'm^2/Hz' or 'm^2/(rad/s)'.
+        """
+        raise NotImplementedError
+
+    def moment(self, n, freq_hz=None):
+        """
+        Calculate spectral moment (along the frequency domain).
+
+        Parameters
+        ----------
+        n : int
+            Order of the spectral moment.
+        freq_hz : bool
+            If frequencies in 'Hz' should be used. If ``False``, 'rad/s' is used.
+            Defaults to original unit used during initialization.
+
+        Returns
+        -------
+        float :
+            Spectral moment.
+
+        Notes
+        -----
+        The spectral moment is calculated according to Equation (8.31) and (8.32)
+        in reference [1].
+
+        References
+        ----------
+        [1] A. Naess and T. Moan, (2013), "Stochastic dynamics of marine structures",
+        Cambridge University Press.
+
+        """
+        f, s = self._nondirectional(freq_hz=freq_hz)
+        m_n = trapezoid((f**n) * s, f)
+        return m_n
+
+    def var(self):
+        """
+        Variance (integral) of the spectrum.
+        """
+        return self.moment(0)
+
+    def std(self):
+        """
+        Standard deviation of the spectrum.
+        """
+        return np.sqrt(self.var())
+
+    @property
+    def tz(self):
+        """
+        Mean zero-crossing period, Tz, in 'seconds'.
+
+        Calculated from the zeroth- and second-order spectral moments according to:
+
+        ``tz = sqrt(m0 / m2)``
+
+        where the spectral moments are calculated by integrating over frequency in Hz.
+
+        Notes
+        -----
+        The mean zero-crossing period is calculated according to Equation (8.33)
+        in reference [1].
+
+        References
+        ----------
+        [1] A. Naess and T. Moan, (2013), "Stochastic dynamics of marine structures",
+        Cambridge University Press.
+
+        """
+        m0 = self.moment(0, freq_hz=True)
+        m2 = self.moment(2, freq_hz=True)
+        return np.sqrt(m0 / m2)
+
+    def extreme(self, t, q=0.37, absmax=False):
+        """
+        Compute the q-th quantile extreme value (assuming a Gaussian process).
+
+        The extreme value, ``x``, is calculated according to:
+
+        ``x = sigma * sqrt(2 * ln((t / tz) / ln(1 / q)))``
+
+        where ``sigma`` is the standard deviation of the process, ``t`` is the duration
+        of the process, and ``q`` is the quantile. Setting ``q=0.37`` yields the
+        most probable maximum (MPM).
+
+        Parameters
+        ----------
+        t : float
+            Time/duration in seconds for which the of the process is observed.
+        q : float or array-like
+            Quantile or sequence of quantiles to compute. Must be between 0 and 1
+            (inclusive).
+        absmax : bool
+            Whether to compute absolute value extremes (i.e., taking the minima into account).
+            If ``False`` (default), only the maxima are considered. See Notes.
+
+        Returns
+        -------
+        x : float or array
+            Extreme value(s). During the given time period, the maximum value (or
+            absolute value maximum) of the process amplitudes will be below the
+            returned value with the given probability.
+
+        Notes
+        -----
+        Computing absolute value extremes by setting ``absmax=True`` is equivalent
+        to doubling the expected zero-crossing rate, ``fz = 1 / Tz``.
+
+        Notes
+        -----
+        The extreme values are calculated according to Equation (1.46) in reference [1]_.
+
+        References
+        ----------
+        .. [1] A. Naess and T. Moan, (2013), "Stochastic dynamics of marine structures",
+           Cambridge University Press.
+
+        """
+
+        if absmax:
+            tz = self.tz / 2.0
+        else:
+            tz = self.tz
+
+        q = np.asarray_chkfinite(q)
+        return self.std() * np.sqrt(2.0 * np.log((t / tz) / np.log(1.0 / q)))
+
+
 class DirectionalSpectrum(Grid):
     """
     Directional spectrum.
