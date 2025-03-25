@@ -2073,7 +2073,9 @@ class Test_GridBin:
 
         yp = np.linspace(0.0, 2.0, 20)
         xp = np.linspace(0.0, 359.0, 10)
-        vp = vp = np.tile(np.linspace(0., 1., len(yp), endpoint=False).reshape(-1, 1), (1, len(xp)))
+        vp = vp = np.tile(
+            np.linspace(0.0, 1.0, len(yp), endpoint=False).reshape(-1, 1), (1, len(xp))
+        )
         gridbin = GridBin(yp, xp, vp, freq_hz=True, degrees=True)
 
         y_ = (yp[4] + yp[5]) / 2
@@ -2115,9 +2117,7 @@ class Test_GridBin:
         grid = GridBin(freq, dirs, vals, freq_hz=True, degrees=True)
 
         # extrapolate
-        vals_out = grid.interpolate(
-            [10, 20], freq_hz=True, fill_value=None
-        )
+        vals_out = grid.interpolate([10, 20], freq_hz=True, fill_value=None)
 
         vals_expect = np.array(
             [
@@ -2151,9 +2151,7 @@ class Test_GridBin:
         )
         vals_expect = vals_real_expect + 1j * vals_imag_expect
 
-        vals_out = grid.interpolate(
-            y, freq_hz=True, complex_convert="rectangular"
-        )
+        vals_out = grid.interpolate(y, freq_hz=True, complex_convert="rectangular")
 
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
@@ -2187,9 +2185,7 @@ class Test_GridBin:
             / np.abs(vals_phase_cos_expect + 1j * vals_phase_sin_expect)
         )
 
-        vals_out = grid.interpolate(
-            y, freq_hz=True, complex_convert="polar"
-        )
+        vals_out = grid.interpolate(y, freq_hz=True, complex_convert="polar")
 
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
@@ -2208,9 +2204,7 @@ class Test_GridBin:
         )
 
         with pytest.raises(ValueError):
-            grid.interpolate(
-                [0, 1, 2, 1]
-            )  # freq not monotonically increasing
+            grid.interpolate([0, 1, 2, 1])  # freq not monotonically increasing
 
     def test_reshape(self):
         a = 7
@@ -2278,9 +2272,7 @@ class Test_GridBin:
 
         y = np.linspace(0.5, 1.0, 20)
         x = xp
-        grid_reshaped = gridbin.reshape(
-            y, freq_hz=True, complex_convert="rectangular"
-        )
+        grid_reshaped = gridbin.reshape(y, freq_hz=True, complex_convert="rectangular")
 
         freq_out = grid_reshaped._freq
         dirs_out = grid_reshaped._dirs
@@ -2317,9 +2309,7 @@ class Test_GridBin:
 
         y = np.linspace(0.5, 1.0, 20)
         x = xp
-        grid_reshaped = gridbin.reshape(
-            y, freq_hz=True, complex_convert="polar"
-        )
+        grid_reshaped = gridbin.reshape(y, freq_hz=True, complex_convert="polar")
 
         freq_out = grid_reshaped._freq
         dirs_out = grid_reshaped._dirs

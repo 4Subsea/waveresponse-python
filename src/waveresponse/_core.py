@@ -1003,7 +1003,6 @@ class GridBin(_BaseGrid):
         return new
 
 
-
 class DisableComplexMixin:
     @property
     def imag(self):
