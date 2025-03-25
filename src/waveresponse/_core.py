@@ -861,6 +861,188 @@ class Grid(_BaseGrid):
         return new
 
 
+class GridBin(_BaseGrid):
+    """
+    Two-dimentional frequency/(wave)direction grid.
+
+    Parameters
+    ----------
+    freq : array-like
+        1-D array of grid frequency coordinates. Positive and monotonically increasing.
+    dirs : array-like
+        1-D array of grid direction coordinates. Positive and monotonically increasing.
+        Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+    vals : array-like (N, M)
+        Values associated with the grid. Should be a 2-D array of shape (N, M),
+        such that ``N=len(freq)`` and ``M=len(dirs)``.
+    freq_hz : bool
+        If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+    degrees : bool
+        If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
+    clockwise : bool
+        If positive directions are defined to be 'clockwise' (``True``) or 'counterclockwise'
+        (``False``). Clockwise means that the directions follow the right-hand rule
+        with an axis pointing downwards.
+    waves_coming_from : bool
+        If waves are 'coming from' the given directions. If ``False``, 'going towards'
+        convention is assumed.
+    """
+
+    def __repr__(self):
+        return "Grid"
+
+    def _interpolate_function(self, complex_convert="rectangular", **kw):
+        """
+        Interpolation function based on ``scipy.interpolate.RegularGridInterpolator``.
+        """
+        xp = np.concatenate(
+            (self._dirs[-1:] - 2 * np.pi, self._dirs, self._dirs[:1] + 2.0 * np.pi)
+        )
+
+        yp = self._freq
+        zp = np.concatenate(
+            (
+                self._vals[:, -1:],
+                self._vals,
+                self._vals[:, :1],
+            ),
+            axis=1,
+        )
+
+        if np.all(np.isreal(zp)):
+            return RGI((xp, yp), zp.T, **kw)
+        elif complex_convert.lower() == "polar":
+            amp, phase = complex_to_polar(zp, phase_degrees=False)
+            phase_complex = np.cos(phase) + 1j * np.sin(phase)
+            interp_amp = RGI((xp, yp), amp.T, **kw)
+            interp_phase = RGI((xp, yp), phase_complex.T, **kw)
+            return lambda *args, **kwargs: (
+                polar_to_complex(
+                    interp_amp(*args, **kwargs),
+                    np.angle(interp_phase(*args, **kwargs)),
+                    phase_degrees=False,
+                )
+            )
+        elif complex_convert.lower() == "rectangular":
+            interp_real = RGI((xp, yp), np.real(zp.T), **kw)
+            interp_imag = RGI((xp, yp), np.imag(zp.T), **kw)
+            return lambda *args, **kwargs: (
+                interp_real(*args, **kwargs) + 1j * interp_imag(*args, **kwargs)
+            )
+        else:
+            raise ValueError("Unknown 'complex_convert' type")
+
+    def interpolate(
+        self,
+        freq,
+        freq_hz=False,
+        complex_convert="rectangular",
+        fill_value=0.0,
+    ):
+        """
+        Interpolate (linear) the grid values to match the given frequency coordinates.
+
+        A 'fill value' is used for extrapolation (i.e. `freq` outside the bounds
+        of the provided 2-D grid). Directions are treated as periodic.
+
+        Parameters
+        ----------
+        freq : array-like
+            1-D array of grid frequency coordinates. Positive and monotonically increasing.
+        freq_hz : bool
+            If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+        complex_convert : str, optional
+            How to convert complex number grid values before interpolating. Should
+            be 'rectangular' or 'polar'. If 'rectangular' (default), complex values
+            are converted to rectangular form (i.e., real and imaginary part) before
+            interpolating. If 'polar', the values are instead converted to polar
+            form (i.e., amplitude and phase) before interpolating. The values are
+            converted back to complex form after interpolation.
+        fill_value : float or None
+            The value used for extrapolation (i.e., `freq` outside the bounds of
+            the provided grid). If ``None``, values outside the frequency domain
+            are extrapolated via nearest-neighbor extrapolation. Note that directions
+            are treated as periodic (and will not need extrapolation).
+
+        Returns
+        -------
+        array :
+            Interpolated grid values.
+        """
+        freq = np.asarray_chkfinite(freq).reshape(-1)
+
+        if freq_hz:
+            freq = 2.0 * np.pi * freq
+
+        self._check_freq(freq)
+
+        interp_fun = self._interpolate_function(
+            complex_convert=complex_convert,
+            method="linear",
+            bounds_error=False,
+            fill_value=fill_value,
+        )
+
+        dirsnew, freqnew = np.meshgrid(self._dirs, freq, indexing="ij", sparse=True)
+        return interp_fun((dirsnew, freqnew)).T
+
+    def reshape(
+        self,
+        freq,
+        freq_hz=False,
+        complex_convert="rectangular",
+        fill_value=0.0,
+    ):
+        """
+        Reshape the grid to match the given frequency/direction coordinates. Grid
+        values will be interpolated (linear).
+
+        Parameters
+        ----------
+        freq : array-like
+            1-D array of new grid frequency coordinates. Positive and monotonically
+            increasing.
+        freq_hz : bool
+            If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+        complex_convert : str, optional
+            How to convert complex number grid values before interpolating. Should
+            be 'rectangular' or 'polar'. If 'rectangular' (default), complex values
+            are converted to rectangular form (i.e., real and imaginary part) before
+            interpolating. If 'polar', the values are instead converted to polar
+            form (i.e., amplitude and phase) before interpolating. The values are
+            converted back to complex form after interpolation.
+        fill_value : float or None
+            The value used for extrapolation (i.e., `freq` outside the bounds of
+            the provided grid). If ``None``, values outside the frequency domain
+            are extrapolated via nearest-neighbor extrapolation. Note that directions
+            are treated as periodic (and will not need extrapolation).
+
+        Returns
+        -------
+        obj :
+            A copy of the object where the underlying coordinate system is reshaped.
+        """
+        freq_new = np.asarray_chkfinite(freq).copy()
+
+        if freq_hz:
+            freq_new = 2.0 * np.pi * freq_new
+
+        self._check_freq(freq_new)
+
+        vals_new = self.interpolate(
+            freq_new,
+            self._dirs,
+            freq_hz=False,
+            degrees=False,
+            complex_convert=complex_convert,
+            fill_value=fill_value,
+        )
+        new = self.copy()
+        new._freq, new._vals = freq_new, vals_new
+        return new
+
+
+
 class DisableComplexMixin:
     @property
     def imag(self):
