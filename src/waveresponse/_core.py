@@ -699,9 +699,9 @@ class _BaseGrid:
 
 class Grid(_BaseGrid):
     """
-    A two-dimensional grid representing spectral densities as a function of
-    frequency and wave direction. Each grid value represents a spectral density,
-    given per unit frequency and per unit direction.
+    A two-dimensional grid with values as a function of frequency and wave direction.
+    The values are assumed to represent a continuous field. I.e., the values can
+    be interpolated in the frequency and direction domain.
 
     Parameters
     ----------
@@ -865,9 +865,10 @@ class Grid(_BaseGrid):
 
 class GridBin(_BaseGrid):
     """
-    A two-dimensional grid representing spectral densities as a function of
-    frequency and directional bins. Each grid value represents a spectral
-    density per unit frequency, with direction treated as discrete bins.
+    A two-dimensional grid with values as a function of frequency and wave direction.
+    The values are assumed to represent a continuous field along the frequency axis,
+    but are treated as bins along the direction axis. I.e., the values can only be
+    interpolated in the frequency domain.
 
     Parameters
     ----------
