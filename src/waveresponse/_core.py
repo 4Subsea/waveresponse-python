@@ -538,6 +538,47 @@ class _BaseGrid:
         new._dirs, new._vals = _sort(dirs_new, new._vals)
         return new
 
+    def _interpolate_function(self, complex_convert="rectangular", **kw):
+        """
+        Interpolation function based on ``scipy.interpolate.RegularGridInterpolator``.
+        """
+        xp = np.concatenate(
+            (self._dirs[-1:] - 2 * np.pi, self._dirs, self._dirs[:1] + 2.0 * np.pi)
+        )
+
+        yp = self._freq
+        zp = np.concatenate(
+            (
+                self._vals[:, -1:],
+                self._vals,
+                self._vals[:, :1],
+            ),
+            axis=1,
+        )
+
+        if np.all(np.isreal(zp)):
+            return RGI((xp, yp), zp.T, **kw)
+        elif complex_convert.lower() == "polar":
+            amp, phase = complex_to_polar(zp, phase_degrees=False)
+            phase_complex = np.cos(phase) + 1j * np.sin(phase)
+            interp_amp = RGI((xp, yp), amp.T, **kw)
+            interp_phase = RGI((xp, yp), phase_complex.T, **kw)
+            return lambda *args, **kwargs: (
+                polar_to_complex(
+                    interp_amp(*args, **kwargs),
+                    np.angle(interp_phase(*args, **kwargs)),
+                    phase_degrees=False,
+                )
+            )
+        elif complex_convert.lower() == "rectangular":
+            interp_real = RGI((xp, yp), np.real(zp.T), **kw)
+            interp_imag = RGI((xp, yp), np.imag(zp.T), **kw)
+            return lambda *args, **kwargs: (
+                interp_real(*args, **kwargs) + 1j * interp_imag(*args, **kwargs)
+            )
+        else:
+            raise ValueError("Unknown 'complex_convert' type")
+
     def __mul__(self, other):
         """
         Multiply values (element-wise).
@@ -685,47 +726,6 @@ class Grid(_BaseGrid):
 
     def __repr__(self):
         return "Grid"
-
-    def _interpolate_function(self, complex_convert="rectangular", **kw):
-        """
-        Interpolation function based on ``scipy.interpolate.RegularGridInterpolator``.
-        """
-        xp = np.concatenate(
-            (self._dirs[-1:] - 2 * np.pi, self._dirs, self._dirs[:1] + 2.0 * np.pi)
-        )
-
-        yp = self._freq
-        zp = np.concatenate(
-            (
-                self._vals[:, -1:],
-                self._vals,
-                self._vals[:, :1],
-            ),
-            axis=1,
-        )
-
-        if np.all(np.isreal(zp)):
-            return RGI((xp, yp), zp.T, **kw)
-        elif complex_convert.lower() == "polar":
-            amp, phase = complex_to_polar(zp, phase_degrees=False)
-            phase_complex = np.cos(phase) + 1j * np.sin(phase)
-            interp_amp = RGI((xp, yp), amp.T, **kw)
-            interp_phase = RGI((xp, yp), phase_complex.T, **kw)
-            return lambda *args, **kwargs: (
-                polar_to_complex(
-                    interp_amp(*args, **kwargs),
-                    np.angle(interp_phase(*args, **kwargs)),
-                    phase_degrees=False,
-                )
-            )
-        elif complex_convert.lower() == "rectangular":
-            interp_real = RGI((xp, yp), np.real(zp.T), **kw)
-            interp_imag = RGI((xp, yp), np.imag(zp.T), **kw)
-            return lambda *args, **kwargs: (
-                interp_real(*args, **kwargs) + 1j * interp_imag(*args, **kwargs)
-            )
-        else:
-            raise ValueError("Unknown 'complex_convert' type")
 
     def interpolate(
         self,
