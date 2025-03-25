@@ -831,6 +831,20 @@ class Test__BaseGrid:
             vals = np.zeros((3, 4))
             _BaseGrid(freq, dirs, vals, degrees=False)
 
+    def test__init__raises_freq_not_1d(self):
+        with pytest.raises(ValueError, match="`freq` must be 1 dimensional."):
+            freq = np.array([[0, 1], [2, 3]])
+            dirs = np.array([0.0, 1.0, 1.5, 2.0])
+            vals = np.zeros((4, 4))
+            _BaseGrid(freq, dirs, vals)
+
+    def test__init__raises_dirs_not_1d(self):
+        with pytest.raises(ValueError, match="`dirs` must be 1 dimensional."):
+            freq = np.array([0, 1, 2, 3])
+            dirs = np.array([[0.0, 1.0], [1.5, 2.0]])
+            vals = np.zeros((4, 4))
+            _BaseGrid(freq, dirs, vals)
+
     def test__init__raises_vals_shape(self):
         with pytest.raises(ValueError):
             freq = np.array([0, 1, 2])

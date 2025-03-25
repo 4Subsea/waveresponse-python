@@ -278,13 +278,9 @@ class _BaseGrid:
         clockwise=False,
         waves_coming_from=True,
     ):
-        self._freq = np.asarray_chkfinite(freq).ravel().copy()
-        self._dirs = np.asarray_chkfinite(dirs).ravel().copy()
-        self._vals = (
-            np.asarray_chkfinite(vals)
-            .reshape((len(self._freq), len(self._dirs)))
-            .copy()
-        )
+        self._freq = np.asarray_chkfinite(freq).copy()
+        self._dirs = np.asarray_chkfinite(dirs).copy()
+        self._vals = np.asarray_chkfinite(vals).copy()
         self._clockwise = clockwise
         self._waves_coming_from = waves_coming_from
         self._freq_hz = freq_hz
@@ -298,6 +294,11 @@ class _BaseGrid:
 
         self._check_freq(self._freq)
         self._check_dirs(self._dirs)
+        if self._vals.shape != (len(self._freq), len(self._dirs)):
+            raise ValueError(
+                "Values must have shape shape (N, M), such that ``N=len(freq)`` "
+                "and ``M=len(dirs)``."
+            )
 
     def __repr__(self):
         return "_BaseGrid"
@@ -328,6 +329,9 @@ class _BaseGrid:
         """
         Check frequency bins.
         """
+        if freq.ndim != 1:
+            raise ValueError("`freq` must be 1 dimensional.")
+
         if np.any(freq[:-1] >= freq[1:]) or freq[0] < 0:
             raise ValueError(
                 "Frequencies must be positive and monotonically increasing."
@@ -337,6 +341,9 @@ class _BaseGrid:
         """
         Check direction bins.
         """
+        if dirs.ndim != 1:
+            raise ValueError("`dirs` must be 1 dimensional.")
+
         if np.any(dirs[:-1] >= dirs[1:]) or dirs[0] < 0 or dirs[-1] >= 2.0 * np.pi:
             raise ValueError(
                 "Directions must be positive, monotonically increasing, and "
@@ -531,47 +538,6 @@ class _BaseGrid:
         new._dirs, new._vals = _sort(dirs_new, new._vals)
         return new
 
-    def _interpolate_function(self, complex_convert="rectangular", **kw):
-        """
-        Interpolation function based on ``scipy.interpolate.RegularGridInterpolator``.
-        """
-        xp = np.concatenate(
-            (self._dirs[-1:] - 2 * np.pi, self._dirs, self._dirs[:1] + 2.0 * np.pi)
-        )
-
-        yp = self._freq
-        zp = np.concatenate(
-            (
-                self._vals[:, -1:],
-                self._vals,
-                self._vals[:, :1],
-            ),
-            axis=1,
-        )
-
-        if np.all(np.isreal(zp)):
-            return RGI((xp, yp), zp.T, **kw)
-        elif complex_convert.lower() == "polar":
-            amp, phase = complex_to_polar(zp, phase_degrees=False)
-            phase_complex = np.cos(phase) + 1j * np.sin(phase)
-            interp_amp = RGI((xp, yp), amp.T, **kw)
-            interp_phase = RGI((xp, yp), phase_complex.T, **kw)
-            return lambda *args, **kwargs: (
-                polar_to_complex(
-                    interp_amp(*args, **kwargs),
-                    np.angle(interp_phase(*args, **kwargs)),
-                    phase_degrees=False,
-                )
-            )
-        elif complex_convert.lower() == "rectangular":
-            interp_real = RGI((xp, yp), np.real(zp.T), **kw)
-            interp_imag = RGI((xp, yp), np.imag(zp.T), **kw)
-            return lambda *args, **kwargs: (
-                interp_real(*args, **kwargs) + 1j * interp_imag(*args, **kwargs)
-            )
-        else:
-            raise ValueError("Unknown 'complex_convert' type")
-
     def __mul__(self, other):
         """
         Multiply values (element-wise).
@@ -716,38 +682,6 @@ class Grid(_BaseGrid):
         If waves are 'coming from' the given directions. If ``False``, 'going towards'
         convention is assumed.
     """
-
-    def __init__(
-        self,
-        freq,
-        dirs,
-        vals,
-        freq_hz=False,
-        degrees=False,
-        clockwise=False,
-        waves_coming_from=True,
-    ):
-        self._freq = np.asarray_chkfinite(freq).copy()
-        self._dirs = np.asarray_chkfinite(dirs).copy()
-        self._vals = np.asarray_chkfinite(vals).copy()
-        self._clockwise = clockwise
-        self._waves_coming_from = waves_coming_from
-        self._freq_hz = freq_hz
-        self._degrees = degrees
-
-        if freq_hz:
-            self._freq = 2.0 * np.pi * self._freq
-
-        if degrees:
-            self._dirs = (np.pi / 180.0) * self._dirs
-
-        self._check_freq(self._freq)
-        self._check_dirs(self._dirs)
-        if self._vals.shape != (len(self._freq), len(self._dirs)):
-            raise ValueError(
-                "Values must have shape shape (N, M), such that ``N=len(freq)`` "
-                "and ``M=len(dirs)``."
-            )
 
     def __repr__(self):
         return "Grid"
