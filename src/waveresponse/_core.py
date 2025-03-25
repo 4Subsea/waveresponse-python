@@ -1151,9 +1151,10 @@ class _FreqSpectrumMixin:
     """
 
     @abstractmethod
-    def _nondirectional(self, freq_hz=None):
+    def _freq_spectrum(self, freq_hz=None):
         """
-        Non-directional spectrum.
+        Integrate the spectrum over the directional domain to obtain the non-directional
+        frequency spectrum.
 
         Parameters
         ----------
@@ -1170,7 +1171,7 @@ class _FreqSpectrumMixin:
         """
         raise NotImplementedError
 
-    def _directional(self, degrees=None):
+    def _dir_spectrum(self, degrees=None):
         """
         Integrate the spectrum over the frequency domain to obtain the 'directional
         distribution' of the spectrum.
@@ -1229,10 +1230,10 @@ class _FreqSpectrumMixin:
             specified axis.
         """
 
-        if axis == 0:
-            return self._directional(degrees=degrees)
-        elif axis == 1:
-            return self._nondirectional(freq_hz=freq_hz)
+        if axis == 0:  # integrate over frequency
+            return self._dir_spectrum(degrees=degrees)
+        elif axis == 1:  # integrate over frequency
+            return self._freq_spectrum(freq_hz=freq_hz)
         else:
             raise ValueError("'axis' must be 0 or 1.")
 
@@ -1264,7 +1265,7 @@ class _FreqSpectrumMixin:
         Cambridge University Press.
 
         """
-        f, s = self._nondirectional(freq_hz=freq_hz)
+        f, s = self._freq_spectrum(freq_hz=freq_hz)
         m_n = trapezoid((f**n) * s, f)
         return m_n
 
@@ -1429,7 +1430,7 @@ class DirectionalSpectrum(_FreqSpectrumMixin, Grid):
         if degrees:
             self._vals = 180.0 / np.pi * self._vals
 
-    def _nondirectional(self, freq_hz=None):
+    def _freq_spectrum(self, freq_hz=None):
         """
         Integrate the spectrum over the directional domain to obtain the non-directional
         spectrum.
