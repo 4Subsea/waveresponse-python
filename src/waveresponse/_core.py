@@ -889,7 +889,7 @@ class GridBin(_BaseGrid):
     """
 
     def __repr__(self):
-        return "Grid"
+        return "GridBin"
 
     def _interpolate_function(self, complex_convert="rectangular", **kw):
         """
@@ -1031,9 +1031,7 @@ class GridBin(_BaseGrid):
 
         vals_new = self.interpolate(
             freq_new,
-            self._dirs,
             freq_hz=False,
-            degrees=False,
             complex_convert=complex_convert,
             fill_value=fill_value,
         )
