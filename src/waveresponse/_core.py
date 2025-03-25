@@ -10,7 +10,6 @@ from scipy.special import gamma
 from ._utils import _robust_modulus, complex_to_polar, polar_to_complex
 
 
-
 def _check_is_similar(*grids, exact_type=True):
     """
     Check if grid objects are similar.

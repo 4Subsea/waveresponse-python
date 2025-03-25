@@ -19,7 +19,7 @@ from waveresponse import (
     calculate_response,
     mirror,
 )
-from waveresponse._core import _check_foldable, _check_is_similar, _BaseGrid
+from waveresponse._core import _BaseGrid, _check_foldable, _check_is_similar
 
 TEST_PATH = Path(__file__).parent
 
@@ -730,7 +730,6 @@ class Test__check_foldable:
             _check_foldable(np.array([]), degrees=True, sym_plane="xz")
 
 
-
 class Test__BaseGrid:
     def test__init__(self):
         freq = np.linspace(0, 1.0, 10)
@@ -977,7 +976,9 @@ class Test__BaseGrid:
         dirs_in = np.array([0, np.pi / 4, np.pi / 2, 3.0 * np.pi / 4, np.pi])
         config_org = {"clockwise": False, "waves_coming_from": True}
         config_new = {"clockwise": True, "waves_coming_from": False}
-        dirs_out = _BaseGrid._convert_dirs(dirs_in, config_new, config_org, degrees=False)
+        dirs_out = _BaseGrid._convert_dirs(
+            dirs_in, config_new, config_org, degrees=False
+        )
 
         dirs_expect = np.array([np.pi, 3.0 * np.pi / 4, np.pi / 2, np.pi / 4, 0])
 
@@ -987,7 +988,9 @@ class Test__BaseGrid:
         dirs_in = np.array([0, 45.0, 90.0, 135.0, 180.0])
         config_org = {"clockwise": False, "waves_coming_from": True}
         config_new = {"clockwise": True, "waves_coming_from": False}
-        dirs_out = _BaseGrid._convert_dirs(dirs_in, config_new, config_org, degrees=True)
+        dirs_out = _BaseGrid._convert_dirs(
+            dirs_in, config_new, config_org, degrees=True
+        )
 
         dirs_expect = np.array([180.0, 135.0, 90.0, 45.0, 0])
 
@@ -1329,7 +1332,9 @@ class Test__BaseGrid:
         np.testing.assert_array_almost_equal(grid_scaled._vals, base_grid._vals * 2)
 
         grid_scaled = base_grid * (1 + 1j)
-        np.testing.assert_array_almost_equal(grid_scaled._vals, base_grid._vals * (1 + 1j))
+        np.testing.assert_array_almost_equal(
+            grid_scaled._vals, base_grid._vals * (1 + 1j)
+        )
 
     def test__rmul__numeric(self, base_grid):
         grid_scaled = 2.0 * base_grid
@@ -1399,7 +1404,9 @@ class Test__BaseGrid:
         out = base_grid + base_grid
 
         assert isinstance(out, _BaseGrid)
-        np.testing.assert_array_almost_equal(out._vals, base_grid._vals + base_grid._vals)
+        np.testing.assert_array_almost_equal(
+            out._vals, base_grid._vals + base_grid._vals
+        )
 
     def test__add__raises_type(self, base_grid, rao):
         with pytest.raises(TypeError):
@@ -1408,7 +1415,9 @@ class Test__BaseGrid:
     @patch("waveresponse._core._check_is_similar")
     def test__add__check_is_similar(self, mock_check_is_similar, base_grid):
         base_grid + base_grid
-        mock_check_is_similar.assert_called_once_with(base_grid, base_grid, exact_type=True)
+        mock_check_is_similar.assert_called_once_with(
+            base_grid, base_grid, exact_type=True
+        )
 
     def test__add__numeric(self, base_grid):
         grid_added = base_grid + 2.0
@@ -1421,7 +1430,9 @@ class Test__BaseGrid:
         np.testing.assert_array_almost_equal(grid_added._vals, base_grid._vals + 2)
 
         grid_added = base_grid + (1 + 1j)
-        np.testing.assert_array_almost_equal(grid_added._vals, base_grid._vals + (1 + 1j))
+        np.testing.assert_array_almost_equal(
+            grid_added._vals, base_grid._vals + (1 + 1j)
+        )
 
     def test__radd__numeric(self, base_grid):
         grid_added = 2.0 + base_grid
@@ -1431,12 +1442,16 @@ class Test__BaseGrid:
         out = base_grid - base_grid
 
         assert isinstance(out, _BaseGrid)
-        np.testing.assert_array_almost_equal(out._vals, base_grid._vals - base_grid._vals)
+        np.testing.assert_array_almost_equal(
+            out._vals, base_grid._vals - base_grid._vals
+        )
 
     @patch("waveresponse._core._check_is_similar")
     def test__sub__check_is_similar(self, mock_check_is_similar, base_grid):
         base_grid - base_grid
-        mock_check_is_similar.assert_called_once_with(base_grid, base_grid, exact_type=True)
+        mock_check_is_similar.assert_called_once_with(
+            base_grid, base_grid, exact_type=True
+        )
 
     def test__sub__raises_type(self, base_grid, rao):
         with pytest.raises(TypeError):
@@ -1444,10 +1459,14 @@ class Test__BaseGrid:
 
     def test__sub__numeric(self, base_grid):
         grid_subtracted = base_grid - 2.0
-        np.testing.assert_array_almost_equal(grid_subtracted._vals, base_grid._vals - 2.0)
+        np.testing.assert_array_almost_equal(
+            grid_subtracted._vals, base_grid._vals - 2.0
+        )
 
         grid_subtracted = base_grid - 0.0
-        np.testing.assert_array_almost_equal(grid_subtracted._vals, base_grid._vals - 0.0)
+        np.testing.assert_array_almost_equal(
+            grid_subtracted._vals, base_grid._vals - 0.0
+        )
 
         grid_subtracted = base_grid - 2
         np.testing.assert_array_almost_equal(grid_subtracted._vals, base_grid._vals - 2)
@@ -1459,7 +1478,9 @@ class Test__BaseGrid:
 
     def test__rsub__numeric(self, base_grid):
         grid_subtracted = 2.0 - base_grid
-        np.testing.assert_array_almost_equal(grid_subtracted._vals, base_grid._vals - 2.0)
+        np.testing.assert_array_almost_equal(
+            grid_subtracted._vals, base_grid._vals - 2.0
+        )
 
     def test__repr__(self, base_grid):
         assert str(base_grid) == "_BaseGrid"
@@ -1469,7 +1490,9 @@ class Test__BaseGrid:
 
         np.testing.assert_array_almost_equal(grid_conj._freq, base_grid._freq)
         np.testing.assert_array_almost_equal(grid_conj._dirs, base_grid._dirs)
-        np.testing.assert_array_almost_equal(grid_conj._vals, base_grid._vals.conjugate())
+        np.testing.assert_array_almost_equal(
+            grid_conj._vals, base_grid._vals.conjugate()
+        )
 
     def test_real(self):
         freq_in = np.array([1, 2, 3])
