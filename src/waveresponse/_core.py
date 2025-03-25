@@ -1170,6 +1170,72 @@ class _FreqSpectrumMixin:
         """
         raise NotImplementedError
 
+    def _directional(self, degrees=None):
+        """
+        Integrate the spectrum over the frequency domain to obtain the 'directional
+        distribution' of the spectrum.
+
+        Parameters
+        ----------
+        degrees : bool
+            If directions should be returned in 'degrees'. If ``False``, 'radians'
+            is used. Defaults to original unit used during initialization.
+
+        Returns
+        -------
+        d : array
+            1-D array of direction coordinates in 'deg' or 'rad'.
+        s : array
+            1-D array of spectral density values in 'm^2/deg' or 'm^2/rad'.
+        """
+
+        if degrees is None:
+            degrees = self._degrees
+
+        f, d, vv = self.grid(freq_hz=False, degrees=degrees)
+
+        s = np.array([trapezoid(vv_f, f) for vv_f in vv.T])
+
+        return d, s
+
+    def spectrum1d(self, axis=1, freq_hz=None, degrees=None):
+        """
+        Integrate the spectrum over a given axis.
+
+        Parameters
+        ----------
+        axis : int
+            Axis along which integration of the spectrum is done. For `axis=1`
+            (default) the spectrum is integrated over direction, resulting
+            in the so-called 'non-directional' spectrum. For `axis=0` the
+            spectrum is integrated over frequency, resulting in the directional
+            'distribution' of the spectrum.
+        freq_hz : bool
+            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is
+            used. This option is only relevant if `axis=1`. Defaults to original
+            unit used during instantiation.
+        degrees : bool
+            If directions should be returned in degrees. This option is only
+            relevant if `axis=0`. Defaults to original unit used during
+            instantiation.
+
+        Returns
+        -------
+        x : 1-D array
+            Spectrum bins corresponding to the specified axis. `axis=1` yields
+            frequencies, while `axis=0` yields directions.
+        s : 1-D array
+            Spectrum density values, where the spectrum is integrated over the
+            specified axis.
+        """
+
+        if axis == 0:
+            return self._directional(degrees=degrees)
+        elif axis == 1:
+            return self._nondirectional(freq_hz=freq_hz)
+        else:
+            raise ValueError("'axis' must be 0 or 1.")
+
     def moment(self, n, freq_hz=None):
         """
         Calculate spectral moment (along the frequency domain).
@@ -1392,72 +1458,6 @@ class DirectionalSpectrum(_FreqSpectrumMixin, Grid):
         s = np.array([trapezoid(vv_d, d) for vv_d in vv])
 
         return f, s
-    
-    def _directional(self, degrees=None):
-        """
-        Integrate the spectrum over the frequency domain to obtain the 'directional
-        distribution' of the spectrum.
-
-        Parameters
-        ----------
-        degrees : bool
-            If directions should be returned in 'degrees'. If ``False``, 'radians'
-            is used. Defaults to original unit used during initialization.
-
-        Returns
-        -------
-        d : array
-            1-D array of direction coordinates in 'deg' or 'rad'.
-        s : array
-            1-D array of spectral density values in 'm^2/deg' or 'm^2/rad'.
-        """
-
-        if degrees is None:
-            degrees = self._degrees
-
-        f, d, vv = self.grid(freq_hz=False, degrees=degrees)
-
-        s = np.array([trapezoid(vv_f, f) for vv_f in vv.T])
-
-        return d, s
-
-    def spectrum1d(self, axis=1, freq_hz=None, degrees=None):
-        """
-        Integrate the spectrum over a given axis.
-
-        Parameters
-        ----------
-        axis : int
-            Axis along which integration of the spectrum is done. For `axis=1`
-            (default) the spectrum is integrated over direction, resulting
-            in the so-called 'non-directional' spectrum. For `axis=0` the
-            spectrum is integrated over frequency, resulting in the directional
-            'distribution' of the spectrum.
-        freq_hz : bool
-            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is
-            used. This option is only relevant if `axis=1`. Defaults to original
-            unit used during instantiation.
-        degrees : bool
-            If directions should be returned in degrees. This option is only
-            relevant if `axis=0`. Defaults to original unit used during
-            instantiation.
-
-        Returns
-        -------
-        x : 1-D array
-            Spectrum bins corresponding to the specified axis. `axis=1` yields
-            frequencies, while `axis=0` yields directions.
-        s : 1-D array
-            Spectrum density values, where the spectrum is integrated over the
-            specified axis.
-        """
-
-        if axis == 0:
-            return self._directional(degrees=degrees)
-        elif axis == 1:
-            return self._nondirectional(freq_hz=freq_hz)
-        else:
-            raise ValueError("'axis' must be 0 or 1.")
 
     @classmethod
     def from_spectrum1d(
