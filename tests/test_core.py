@@ -1551,6 +1551,7 @@ class Test_Grid:
             waves_coming_from=True,
         )
 
+        assert isinstance(grid, _BaseGrid)
         np.testing.assert_array_almost_equal(grid._freq, 2.0 * np.pi * freq)
         np.testing.assert_array_almost_equal(grid._dirs, (np.pi / 180.0) * dirs)
         np.testing.assert_array_almost_equal(grid._vals, vals)
@@ -1573,6 +1574,7 @@ class Test_Grid:
             waves_coming_from=False,
         )
 
+        assert isinstance(grid, _BaseGrid)
         np.testing.assert_array_almost_equal(grid._freq, freq)
         np.testing.assert_array_almost_equal(grid._dirs, dirs)
         np.testing.assert_array_almost_equal(grid._vals, vals)
