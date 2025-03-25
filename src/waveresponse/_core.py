@@ -1217,7 +1217,8 @@ class _FreqSpectrumMixin:
     @property
     def tz(self):
         """
-        Mean zero-crossing period, Tz, in 'seconds'.
+        Mean zero-crossing period, Tz, in 'seconds'. Only applicable for
+        positive real-valued spectra.
 
         Calculated from the zeroth- and second-order spectral moments according to:
 
@@ -1236,13 +1237,20 @@ class _FreqSpectrumMixin:
         Cambridge University Press.
 
         """
+        if np.iscomplex(self._vals).any() or (self._vals < 0.0).any():
+            raise ValueError(
+                "Mean zero-crossing period is only defined for positive real-valued spectra."
+            )
+
         m0 = self.moment(0, freq_hz=True)
         m2 = self.moment(2, freq_hz=True)
+
         return np.sqrt(m0 / m2)
 
     def extreme(self, t, q=0.37, absmax=False):
         """
         Compute the q-th quantile extreme value (assuming a Gaussian process).
+        Only applicable for positive real-valued spectra.
 
         The extreme value, ``x``, is calculated according to:
 
