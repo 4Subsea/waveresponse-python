@@ -1147,7 +1147,7 @@ class RAO(Grid):
 
 class _SpectrumMixin:
     """
-    Mixin class for nondirectional frequency spectrum operations.
+    Mixin class Spectrum methods.
     """
 
     @abstractmethod
