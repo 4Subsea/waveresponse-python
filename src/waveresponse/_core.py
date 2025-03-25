@@ -7,79 +7,7 @@ from scipy.integrate import trapezoid
 from scipy.interpolate import RegularGridInterpolator as RGI
 from scipy.special import gamma
 
-
-def _robust_modulus(x, periodicity):
-    """
-    Robust modulus operator.
-
-    Similar to ``x % periodicity``, but ensures that it is robust w.r.t. floating
-    point numbers.
-    """
-    x = np.asarray_chkfinite(x % periodicity).copy()
-    return np.nextafter(x, -1, where=(x == periodicity), out=x)
-
-
-def complex_to_polar(complex_vals, phase_degrees=False):
-    """
-    Convert complex numbers to polar form (i.e., amplitude and phase).
-
-    Parameters
-    ----------
-    complex_vals : array-like
-        Complex number values.
-    phase_degrees : bool
-        Whether the phase angles should be returned in 'degrees' (``True``) or
-        'radians' (``False``).
-
-    Returns
-    -------
-    amp : array
-        Amplitudes.
-    phase : array
-        Phase angles.
-
-    """
-    complex_vals = np.asarray_chkfinite(complex_vals)
-    amp = np.abs(complex_vals)
-    phase = np.angle(complex_vals, deg=phase_degrees)
-    return amp, phase
-
-
-def polar_to_complex(amp, phase, phase_degrees=False):
-    """
-    Convert polar coordinates (i.e., amplitude and phase) to complex numbers.
-
-    Given as:
-
-        ``A * exp(j * phi)``
-
-    where, ``A`` is the amplitude and ``phi`` is the phase.
-
-    Parameters
-    ----------
-    amp : array-like
-        Amplitude values.
-    phase : array-like
-        Phase angle values.
-    phase_degrees : bool
-        Whether the phase angles are given in 'degrees'. If ``False``, 'radians'
-        is assumed.
-
-    Returns
-    -------
-    array :
-        Complex numbers.
-    """
-    amp = np.asarray_chkfinite(amp)
-    phase = np.asarray_chkfinite(phase)
-
-    if phase_degrees:
-        phase = (np.pi / 180.0) * phase
-
-    if amp.shape != phase.shape:
-        raise ValueError()
-
-    return amp * np.exp(1j * phase)
+from ._utils import _robust_modulus, complex_to_polar, polar_to_complex
 
 
 def _check_is_similar(*grids, exact_type=True):
@@ -93,7 +21,7 @@ def _check_is_similar(*grids, exact_type=True):
         type_ = type(grid_ref)
 
         def check_type(grid, grid_type):
-            return type(grid) == grid_type
+            return type(grid) is grid_type
 
     else:
         type_ = Grid
@@ -287,7 +215,7 @@ def mirror(rao, dof, sym_plane="xz"):
     lb_0, ub_0 = np.nextafter(bounds[0], (-periodicity, periodicity))
     lb_1, ub_1 = np.nextafter(bounds[1], (-periodicity, periodicity))
     exclude_bounds = ((dirs >= ub_0) | (dirs <= lb_0)) & (
-        ((dirs >= ub_1) | (dirs <= lb_1))
+        (dirs >= ub_1) | (dirs <= lb_1)
     )
 
     _check_foldable(dirs[exclude_bounds], degrees=rao._degrees, sym_plane=sym_plane)
@@ -313,7 +241,7 @@ def mirror(rao, dof, sym_plane="xz"):
     )
 
 
-class Grid:
+class _BaseGrid:
     """
     Two-dimentional frequency/(wave)direction grid.
 
@@ -372,10 +300,13 @@ class Grid:
                 "and ``M=len(dirs)``."
             )
 
+    def __repr__(self):
+        return "_BaseGrid"
+
     @classmethod
     def from_grid(cls, grid):
         """
-        Construct from a Grid object.
+        Construct from a Grid-like object.
 
         Parameters
         ----------
@@ -398,6 +329,9 @@ class Grid:
         """
         Check frequency bins.
         """
+        if freq.ndim != 1:
+            raise ValueError("`freq` must be 1 dimensional.")
+
         if np.any(freq[:-1] >= freq[1:]) or freq[0] < 0:
             raise ValueError(
                 "Frequencies must be positive and monotonically increasing."
@@ -407,6 +341,9 @@ class Grid:
         """
         Check direction bins.
         """
+        if dirs.ndim != 1:
+            raise ValueError("`dirs` must be 1 dimensional.")
+
         if np.any(dirs[:-1] >= dirs[1:]) or dirs[0] < 0 or dirs[-1] >= 2.0 * np.pi:
             raise ValueError(
                 "Directions must be positive, monotonically increasing, and "
@@ -601,6 +538,154 @@ class Grid:
         new._dirs, new._vals = _sort(dirs_new, new._vals)
         return new
 
+    def __mul__(self, other):
+        """
+        Multiply values (element-wise).
+
+        Both grids must have the same frequency/direction coordinates, and the same
+        'wave convention'.
+
+        Parameters
+        ----------
+        other : obj or numeric
+            Grid object or number to be multiplied with.
+
+        Returns
+        -------
+        obj :
+            A copy of the object where the values are multiplied with values of
+            another grid.
+        """
+        new = self.copy()
+
+        if isinstance(other, Number):
+            new._vals = new._vals * other
+        else:
+            _check_is_similar(self, other, exact_type=True)
+            new._vals = new._vals * other._vals
+
+        return new
+
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
+    def __add__(self, other):
+        """
+        Add values (element-wise).
+
+        Both grids must have the same frequency/direction coordinates, and the same
+        'wave convention'.
+
+        Parameters
+        ----------
+        other : obj or numeric
+            Grid object or number to be added.
+
+        Returns
+        -------
+        obj :
+            A copy of the object where the values are added with another grid's values.
+        """
+        new = self.copy()
+
+        if isinstance(other, Number):
+            new._vals = new._vals + other
+        else:
+            _check_is_similar(self, other, exact_type=True)
+            new._vals = new._vals + other._vals
+
+        return new
+
+    def __radd__(self, other):
+        return self.__add__(other)
+
+    def __sub__(self, other):
+        """
+        Subtract values (element-wise).
+
+        Both grids must have the same frequency/direction coordinates, and the same
+        'wave convention'.
+
+        Parameters
+        ----------
+        other : obj or numeric
+            Grid object or number to be subtracted.
+
+        Returns
+        -------
+        obj :
+            A copy of the object where the values are subtracted with another grid's values.
+        """
+        new = self.copy()
+
+        if isinstance(other, Number):
+            new._vals = new._vals - other
+        else:
+            _check_is_similar(self, other, exact_type=True)
+            new._vals = new._vals - other._vals
+
+        return new
+
+    def __rsub__(self, other):
+        return self.__sub__(other)
+
+    def conjugate(self):
+        """
+        Return a copy of the object with complex conjugate values.
+        """
+        new = self.copy()
+        new._vals = new._vals.conjugate()
+        return new
+
+    @property
+    def real(self):
+        """
+        Return a new Grid object where all values are converted to their real part.
+        """
+        new = _cast_to_grid(self)
+        new._vals = new._vals.real
+        return new
+
+    @property
+    def imag(self):
+        """
+        Return a new Grid object where all values are converted to their imaginary part.
+        """
+        new = _cast_to_grid(self)
+        new._vals = new._vals.imag
+        return new
+
+
+class Grid(_BaseGrid):
+    """
+    Two-dimentional frequency/(wave)direction grid.
+
+    Parameters
+    ----------
+    freq : array-like
+        1-D array of grid frequency coordinates. Positive and monotonically increasing.
+    dirs : array-like
+        1-D array of grid direction coordinates. Positive and monotonically increasing.
+        Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+    vals : array-like (N, M)
+        Values associated with the grid. Should be a 2-D array of shape (N, M),
+        such that ``N=len(freq)`` and ``M=len(dirs)``.
+    freq_hz : bool
+        If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+    degrees : bool
+        If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
+    clockwise : bool
+        If positive directions are defined to be 'clockwise' (``True``) or 'counterclockwise'
+        (``False``). Clockwise means that the directions follow the right-hand rule
+        with an axis pointing downwards.
+    waves_coming_from : bool
+        If waves are 'coming from' the given directions. If ``False``, 'going towards'
+        convention is assumed.
+    """
+
+    def __repr__(self):
+        return "Grid"
+
     def _interpolate_function(self, complex_convert="rectangular", **kw):
         """
         Interpolation function based on ``scipy.interpolate.RegularGridInterpolator``.
@@ -773,126 +858,6 @@ class Grid:
         )
         new = self.copy()
         new._freq, new._dirs, new._vals = freq_new, dirs_new, vals_new
-        return new
-
-    def __mul__(self, other):
-        """
-        Multiply values (element-wise).
-
-        Both grids must have the same frequency/direction coordinates, and the same
-        'wave convention'.
-
-        Parameters
-        ----------
-        other : obj or numeric
-            Grid object or number to be multiplied with.
-
-        Returns
-        -------
-        obj :
-            A copy of the object where the values are multiplied with values of
-            another grid.
-        """
-        new = self.copy()
-
-        if isinstance(other, Number):
-            new._vals = new._vals * other
-        else:
-            _check_is_similar(self, other, exact_type=True)
-            new._vals = new._vals * other._vals
-
-        return new
-
-    def __rmul__(self, other):
-        return self.__mul__(other)
-
-    def __add__(self, other):
-        """
-        Add values (element-wise).
-
-        Both grids must have the same frequency/direction coordinates, and the same
-        'wave convention'.
-
-        Parameters
-        ----------
-        other : obj or numeric
-            Grid object or number to be added.
-
-        Returns
-        -------
-        obj :
-            A copy of the object where the values are added with another grid's values.
-        """
-        new = self.copy()
-
-        if isinstance(other, Number):
-            new._vals = new._vals + other
-        else:
-            _check_is_similar(self, other, exact_type=True)
-            new._vals = new._vals + other._vals
-
-        return new
-
-    def __radd__(self, other):
-        return self.__add__(other)
-
-    def __sub__(self, other):
-        """
-        Subtract values (element-wise).
-
-        Both grids must have the same frequency/direction coordinates, and the same
-        'wave convention'.
-
-        Parameters
-        ----------
-        other : obj or numeric
-            Grid object or number to be subtracted.
-
-        Returns
-        -------
-        obj :
-            A copy of the object where the values are subtracted with another grid's values.
-        """
-        new = self.copy()
-
-        if isinstance(other, Number):
-            new._vals = new._vals - other
-        else:
-            _check_is_similar(self, other, exact_type=True)
-            new._vals = new._vals - other._vals
-
-        return new
-
-    def __rsub__(self, other):
-        return self.__sub__(other)
-
-    def __repr__(self):
-        return "Grid"
-
-    def conjugate(self):
-        """
-        Return a copy of the object with complex conjugate values.
-        """
-        new = self.copy()
-        new._vals = new._vals.conjugate()
-        return new
-
-    @property
-    def real(self):
-        """
-        Return a new Grid object where all values are converted to their real part.
-        """
-        new = _cast_to_grid(self)
-        new._vals = new._vals.real
-        return new
-
-    @property
-    def imag(self):
-        """
-        Return a new Grid object where all values are converted to their imaginary part.
-        """
-        new = _cast_to_grid(self)
-        new._vals = new._vals.imag
         return new
 
 
