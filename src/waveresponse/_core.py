@@ -863,7 +863,7 @@ class Grid(_BaseGrid):
         return new
 
 
-class GridBin(_BaseGrid):
+class BinGrid(_BaseGrid):
     """
     A two-dimensional grid with values as a function of frequency and wave direction.
     The values are assumed to represent a continuous field along the frequency axis,
@@ -894,7 +894,7 @@ class GridBin(_BaseGrid):
     """
 
     def __repr__(self):
-        return "GridBin"
+        return "BinGrid"
 
     def interpolate(
         self,

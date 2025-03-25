@@ -15,7 +15,7 @@ from waveresponse import (
     CosineHalfSpreading,
     DirectionalSpectrum,
     Grid,
-    GridBin,
+    BinGrid,
     WaveSpectrum,
     calculate_response,
     mirror,
@@ -69,10 +69,10 @@ def grid(freq_dirs):
 
 
 @pytest.fixture
-def gridbin(freq_dirs):
+def bingrid(freq_dirs):
     freq, dirs = freq_dirs
     vals = np.random.random((len(freq), len(dirs)))
-    grid = GridBin(
+    grid = BinGrid(
         freq,
         dirs,
         vals,
@@ -2008,12 +2008,12 @@ class Test_Grid:
         assert str(grid) == "Grid"
 
 
-class Test_GridBin:
+class Test_BinGrid:
     def test__init__(self):
         freq = np.linspace(0, 1.0, 10)
         dirs = np.linspace(0, 360.0, 15, endpoint=False)
         vals = np.zeros((10, 15))
-        grid = GridBin(
+        grid = BinGrid(
             freq,
             dirs,
             vals,
@@ -2039,13 +2039,13 @@ class Test_GridBin:
         yp = np.linspace(0.0, 2.0, 20)
         xp = np.linspace(0.0, 359.0, 10)
         vp = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in yp])
-        gridbin = GridBin(yp, xp, vp, freq_hz=True, degrees=True)
+        bingrid = BinGrid(yp, xp, vp, freq_hz=True, degrees=True)
 
         y = np.linspace(0.5, 1.0, 20)
         x = xp
         vals_expect = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
 
-        vals_out = gridbin.interpolate(y, freq_hz=True)
+        vals_out = bingrid.interpolate(y, freq_hz=True)
 
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
@@ -2056,14 +2056,14 @@ class Test_GridBin:
         yp = np.linspace(0.0, 2.0, 20)
         xp = np.linspace(0.0, 359.0, 10)
         vp = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in yp])
-        gridbin = GridBin(yp, xp, vp, freq_hz=True, degrees=True)
+        bingrid = BinGrid(yp, xp, vp, freq_hz=True, degrees=True)
 
         y = np.linspace(0.5, 1.0, 20)
         x = xp
         vals_expect = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
 
         y_ = (2.0 * np.pi) * y
-        vals_out = gridbin.interpolate(y_, freq_hz=False)
+        vals_out = bingrid.interpolate(y_, freq_hz=False)
 
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
@@ -2076,10 +2076,10 @@ class Test_GridBin:
         vp = vp = np.tile(
             np.linspace(0.0, 1.0, len(yp), endpoint=False).reshape(-1, 1), (1, len(xp))
         )
-        gridbin = GridBin(yp, xp, vp, freq_hz=True, degrees=True)
+        bingrid = BinGrid(yp, xp, vp, freq_hz=True, degrees=True)
 
         y_ = (yp[4] + yp[5]) / 2
-        vals_out = gridbin.interpolate(y_, freq_hz=True)
+        vals_out = bingrid.interpolate(y_, freq_hz=True)
 
         vals_expect = ((vp[4] + vp[5]) / 2).reshape(1, -1)
 
@@ -2095,7 +2095,7 @@ class Test_GridBin:
                 [1, 2, 3, 4],
             ]
         )
-        grid = GridBin(freq, dirs, vals, freq_hz=True, degrees=True)
+        grid = BinGrid(freq, dirs, vals, freq_hz=True, degrees=True)
 
         # extrapolate
         vals_out = grid.interpolate([10, 20], freq_hz=True)
@@ -2114,7 +2114,7 @@ class Test_GridBin:
                 [1, 2, 3, 4],
             ]
         )
-        grid = GridBin(freq, dirs, vals, freq_hz=True, degrees=True)
+        grid = BinGrid(freq, dirs, vals, freq_hz=True, degrees=True)
 
         # extrapolate
         vals_out = grid.interpolate([10, 20], freq_hz=True, fill_value=None)
@@ -2139,7 +2139,7 @@ class Test_GridBin:
         vp_real = np.array([[a_real * x_i + b_real * y_i for x_i in xp] for y_i in yp])
         vp_imag = np.array([[a_imag * x_i + b_imag * y_i for x_i in xp] for y_i in yp])
         vp = vp_real + 1j * vp_imag
-        grid = GridBin(yp, xp, vp, freq_hz=True, degrees=True)
+        grid = BinGrid(yp, xp, vp, freq_hz=True, degrees=True)
 
         y = np.linspace(0.5, 1.0, 20)
         x = xp
@@ -2168,7 +2168,7 @@ class Test_GridBin:
             [[a_phase * x_i + b_phase * y_i for x_i in xp] for y_i in yp]
         )
         vp = vp_amp * (np.cos(vp_phase) + 1j * np.sin(vp_phase))
-        grid = GridBin(yp, xp, vp, freq_hz=True, degrees=True)
+        grid = BinGrid(yp, xp, vp, freq_hz=True, degrees=True)
 
         y = np.linspace(0.0, 2.0, 200)
         x = xp
@@ -2193,7 +2193,7 @@ class Test_GridBin:
         freq = np.linspace(0, 1.0, 10)
         dirs = np.linspace(0, 360.0, 15, endpoint=False)
         vals = np.zeros((10, 15))
-        grid = GridBin(
+        grid = BinGrid(
             freq,
             dirs,
             vals,
@@ -2213,11 +2213,11 @@ class Test_GridBin:
         yp = np.linspace(0.0, 2.0, 20)
         xp = np.linspace(0.0, 359.0, 10)
         vp = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in yp])
-        gridbin = GridBin(yp, xp, vp, freq_hz=True, degrees=True)
+        bingrid = BinGrid(yp, xp, vp, freq_hz=True, degrees=True)
 
         y = np.linspace(0.5, 1.0, 20)
         x = xp
-        grid_reshaped = gridbin.reshape(y, freq_hz=True)
+        grid_reshaped = bingrid.reshape(y, freq_hz=True)
 
         freq_expect = (2.0 * np.pi) * y
         dirs_expect = (np.pi / 180.0) * x
@@ -2238,7 +2238,7 @@ class Test_GridBin:
         yp = np.linspace(0.0, 2.0, 20)
         xp = np.linspace(0.0, 359.0, 10)
         vp = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in yp])
-        grid = GridBin(yp, xp, vp, freq_hz=True, degrees=True)
+        grid = BinGrid(yp, xp, vp, freq_hz=True, degrees=True)
 
         y = np.linspace(0.5, 1.0, 20)
         x = xp
@@ -2268,11 +2268,11 @@ class Test_GridBin:
         vp_real = np.array([[a_real * x_i + b_real * y_i for x_i in xp] for y_i in yp])
         vp_imag = np.array([[a_imag * x_i + b_imag * y_i for x_i in xp] for y_i in yp])
         vp = vp_real + 1j * vp_imag
-        gridbin = GridBin(yp, xp, vp, freq_hz=True, degrees=True)
+        bingrid = BinGrid(yp, xp, vp, freq_hz=True, degrees=True)
 
         y = np.linspace(0.5, 1.0, 20)
         x = xp
-        grid_reshaped = gridbin.reshape(y, freq_hz=True, complex_convert="rectangular")
+        grid_reshaped = bingrid.reshape(y, freq_hz=True, complex_convert="rectangular")
 
         freq_out = grid_reshaped._freq
         dirs_out = grid_reshaped._dirs
@@ -2305,11 +2305,11 @@ class Test_GridBin:
             [[a_phase * x_i + b_phase * y_i for x_i in xp] for y_i in yp]
         )
         vp = vp_amp * (np.cos(vp_phase) + 1j * np.sin(vp_phase))
-        gridbin = GridBin(yp, xp, vp, freq_hz=True, degrees=True)
+        bingrid = BinGrid(yp, xp, vp, freq_hz=True, degrees=True)
 
         y = np.linspace(0.5, 1.0, 20)
         x = xp
-        grid_reshaped = gridbin.reshape(y, freq_hz=True, complex_convert="polar")
+        grid_reshaped = bingrid.reshape(y, freq_hz=True, complex_convert="polar")
 
         freq_out = grid_reshaped._freq
         dirs_out = grid_reshaped._dirs
@@ -2338,7 +2338,7 @@ class Test_GridBin:
         freq = np.linspace(0, 1.0, 10)
         dirs = np.linspace(0, 360.0, 15, endpoint=False)
         vals = np.zeros((10, 15))
-        grid = GridBin(
+        grid = BinGrid(
             freq,
             dirs,
             vals,
@@ -2351,8 +2351,8 @@ class Test_GridBin:
         with pytest.raises(ValueError):
             grid.reshape([0, 1, 2, 1])  # freq not monotonically increasing
 
-    def test__repr__(self, gridbin):
-        assert str(gridbin) == "GridBin"
+    def test__repr__(self, bingrid):
+        assert str(bingrid) == "BinGrid"
 
 
 class Test_RAO:
