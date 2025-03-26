@@ -1913,6 +1913,16 @@ class DirectionalBinSpectrum(_SpectrumMixin, BinGrid):
         #     waves_coming_from=waves_coming_from,
         # )
 
+        # return DirectionalSpectrum(
+        #     freq,
+        #     dirs,
+        #     vals,
+        #     freq_hz=freq_hz,
+        #     degrees=degrees,
+        #     clockwise=clockwise,
+        #     waves_coming_from=waves_coming_from,
+        # ).as_bin()
+
     def grid(self, freq_hz=False, degrees=False):
         """
         Return a copy of the spectrum's frequency/direction coordinates and corresponding
