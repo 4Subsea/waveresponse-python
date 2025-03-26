@@ -3301,12 +3301,64 @@ class Test_DirectionalSpectrum:
             waves_coming_from=True,
         )
 
-        freq_out, dirs_out, vals_out = spectrum.grid(freq_hz=True, degrees=False)
+        freq_out, dirs_out, vals_out = spectrum.bingrid(freq_hz=True, degrees=False)
 
         freq_expect = freq_in
         dirs_expect = (np.pi / 180.0) * dirs_in
         vals_expect = 1.0 / (np.pi / 180.0) * vals_in
         vals_expect *= (np.pi / 180.0) * delta_dir
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_bingrid_rads_deg(self):
+        delta_dir = 10.0
+        freq_in = np.arange(0.0, 1, 0.1)
+        dirs_in = np.arange(5.0, 360.0, delta_dir)
+        vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
+        spectrum = DirectionalSpectrum(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_out, dirs_out, vals_out = spectrum.bingrid(freq_hz=False, degrees=True)
+
+        freq_expect = 2.0 * np.pi * freq_in
+        dirs_expect = dirs_in
+        vals_expect = 1.0 / (2.0 * np.pi) * vals_in
+        vals_expect *= delta_dir
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_bingrid__hz_deg(self):
+        delta_dir = 10.0
+        freq_in = np.arange(0.0, 1, 0.1)
+        dirs_in = np.arange(5.0, 360.0, delta_dir)
+        vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
+        spectrum = DirectionalSpectrum(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_out, dirs_out, vals_out = spectrum.bingrid(freq_hz=True, degrees=True)
+
+        freq_expect = freq_in
+        dirs_expect = dirs_in
+        vals_expect = vals_in
+        vals_expect *= delta_dir
 
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
