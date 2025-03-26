@@ -3260,6 +3260,34 @@ class Test_DirectionalSpectrum:
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
+    def test_bingrid(self):
+        freq_in = np.array([0.2, 0.4, 0.6, 0.8, 1.0])
+        dirs_in = np.array([0.0, 90.0, 180.0])
+        vals_in = np.ones((len(freq_in), len(dirs_in)))
+        spectrum = DirectionalSpectrum(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_out, dirs_out, vals_out = spectrum.bingrid(freq_hz=False, degrees=False)
+
+        freq_expect = 2.0 * np.pi * freq_in
+        dirs_expect = (np.pi / 180.0) * dirs_in
+        vals_expect = 1.0 / (2.0 * np.pi * (np.pi / 180.0)) * vals_in
+
+        vals_expect[:, 0] *= 135.0 * (np.pi / 180.0)
+        vals_expect[:, 1] *= 90.0 * (np.pi / 180.0)
+        vals_expect[:, 2] *= 135.0 * (np.pi / 180.0)
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
     def test_bingrid_rads_rad(self):
         delta_dir = 10.0
         freq_in = np.arange(0.0, 1, 0.1)
