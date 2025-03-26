@@ -1714,8 +1714,15 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
 
         if degrees:
             vals *= np.pi / 180.0
+            period = 360.0
+        else:
+            period = 2.0 * np.pi
 
-        return freq, dirs, vals
+        dirs_tmp = np.r_[-period + dirs[-1], dirs, period + dirs[0]]
+        dirs_mid = dirs_tmp[:-1] + np.diff(dirs_tmp) / 2.0
+        vals_binned = vals * np.diff(dirs_mid)[np.newaxis, :]
+
+        return freq, dirs, vals_binned
 
     def interpolate(
         self,
