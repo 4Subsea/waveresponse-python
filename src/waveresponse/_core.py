@@ -1681,6 +1681,51 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
 
         return freq, dirs, vals
 
+    def bingrid(self, freq_hz=False, degrees=False):
+        """
+        Return a copy of the spectrum's frequency and direction coordinates,
+        along with the corresponding binned spectrum values.
+
+        The spectrum values are integrated over their respective direction bins,
+        resulting in total energy per unit frequency. This differs from the ``grid``
+        method, which returns the spectral density values directly without bin
+        integration.
+
+        Parameters
+        ----------
+        freq_hz : bool
+            Whether to return frequencies in hertz (Hz). If ``False``, angular
+            frequency in radians per second (rad/s) is used.
+        degrees : bool
+            Whether to return directions in degrees. If ``False``, radians are used.
+
+        Returns
+        -------
+        freq : ndarray, shape (N,)
+            1D array of frequency coordinates.
+        dirs : ndarray, shape (M,)
+            1D array of direction coordinates.
+        vals : ndarray, shape (N, M)
+            2D array of binned spectrum energy values (energy per unit frequency).
+            ``N = len(freq)``, ``M = len(dirs)``.
+        """
+        freq, dirs, vals = super().grid(freq_hz=freq_hz, degrees=degrees)
+
+        if freq_hz:
+            vals *= 2.0 * np.pi
+
+        if degrees:
+            vals *= np.pi / 180.0
+            period = 360.0
+        else:
+            period = 2.0 * np.pi
+
+        dirs_tmp = np.r_[-period + dirs[-1], dirs, period + dirs[0]]
+        dirs_mid = dirs_tmp[:-1] + np.diff(dirs_tmp) / 2.0
+        vals_binned = vals * np.diff(dirs_mid)[np.newaxis, :]
+
+        return freq, dirs, vals_binned
+
     def interpolate(
         self,
         freq,
