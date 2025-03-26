@@ -1683,29 +1683,31 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
 
     def bingrid(self, freq_hz=False, degrees=False):
         """
-        Return a copy of the spectrum's frequency/direction coordinates and corresponding
-        binned spectrum values. I.e., the spectrum values are integrated over their
-        respective direction bins to form the total energy for that bin; this is
-        in contrast to the ``grid`` method which returns the spectrum density values.
+        Return a copy of the spectrum's frequency and direction coordinates,
+        along with the corresponding binned spectrum values.
+
+        The spectrum values are integrated over their respective direction bins,
+        resulting in total energy per unit frequency. This differs from the ``grid``
+        method, which returns the spectral density values directly without bin
+        integration.
 
         Parameters
         ----------
         freq_hz : bool
-            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
+            Whether to return frequencies in hertz (Hz). If ``False``, angular
+            frequency in radians per second (rad/s) is used.
         degrees : bool
-            If directions should be returned in 'degrees'. If ``False``, 'radians'
-            is used.
+            Whether to return directions in degrees. If ``False``, radians are used.
 
         Returns
         -------
-        freq : array
-            1-D array of grid frequency coordinates.
-        dirs : array
-            1-D array of grid direction coordinates.
-        vals : array (N, M)
-            Binned spectrum density values given as energy per unit frequency.
-            The values form a 2-D array of shape (N, M), such that ``N=len(freq)``
-            and ``M=len(dirs)``.
+        freq : ndarray, shape (N,)
+            1D array of frequency coordinates.
+        dirs : ndarray, shape (M,)
+            1D array of direction coordinates.
+        vals : ndarray, shape (N, M)
+            2D array of binned spectrum energy values (energy per unit frequency).
+            ``N = len(freq)``, ``M = len(dirs)``.
         """
         freq, dirs, vals = super().grid(freq_hz=freq_hz, degrees=degrees)
 
