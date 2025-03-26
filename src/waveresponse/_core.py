@@ -1805,9 +1805,6 @@ class DirectionalBinSpectrum(_SpectrumMixin, BinGrid):
         if freq_hz:
             self._vals = 1.0 / (2.0 * np.pi) * self._vals
 
-        if degrees:
-            self._vals = 180.0 / np.pi * self._vals
-
     def __repr__(self):
         return "DirectionalBinSpectrum"
 
@@ -1950,7 +1947,6 @@ class DirectionalBinSpectrum(_SpectrumMixin, BinGrid):
         self,
         freq,
         freq_hz=False,
-        degrees=False,
         fill_value=0.0,
         **kwargs,
     ):
@@ -1969,8 +1965,6 @@ class DirectionalBinSpectrum(_SpectrumMixin, BinGrid):
             1-D array of grid direction coordinates. Positive and monotonically increasing.
         freq_hz : bool
             If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
-        degrees : bool
-            If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
         fill_value : float or None
             The value used for extrapolation (i.e., `freq` outside the bounds of
             the provided grid). If ``None``, values outside the frequency domain
@@ -1986,7 +1980,6 @@ class DirectionalBinSpectrum(_SpectrumMixin, BinGrid):
         vals = super().interpolate(
             freq,
             freq_hz=freq_hz,
-            degrees=degrees,
             fill_value=fill_value,
         )
 
