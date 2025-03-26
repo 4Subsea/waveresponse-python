@@ -3338,7 +3338,7 @@ class Test_DirectionalSpectrum:
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
-    def test_bingrid__hz_deg(self):
+    def test_bingrid_hz_deg(self):
         delta_dir = 10.0
         freq_in = np.arange(0.0, 1, 0.1)
         dirs_in = np.arange(5.0, 360.0, delta_dir)
