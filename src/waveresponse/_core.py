@@ -1486,8 +1486,7 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
     class, and is a two-dimentional frequency/(wave)direction grid. The spectrum values
     represents spectrum density.
 
-    Proper scaling is performed such that the total "energy" is kept constant at
-    all times.
+    Proper scaling is applied to ensure that the total "energy" remains constant at all times.
 
     Parameters
     ----------
@@ -1750,14 +1749,13 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
 
 class DirectionalBinSpectrum(_SpectrumMixin, BinGrid):
     """
-    Directional spectrum.
+    Directional binned spectrum.
 
-    The ``DirectionalSpectrum`` class extends the :class:`~waveresponse.BinGrid`
-    class, and is a two-dimentional frequency/(wave)direction grid. The spectrum values
-    represents spectrum density in frequency binned in directions.
+    The ``DirectionalBinSpectrum`` class extends the :class:`~waveresponse.BinGrid`
+    class and represents a two-dimensional frequency/wave-direction grid. The spectrum values 
+    represent spectral density as a function of frequency, binned by direction.
 
-    Proper scaling is performed such that the total "energy" is kept constant at
-    all times.
+    Proper scaling is applied to ensure that the total "energy" remains constant at all times.
 
     Parameters
     ----------
@@ -1834,94 +1832,6 @@ class DirectionalBinSpectrum(_SpectrumMixin, BinGrid):
         s = vv.sum(axis=1)
 
         return f, s
-
-    @classmethod
-    def from_spectrum1d(
-        cls,
-        freq,
-        dirs,
-        spectrum1d,
-        spread_fun,
-        dirp,
-        freq_hz=False,
-        degrees=False,
-        clockwise=False,
-        waves_coming_from=True,
-    ):
-        """
-        Construct a 2-D 'directional' spectrum from a 1-D 'non-directional' spectrum,
-        a spreading function and a peak direction.
-
-        The directional spectrum is constructed according to:
-
-            ``S(f, theta) = S(f) * D(f, theta - theta_p)``
-
-        where ``S(f)`` is the non-directional spectrum, ``D(f, theta - theta_p)``
-        is the directional spreading function, and ``theta_p`` is the peak direction.
-        ``f`` is the frequency coordinate, and ``theta`` is the direction coordinate.
-
-        Parameters
-        ----------
-        freq : array-like
-            1-D array of grid frequency coordinates. Positive and monotonically increasing.
-        dirs : array-like
-            1-D array of grid direction coordinates. Positive and monotonically increasing.
-            Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
-        spectrum1d : array-like
-            1-D array of non-directional spectrum density values. These 1-D spectrum
-            values will be scaled according to the spreading function, and distributed
-            to all frequency/direction coordinates. `spectrum1d` must have the same
-            length as `freq`.
-        spread_fun : callable
-            Spreading function. Takes a frequency coordinate (float) and a direction
-            coordinate (float) as input, and returns a corresponding scaling value
-            (float).
-        dirp : float
-            Peak direction. Direction in which the spectrum has its maximum values.
-        freq_hz : bool
-            If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
-        degrees : bool
-            If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
-        clockwise : bool
-            If positive directions are defined to be 'clockwise'. If ``False``,
-            'counterclockwise' is assumed.
-        waves_coming_from : bool
-            If waves are 'coming from' the given directions. If ``False``, 'going towards'
-            convention is assumed.
-        """
-        raise NotImplementedError
-        # spectrum1d = np.asarray_chkfinite(spectrum1d).reshape(-1, 1)
-        # vals = np.tile(spectrum1d, (1, len(dirs)))
-
-        # if degrees:
-        #     period = 360.0
-        # else:
-        #     period = 2.0 * np.pi
-
-        # for (idx_f, idx_d), val_i in np.ndenumerate(vals):
-        #     f_i = freq[idx_f]
-        #     d_i = _robust_modulus(dirs[idx_d] - dirp, period)
-        #     vals[idx_f, idx_d] = spread_fun(f_i, d_i) * val_i
-
-        # return cls(
-        #     freq,
-        #     dirs,
-        #     vals,
-        #     freq_hz=freq_hz,
-        #     degrees=degrees,
-        #     clockwise=clockwise,
-        #     waves_coming_from=waves_coming_from,
-        # )
-
-        # return DirectionalSpectrum(
-        #     freq,
-        #     dirs,
-        #     vals,
-        #     freq_hz=freq_hz,
-        #     degrees=degrees,
-        #     clockwise=clockwise,
-        #     waves_coming_from=waves_coming_from,
-        # ).as_bin()
 
     def grid(self, freq_hz=False, degrees=False):
         """
@@ -2007,9 +1917,7 @@ class WaveSpectrum(DisableComplexMixin, DirectionalSpectrum):
     class, and is a two-dimentional frequency/(wave)direction grid. The spectrum values
     represents spectrum density. Only real and positive values allowed.
 
-    Proper scaling is performed such that the total "energy" is kept constant at
-    all times.
-
+    Proper scaling is applied to ensure that the total "energy" remains constant at all times.
 
     Parameters
     ----------
