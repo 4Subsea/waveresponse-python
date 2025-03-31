@@ -14,8 +14,8 @@ from waveresponse import (
     BinGrid,
     CosineFullSpreading,
     CosineHalfSpreading,
-    DirectionalSpectrum,
     DirectionalBinSpectrum,
+    DirectionalSpectrum,
     Grid,
     WaveSpectrum,
     calculate_response,
@@ -4071,7 +4071,6 @@ class Test_DirectionalSpectrum:
         assert extreme_out == pytest.approx(extreme_expect)
 
 
-
 class Test_DirectionalBinSpectrum:
     def test__init___hz_deg(self):
         freq_in = np.arange(0.0, 1, 0.1)
@@ -4138,9 +4137,7 @@ class Test_DirectionalBinSpectrum:
         assert spectrum._waves_coming_from is False
         np.testing.assert_array_almost_equal(spectrum._freq, freq_in)
         np.testing.assert_array_almost_equal(spectrum._dirs, (np.pi / 180.0) * dirs_in)
-        np.testing.assert_array_almost_equal(
-            spectrum._vals, vals_in
-        )
+        np.testing.assert_array_almost_equal(spectrum._vals, vals_in)
 
     def test__init___rads_rad(self):
         freq_in = (2.0 * np.pi) * np.arange(0.0, 1, 0.1)
@@ -4272,7 +4269,7 @@ class Test_DirectionalBinSpectrum:
 
         freq_expect = freq_in
         dirs_expect = (np.pi / 180.0) * dirs_in
-        vals_expect =  vals_in
+        vals_expect = vals_in
 
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
@@ -4404,7 +4401,8 @@ class Test_DirectionalBinSpectrum:
 
         integral_expect = (
             (1.0 / 2.0)
-            * (0.0 - 360.0) / 10
+            * (0.0 - 360.0)
+            / 10
             * (y0 - y1)
             * (a * (0.0 + 360.0) + b * (y0 + y1))
         )
@@ -4426,7 +4424,8 @@ class Test_DirectionalBinSpectrum:
 
         integral_expect = (
             (1.0 / 2.0)
-            * (0.0 - 360.0) / 10
+            * (0.0 - 360.0)
+            / 10
             * (y0 - y1)
             * (a * (0.0 + 360.0) + b * (y0 + y1))
         )
@@ -4585,9 +4584,10 @@ class Test_DirectionalBinSpectrum:
 
         m_out = spectrum.moment(1, freq_hz=True)
 
-        m_expect = ((1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2) + 1j * (
-            1.0 / 2.0
-        ) * (0.0 - 360.0) * (f0**2 - f1**2)) / 10
+        m_expect = (
+            (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2)
+            + 1j * (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2)
+        ) / 10
 
         assert m_out == pytest.approx(m_expect)
 
@@ -4617,9 +4617,10 @@ class Test_DirectionalBinSpectrum:
 
         m_out = spectrum.moment(1, freq_hz=False)
 
-        m_expect = ((1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2) * (
-            2.0 * np.pi
-        ) + 1j * (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2) * (2.0 * np.pi)) / 10
+        m_expect = (
+            (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2) * (2.0 * np.pi)
+            + 1j * (1.0 / 2.0) * (0.0 - 360.0) * (f0**2 - f1**2) * (2.0 * np.pi)
+        ) / 10
 
         assert m_out == pytest.approx(m_expect)
 
@@ -4650,9 +4651,10 @@ class Test_DirectionalBinSpectrum:
 
         m_out = spectrum.moment(2, freq_hz=True)
 
-        m_expect = ((1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) + 1j * (
-            1.0 / 3.0
-        ) * (0.0 - 360.0) * (f0**3 - f1**3)) / 10
+        m_expect = (
+            (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3)
+            + 1j * (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3)
+        ) / 10
 
         # not exactly same due to error in trapezoid for higher order functions
         assert m_out == pytest.approx(m_expect, rel=0.1)
@@ -4668,7 +4670,9 @@ class Test_DirectionalBinSpectrum:
 
         m_out = spectrum.moment(2, freq_hz=False)
 
-        m_expect = (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (2.0 * np.pi) ** 2 / 10
+        m_expect = (
+            (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (2.0 * np.pi) ** 2 / 10
+        )
 
         # not exactly same due to error in trapezoid for higher order functions
         assert m_out == pytest.approx(m_expect, rel=0.1)
@@ -4684,11 +4688,10 @@ class Test_DirectionalBinSpectrum:
 
         m_out = spectrum.moment(2, freq_hz=False)
 
-        m_expect = ((1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (
-            2.0 * np.pi
-        ) ** 2 + 1j * (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (
-            2.0 * np.pi
-        ) ** 2) / 10
+        m_expect = (
+            (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (2.0 * np.pi) ** 2
+            + 1j * (1.0 / 3.0) * (0.0 - 360.0) * (f0**3 - f1**3) * (2.0 * np.pi) ** 2
+        ) / 10
 
         # not exactly same due to error in trapezoid for higher order functions
         assert m_out == pytest.approx(m_expect, rel=0.1)
@@ -4797,7 +4800,9 @@ class Test_DirectionalBinSpectrum:
         freq = np.linspace(f0, f1, 20)
         dirs = np.arange(5, 360, 10)
         vals = np.ones((len(freq), len(dirs)))
-        spectrum = wr.DirectionalBinSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+        spectrum = wr.DirectionalBinSpectrum(
+            freq, dirs, vals, freq_hz=True, degrees=True
+        )
 
         T = 360 * 24 * 60.0**2
         q = 0.99
@@ -4817,7 +4822,9 @@ class Test_DirectionalBinSpectrum:
         freq = np.linspace(f0, f1, 20)
         dirs = np.arange(5, 360, 10)
         vals = np.ones((len(freq), len(dirs))) + 1j * np.ones((len(freq), len(dirs)))
-        spectrum = wr.DirectionalBinSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+        spectrum = wr.DirectionalBinSpectrum(
+            freq, dirs, vals, freq_hz=True, degrees=True
+        )
 
         T = 360 * 24 * 60.0**2
         q = 0.99
@@ -4831,7 +4838,9 @@ class Test_DirectionalBinSpectrum:
         freq = np.linspace(f0, f1, 20)
         dirs = np.arange(5, 360, 10)
         vals = -np.ones((len(freq), len(dirs)))
-        spectrum = wr.DirectionalBinSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+        spectrum = wr.DirectionalBinSpectrum(
+            freq, dirs, vals, freq_hz=True, degrees=True
+        )
 
         T = 360 * 24 * 60.0**2
         q = 0.99
@@ -4845,7 +4854,9 @@ class Test_DirectionalBinSpectrum:
         freq = np.linspace(f0, f1, 20)
         dirs = np.arange(5, 360, 10)
         vals = np.ones((len(freq), len(dirs)))
-        spectrum = wr.DirectionalBinSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+        spectrum = wr.DirectionalBinSpectrum(
+            freq, dirs, vals, freq_hz=True, degrees=True
+        )
 
         T = 360 * 24 * 60.0**2
         q = [0.1, 0.5, 0.99]
@@ -4869,7 +4880,9 @@ class Test_DirectionalBinSpectrum:
         freq = np.linspace(f0, f1, 20)
         dirs = np.arange(5, 360, 10)
         vals = np.ones((len(freq), len(dirs)))
-        spectrum = wr.DirectionalBinSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+        spectrum = wr.DirectionalBinSpectrum(
+            freq, dirs, vals, freq_hz=True, degrees=True
+        )
 
         T = 360 * 24 * 60.0**2
         extreme_out = spectrum.extreme(T, q=0.37)
@@ -4888,7 +4901,9 @@ class Test_DirectionalBinSpectrum:
         freq = np.linspace(f0, f1, 20)
         dirs = np.arange(5, 360, 10)
         vals = np.ones((len(freq), len(dirs)))
-        spectrum = wr.DirectionalBinSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+        spectrum = wr.DirectionalBinSpectrum(
+            freq, dirs, vals, freq_hz=True, degrees=True
+        )
 
         T = 360 * 24 * 60.0**2
         q = 0.99

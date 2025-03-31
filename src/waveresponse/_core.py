@@ -1746,13 +1746,12 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
         return x
 
 
-
 class DirectionalBinSpectrum(_SpectrumMixin, BinGrid):
     """
     Directional binned spectrum.
 
     The ``DirectionalBinSpectrum`` class extends the :class:`~waveresponse.BinGrid`
-    class and represents a two-dimensional frequency/wave-direction grid. The spectrum values 
+    class and represents a two-dimensional frequency/wave-direction grid. The spectrum values
     represent spectral density as a function of frequency, binned by direction.
 
     Proper scaling is applied to ensure that the total "energy" remains constant at all times.
