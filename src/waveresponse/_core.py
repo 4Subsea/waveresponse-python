@@ -1486,8 +1486,7 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
     class, and is a two-dimentional frequency/(wave)direction grid. The spectrum values
     represents spectrum density.
 
-    Proper scaling is performed such that the total "energy" is kept constant at
-    all times.
+    Proper scaling is applied to ensure that the total "energy" remains constant at all times.
 
     Parameters
     ----------
@@ -1792,6 +1791,168 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
         return x
 
 
+class DirectionalBinSpectrum(_SpectrumMixin, BinGrid):
+    """
+    Directional binned spectrum.
+
+    The ``DirectionalBinSpectrum`` class extends the :class:`~waveresponse.BinGrid`
+    class and represents a two-dimensional frequency/wave-direction grid. The spectrum values
+    represent spectral density as a function of frequency, binned by direction.
+
+    Proper scaling is applied to ensure that the total "energy" remains constant at all times.
+
+    Parameters
+    ----------
+    freq : array-like
+        1-D array of grid frequency coordinates. Positive and monotonically increasing.
+    dirs : array-like
+        1-D array of grid direction coordinates. Positive and monotonically increasing.
+        Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+    vals : array-like (N, M)
+        Spectrum density values associated with the grid. Should be a 2-D array
+        of shape (N, M), such that ``N=len(freq)`` and ``M=len(dirs)``.
+    freq_hz : bool
+        If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+    degrees : bool
+        If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
+    clockwise : bool
+        If positive directions are defined to be 'clockwise' (``True``) or 'counterclockwise'
+        (``False``). Clockwise means that the directions follow the right-hand rule
+        with an axis pointing downwards.
+    waves_coming_from : bool
+        If waves are 'coming from' the given directions. If ``False``, 'going towards'
+        convention is assumed.
+    """
+
+    def __init__(
+        self,
+        freq,
+        dirs,
+        vals,
+        freq_hz=False,
+        degrees=False,
+        clockwise=False,
+        waves_coming_from=True,
+    ):
+        super().__init__(
+            freq,
+            dirs,
+            vals,
+            freq_hz=freq_hz,
+            degrees=degrees,
+            clockwise=clockwise,
+            waves_coming_from=waves_coming_from,
+        )
+
+        if freq_hz:
+            self._vals = 1.0 / (2.0 * np.pi) * self._vals
+
+    def __repr__(self):
+        return "DirectionalBinSpectrum"
+
+    def _freq_spectrum(self, freq_hz=None):
+        """
+        Integrate the spectrum over the directional domain to obtain the non-directional
+        spectrum.
+
+        Parameters
+        ----------
+        freq_hz : bool
+            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is
+            used. Defaults to original unit used during initialization.
+
+        Returns
+        -------
+        f : array
+            1-D array of frequency coordinates in 'Hz' or 'rad/s'.
+        s : array
+            1-D array of spectral density values in 'm^2/Hz' or 'm^2/(rad/s)'.
+        """
+
+        if freq_hz is None:
+            freq_hz = self._freq_hz
+
+        f, _, vv = self.grid(freq_hz=freq_hz, degrees=False)
+        s = vv.sum(axis=1)
+
+        return f, s
+
+    def grid(self, freq_hz=False, degrees=False):
+        """
+        Return a copy of the spectrum's frequency/direction coordinates and corresponding
+        values.
+
+        Parameters
+        ----------
+        freq_hz : bool
+            If frequencies should be returned in 'Hz'. If ``False``, 'rad/s' is used.
+        degrees : bool
+            If directions should be returned in 'degrees'. If ``False``, 'radians'
+            is used.
+
+        Returns
+        -------
+        freq : array
+            1-D array of grid frequency coordinates.
+        dirs : array
+            1-D array of grid direction coordinates.
+        vals : array (N, M)
+            Spectrum density values as 2-D array of shape (N, M), such that ``N=len(freq)``
+            and ``M=len(dirs)``.
+        """
+        freq, dirs, vals = super().grid(freq_hz=freq_hz, degrees=degrees)
+
+        if freq_hz:
+            vals *= 2.0 * np.pi
+
+        return freq, dirs, vals
+
+    def interpolate(
+        self,
+        freq,
+        freq_hz=False,
+        fill_value=0.0,
+        **kwargs,
+    ):
+        """
+        Interpolate (linear) the spectrum values to match the given frequency and direction
+        coordinates.
+
+        A 'fill value' is used for extrapolation (i.e. `freq` outside the bounds
+        of the provided 2-D grid). Directions are treated as periodic.
+
+        Parameters
+        ----------
+        freq : array-like
+            1-D array of grid frequency coordinates. Positive and monotonically increasing.
+        dirs : array-like
+            1-D array of grid direction coordinates. Positive and monotonically increasing.
+        freq_hz : bool
+            If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+        fill_value : float or None
+            The value used for extrapolation (i.e., `freq` outside the bounds of
+            the provided grid). If ``None``, values outside the frequency domain
+            are extrapolated via nearest-neighbor extrapolation. Note that directions
+            are treated as periodic (and will not need extrapolation).
+
+        Returns
+        -------
+        array :
+            Interpolated spectrum density values.
+        """
+
+        vals = super().interpolate(
+            freq,
+            freq_hz=freq_hz,
+            fill_value=fill_value,
+        )
+
+        if freq_hz:
+            vals *= 2.0 * np.pi
+
+        return vals
+
+
 class WaveSpectrum(DisableComplexMixin, DirectionalSpectrum):
     """
     Wave spectrum.
@@ -1800,9 +1961,7 @@ class WaveSpectrum(DisableComplexMixin, DirectionalSpectrum):
     class, and is a two-dimentional frequency/(wave)direction grid. The spectrum values
     represents spectrum density. Only real and positive values allowed.
 
-    Proper scaling is performed such that the total "energy" is kept constant at
-    all times.
-
+    Proper scaling is applied to ensure that the total "energy" remains constant at all times.
 
     Parameters
     ----------
