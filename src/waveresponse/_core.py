@@ -1719,16 +1719,14 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
         dirs = self.dirs(degrees=False)
         freq = self.freq(freq_hz=False)
 
-        dirs_tmp = np.r_[-2.0*np.pi + dirs[-1], dirs, 2.0*np.pi + dirs[0]]
+        dirs_tmp = np.r_[-2.0 * np.pi + dirs[-1], dirs, 2.0 * np.pi + dirs[0]]
         dirs_binbound = dirs_tmp[:-1] + np.diff(dirs_tmp) / 2.0
 
         dirs_bin = np.empty((dirs_binbound.size + dirs.size,), dtype=dirs.dtype)
         dirs_bin[0::2], dirs_bin[1::2] = dirs_binbound, dirs
 
         interp_fun = self._interpolate_function(
-            complex_convert=complex_convert,
-            method="linear",
-            bounds_error=True
+            complex_convert=complex_convert, method="linear", bounds_error=True
         )
 
         dirsnew, freqnew = np.meshgrid(dirs_bin, freq, indexing="ij", sparse=True)
@@ -1736,10 +1734,10 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
 
         vals_binned = np.column_stack(
             [
-                np.trapezoid(vals_tmp[:, i:i + 3], dirs_bin[i:i + 3], axis=1)
+                np.trapezoid(vals_tmp[:, i : i + 3], dirs_bin[i : i + 3], axis=1)
                 for i in range(0, 2 * len(dirs), 2)
             ]
-            )
+        )
 
         if freq_hz:
             vals_binned *= 2.0 * np.pi
