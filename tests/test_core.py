@@ -3305,11 +3305,47 @@ class Test_DirectionalSpectrum:
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
-    def test_bingrid_rads_rad(self):
-        delta_dir = 10.0
+    def test_bingrid2(self):
+        freq_in = np.array([0.2, 0.4, 0.6, 0.8, 1.0]) * 2.*np.pi
+        dirs_in = np.radians(np.array([0.0, 90.0, 180.0]))
+        vals_in = np.ones((len(freq_in), len(dirs_in)))
+        spectrum = DirectionalSpectrum(
+            freq_in,
+            dirs_in,
+            vals_in,
+            freq_hz=False,
+            degrees=False,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_out, dirs_out, vals_out = spectrum.bingrid(freq_hz=False, degrees=False)
+
+        freq_expect = freq_in
+        dirs_expect = dirs_in
+        vals_expect = vals_in
+
+        vals_expect[:, 0] *= 135.0 * (np.pi / 180.0)
+        vals_expect[:, 1] *= 90.0 * (np.pi / 180.0)
+        vals_expect[:, 2] *= 135.0 * (np.pi / 180.0)
+
+        np.testing.assert_array_almost_equal(freq_out, freq_expect)
+        np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    @pytest.mark.parametrize("dirs_in", [
+        np.array([0.0, 90.0, 180.0, 270.0]),
+        np.array([10.0, 100.0, 190.0, 280.0]),
+        np.array([85.0, 175.0, 265.0, 355.])
+    ])
+    def test_bingrid_rads_rad(self, dirs_in):
         freq_in = np.arange(0.0, 1, 0.1)
-        dirs_in = np.arange(5.0, 360.0, delta_dir)
-        vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
+        vals_in = np.column_stack([
+            np.zeros_like(freq_in),
+            np.ones_like(freq_in),
+            4 * np.ones_like(freq_in),
+            np.ones_like(freq_in)
+        ])
         spectrum = DirectionalSpectrum(
             freq_in,
             dirs_in,
@@ -3324,18 +3360,31 @@ class Test_DirectionalSpectrum:
 
         freq_expect = 2.0 * np.pi * freq_in
         dirs_expect = (np.pi / 180.0) * dirs_in
-        vals_expect = 1.0 / (2.0 * np.pi * (np.pi / 180.0)) * vals_in
-        vals_expect *= (np.pi / 180.0) * delta_dir
+        vals_expect = np.column_stack([
+            22.5 * np.ones_like(freq_in),
+            112.5 * np.ones_like(freq_in),
+            292.5 * np.ones_like(freq_in),
+            112.5 * np.ones_like(freq_in)
+        ]) / (2.0 * np.pi)
 
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
-    def test_bingrid_hz_rad(self):
-        delta_dir = 10.0
+    @pytest.mark.parametrize("dirs_in", [
+        np.array([0.0, 90.0, 180.0, 270.0]),
+        np.array([10.0, 100.0, 190.0, 280.0]),
+        np.array([85.0, 175.0, 265.0, 355.])
+    ])
+    def test_bingrid_hz_rad(self, dirs_in):
         freq_in = np.arange(0.0, 1, 0.1)
-        dirs_in = np.arange(5.0, 360.0, delta_dir)
-        vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
+        vals_in = np.column_stack([
+            np.zeros_like(freq_in),
+            np.ones_like(freq_in),
+            4 * np.ones_like(freq_in),
+            np.ones_like(freq_in)
+        ])
+
         spectrum = DirectionalSpectrum(
             freq_in,
             dirs_in,
@@ -3349,19 +3398,32 @@ class Test_DirectionalSpectrum:
         freq_out, dirs_out, vals_out = spectrum.bingrid(freq_hz=True, degrees=False)
 
         freq_expect = freq_in
-        dirs_expect = (np.pi / 180.0) * dirs_in
-        vals_expect = 1.0 / (np.pi / 180.0) * vals_in
-        vals_expect *= (np.pi / 180.0) * delta_dir
+        dirs_expect = dirs_in * (np.pi / 180.0)
+        vals_expect = np.column_stack([
+            22.5 * np.ones_like(freq_in),
+            112.5 * np.ones_like(freq_in),
+            292.5 * np.ones_like(freq_in),
+            112.5 * np.ones_like(freq_in)
+        ])
 
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
-    def test_bingrid_rads_deg(self):
-        delta_dir = 10.0
+    @pytest.mark.parametrize("dirs_in", [
+        np.array([0.0, 90.0, 180.0, 270.0]),
+        np.array([10.0, 100.0, 190.0, 280.0]),
+        np.array([85.0, 175.0, 265.0, 355.])
+    ])
+    def test_bingrid_rads_deg(self, dirs_in):
         freq_in = np.arange(0.0, 1, 0.1)
-        dirs_in = np.arange(5.0, 360.0, delta_dir)
-        vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
+        vals_in = np.column_stack([
+            np.zeros_like(freq_in),
+            np.ones_like(freq_in),
+            4 * np.ones_like(freq_in),
+            np.ones_like(freq_in)
+        ])
+
         spectrum = DirectionalSpectrum(
             freq_in,
             dirs_in,
@@ -3376,18 +3438,30 @@ class Test_DirectionalSpectrum:
 
         freq_expect = 2.0 * np.pi * freq_in
         dirs_expect = dirs_in
-        vals_expect = 1.0 / (2.0 * np.pi) * vals_in
-        vals_expect *= delta_dir
+        vals_expect = np.column_stack([
+            22.5 * np.ones_like(freq_in),
+            112.5 * np.ones_like(freq_in),
+            292.5 * np.ones_like(freq_in),
+            112.5 * np.ones_like(freq_in)
+        ]) / (2.0 * np.pi)
 
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
-    def test_bingrid_hz_deg(self):
-        delta_dir = 10.0
+    @pytest.mark.parametrize("dirs_in", [
+        np.array([0.0, 90.0, 180.0, 270.0]),
+        np.array([10.0, 100.0, 190.0, 280.0]),
+        np.array([85.0, 175.0, 265.0, 355.])
+    ])
+    def test_bingrid_hz_deg(self, dirs_in):
         freq_in = np.arange(0.0, 1, 0.1)
-        dirs_in = np.arange(5.0, 360.0, delta_dir)
-        vals_in = np.random.random(size=(len(freq_in), len(dirs_in)))
+        vals_in = np.column_stack([
+            np.zeros_like(freq_in),
+            np.ones_like(freq_in),
+            4 * np.ones_like(freq_in),
+            np.ones_like(freq_in)
+        ])
         spectrum = DirectionalSpectrum(
             freq_in,
             dirs_in,
@@ -3402,8 +3476,13 @@ class Test_DirectionalSpectrum:
 
         freq_expect = freq_in
         dirs_expect = dirs_in
-        vals_expect = vals_in
-        vals_expect *= delta_dir
+        dirs_expect = dirs_in
+        vals_expect = np.column_stack([
+            22.5 * np.ones_like(freq_in),
+            112.5 * np.ones_like(freq_in),
+            292.5 * np.ones_like(freq_in),
+            112.5 * np.ones_like(freq_in)
+        ])
 
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
