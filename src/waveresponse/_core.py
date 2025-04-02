@@ -1716,26 +1716,25 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
             ``N = len(freq)``, ``M = len(dirs)``.
         """
 
-        dirs = self.dirs(degrees=False)
-        freq = self.freq(freq_hz=False)
+        dirs_tmp = np.r_[
+            -2.0 * np.pi + self._dirs[-1], self._dirs, 2.0 * np.pi + self._dirs[0]
+        ]
 
-        dirs_tmp = np.r_[-2.0 * np.pi + dirs[-1], dirs, 2.0 * np.pi + dirs[0]]
-        dirs_binbound = dirs_tmp[:-1] + np.diff(dirs_tmp) / 2.0
-
-        dirs_bin = np.empty((dirs_binbound.size + dirs.size,), dtype=dirs.dtype)
-        dirs_bin[0::2], dirs_bin[1::2] = dirs_binbound, dirs
+        dirs_bin = np.empty(self._dirs.size * 2 + 1, dtype=self._dirs.dtype)
+        dirs_bin[0::2] = dirs_tmp[:-1] + np.diff(dirs_tmp) / 2.0  # bin boundaries
+        dirs_bin[1::2] = self._dirs  # bin centers
 
         interp_fun = self._interpolate_function(
             complex_convert=complex_convert, method="linear", bounds_error=True
         )
 
-        dirsnew, freqnew = np.meshgrid(dirs_bin, freq, indexing="ij", sparse=True)
+        dirsnew, freqnew = np.meshgrid(dirs_bin, self._freq, indexing="ij", sparse=True)
         vals_tmp = interp_fun((dirsnew, freqnew)).T
 
         vals_binned = np.column_stack(
             [
                 trapezoid(vals_tmp[:, i : i + 3], dirs_bin[i : i + 3], axis=1)
-                for i in range(0, 2 * len(dirs), 2)
+                for i in range(0, 2 * len(self._dirs), 2)
             ]
         )
 
