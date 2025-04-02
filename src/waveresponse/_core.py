@@ -2057,7 +2057,7 @@ class WaveSpectrum(DisableComplexMixin, DirectionalSpectrum):
             dirm = np.degrees(dirm)
 
         return dirm
-    
+
 
 class WaveBinSpectrum(DisableComplexMixin, DirectionalBinSpectrum):
     """
@@ -2137,21 +2137,21 @@ class WaveBinSpectrum(DisableComplexMixin, DirectionalBinSpectrum):
         fp = f[np.argmax(S)]
         return 1.0 / fp
 
-    # @staticmethod
-    # def _mean_direction(dirs, spectrum):
-    #     """
-    #     Mean spectrum direction.
+    @staticmethod
+    def _mean_direction(dirs, spectrum):
+        """
+        Mean spectrum direction.
 
-    #     Parameters
-    #     ----------
-    #     dirs : array-like
-    #         Directions in 'radians'.
-    #     spectrum : array-like
-    #         1-D spectrum directional distribution.
-    #     """
-    #     sin = trapezoid(np.sin(dirs) * spectrum, dirs)
-    #     cos = trapezoid(np.cos(dirs) * spectrum, dirs)
-    #     return _robust_modulus(np.arctan2(sin, cos), 2.0 * np.pi)
+        Parameters
+        ----------
+        dirs : array-like
+            Directions in 'radians'.
+        spectrum : array-like
+            1-D spectrum directional distribution.
+        """
+        sin = np.sum(np.sin(dirs) * spectrum) / len(dirs)
+        cos = np.sum(np.cos(dirs) * spectrum) / len(dirs)
+        return _robust_modulus(np.arctan2(sin, cos), 2.0 * np.pi)
 
     # def dirp(self, degrees=None):
     #     """
