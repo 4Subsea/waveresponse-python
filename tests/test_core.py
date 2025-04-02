@@ -5311,7 +5311,11 @@ class Test_WaveBinSpectrum:
         ([0.0, np.pi / 2.0, np.pi], [0.0, 0.0, 1.0], np.pi),
         ([0.0, np.pi / 2.0, np.pi], [0.0, 1.0, 0.0], np.pi / 2.0),
         ([0.0, np.pi / 2.0, np.pi], [1.0, 0.0, 0.0], 0.0),
-        ([np.pi, 3.0 * np.pi / 2.0, 2.0 * np.pi - 1e-8], [1.0, 1.0, 1.0], 3.0 * np.pi / 2.0),
+        (
+            [np.pi, 3.0 * np.pi / 2.0, 2.0 * np.pi - 1e-8],
+            [1.0, 1.0, 1.0],
+            3.0 * np.pi / 2.0,
+        ),
     ]
 
     @pytest.mark.parametrize("d,s,mean_dir_rad", testdata_mean_direction)
