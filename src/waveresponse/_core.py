@@ -1734,7 +1734,7 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
 
         vals_binned = np.column_stack(
             [
-                np.trapezoid(vals_tmp[:, i : i + 3], dirs_bin[i : i + 3], axis=1)
+                trapezoid(vals_tmp[:, i : i + 3], dirs_bin[i : i + 3], axis=1)
                 for i in range(0, 2 * len(dirs), 2)
             ]
         )
