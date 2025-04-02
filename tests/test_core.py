@@ -5308,10 +5308,10 @@ class Test_WaveBinSpectrum:
 
     testdata_mean_direction = [
         ([0.0, np.pi / 2.0, np.pi], [1.0, 1.0, 1.0], np.pi / 2.0),
-        ([np.pi, 3.0 * np.pi / 2.0, 2.0 * np.pi], [1.0, 1.0, 1.0], 3.0 * np.pi / 2.0),
         ([0.0, np.pi / 2.0, np.pi], [0.0, 0.0, 1.0], np.pi),
         ([0.0, np.pi / 2.0, np.pi], [0.0, 1.0, 0.0], np.pi / 2.0),
         ([0.0, np.pi / 2.0, np.pi], [1.0, 0.0, 0.0], 0.0),
+        ([np.pi, 3.0 * np.pi / 2.0, 2.0 * np.pi - 1e-8], [1.0, 1.0, 1.0], 3.0 * np.pi / 2.0),
     ]
 
     @pytest.mark.parametrize("d,s,expect", testdata_mean_direction)
@@ -5320,6 +5320,57 @@ class Test_WaveBinSpectrum:
         s = np.asarray(s)
         meandir_out = WaveBinSpectrum._mean_direction(d, s)
         assert meandir_out == pytest.approx(expect)
+
+    @pytest.mark.parametrize("d,s,expect", testdata_mean_direction)
+    def test_dirp_deg(self, d, s, expect):
+        d = np.asarray(d)
+        s = np.asarray(s)
+        f = np.linspace(0, 2, 20)
+        v = np.zeros((len(f), len(d)))
+
+        idx_freq_max = 10
+        v[idx_freq_max, :] = s
+
+        wave = WaveBinSpectrum(f, d, v, freq_hz=True, degrees=False)
+
+        dirp_out = wave.dirp(degrees=True)
+        dirp_expect = (180.0 / np.pi) * expect
+
+        assert dirp_out == pytest.approx(dirp_expect, rel=0.1)
+
+    @pytest.mark.parametrize("d,s,expect", testdata_mean_direction)
+    def test_dirp_rad(self, d, s, expect):
+        d = np.asarray(d)
+        s = np.asarray(s)
+        f = np.linspace(0, 2, 20)
+        v = np.zeros((len(f), len(d)))
+
+        idx_freq_max = 10
+        v[idx_freq_max, :] = s
+
+        wave = WaveBinSpectrum(f, d, v, freq_hz=True, degrees=False)
+
+        dirp_out = wave.dirp(degrees=False)
+        dirp_expect = expect
+
+        assert dirp_out == pytest.approx(dirp_expect, rel=0.1)
+
+    # @pytest.mark.parametrize("d0,d1,expect", testdata_mean_direction)
+    # def test_dirp_rad(self, d0, d1, expect):
+    #     freq = np.linspace(0, 2, 20)
+    #     dirs = np.linspace(0, 2.0 * np.pi - 1e-3, 100)
+    #     vals = np.zeros((len(freq), len(dirs)))
+
+    #     dirs_mask = (dirs >= d0) & (dirs <= d1)
+    #     idx_freq_max = 10
+    #     vals[idx_freq_max, dirs_mask] = 1.0
+
+    #     wave = WaveSpectrum(freq, dirs, vals, freq_hz=True, degrees=False)
+
+    #     dirp_out = wave.dirp(degrees=False)
+    #     dirp_expect = expect
+
+    #     assert dirp_out == pytest.approx(dirp_expect, rel=0.1)
 
     # def test__mean_direction(self):
     #     dirs = np.array([0.0, np.pi / 2.0, np.pi, 3.0 * np.pi / 2.0])

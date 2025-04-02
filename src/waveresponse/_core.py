@@ -2153,37 +2153,40 @@ class WaveBinSpectrum(DisableComplexMixin, DirectionalBinSpectrum):
         cos = np.sum(np.cos(dirs) * spectrum) / len(dirs)
         return _robust_modulus(np.arctan2(sin, cos), 2.0 * np.pi)
 
-    # def dirp(self, degrees=None):
-    #     """
-    #     Wave peak direction.
+    def dirp(self, degrees=None):
+        """
+        Wave peak direction.
 
-    #     Defined as the mean wave direction along the frequency corresponding to
-    #     the maximum value of the 'non-directional' spectrum.
+        Defined as the mean wave direction along the frequency corresponding to
+        the maximum value of the 'non-directional' spectrum.
 
-    #     Parameters
-    #     ----------
-    #     degrees : bool
-    #         If wave peak direction should be returned in 'degrees'. If ``False``,
-    #         the direction is returned in 'radians'. Defaults to original unit used
-    #         during initialization.
-    #     """
+        Parameters
+        ----------
+        degrees : bool
+            If wave peak direction should be returned in 'degrees'. If ``False``,
+            the direction is returned in 'radians'. Defaults to original unit used
+            during initialization.
+        """
 
-    #     if degrees is None:
-    #         degrees = self._degrees
+        if degrees is None:
+            degrees = self._degrees
 
-    #     freq, spectrum1d = self.spectrum1d(axis=1, freq_hz=False)
+        freq, spectrum1d = self.spectrum1d(axis=1, freq_hz=False)
 
-    #     dirs = self._full_range_dir(self._dirs)  # radians
-    #     spectrum2d = self.interpolate(freq, dirs, freq_hz=False, degrees=False)
 
-    #     spectrum_peak_dir = spectrum2d[np.argmax(spectrum1d), :]
+        # dirs = self._full_range_dir(self._dirs)  # radians
+        # spectrum2d = self.interpolate(freq, dirs, freq_hz=False, degrees=False)
 
-    #     dirp = self._mean_direction(dirs, spectrum_peak_dir)
+        # spectrum2d = self._vals
 
-    #     if degrees:
-    #         dirp = (180.0 / np.pi) * dirp
+        spectrum_peakfreq = self._vals[np.argmax(spectrum1d), :]
 
-    #     return dirp
+        dirp = self._mean_direction(self._dirs, spectrum_peakfreq)
+
+        if degrees:
+            dirp = (180.0 / np.pi) * dirp
+
+        return dirp
 
     # def dirm(self, degrees=None):
     #     """
