@@ -5114,7 +5114,7 @@ class Test_WaveBinSpectrum:
         dirs_expect = (np.pi / 180.0) * dirs
         vals_expect = vals / (2.0 * np.pi)
 
-        assert isinstance(wave, BinGrid)
+        assert isinstance(wave, Grid)
         assert isinstance(wave, DirectionalBinSpectrum)
         np.testing.assert_array_almost_equal(wave._freq, freq_expect)
         np.testing.assert_array_almost_equal(wave._dirs, dirs_expect)

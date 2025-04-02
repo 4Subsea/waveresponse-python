@@ -1654,12 +1654,15 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
         dirs_bin[0::2] = dirs_tmp[:-1] + np.diff(dirs_tmp) / 2.0  # bin boundaries
         dirs_bin[1::2] = self._dirs  # bin centers
 
-        interp_fun = self._interpolate_function(
-            complex_convert=complex_convert, method="linear", bounds_error=True
+        interp_fun = _GridInterpolator(
+            self._freq,
+            self._dirs,
+            self._vals,
+            complex_convert=complex_convert,
+            method="linear",
+            bounds_error=True
         )
-
-        dirsnew, freqnew = np.meshgrid(dirs_bin, self._freq, indexing="ij", sparse=True)
-        vals_tmp = interp_fun((dirsnew, freqnew)).T
+        vals_tmp = interp_fun(self._freq, dirs_bin)
 
         vals_binned = np.column_stack(
             [
