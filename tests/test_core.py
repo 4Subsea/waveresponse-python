@@ -5307,16 +5307,17 @@ class Test_WaveBinSpectrum:
         assert tp_out == tp_expect
 
     testdata_mean_direction = [
-        (np.array([0.0, np.pi / 2.0, np.pi]), np.array([1.0, 1.0, 1.0]), np.pi / 2.0),
-        (
-            np.array([np.pi, 3.0 * np.pi / 2.0, 2.0 * np.pi]),
-            np.array([1.0, 1.0, 1.0]),
-            3.0 * np.pi / 2.0,
-        ),
+        ([0.0, np.pi / 2.0, np.pi], [1.0, 1.0, 1.0], np.pi / 2.0),
+        ([np.pi, 3.0 * np.pi / 2.0, 2.0 * np.pi], [1.0, 1.0, 1.0], 3.0 * np.pi / 2.0),
+        ([0.0, np.pi / 2.0, np.pi], [0.0, 0.0, 1.0], np.pi),
+        ([0.0, np.pi / 2.0, np.pi], [0.0, 1.0, 0.0], np.pi / 2.0),
+        ([0.0, np.pi / 2.0, np.pi], [1.0, 0.0, 0.0], 0.0),
     ]
 
     @pytest.mark.parametrize("d,s,expect", testdata_mean_direction)
     def test__mean_direction(self, d, s, expect):
+        d = np.asarray(d)
+        s = np.asarray(s)
         meandir_out = WaveBinSpectrum._mean_direction(d, s)
         assert meandir_out == pytest.approx(expect)
 
