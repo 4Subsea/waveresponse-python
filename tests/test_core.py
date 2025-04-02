@@ -17,6 +17,7 @@ from waveresponse import (
     DirectionalBinSpectrum,
     DirectionalSpectrum,
     Grid,
+    WaveBinSpectrum,
     WaveSpectrum,
     calculate_response,
     mirror,
@@ -156,6 +157,23 @@ def wave(freq_dirs):
     freq, dirs = freq_dirs
     vals = np.random.random((len(freq), len(dirs)))
     wave = WaveSpectrum(
+        freq,
+        dirs,
+        vals,
+        freq_hz=True,
+        degrees=True,
+        clockwise=True,
+        waves_coming_from=True,
+    )
+
+    return wave
+
+
+@pytest.fixture
+def wavebin(freq_dirs):
+    freq, dirs = freq_dirs
+    vals = np.random.random((len(freq), len(dirs)))
+    wave = WaveBinSpectrum(
         freq,
         dirs,
         vals,
@@ -5384,6 +5402,229 @@ class Test_WaveSpectrum:
         dirm_expect = expect
 
         assert dirm_out == pytest.approx(dirm_expect, rel=0.1)
+
+
+class Test_WaveBinSpectrum:
+    def test__init__(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.random.random((10, 15))
+        wave = WaveBinSpectrum(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        freq_expect = 2.0 * np.pi * freq
+        dirs_expect = (np.pi / 180.0) * dirs
+        vals_expect = vals / (2.0 * np.pi)
+
+        assert isinstance(wave, BinGrid)
+        assert isinstance(wave, DirectionalBinSpectrum)
+        np.testing.assert_array_almost_equal(wave._freq, freq_expect)
+        np.testing.assert_array_almost_equal(wave._dirs, dirs_expect)
+        np.testing.assert_array_almost_equal(wave._vals, vals_expect)
+        assert wave._clockwise is True
+        assert wave._waves_coming_from is True
+        assert wave._freq_hz is True
+        assert wave._degrees is True
+
+    def test_from_grid(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.random.random((10, 15))
+        grid = Grid(
+            freq,
+            dirs,
+            vals,
+            freq_hz=True,
+            degrees=True,
+            clockwise=True,
+            waves_coming_from=True,
+        )
+
+        spectrum = WaveBinSpectrum.from_grid(grid)
+
+        vals_expect = vals.copy()
+        vals_expect /= 2.0 * np.pi
+
+        assert isinstance(spectrum, WaveBinSpectrum)
+        np.testing.assert_array_almost_equal(spectrum._freq, grid._freq)
+        np.testing.assert_array_almost_equal(spectrum._dirs, grid._dirs)
+        np.testing.assert_array_almost_equal(spectrum._vals, vals_expect)
+        assert spectrum._clockwise == grid._clockwise
+        assert spectrum._waves_coming_from == grid._waves_coming_from
+        assert spectrum._freq_hz == grid._freq_hz
+        assert spectrum._degrees == grid._degrees
+
+    def test__init__raises_vals_neg(self):
+        freq = np.arange(0.05, 1, 0.1)
+        dirs = np.arange(5.0, 360.0, 10.0)
+        vals = np.random.random(size=(len(freq), len(dirs)))
+        vals[0, 1] *= -1
+
+        with pytest.raises(ValueError):
+            WaveBinSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+    def test__init__raises_vals_complex(self):
+        freq = np.arange(0.05, 1, 0.1)
+        dirs = np.arange(5.0, 360.0, 10.0)
+        vals = np.random.random(size=(len(freq), len(dirs)))
+        vals = vals + 1j * vals
+
+        with pytest.raises(ValueError):
+            WaveBinSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+    def test__repr__(self, wavebin):
+        assert str(wavebin) == "WaveBinSpectrum"
+
+    def test_conjugate_raises(self, wavebin):
+        with pytest.raises(AttributeError):
+            wavebin.conjugate()
+
+    def test_real_raises(self, wavebin):
+        with pytest.raises(AttributeError):
+            wavebin.real
+
+    def test_imag_raises(self, wavebin):
+        with pytest.raises(AttributeError):
+            wavebin.imag
+
+    def test_hs(self):
+        f0 = 0.0
+        f1 = 2.0
+
+        freq = np.linspace(f0, f1, 20)
+        dirs = np.arange(5, 360, 10)
+        vals = np.ones((len(freq), len(dirs)))
+        wave = WaveBinSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+        hs_out = wave.hs
+        var_expect = 1.0 * (f1 - f0) * len(dirs)
+        hs_expect = 4.0 * np.sqrt(var_expect)
+
+        assert hs_out == pytest.approx(hs_expect)
+
+    def test_tp_hz(self):
+        freq = np.linspace(0, 2, 20)
+        dirs = np.arange(5, 360, 10)
+        vals = np.ones((len(freq), len(dirs)))
+
+        idx_dirs_max = 4
+        idx_freq_max = 10
+        vals[idx_freq_max, idx_dirs_max] = 2.0
+
+        wave = WaveBinSpectrum(freq, dirs, vals, freq_hz=True, degrees=True)
+
+        tp_out = wave.tp
+
+        fp_expect = freq[idx_freq_max]
+        tp_expect = 1.0 / fp_expect
+
+        assert tp_out == tp_expect
+
+    def test_tp_rads(self):
+        freq = np.linspace(0, 2, 20)
+        dirs = np.arange(5, 360, 10)
+        vals = np.ones((len(freq), len(dirs)))
+
+        idx_dirs_max = 4
+        idx_freq_max = 10
+        vals[idx_freq_max, idx_dirs_max] = 2.0
+
+        wave = WaveBinSpectrum(freq, dirs, vals, freq_hz=False, degrees=True)
+
+        tp_out = wave.tp
+
+        fp_expect = freq[idx_freq_max] / (2.0 * np.pi)
+        tp_expect = 1.0 / fp_expect
+
+        assert tp_out == tp_expect
+
+    testdata_mean_direction = [
+        ([0.0, np.pi / 2.0, np.pi], [1.0, 1.0, 1.0], np.pi / 2.0),
+        ([0.0, np.pi / 2.0, np.pi], [0.0, 0.0, 1.0], np.pi),
+        ([0.0, np.pi / 2.0, np.pi], [0.0, 1.0, 0.0], np.pi / 2.0),
+        ([0.0, np.pi / 2.0, np.pi], [1.0, 0.0, 0.0], 0.0),
+        (
+            [np.pi, 3.0 * np.pi / 2.0, 2.0 * np.pi - 1e-8],
+            [1.0, 1.0, 1.0],
+            3.0 * np.pi / 2.0,
+        ),
+    ]
+
+    @pytest.mark.parametrize("d,s,mean_dir_rad", testdata_mean_direction)
+    def test__mean_direction(self, d, s, mean_dir_rad):
+        d = np.asarray(d)
+        s = np.asarray(s)
+        meandir_out = WaveBinSpectrum._mean_direction(d, s)
+        assert meandir_out == pytest.approx(mean_dir_rad)
+
+    @pytest.mark.parametrize("d,s,mean_dir_rad", testdata_mean_direction)
+    def test_dirp_deg(self, d, s, mean_dir_rad):
+        d = np.asarray(d)
+        s = np.asarray(s)
+        f = np.linspace(0, 2, 20)
+        v = np.zeros((len(f), len(d)))
+
+        idx_freq_max = 10
+        v[idx_freq_max, :] = s
+
+        wave = WaveBinSpectrum(f, d, v, freq_hz=True, degrees=False)
+
+        dirp_out = wave.dirp(degrees=True)
+        dirp_expect = (180.0 / np.pi) * mean_dir_rad
+
+        assert dirp_out == pytest.approx(dirp_expect)
+
+    @pytest.mark.parametrize("d,s,mean_dir_rad", testdata_mean_direction)
+    def test_dirp_rad(self, d, s, mean_dir_rad):
+        d = np.asarray(d)
+        s = np.asarray(s)
+        f = np.linspace(0, 2, 20)
+        v = np.zeros((len(f), len(d)))
+
+        idx_freq_max = 10
+        v[idx_freq_max, :] = s
+
+        wave = WaveBinSpectrum(f, d, v, freq_hz=True, degrees=False)
+
+        dirp_out = wave.dirp(degrees=False)
+        dirp_expect = mean_dir_rad
+
+        assert dirp_out == pytest.approx(dirp_expect)
+
+    @pytest.mark.parametrize("d,s,mean_dir_rad", testdata_mean_direction)
+    def test_dirm_deg(self, d, s, mean_dir_rad):
+        d = np.asarray(d)
+        s = np.asarray(s)
+        f = np.linspace(0, 2, 20)
+        v = np.tile(s, (len(f), 1))
+
+        wave = WaveBinSpectrum(f, d, v, freq_hz=True, degrees=False)
+
+        dirm_out = wave.dirm(degrees=True)
+        dirm_expect = (180.0 / np.pi) * mean_dir_rad
+
+        assert dirm_out == pytest.approx(dirm_expect)
+
+    @pytest.mark.parametrize("d,s,mean_dir_rad", testdata_mean_direction)
+    def test_dirm_rad(self, d, s, mean_dir_rad):
+        d = np.asarray(d)
+        s = np.asarray(s)
+        f = np.linspace(0, 2, 20)
+        v = np.tile(s, (len(f), 1))
+
+        wave = WaveBinSpectrum(f, d, v, freq_hz=True, degrees=False)
+
+        dirm_out = wave.dirm(degrees=False)
+        dirm_expect = mean_dir_rad
+
+        assert dirm_out == pytest.approx(dirm_expect)
 
 
 class Test_calculate_response:

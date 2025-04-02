@@ -2130,6 +2130,149 @@ class WaveSpectrum(DisableComplexMixin, DirectionalSpectrum):
         return dirm
 
 
+class WaveBinSpectrum(DisableComplexMixin, DirectionalBinSpectrum):
+    """
+    Binned wave spectrum.
+
+    The ``WaveSpectrum`` class extends the :class:`~waveresponse.DirectionalBinSpectrum`
+    class, and is a two-dimentional frequency/(wave)direction grid. The spectrum values
+    represents spectrum density as a function of frequency, binned by direction.
+
+    Proper scaling is applied to ensure that the total "energy" remains constant at all times.
+
+    Parameters
+    ----------
+    freq : array-like
+        1-D array of grid frequency coordinates. Positive and monotonically increasing.
+    dirs : array-like
+        1-D array of grid direction coordinates. Positive and monotonically increasing.
+        Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+    vals : array-like (N, M)
+        Spectrum density values associated with the grid. Should be a 2-D array
+        of shape (N, M), such that ``N=len(freq)`` and ``M=len(dirs)``.
+    freq_hz : bool
+        If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+    degrees : bool
+        If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
+    clockwise : bool
+        If positive directions are defined to be 'clockwise' (``True``) or 'counterclockwise'
+        (``False``). Clockwise means that the directions follow the right-hand rule
+        with an axis pointing downwards.
+    waves_coming_from : bool
+        If waves are 'coming from' the given directions. If ``False``, 'going towards'
+        convention is assumed.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if np.any(np.iscomplex(self._vals)):
+            raise ValueError("Spectrum values can not be complex.")
+        elif np.any(self._vals < 0.0):
+            raise ValueError("Spectrum values must be positive.")
+
+    def __repr__(self):
+        return "WaveBinSpectrum"
+
+    @property
+    def hs(self):
+        """
+        Significan wave height, Hs.
+
+        Calculated from the zeroth-order spectral moment according to:
+
+        ``hs = 4.0 * sqrt(m0)``
+
+        Notes
+        -----
+        The significant wave height is calculated according to equation (2.26) in
+        reference [1].
+
+        References
+        ----------
+        [1] 0. M. Faltinsen, (1990), "Sea loads on ships and offshore structures",
+        Cambridge University Press.
+        """
+        m0 = self.moment(0)
+        return 4.0 * np.sqrt(m0)
+
+    @property
+    def tp(self):
+        """
+        Wave peak period in 'seconds'.
+
+        The period at which the 'non-directional' wave spectrum, ``S(f)``, has its maximum
+        value.
+        """
+        f, S = self.spectrum1d(axis=1, freq_hz=True)
+        fp = f[np.argmax(S)]
+        return 1.0 / fp
+
+    @staticmethod
+    def _mean_direction(dirs, spectrum):
+        """
+        Mean spectrum direction.
+
+        Parameters
+        ----------
+        dirs : array-like
+            Directions in 'radians'.
+        spectrum : array-like
+            1-D spectrum directional distribution.
+        """
+        sin = np.sum(np.sin(dirs) * spectrum) / len(dirs)
+        cos = np.sum(np.cos(dirs) * spectrum) / len(dirs)
+        return _robust_modulus(np.arctan2(sin, cos), 2.0 * np.pi)
+
+    def dirp(self, degrees=None):
+        """
+        Wave peak direction.
+
+        Defined as the mean wave direction along the frequency corresponding to
+        the maximum value of the 'non-directional' spectrum.
+
+        Parameters
+        ----------
+        degrees : bool
+            If wave peak direction should be returned in 'degrees'. If ``False``,
+            the direction is returned in 'radians'. Defaults to original unit used
+            during initialization.
+        """
+
+        if degrees is None:
+            degrees = self._degrees
+
+        _, spectrum1d = self.spectrum1d(axis=1, freq_hz=False)
+
+        spectrum_peakfreq = self._vals[np.argmax(spectrum1d), :]
+
+        dirp = self._mean_direction(self._dirs, spectrum_peakfreq)
+
+        if degrees:
+            dirp = (180.0 / np.pi) * dirp
+
+        return dirp
+
+    def dirm(self, degrees=None):
+        """
+        Mean wave direction.
+
+        Parameters
+        ----------
+        degrees : bool
+            If mean wave direction should be returned in 'degrees'. If ``False``,
+            the direction is returned in 'radians'. Defaults to original unit used
+            during instantiation.
+        """
+
+        dirm = self._mean_direction(*self.spectrum1d(axis=0, degrees=False))
+
+        if degrees:
+            dirm = np.degrees(dirm)
+
+        return dirm
+
+
 def calculate_response(
     rao, wave, heading, heading_degrees=False, coord_freq="wave", coord_dirs="wave"
 ):
