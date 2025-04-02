@@ -5,6 +5,7 @@ from ._core import (
     DirectionalBinSpectrum,
     DirectionalSpectrum,
     Grid,
+    WaveBinSpectrum,
     WaveSpectrum,
     calculate_response,
     complex_to_polar,
@@ -51,5 +52,6 @@ __all__ = [
     "rigid_transform_surge",
     "rigid_transform_sway",
     "Torsethaugen",
+    "WaveBinSpectrum",
     "WaveSpectrum",
 ]

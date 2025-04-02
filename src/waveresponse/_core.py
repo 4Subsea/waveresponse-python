@@ -1610,6 +1610,69 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
 
         return freq, dirs, vals
 
+    def bingrid(self, freq_hz=False, degrees=False, complex_convert="rectangular"):
+        """
+        Return a copy of the spectrum's frequency and direction coordinates,
+        along with the corresponding binned spectrum values.
+
+        The spectrum values are interpolated and then integrated over their
+        respective direction bins, resulting in total energy per unit frequency.
+        This differs from the ``grid`` method, which returns the spectral density
+        values directly without bin integration.
+
+        Parameters
+        ----------
+        freq_hz : bool
+            Whether to return frequencies in hertz (Hz). If ``False``, angular
+            frequency in radians per second (rad/s) is used.
+        degrees : bool
+            Whether to return directions in degrees. If ``False``, radians are used.
+        complex_convert : str, optional
+            How to convert complex number grid values before interpolating. Should
+            be 'rectangular' or 'polar'. If 'rectangular' (default), complex values
+            are converted to rectangular form (i.e., real and imaginary part) before
+            interpolating. If 'polar', the values are instead converted to polar
+            form (i.e., amplitude and phase) before interpolating. The values are
+            converted back to complex form after interpolation.
+
+        Returns
+        -------
+        freq : ndarray, shape (N,)
+            1D array of frequency coordinates.
+        dirs : ndarray, shape (M,)
+            1D array of direction coordinates.
+        vals : ndarray, shape (N, M)
+            2D array of binned spectrum energy values (energy per unit frequency).
+            ``N = len(freq)``, ``M = len(dirs)``.
+        """
+
+        dirs_tmp = np.r_[
+            -2.0 * np.pi + self._dirs[-1], self._dirs, 2.0 * np.pi + self._dirs[0]
+        ]
+
+        dirs_bin = np.empty(self._dirs.size * 2 + 1, dtype=self._dirs.dtype)
+        dirs_bin[0::2] = dirs_tmp[:-1] + np.diff(dirs_tmp) / 2.0  # bin boundaries
+        dirs_bin[1::2] = self._dirs  # bin centers
+
+        interp_fun = self._interpolate_function(
+            complex_convert=complex_convert, method="linear", bounds_error=True
+        )
+
+        dirsnew, freqnew = np.meshgrid(dirs_bin, self._freq, indexing="ij", sparse=True)
+        vals_tmp = interp_fun((dirsnew, freqnew)).T
+
+        vals_binned = np.column_stack(
+            [
+                trapezoid(vals_tmp[:, i : i + 3], dirs_bin[i : i + 3], axis=1)
+                for i in range(0, 2 * len(self._dirs), 2)
+            ]
+        )
+
+        if freq_hz:
+            vals_binned *= 2.0 * np.pi
+
+        return self.freq(freq_hz=freq_hz), self.dirs(degrees=degrees), vals_binned
+
     def interpolate(
         self,
         freq,
@@ -2081,6 +2144,149 @@ class WaveSpectrum(DisableComplexMixin, DirectionalSpectrum):
         spectrum_dir = np.interp(d, dp, sp, period=2.0 * np.pi)
 
         dirm = self._mean_direction(d, spectrum_dir)
+
+        if degrees:
+            dirm = np.degrees(dirm)
+
+        return dirm
+
+
+class WaveBinSpectrum(DisableComplexMixin, DirectionalBinSpectrum):
+    """
+    Binned wave spectrum.
+
+    The ``WaveSpectrum`` class extends the :class:`~waveresponse.DirectionalBinSpectrum`
+    class, and is a two-dimentional frequency/(wave)direction grid. The spectrum values
+    represents spectrum density as a function of frequency, binned by direction.
+
+    Proper scaling is applied to ensure that the total "energy" remains constant at all times.
+
+    Parameters
+    ----------
+    freq : array-like
+        1-D array of grid frequency coordinates. Positive and monotonically increasing.
+    dirs : array-like
+        1-D array of grid direction coordinates. Positive and monotonically increasing.
+        Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+    vals : array-like (N, M)
+        Spectrum density values associated with the grid. Should be a 2-D array
+        of shape (N, M), such that ``N=len(freq)`` and ``M=len(dirs)``.
+    freq_hz : bool
+        If frequency is given in 'Hz'. If ``False``, 'rad/s' is assumed.
+    degrees : bool
+        If direction is given in 'degrees'. If ``False``, 'radians' is assumed.
+    clockwise : bool
+        If positive directions are defined to be 'clockwise' (``True``) or 'counterclockwise'
+        (``False``). Clockwise means that the directions follow the right-hand rule
+        with an axis pointing downwards.
+    waves_coming_from : bool
+        If waves are 'coming from' the given directions. If ``False``, 'going towards'
+        convention is assumed.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if np.any(np.iscomplex(self._vals)):
+            raise ValueError("Spectrum values can not be complex.")
+        elif np.any(self._vals < 0.0):
+            raise ValueError("Spectrum values must be positive.")
+
+    def __repr__(self):
+        return "WaveBinSpectrum"
+
+    @property
+    def hs(self):
+        """
+        Significan wave height, Hs.
+
+        Calculated from the zeroth-order spectral moment according to:
+
+        ``hs = 4.0 * sqrt(m0)``
+
+        Notes
+        -----
+        The significant wave height is calculated according to equation (2.26) in
+        reference [1].
+
+        References
+        ----------
+        [1] 0. M. Faltinsen, (1990), "Sea loads on ships and offshore structures",
+        Cambridge University Press.
+        """
+        m0 = self.moment(0)
+        return 4.0 * np.sqrt(m0)
+
+    @property
+    def tp(self):
+        """
+        Wave peak period in 'seconds'.
+
+        The period at which the 'non-directional' wave spectrum, ``S(f)``, has its maximum
+        value.
+        """
+        f, S = self.spectrum1d(axis=1, freq_hz=True)
+        fp = f[np.argmax(S)]
+        return 1.0 / fp
+
+    @staticmethod
+    def _mean_direction(dirs, spectrum):
+        """
+        Mean spectrum direction.
+
+        Parameters
+        ----------
+        dirs : array-like
+            Directions in 'radians'.
+        spectrum : array-like
+            1-D spectrum directional distribution.
+        """
+        sin = np.sum(np.sin(dirs) * spectrum) / len(dirs)
+        cos = np.sum(np.cos(dirs) * spectrum) / len(dirs)
+        return _robust_modulus(np.arctan2(sin, cos), 2.0 * np.pi)
+
+    def dirp(self, degrees=None):
+        """
+        Wave peak direction.
+
+        Defined as the mean wave direction along the frequency corresponding to
+        the maximum value of the 'non-directional' spectrum.
+
+        Parameters
+        ----------
+        degrees : bool
+            If wave peak direction should be returned in 'degrees'. If ``False``,
+            the direction is returned in 'radians'. Defaults to original unit used
+            during initialization.
+        """
+
+        if degrees is None:
+            degrees = self._degrees
+
+        _, spectrum1d = self.spectrum1d(axis=1, freq_hz=False)
+
+        spectrum_peakfreq = self._vals[np.argmax(spectrum1d), :]
+
+        dirp = self._mean_direction(self._dirs, spectrum_peakfreq)
+
+        if degrees:
+            dirp = (180.0 / np.pi) * dirp
+
+        return dirp
+
+    def dirm(self, degrees=None):
+        """
+        Mean wave direction.
+
+        Parameters
+        ----------
+        degrees : bool
+            If mean wave direction should be returned in 'degrees'. If ``False``,
+            the direction is returned in 'radians'. Defaults to original unit used
+            during instantiation.
+        """
+
+        dirm = self._mean_direction(*self.spectrum1d(axis=0, degrees=False))
 
         if degrees:
             dirm = np.degrees(dirm)
