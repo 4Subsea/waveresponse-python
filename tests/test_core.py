@@ -9,9 +9,8 @@ from scipy.integrate import quad
 from scipy.interpolate import RegularGridInterpolator as RGI
 
 import waveresponse as wr
-from waveresponse import (
+from waveresponse import (  # BinGrid,
     RAO,
-    # BinGrid,
     CosineFullSpreading,
     CosineHalfSpreading,
     DirectionalBinSpectrum,
@@ -745,12 +744,8 @@ class Test__GridInterpolator:
         x = np.linspace(5.0, 15.0, 10)
         vals_expect = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
 
-        interp_fun = _GridInterpolator(
-            yp * 2.*np.pi,
-            np.radians(xp),
-            vp
-        )
-        vals_out = interp_fun(y * 2. * np.pi, np.radians(x))
+        interp_fun = _GridInterpolator(yp * 2.0 * np.pi, np.radians(xp), vp)
+        vals_out = interp_fun(y * 2.0 * np.pi, np.radians(x))
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
     def test_interpolate_single_coordinate(self):
@@ -761,12 +756,8 @@ class Test__GridInterpolator:
         xp = np.linspace(0.0, 359.0, 10)
         vp = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in yp])
 
-        interp_fun = _GridInterpolator(
-            yp * 2.*np.pi,
-            np.radians(xp),
-            vp
-        )
-        vals_out = interp_fun(1.8 * 2. * np.pi, np.radians(12.1))
+        interp_fun = _GridInterpolator(yp * 2.0 * np.pi, np.radians(xp), vp)
+        vals_out = interp_fun(1.8 * 2.0 * np.pi, np.radians(12.1))
         vals_expect = np.array(a * 12.1 + b * 1.8)
 
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
@@ -782,13 +773,13 @@ class Test__GridInterpolator:
             ]
         )
         interp_fun = _GridInterpolator(
-            freq * 2.*np.pi,
+            freq * 2.0 * np.pi,
             np.radians(dirs),
             vals,
             fill_value=0.0,
             bounds_error=False,
         )
-        vals_out = interp_fun(np.array([10, 20]) * 2. * np.pi, np.radians([0, 90]))
+        vals_out = interp_fun(np.array([10, 20]) * 2.0 * np.pi, np.radians([0, 90]))
 
         vals_expect = np.array(
             [
@@ -810,13 +801,13 @@ class Test__GridInterpolator:
             ]
         )
         interp_fun = _GridInterpolator(
-            freq * 2.*np.pi,
+            freq * 2.0 * np.pi,
             np.radians(dirs),
             vals,
             fill_value=None,
             bounds_error=False,
         )
-        vals_out = interp_fun(np.array([10, 20]) * 2. * np.pi, np.radians([0, 90]))
+        vals_out = interp_fun(np.array([10, 20]) * 2.0 * np.pi, np.radians([0, 90]))
 
         vals_expect = np.array(
             [
@@ -850,12 +841,9 @@ class Test__GridInterpolator:
         vals_expect = vals_real_expect + 1j * vals_imag_expect
 
         interp_fun = _GridInterpolator(
-            yp * 2.*np.pi,
-            np.radians(xp),
-            vp,
-            complex_convert="rectangular"
+            yp * 2.0 * np.pi, np.radians(xp), vp, complex_convert="rectangular"
         )
-        vals_out = interp_fun(y * 2. * np.pi, np.radians(x))
+        vals_out = interp_fun(y * 2.0 * np.pi, np.radians(x))
 
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
@@ -889,12 +877,9 @@ class Test__GridInterpolator:
         )
 
         interp_fun = _GridInterpolator(
-            yp * 2.*np.pi,
-            np.radians(xp),
-            vp,
-            complex_convert="polar"
+            yp * 2.0 * np.pi, np.radians(xp), vp, complex_convert="polar"
         )
-        vals_out = interp_fun(y * 2. * np.pi, np.radians(x))
+        vals_out = interp_fun(y * 2.0 * np.pi, np.radians(x))
 
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
 
@@ -903,19 +888,17 @@ class Test__GridInterpolator:
         dirs = np.linspace(0, 360.0, 15, endpoint=False)
         vals = np.zeros((10, 15))
         interp_fun = _GridInterpolator(
-            freq * 2.*np.pi,
+            freq * 2.0 * np.pi,
             np.radians(dirs),
             vals,
             bounds_error=True,
         )
 
         with pytest.raises(ValueError):
-            interp_fun(np.array([0, 0.5]) * 2. * np.pi, np.radians([0, 1, 2, 400]))
+            interp_fun(np.array([0, 0.5]) * 2.0 * np.pi, np.radians([0, 1, 2, 400]))
 
         with pytest.raises(ValueError):
-            interp_fun(np.array([0, 2.]) * 2. * np.pi, np.radians([0, 1, 2, 100]))
-
-
+            interp_fun(np.array([0, 2.0]) * 2.0 * np.pi, np.radians([0, 1, 2, 100]))
 
 
 class Test_Grid:
@@ -1571,9 +1554,7 @@ class Test_Grid:
         dirs_in = np.array([0, np.pi / 4, np.pi / 2, 3.0 * np.pi / 4, np.pi])
         config_org = {"clockwise": False, "waves_coming_from": True}
         config_new = {"clockwise": True, "waves_coming_from": False}
-        dirs_out = Grid._convert_dirs(
-            dirs_in, config_new, config_org, degrees=False
-        )
+        dirs_out = Grid._convert_dirs(dirs_in, config_new, config_org, degrees=False)
 
         dirs_expect = np.array([np.pi, 3.0 * np.pi / 4, np.pi / 2, np.pi / 4, 0])
 
@@ -1583,9 +1564,7 @@ class Test_Grid:
         dirs_in = np.array([0, 45.0, 90.0, 135.0, 180.0])
         config_org = {"clockwise": False, "waves_coming_from": True}
         config_new = {"clockwise": True, "waves_coming_from": False}
-        dirs_out = Grid._convert_dirs(
-            dirs_in, config_new, config_org, degrees=True
-        )
+        dirs_out = Grid._convert_dirs(dirs_in, config_new, config_org, degrees=True)
 
         dirs_expect = np.array([180.0, 135.0, 90.0, 45.0, 0])
 
@@ -1927,9 +1906,7 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * 2)
 
         grid_scaled = grid * (1 + 1j)
-        np.testing.assert_array_almost_equal(
-            grid_scaled._vals, grid._vals * (1 + 1j)
-        )
+        np.testing.assert_array_almost_equal(grid_scaled._vals, grid._vals * (1 + 1j))
 
     def test__rmul__numeric(self, grid):
         grid_scaled = 2.0 * grid
@@ -1999,9 +1976,7 @@ class Test_Grid:
         out = grid + grid
 
         assert isinstance(out, Grid)
-        np.testing.assert_array_almost_equal(
-            out._vals, grid._vals + grid._vals
-        )
+        np.testing.assert_array_almost_equal(out._vals, grid._vals + grid._vals)
 
     def test__add__raises_type(self, grid, rao):
         with pytest.raises(TypeError):
@@ -2010,9 +1985,7 @@ class Test_Grid:
     @patch("waveresponse._core._check_is_similar")
     def test__add__check_is_similar(self, mock_check_is_similar, grid):
         grid + grid
-        mock_check_is_similar.assert_called_once_with(
-            grid, grid, exact_type=True
-        )
+        mock_check_is_similar.assert_called_once_with(grid, grid, exact_type=True)
 
     def test__add__numeric(self, grid):
         grid_added = grid + 2.0
@@ -2025,9 +1998,7 @@ class Test_Grid:
         np.testing.assert_array_almost_equal(grid_added._vals, grid._vals + 2)
 
         grid_added = grid + (1 + 1j)
-        np.testing.assert_array_almost_equal(
-            grid_added._vals, grid._vals + (1 + 1j)
-        )
+        np.testing.assert_array_almost_equal(grid_added._vals, grid._vals + (1 + 1j))
 
     def test__radd__numeric(self, grid):
         grid_added = 2.0 + grid
@@ -2037,16 +2008,12 @@ class Test_Grid:
         out = grid - grid
 
         assert isinstance(out, Grid)
-        np.testing.assert_array_almost_equal(
-            out._vals, grid._vals - grid._vals
-        )
+        np.testing.assert_array_almost_equal(out._vals, grid._vals - grid._vals)
 
     @patch("waveresponse._core._check_is_similar")
     def test__sub__check_is_similar(self, mock_check_is_similar, grid):
         grid - grid
-        mock_check_is_similar.assert_called_once_with(
-            grid, grid, exact_type=True
-        )
+        mock_check_is_similar.assert_called_once_with(grid, grid, exact_type=True)
 
     def test__sub__raises_type(self, grid, rao):
         with pytest.raises(TypeError):
@@ -2054,14 +2021,10 @@ class Test_Grid:
 
     def test__sub__numeric(self, grid):
         grid_subtracted = grid - 2.0
-        np.testing.assert_array_almost_equal(
-            grid_subtracted._vals, grid._vals - 2.0
-        )
+        np.testing.assert_array_almost_equal(grid_subtracted._vals, grid._vals - 2.0)
 
         grid_subtracted = grid - 0.0
-        np.testing.assert_array_almost_equal(
-            grid_subtracted._vals, grid._vals - 0.0
-        )
+        np.testing.assert_array_almost_equal(grid_subtracted._vals, grid._vals - 0.0)
 
         grid_subtracted = grid - 2
         np.testing.assert_array_almost_equal(grid_subtracted._vals, grid._vals - 2)
@@ -2073,18 +2036,14 @@ class Test_Grid:
 
     def test__rsub__numeric(self, grid):
         grid_subtracted = 2.0 - grid
-        np.testing.assert_array_almost_equal(
-            grid_subtracted._vals, grid._vals - 2.0
-        )
+        np.testing.assert_array_almost_equal(grid_subtracted._vals, grid._vals - 2.0)
 
     def test_conjugate(self, grid):
         grid_conj = grid.conjugate()
 
         np.testing.assert_array_almost_equal(grid_conj._freq, grid._freq)
         np.testing.assert_array_almost_equal(grid_conj._dirs, grid._dirs)
-        np.testing.assert_array_almost_equal(
-            grid_conj._vals, grid._vals.conjugate()
-        )
+        np.testing.assert_array_almost_equal(grid_conj._vals, grid._vals.conjugate())
 
     def test_real(self):
         freq_in = np.array([1, 2, 3])

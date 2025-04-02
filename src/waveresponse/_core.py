@@ -1871,10 +1871,7 @@ class DirectionalBinSpectrum(_SpectrumMixin, Grid):
 
         return freq, dirs, vals
 
-    def interpolate(
-        self,
-        *args, **kwargs
-    ):
+    def interpolate(self, *args, **kwargs):
         raise NotImplementedError("Use `.reshape` instead.")
 
     def reshape(
