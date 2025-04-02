@@ -1660,7 +1660,7 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
             self._vals,
             complex_convert=complex_convert,
             method="linear",
-            bounds_error=True
+            bounds_error=True,
         )
         vals_tmp = interp_fun(self._freq, dirs_bin)
 
