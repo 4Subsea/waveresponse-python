@@ -2171,13 +2171,7 @@ class WaveBinSpectrum(DisableComplexMixin, DirectionalBinSpectrum):
         if degrees is None:
             degrees = self._degrees
 
-        freq, spectrum1d = self.spectrum1d(axis=1, freq_hz=False)
-
-
-        # dirs = self._full_range_dir(self._dirs)  # radians
-        # spectrum2d = self.interpolate(freq, dirs, freq_hz=False, degrees=False)
-
-        # spectrum2d = self._vals
+        _, spectrum1d = self.spectrum1d(axis=1, freq_hz=False)
 
         spectrum_peakfreq = self._vals[np.argmax(spectrum1d), :]
 
