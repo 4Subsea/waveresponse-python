@@ -21,7 +21,7 @@ from waveresponse import (
     calculate_response,
     mirror,
 )
-from waveresponse._core import _check_foldable, _check_is_similar
+from waveresponse._core import _check_foldable, _check_is_similar, _GridInterpolator
 
 TEST_PATH = Path(__file__).parent
 
@@ -35,22 +35,6 @@ def freq_dirs():
     freq = np.linspace(0, 1.0, 10)
     dirs = np.linspace(0, 360.0, 15, endpoint=False)
     return freq, dirs
-
-
-# @pytest.fixture
-# def base_grid(freq_dirs):
-#     freq, dirs = freq_dirs
-#     vals = np.random.random((len(freq), len(dirs)))
-#     grid = _BaseGrid(
-#         freq,
-#         dirs,
-#         vals,
-#         freq_hz=True,
-#         degrees=True,
-#         clockwise=True,
-#         waves_coming_from=True,
-#     )
-#     return grid
 
 
 @pytest.fixture
@@ -67,22 +51,6 @@ def grid(freq_dirs):
         waves_coming_from=True,
     )
     return grid
-
-
-# @pytest.fixture
-# def bingrid(freq_dirs):
-#     freq, dirs = freq_dirs
-#     vals = np.random.random((len(freq), len(dirs)))
-#     grid = BinGrid(
-#         freq,
-#         dirs,
-#         vals,
-#         freq_hz=True,
-#         degrees=True,
-#         clockwise=True,
-#         waves_coming_from=True,
-#     )
-#     return grid
 
 
 @pytest.fixture
@@ -764,7 +732,193 @@ class Test__check_foldable:
             _check_foldable(np.array([]), degrees=True, sym_plane="xz")
 
 
-class Test__Grid:
+class Test__GridInterpolator:
+    def test_interpolate(self):
+        a = 7
+        b = 6
+
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.linspace(0.0, 359.0, 10)
+        vp = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in yp])
+
+        y = np.linspace(0.5, 1.0, 20)
+        x = np.linspace(5.0, 15.0, 10)
+        vals_expect = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
+
+        interp_fun = _GridInterpolator(
+            yp * 2.*np.pi,
+            np.radians(xp),
+            vp
+        )
+        vals_out = interp_fun(y * 2. * np.pi, np.radians(x))
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_interpolate_single_coordinate(self):
+        a = 7
+        b = 6
+
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.linspace(0.0, 359.0, 10)
+        vp = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in yp])
+
+        interp_fun = _GridInterpolator(
+            yp * 2.*np.pi,
+            np.radians(xp),
+            vp
+        )
+        vals_out = interp_fun(1.8 * 2. * np.pi, np.radians(12.1))
+        vals_expect = np.array(a * 12.1 + b * 1.8)
+
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_interpolate_fill_value(self):
+        freq = np.array([0, 1, 2])
+        dirs = np.array([0, 90, 180, 270])
+        vals = np.array(
+            [
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+            ]
+        )
+        interp_fun = _GridInterpolator(
+            freq * 2.*np.pi,
+            np.radians(dirs),
+            vals,
+            fill_value=0.0,
+            bounds_error=False,
+        )
+        vals_out = interp_fun(np.array([10, 20]) * 2. * np.pi, np.radians([0, 90]))
+
+        vals_expect = np.array(
+            [
+                [0.0, 0.0],
+                [0.0, 0.0],
+            ]
+        )
+
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_interpolate_fill_value_None(self):
+        freq = np.array([0, 1, 2])
+        dirs = np.array([0, 90, 180, 270])
+        vals = np.array(
+            [
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+                [1, 2, 3, 4],
+            ]
+        )
+        interp_fun = _GridInterpolator(
+            freq * 2.*np.pi,
+            np.radians(dirs),
+            vals,
+            fill_value=None,
+            bounds_error=False,
+        )
+        vals_out = interp_fun(np.array([10, 20]) * 2. * np.pi, np.radians([0, 90]))
+
+        vals_expect = np.array(
+            [
+                [1.0, 2.0],
+                [1.0, 2.0],
+            ]
+        )
+
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_interpolate_complex_rectangular(self):
+        a_real = 7
+        b_real = 6
+        a_imag = 3
+        b_imag = 9
+
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.linspace(0.0, 359.0, 10)
+        vp_real = np.array([[a_real * x_i + b_real * y_i for x_i in xp] for y_i in yp])
+        vp_imag = np.array([[a_imag * x_i + b_imag * y_i for x_i in xp] for y_i in yp])
+        vp = vp_real + 1j * vp_imag
+
+        y = np.linspace(0.5, 1.0, 20)
+        x = np.linspace(5.0, 15.0, 10)
+        vals_real_expect = np.array(
+            [[a_real * x_i + b_real * y_i for x_i in x] for y_i in y]
+        )
+        vals_imag_expect = np.array(
+            [[a_imag * x_i + b_imag * y_i for x_i in x] for y_i in y]
+        )
+        vals_expect = vals_real_expect + 1j * vals_imag_expect
+
+        interp_fun = _GridInterpolator(
+            yp * 2.*np.pi,
+            np.radians(xp),
+            vp,
+            complex_convert="rectangular"
+        )
+        vals_out = interp_fun(y * 2. * np.pi, np.radians(x))
+
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_interpolate_complex_polar(self):
+        a_amp = 7
+        b_amp = 6
+        a_phase = 0.01
+        b_phase = 0.03
+
+        yp = np.linspace(0.0, 2.0, 20)
+        xp = np.linspace(0.0, 359.0, 10)
+        vp_amp = np.array([[a_amp * x_i + b_amp * y_i for x_i in xp] for y_i in yp])
+        vp_phase = np.array(
+            [[a_phase * x_i + b_phase * y_i for x_i in xp] for y_i in yp]
+        )
+        vp = vp_amp * (np.cos(vp_phase) + 1j * np.sin(vp_phase))
+
+        y = np.linspace(0.0, 2.0, 200)
+        x = np.linspace(0.0, 359.0, 100)
+        vals_amp_expect = np.array(
+            [[a_amp * x_i + b_amp * y_i for x_i in x] for y_i in y]
+        )
+        x_, y_ = np.meshgrid(x, y, indexing="ij", sparse=True)
+        vals_phase_cos_expect = RGI((xp, yp), np.cos(vp_phase).T)((x_, y_)).T
+        vals_phase_sin_expect = RGI((xp, yp), np.sin(vp_phase).T)((x_, y_)).T
+
+        vals_expect = (
+            vals_amp_expect
+            * (vals_phase_cos_expect + 1j * vals_phase_sin_expect)
+            / np.abs(vals_phase_cos_expect + 1j * vals_phase_sin_expect)
+        )
+
+        interp_fun = _GridInterpolator(
+            yp * 2.*np.pi,
+            np.radians(xp),
+            vp,
+            complex_convert="polar"
+        )
+        vals_out = interp_fun(y * 2. * np.pi, np.radians(x))
+
+        np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
+    def test_interpolate_raises_outside_bound(self):
+        freq = np.linspace(0, 1.0, 10)
+        dirs = np.linspace(0, 360.0, 15, endpoint=False)
+        vals = np.zeros((10, 15))
+        interp_fun = _GridInterpolator(
+            freq * 2.*np.pi,
+            np.radians(dirs),
+            vals,
+            bounds_error=True,
+        )
+
+        with pytest.raises(ValueError):
+            interp_fun(np.array([0, 0.5]) * 2. * np.pi, np.radians([0, 1, 2, 400]))
+
+        with pytest.raises(ValueError):
+            interp_fun(np.array([0, 2.]) * 2. * np.pi, np.radians([0, 1, 2, 100]))
+
+
+
+
+class Test_Grid:
     def test__init__(self):
         freq = np.linspace(0, 1.0, 10)
         dirs = np.linspace(0, 360.0, 15, endpoint=False)

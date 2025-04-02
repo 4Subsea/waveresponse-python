@@ -142,7 +142,7 @@ def _sort(dirs, vals):
     return dirs[sorted_args], vals[:, sorted_args]
 
 
-class _GridInterpolate:
+class _GridInterpolator:
     def __init__(self, freq, dirs, vals, complex_convert="rectangular", **kwargs):
         """
         Interpolation function based on ``scipy.interpolate.RegularGridInterpolator``.
@@ -763,7 +763,7 @@ class Grid:
         self._check_freq(freq)
         self._check_dirs(dirs)
 
-        interp_fun = _GridInterpolate(
+        interp_fun = _GridInterpolator(
             self._freq,
             self._dirs,
             self._vals,
@@ -836,7 +836,7 @@ class Grid:
         self._check_freq(freq_new)
         self._check_dirs(dirs_new)
 
-        interp_fun = _GridInterpolate(
+        interp_fun = _GridInterpolator(
             self._freq,
             self._dirs,
             self._vals,
@@ -1074,7 +1074,7 @@ class RAO(Grid):
         self._check_freq(freq_new)
         self._check_dirs(dirs_new)
 
-        interp_fun = _GridInterpolate(
+        interp_fun = _GridInterpolator(
             freq_new,
             dirs_new,
             self._vals,
@@ -1732,7 +1732,7 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
         self._check_freq(freq_new)
         self._check_dirs(dirs_new)
 
-        interp_fun = _GridInterpolate(
+        interp_fun = _GridInterpolator(
             self._freq,
             self._dirs,
             self._vals,
@@ -1920,7 +1920,7 @@ class DirectionalBinSpectrum(_SpectrumMixin, Grid):
 
         self._check_freq(freq_new)
 
-        interp_fun = _GridInterpolate(
+        interp_fun = _GridInterpolator(
             self._freq,
             self._dirs,
             self._vals,
