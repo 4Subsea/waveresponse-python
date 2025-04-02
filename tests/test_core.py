@@ -5314,15 +5314,15 @@ class Test_WaveBinSpectrum:
         ([np.pi, 3.0 * np.pi / 2.0, 2.0 * np.pi - 1e-8], [1.0, 1.0, 1.0], 3.0 * np.pi / 2.0),
     ]
 
-    @pytest.mark.parametrize("d,s,expect", testdata_mean_direction)
-    def test__mean_direction(self, d, s, expect):
+    @pytest.mark.parametrize("d,s,mean_dir_expect", testdata_mean_direction)
+    def test__mean_direction(self, d, s, mean_dir_expect):
         d = np.asarray(d)
         s = np.asarray(s)
         meandir_out = WaveBinSpectrum._mean_direction(d, s)
-        assert meandir_out == pytest.approx(expect)
+        assert meandir_out == pytest.approx(mean_dir_expect)
 
-    @pytest.mark.parametrize("d,s,expect", testdata_mean_direction)
-    def test_dirp_deg(self, d, s, expect):
+    @pytest.mark.parametrize("d,s,mean_dir_expect", testdata_mean_direction)
+    def test_dirp_deg(self, d, s, mean_dir_expect):
         d = np.asarray(d)
         s = np.asarray(s)
         f = np.linspace(0, 2, 20)
@@ -5334,12 +5334,12 @@ class Test_WaveBinSpectrum:
         wave = WaveBinSpectrum(f, d, v, freq_hz=True, degrees=False)
 
         dirp_out = wave.dirp(degrees=True)
-        dirp_expect = (180.0 / np.pi) * expect
+        dirp_expect = (180.0 / np.pi) * mean_dir_expect
 
         assert dirp_out == pytest.approx(dirp_expect, rel=0.1)
 
-    @pytest.mark.parametrize("d,s,expect", testdata_mean_direction)
-    def test_dirp_rad(self, d, s, expect):
+    @pytest.mark.parametrize("d,s,mean_dir_expect", testdata_mean_direction)
+    def test_dirp_rad(self, d, s, mean_dir_expect):
         d = np.asarray(d)
         s = np.asarray(s)
         f = np.linspace(0, 2, 20)
@@ -5351,12 +5351,12 @@ class Test_WaveBinSpectrum:
         wave = WaveBinSpectrum(f, d, v, freq_hz=True, degrees=False)
 
         dirp_out = wave.dirp(degrees=False)
-        dirp_expect = expect
+        dirp_expect = mean_dir_expect
 
         assert dirp_out == pytest.approx(dirp_expect, rel=0.1)
 
-    @pytest.mark.parametrize("d,s,expect", testdata_mean_direction)
-    def test_dirm_deg(self, d, s, expect):
+    @pytest.mark.parametrize("d,s,mean_dir_expect", testdata_mean_direction)
+    def test_dirm_deg(self, d, s, mean_dir_expect):
         d = np.asarray(d)
         s = np.asarray(s)
         f = np.linspace(0, 2, 20)
@@ -5365,12 +5365,12 @@ class Test_WaveBinSpectrum:
         wave = WaveBinSpectrum(f, d, v, freq_hz=True, degrees=False)
 
         dirm_out = wave.dirm(degrees=True)
-        dirm_expect = (180.0 / np.pi) * expect
+        dirm_expect = (180.0 / np.pi) * mean_dir_expect
 
         assert dirm_out == pytest.approx(dirm_expect, rel=0.1)
 
-    @pytest.mark.parametrize("d,s,expect", testdata_mean_direction)
-    def test_dirm_rad(self, d, s, expect):
+    @pytest.mark.parametrize("d,s,mean_dir_expect", testdata_mean_direction)
+    def test_dirm_rad(self, d, s, mean_dir_expect):
         d = np.asarray(d)
         s = np.asarray(s)
         f = np.linspace(0, 2, 20)
@@ -5379,7 +5379,7 @@ class Test_WaveBinSpectrum:
         wave = WaveBinSpectrum(f, d, v, freq_hz=True, degrees=False)
 
         dirm_out = wave.dirm(degrees=False)
-        dirm_expect = expect
+        dirm_expect = mean_dir_expect
 
         assert dirm_out == pytest.approx(dirm_expect, rel=0.1)
 
