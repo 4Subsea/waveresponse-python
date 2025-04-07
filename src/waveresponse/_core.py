@@ -1076,8 +1076,8 @@ class RAO(Grid):
         self._check_dirs(dirs_new)
 
         interp_fun = _GridInterpolator(
-            freq_new,
-            dirs_new,
+            self._freq,
+            self._dirs,
             self._vals,
             complex_convert=complex_convert,
             method="linear",
