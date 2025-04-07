@@ -4329,10 +4329,9 @@ class Test_DirectionalBinSpectrum:
 
         y = np.linspace(0.5, 1.0, 20)
         x = xp
-        vals_expect = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
 
-        with pytest.raises(NotImplementedError):
-            _ = spectrum.interpolate(y, freq_hz=True)
+        with pytest.raises(AttributeError):
+            _ = spectrum.interpolate(y, x, freq_hz=True, degrees=True)
 
     def test_var(self):
         y0 = 0.0
