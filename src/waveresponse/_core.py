@@ -146,6 +146,7 @@ class _GridInterpolator:
     """
     Interpolation function based on ``scipy.interpolate.RegularGridInterpolator``.
     """
+
     def __init__(self, freq, dirs, vals, complex_convert="rectangular", **kwargs):
         xp = np.concatenate((dirs[-1:] - 2 * np.pi, dirs, dirs[:1] + 2.0 * np.pi))
 
