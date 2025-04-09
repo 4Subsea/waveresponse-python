@@ -71,10 +71,9 @@ def multiply(grid1, grid2, output_type="Grid"):
     }
 
     if not (isinstance(output_type, type) and issubclass(output_type, Grid)):
-        if output_type in TYPE_MAP:
-            output_type = TYPE_MAP[output_type]
-        else:
+        if output_type not in TYPE_MAP:
             raise ValueError(f"Invalid `output_type`: {output_type!r}")
+        output_type = TYPE_MAP[output_type]
 
     _check_is_similar(grid1, grid2, exact_type=False)
 
