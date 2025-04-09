@@ -297,6 +297,78 @@ class Test_multiply:
         np.testing.assert_array_almost_equal(out._dirs, wave._dirs)
         np.testing.assert_array_almost_equal(out._vals, vals_expect)
 
+    @pytest.mark.parametrize("output_type", ("grid", "Grid", Grid))
+    def test_wavebin_and_wavebin_to_grid(self, output_type, wavebin):
+        grid1 = wavebin.copy()
+        grid2 = wavebin.copy()
+        out = wr.multiply(grid1, grid2, output_type=output_type)
+
+        vals_expect = wavebin._vals * wavebin._vals
+
+        assert isinstance(out, Grid)
+        assert not isinstance(out, WaveSpectrum)
+        assert out._freq_hz is False
+        assert out._degrees is False
+        assert out._clockwise == grid1._clockwise
+        assert out._waves_coming_from == grid1._waves_coming_from
+        np.testing.assert_array_almost_equal(out._freq, grid1._freq)
+        np.testing.assert_array_almost_equal(out._dirs, grid1._dirs)
+        np.testing.assert_array_almost_equal(out._vals, vals_expect)
+
+    @pytest.mark.parametrize("output_type", ("wave_bin_spectrum", "WaveBinSpectrum", WaveBinSpectrum))
+    def test_wavebin_and_wavebin_to_wavebin(self, output_type, wavebin):
+        grid1 = wavebin.copy()
+        grid2 = wavebin.copy()
+        out = wr.multiply(grid1, grid2, output_type=output_type)
+
+        vals_expect = wavebin._vals * wavebin._vals
+
+        assert isinstance(out, Grid)
+        assert not isinstance(out, WaveSpectrum)
+        assert out._freq_hz is False
+        assert out._degrees is False
+        assert out._clockwise == grid1._clockwise
+        assert out._waves_coming_from == grid1._waves_coming_from
+        np.testing.assert_array_almost_equal(out._freq, grid1._freq)
+        np.testing.assert_array_almost_equal(out._dirs, grid1._dirs)
+        np.testing.assert_array_almost_equal(out._vals, vals_expect)
+
+    @pytest.mark.parametrize("output_type", ("grid", "Grid", Grid))
+    def test_binspectrum_and_binspectrum_to_grid(self, output_type, directional_bin_spectrum):
+        grid1 = directional_bin_spectrum.copy()
+        grid2 = directional_bin_spectrum.copy()
+        out = wr.multiply(grid1, grid2, output_type=output_type)
+
+        vals_expect = grid1._vals * grid2._vals
+
+        assert isinstance(out, Grid)
+        assert not isinstance(out, WaveSpectrum)
+        assert out._freq_hz is False
+        assert out._degrees is False
+        assert out._clockwise == grid1._clockwise
+        assert out._waves_coming_from == grid1._waves_coming_from
+        np.testing.assert_array_almost_equal(out._freq, grid1._freq)
+        np.testing.assert_array_almost_equal(out._dirs, grid1._dirs)
+        np.testing.assert_array_almost_equal(out._vals, vals_expect)
+
+    @pytest.mark.parametrize("output_type", ("directional_bin_spectrum", "DirectionalBinSpectrum", DirectionalBinSpectrum))
+    def test_binspectrum_and_binspectrum_to_binspectrum(self, output_type, directional_bin_spectrum):
+        grid1 = directional_bin_spectrum.copy()
+        grid2 = directional_bin_spectrum.copy()
+        out = wr.multiply(grid1, grid2, output_type=output_type)
+
+        vals_expect = grid1._vals * grid2._vals
+
+        assert isinstance(out, Grid)
+        assert not isinstance(out, WaveSpectrum)
+        assert out._freq_hz is False
+        assert out._degrees is False
+        assert out._clockwise == grid1._clockwise
+        assert out._waves_coming_from == grid1._waves_coming_from
+        np.testing.assert_array_almost_equal(out._freq, grid1._freq)
+        np.testing.assert_array_almost_equal(out._dirs, grid1._dirs)
+        np.testing.assert_array_almost_equal(out._vals, vals_expect)
+
     def test_raises_output_type(self, grid):
         with pytest.raises(ValueError):
             wr.multiply(grid, grid.copy(), output_type="invalid-type")
