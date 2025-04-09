@@ -70,10 +70,10 @@ def multiply(grid1, grid2, output_type="Grid"):
         "wave_spectrum": WaveSpectrum,  # for backward compatibility
     }
 
-    if not (isinstance(output_type, type) and issubclass(output_type, Grid)):
-        if output_type not in TYPE_MAP:
-            raise ValueError(f"Invalid `output_type`: {output_type!r}")
-        output_type = TYPE_MAP[output_type]
+    output_type_ = TYPE_MAP.get(output_type, output_type)
+
+    if not (isinstance(output_type_, type) and issubclass(output_type_, Grid)):
+        raise ValueError(f"Invalid `output_type`: {output_type_!r}")
 
     _check_is_similar(grid1, grid2, exact_type=False)
 
@@ -91,7 +91,7 @@ def multiply(grid1, grid2, output_type="Grid"):
         **convention,
     )
 
-    return output_type.from_grid(new)
+    return output_type_.from_grid(new)
 
 
 def _cast_to_grid(grid):
