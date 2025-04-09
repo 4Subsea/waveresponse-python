@@ -43,7 +43,7 @@ def _check_is_similar(*grids, exact_type=True):
             raise ValueError("Grid objects have different wave conventions.")
 
 
-def multiply(grid1, grid2, output_type="grid"):
+def multiply(grid1, grid2, output_type="Grid"):
     """
     Multiply values (element-wise).
 
@@ -53,23 +53,29 @@ def multiply(grid1, grid2, output_type="grid"):
         Grid object.
     grid2 : obj
         Grid object.
-    output_type : str {"grid", "rao", "directional_spectrum", "wave_spectrum"}
+    output_type : {'Grid', 'RAO', 'DirectionalSpectrum', 'WaveSpectrum', 'DirectionalBinSpectrum', 'WaveBinSpectrum'}
         Output grid type.
     """
 
     TYPE_MAP = {
-        "grid": Grid,
-        "rao": RAO,
-        "directional_spectrum": DirectionalSpectrum,
-        "wave_spectrum": WaveSpectrum,
+        "Grid": Grid,
+        "RAO": RAO,
+        "DirectionalSpectrum": DirectionalSpectrum,
+        "DirectionalBinSpectrum": DirectionalBinSpectrum,
+        "WaveSpectrum": WaveSpectrum,
+        "WaveBinSpectrum": WaveBinSpectrum,
+        "grid": Grid,  # for backward compatibility
+        "rao": RAO,  # for backward compatibility
+        "directional_spectrum": DirectionalSpectrum,  # for backward compatibility
+        "wave_spectrum": WaveSpectrum,  # for backward compatibility
     }
 
-    if output_type not in TYPE_MAP:
-        raise ValueError("The given `output_type` is not valid.")
+    output_type_ = TYPE_MAP.get(output_type, output_type)
+
+    if not (isinstance(output_type_, type) and issubclass(output_type_, Grid)):
+        raise ValueError(f"Invalid `output_type`: {output_type_!r}")
 
     _check_is_similar(grid1, grid2, exact_type=False)
-
-    type_ = TYPE_MAP.get(output_type)
 
     freq = grid1._freq
     dirs = grid1._dirs
@@ -85,7 +91,7 @@ def multiply(grid1, grid2, output_type="grid"):
         **convention,
     )
 
-    return type_.from_grid(new)
+    return output_type_.from_grid(new)
 
 
 def _cast_to_grid(grid):
