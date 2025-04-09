@@ -53,7 +53,7 @@ def multiply(grid1, grid2, output_type="Grid"):
         Grid object.
     grid2 : obj
         Grid object.
-    output_type : str {"Grid", "RAO", "DirectionalSpectrum", "DirectionalBinSpectrum", "WaveSpectrum", "WaveBinSpectrum"}
+    output_type : grid-type, default 'Grid'
         Output grid type.
     """
 
@@ -74,18 +74,32 @@ def multiply(grid1, grid2, output_type="Grid"):
         "wave_spectrum": WaveSpectrum,
     }
 
+    if output_type in TYPE_MAP_DEPRECATED:
+        warnings.warn(
+            f"The '{output_type}' type is deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
+    # if isinstance(output_type, type) and issubclass(output_type, Grid):
+    #     gridtype = output_type
+    # elif output_type in (map_ := TYPE_MAP | TYPE_MAP_DEPRECATED):
+    #     gridtype = map_[output_type]
+    #     if output_type in TYPE_MAP_DEPRECATED:
+    #         warnings.warn(
+    #             f"The '{output_type}' type is deprecated and will be removed in a future release.",
+    #             DeprecationWarning,
+    #             stacklevel=2,
+    #         )
+    # else:
+    #     raise ValueError("The given `output_type` is not valid.")
+
     if isinstance(output_type, type) and issubclass(output_type, Grid):
         gridtype = output_type
-    elif output_type in (map_ := TYPE_MAP | TYPE_MAP_DEPRECATED):
-        gridtype = map_[output_type]
-        if output_type in TYPE_MAP_DEPRECATED:
-            warnings.warn(
-                f"The '{output_type}' type is deprecated and will be removed in a future release.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
+    elif output_type in (type_map := TYPE_MAP | TYPE_MAP_DEPRECATED):
+        gridtype = type_map[output_type]
     else:
-        raise ValueError("The given `output_type` is not valid.")
+        raise ValueError(f"Invalid `output_type`: {output_type!r}")
 
     _check_is_similar(grid1, grid2, exact_type=False)
 
