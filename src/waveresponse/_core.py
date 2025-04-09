@@ -74,7 +74,7 @@ def multiply(grid1, grid2, output_type="Grid"):
         "wave_spectrum": WaveSpectrum,
     }
 
-    if not isinstance(output_type, Grid):
+    if not issubclass(output_type, Grid):
         if output_type not in TYPE_MAP and output_type not in TYPE_MAP_DEPRECATED:
             raise ValueError("The given `output_type` is not valid.")
         if output_type in TYPE_MAP_DEPRECATED:
