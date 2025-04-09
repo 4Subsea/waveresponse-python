@@ -90,12 +90,11 @@ def multiply(grid1, grid2, gtype="Grid", **kwargs):
             stacklevel=2,
         )
 
-    if isinstance(gtype, type) and issubclass(gtype, Grid):
-        gridtype = gtype
-    elif gtype in (type_map := TYPE_MAP | TYPE_MAP_DEPRECATED):
-        gridtype = type_map[gtype]
-    else:
-        raise ValueError(f"Invalid `gtype`: {gtype!r}")
+    if not (isinstance(gtype, type) and issubclass(gtype, Grid)):
+        if gtype in (type_map := TYPE_MAP | TYPE_MAP_DEPRECATED):
+            gtype = type_map[gtype]
+        else:
+            raise ValueError(f"Invalid `gtype`: {gtype!r}")
 
     _check_is_similar(grid1, grid2, exact_type=False)
 
@@ -113,7 +112,7 @@ def multiply(grid1, grid2, gtype="Grid", **kwargs):
         **convention,
     )
 
-    return gridtype.from_grid(new)
+    return gtype.from_grid(new)
 
 
 def _cast_to_grid(grid):
