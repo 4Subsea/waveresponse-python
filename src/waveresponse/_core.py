@@ -85,7 +85,7 @@ def multiply(grid1, grid2, gtype="Grid", **kwargs):
 
     if gtype in TYPE_MAP_DEPRECATED:
         warnings.warn(
-            f"The '{gtype}' type is deprecated and will be removed in a future release.",
+            f"The '{gtype}' type is deprecated and will be removed in a future release. Use one of {set(TYPE_MAP.keys())} instead.",
             DeprecationWarning,
             stacklevel=2,
         )
