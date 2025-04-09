@@ -43,7 +43,7 @@ def _check_is_similar(*grids, exact_type=True):
             raise ValueError("Grid objects have different wave conventions.")
 
 
-def multiply(grid1, grid2, output_type="grid"):
+def multiply(grid1, grid2, output_type="Grid"):
     """
     Multiply values (element-wise).
 
@@ -85,7 +85,7 @@ def multiply(grid1, grid2, output_type="grid"):
             )
             output_type = TYPE_MAP_DEPRECATED[output_type]
         else:
-            output_type = TYPE_MAP_DEPRECATED[output_type]
+            output_type = TYPE_MAP[output_type]
 
     _check_is_similar(grid1, grid2, exact_type=False)
 
