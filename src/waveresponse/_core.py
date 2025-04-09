@@ -43,7 +43,7 @@ def _check_is_similar(*grids, exact_type=True):
             raise ValueError("Grid objects have different wave conventions.")
 
 
-def multiply(grid1, grid2, output_type="Grid"):
+def multiply(grid1, grid2, gtype="Grid", **kwargs):
     """
     Multiply values (element-wise).
 
@@ -53,7 +53,7 @@ def multiply(grid1, grid2, output_type="Grid"):
         Grid object.
     grid2 : obj
         Grid object.
-    output_type : grid-type, default 'Grid'
+    gtype : grid-type, default 'Grid'
         Output grid type.
     """
 
@@ -74,32 +74,27 @@ def multiply(grid1, grid2, output_type="Grid"):
         "wave_spectrum": WaveSpectrum,
     }
 
-    if output_type in TYPE_MAP_DEPRECATED:
+    if "output_type" in kwargs:
+        gtype = kwargs.pop("output_type")
         warnings.warn(
-            f"The '{output_type}' type is deprecated and will be removed in a future release.",
+            "The 'output_type' keyword argument is deprecated and will be removed in a future release. Use 'gtype' instead.",
             DeprecationWarning,
             stacklevel=2,
         )
 
-    # if isinstance(output_type, type) and issubclass(output_type, Grid):
-    #     gridtype = output_type
-    # elif output_type in (map_ := TYPE_MAP | TYPE_MAP_DEPRECATED):
-    #     gridtype = map_[output_type]
-    #     if output_type in TYPE_MAP_DEPRECATED:
-    #         warnings.warn(
-    #             f"The '{output_type}' type is deprecated and will be removed in a future release.",
-    #             DeprecationWarning,
-    #             stacklevel=2,
-    #         )
-    # else:
-    #     raise ValueError("The given `output_type` is not valid.")
+    if gtype in TYPE_MAP_DEPRECATED:
+        warnings.warn(
+            f"The '{gtype}' type is deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
-    if isinstance(output_type, type) and issubclass(output_type, Grid):
-        gridtype = output_type
-    elif output_type in (type_map := TYPE_MAP | TYPE_MAP_DEPRECATED):
-        gridtype = type_map[output_type]
+    if isinstance(gtype, type) and issubclass(gtype, Grid):
+        gridtype = gtype
+    elif gtype in (type_map := TYPE_MAP | TYPE_MAP_DEPRECATED):
+        gridtype = type_map[gtype]
     else:
-        raise ValueError(f"Invalid `output_type`: {output_type!r}")
+        raise ValueError(f"Invalid `gtype`: {gtype!r}")
 
     _check_is_similar(grid1, grid2, exact_type=False)
 
