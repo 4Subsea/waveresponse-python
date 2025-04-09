@@ -58,18 +58,36 @@ def multiply(grid1, grid2, output_type="grid"):
     """
 
     TYPE_MAP = {
+        "Grid": Grid,
+        "RAO": RAO,
+        "DirectionalSpectrum": DirectionalSpectrum,
+        "DirectionalBinSpectrum": DirectionalBinSpectrum,
+        "WaveSpectrum": WaveSpectrum,
+        "WaveBinSpectrum": WaveBinSpectrum,
+    }
+
+    # Deprecated types for backward compatibility
+    TYPE_MAP_DEPRECATED = {
         "grid": Grid,
         "rao": RAO,
         "directional_spectrum": DirectionalSpectrum,
         "wave_spectrum": WaveSpectrum,
     }
 
-    if output_type not in TYPE_MAP:
-        raise ValueError("The given `output_type` is not valid.")
+    if not isinstance(output_type, Grid):
+        if output_type not in TYPE_MAP and output_type not in TYPE_MAP_DEPRECATED:
+            raise ValueError("The given `output_type` is not valid.")
+        if output_type in TYPE_MAP_DEPRECATED:
+            warnings.warn(
+                f"The '{output_type}' type is deprecated and will be removed in a future release.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            output_type = TYPE_MAP_DEPRECATED[output_type]
+        else:
+            output_type = TYPE_MAP_DEPRECATED[output_type]
 
     _check_is_similar(grid1, grid2, exact_type=False)
-
-    type_ = TYPE_MAP.get(output_type)
 
     freq = grid1._freq
     dirs = grid1._dirs
@@ -85,7 +103,7 @@ def multiply(grid1, grid2, output_type="grid"):
         **convention,
     )
 
-    return type_.from_grid(new)
+    return output_type.from_grid(new)
 
 
 def _cast_to_grid(grid):
