@@ -43,7 +43,7 @@ def _check_is_similar(*grids, exact_type=True):
             raise ValueError("Grid objects have different wave conventions.")
 
 
-def multiply(grid1, grid2, output_type="Grid"):
+def multiply(grid1, grid2, output_type="grid"):
     """
     Multiply values (element-wise).
 
