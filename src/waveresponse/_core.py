@@ -74,18 +74,18 @@ def multiply(grid1, grid2, output_type="Grid"):
         "wave_spectrum": WaveSpectrum,
     }
 
-    if not issubclass(output_type, Grid):
-        if output_type not in TYPE_MAP and output_type not in TYPE_MAP_DEPRECATED:
-            raise ValueError("The given `output_type` is not valid.")
+    if isinstance(output_type, type) and issubclass(output_type, Grid):
+        gridtype = output_type
+    elif output_type in (map_ := TYPE_MAP | TYPE_MAP_DEPRECATED):
+        gridtype = map_[output_type]
         if output_type in TYPE_MAP_DEPRECATED:
             warnings.warn(
                 f"The '{output_type}' type is deprecated and will be removed in a future release.",
                 DeprecationWarning,
                 stacklevel=2,
             )
-            output_type = TYPE_MAP_DEPRECATED[output_type]
-        else:
-            output_type = TYPE_MAP[output_type]
+    else:
+        raise ValueError("The given `output_type` is not valid.")
 
     _check_is_similar(grid1, grid2, exact_type=False)
 
@@ -103,7 +103,7 @@ def multiply(grid1, grid2, output_type="Grid"):
         **convention,
     )
 
-    return output_type.from_grid(new)
+    return gridtype.from_grid(new)
 
 
 def _cast_to_grid(grid):
