@@ -74,6 +74,7 @@ def multiply(grid1, grid2, gtype="Grid", **kwargs):
         "wave_spectrum": WaveSpectrum,
     }
 
+    # Check for deprecated 'output_type' argument
     if "output_type" in kwargs:
         gtype = kwargs.pop("output_type")
         warnings.warn(
