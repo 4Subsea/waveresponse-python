@@ -4,8 +4,9 @@ from abc import ABC, abstractmethod
 from numbers import Number
 
 import numpy as np
-from scipy.integrate import trapezoid
+from scipy.integrate import trapezoid, quad
 from scipy.interpolate import RegularGridInterpolator as RGI
+from scipy.optimize import root_scalar
 from scipy.special import gamma
 
 from ._utils import _robust_modulus, complex_to_polar, polar_to_complex
@@ -2411,6 +2412,32 @@ class BaseSpreading(ABC):
             Direction coordinate in 'radians'.
         """
         raise NotImplementedError()
+
+    def discrete_directions(self, n, direction_offset=0.0):
+        if self._degrees:
+            x_lb = -180.0
+            x_ub = 180.0
+            periodicity = 360.0
+        else:
+            x_lb = -np.pi
+            x_ub = np.pi
+            periodicity = 2.0 * np.pi
+
+        total_area = quad(lambda theta: self(None, theta), x_lb, x_ub)[0]
+        half_bin_edges = np.empty(2 * n - 1)
+
+        x_prev = x_lb
+        for i in range(1, 2 * n):
+            target_area = total_area * i / (2 * n)
+            res = root_scalar(
+                lambda x: quad(lambda theta: self(None, theta), x_lb, x)[0]
+                - target_area,
+                bracket=[x_prev, x_ub],
+            )
+            x_prev = res.root
+            half_bin_edges[i - 1] = x_prev
+
+        return _robust_modulus(half_bin_edges[::2] + direction_offset, periodicity)
 
 
 class CosineHalfSpreading(BaseSpreading):

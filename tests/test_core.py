@@ -5994,3 +5994,16 @@ class Test_CosineHalfSpreading:
     def test__call__radians(self, f, d, s, spread_expect):
         spreading = CosineHalfSpreading(s, degrees=False)
         assert spreading(f, d) == pytest.approx(spread_expect)
+
+    @pytest.mark.parametrize("n,dirs_expect", [
+        [2, np.array([-13.2, 13.2])],
+        [3, np.array([-18.8, 0.0, 18.8])],
+        [4, np.array([-22.3, -6.3, 6.3, 22.3])],
+        [5, np.array([-24.8, -10.3, 0.0, 10.3, 24.8])]
+    ])
+    def test_discrete_directions_no_offset(self , n, dirs_expect):
+        spreading = CosineHalfSpreading(4, degrees=True)
+        np.testing.assert_allclose((spreading.discrete_directions(n) + 1e-8) % 360.0, dirs_expect % 360.0, rtol=0.0, atol=0.1)
+
+        spreading = CosineHalfSpreading(4, degrees=False)
+        np.testing.assert_allclose(np.degrees(spreading.discrete_directions(n) + 1e-8) % 360.0, dirs_expect % 360.0, rtol=0.0, atol=0.1)
