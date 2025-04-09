@@ -320,9 +320,7 @@ class Test_multiply:
         np.testing.assert_array_almost_equal(out._dirs, grid1._dirs)
         np.testing.assert_array_almost_equal(out._vals, vals_expect)
 
-    @pytest.mark.parametrize(
-        "output_type", ("wave_bin_spectrum", "WaveBinSpectrum", WaveBinSpectrum)
-    )
+    @pytest.mark.parametrize("output_type", ("WaveBinSpectrum", WaveBinSpectrum))
     def test_wavebin_and_wavebin_to_wavebin(self, output_type, wavebin):
         grid1 = wavebin.copy()
         grid2 = wavebin.copy()
@@ -362,7 +360,7 @@ class Test_multiply:
 
     @pytest.mark.parametrize(
         "output_type",
-        ("directional_bin_spectrum", "DirectionalBinSpectrum", DirectionalBinSpectrum),
+        ("DirectionalBinSpectrum", DirectionalBinSpectrum),
     )
     def test_binspectrum_and_binspectrum_to_binspectrum(
         self, output_type, directional_bin_spectrum

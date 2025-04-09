@@ -64,12 +64,10 @@ def multiply(grid1, grid2, output_type="Grid"):
         "DirectionalBinSpectrum": DirectionalBinSpectrum,
         "WaveSpectrum": WaveSpectrum,
         "WaveBinSpectrum": WaveBinSpectrum,
-        "grid": Grid,
-        "rao": RAO,
-        "directional_spectrum": DirectionalSpectrum,
-        "directional_bin_spectrum": DirectionalBinSpectrum,
-        "wave_spectrum": WaveSpectrum,
-        "wave_bin_spectrum": WaveBinSpectrum,
+        "grid": Grid,  # for backward compatibility
+        "rao": RAO,  # for backward compatibility
+        "directional_spectrum": DirectionalSpectrum,  # for backward compatibility
+        "wave_spectrum": WaveSpectrum,  # for backward compatibility
     }
 
     if not (isinstance(output_type, type) and issubclass(output_type, Grid)):
