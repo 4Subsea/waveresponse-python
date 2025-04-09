@@ -43,7 +43,7 @@ def _check_is_similar(*grids, exact_type=True):
             raise ValueError("Grid objects have different wave conventions.")
 
 
-def multiply(grid1, grid2, gtype="Grid", **kwargs):
+def multiply(grid1, grid2, output_type="Grid"):
     """
     Multiply values (element-wise).
 
@@ -53,7 +53,7 @@ def multiply(grid1, grid2, gtype="Grid", **kwargs):
         Grid object.
     grid2 : obj
         Grid object.
-    gtype : grid-type, default 'Grid'
+    output_type : {'Grid', 'RAO', 'DirectionalSpectrum', 'WaveSpectrum', 'DirectionalBinSpectrum', 'WaveBinSpectrum'}
         Output grid type.
     """
 
@@ -64,37 +64,19 @@ def multiply(grid1, grid2, gtype="Grid", **kwargs):
         "DirectionalBinSpectrum": DirectionalBinSpectrum,
         "WaveSpectrum": WaveSpectrum,
         "WaveBinSpectrum": WaveBinSpectrum,
-    }
-
-    # Deprecated types for backward compatibility
-    TYPE_MAP_DEPRECATED = {
         "grid": Grid,
         "rao": RAO,
         "directional_spectrum": DirectionalSpectrum,
+        "directional_bin_spectrum": DirectionalBinSpectrum,
         "wave_spectrum": WaveSpectrum,
+        "wave_bin_spectrum": WaveBinSpectrum,
     }
 
-    # Check for deprecated 'output_type' argument
-    if "output_type" in kwargs:
-        gtype = kwargs.pop("output_type")
-        warnings.warn(
-            "The 'output_type' keyword argument is deprecated and will be removed in a future release. Use 'gtype' instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-
-    if gtype in TYPE_MAP_DEPRECATED:
-        warnings.warn(
-            f"The '{gtype}' type is deprecated and will be removed in a future release. Use one of {set(TYPE_MAP.keys())} instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-
-    if not (isinstance(gtype, type) and issubclass(gtype, Grid)):
-        if gtype in (type_map := TYPE_MAP | TYPE_MAP_DEPRECATED):
-            gtype = type_map[gtype]
+    if not (isinstance(output_type, type) and issubclass(output_type, Grid)):
+        if output_type in TYPE_MAP:
+            output_type = TYPE_MAP[output_type]
         else:
-            raise ValueError(f"Invalid `gtype`: {gtype!r}")
+            raise ValueError(f"Invalid `output_type`: {output_type!r}")
 
     _check_is_similar(grid1, grid2, exact_type=False)
 
@@ -112,7 +94,7 @@ def multiply(grid1, grid2, gtype="Grid", **kwargs):
         **convention,
     )
 
-    return gtype.from_grid(new)
+    return output_type.from_grid(new)
 
 
 def _cast_to_grid(grid):
