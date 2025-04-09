@@ -189,8 +189,9 @@ class Test_multiply:
         np.testing.assert_array_almost_equal(out._dirs, rao._dirs)
         np.testing.assert_array_almost_equal(out._vals, vals_expect)
 
-    def test_grid_and_grid_to_grid(self, grid):
-        out = wr.multiply(grid, grid.copy(), output_type="grid")
+    @pytest.mark.parametrize("output_type", ("grid", "Grid", Grid))
+    def test_grid_and_grid_to_grid(self, output_type, grid):
+        out = wr.multiply(grid, grid.copy(), output_type=output_type)
 
         vals_expect = grid._vals * grid._vals
 
@@ -203,8 +204,9 @@ class Test_multiply:
         np.testing.assert_array_almost_equal(out._dirs, grid._dirs)
         np.testing.assert_array_almost_equal(out._vals, vals_expect)
 
-    def test_rao_and_wave_to_grid(self, rao, wave):
-        out = wr.multiply(rao, wave, output_type="grid")
+    @pytest.mark.parametrize("output_type", ("grid", "Grid", Grid))
+    def test_rao_and_wave_to_grid(self, output_type, rao, wave):
+        out = wr.multiply(rao, wave, output_type=output_type)
 
         vals_expect = rao._vals * wave._vals
 
@@ -217,8 +219,9 @@ class Test_multiply:
         np.testing.assert_array_almost_equal(out._dirs, rao._dirs)
         np.testing.assert_array_almost_equal(out._vals, vals_expect)
 
-    def test_rao_and_rao_to_rao(self, rao):
-        out = wr.multiply(rao, rao.copy(), output_type="rao")
+    @pytest.mark.parametrize("output_type", ("rao", "RAO", RAO))
+    def test_rao_and_rao_to_rao(self, output_type, rao):
+        out = wr.multiply(rao, rao.copy(), output_type=output_type)
 
         vals_expect = rao._vals * rao._vals
 
@@ -231,8 +234,9 @@ class Test_multiply:
         np.testing.assert_array_almost_equal(out._dirs, rao._dirs)
         np.testing.assert_array_almost_equal(out._vals, vals_expect)
 
-    def test_rao_and_rao_to_grid(self, rao):
-        out = wr.multiply(rao, rao.copy(), output_type="grid")
+    @pytest.mark.parametrize("output_type", ("grid", "Grid", Grid))
+    def test_rao_and_rao_to_grid(self, output_type, rao):
+        out = wr.multiply(rao, rao.copy(), output_type=output_type)
 
         vals_expect = rao._vals * rao._vals
 
@@ -246,8 +250,9 @@ class Test_multiply:
         np.testing.assert_array_almost_equal(out._dirs, rao._dirs)
         np.testing.assert_array_almost_equal(out._vals, vals_expect)
 
-    def test_wave_and_wave_to_wave(self, wave):
-        out = wr.multiply(wave, wave.copy(), output_type="wave_spectrum")
+    @pytest.mark.parametrize("output_type", ("wave_spectrum", "WaveSpectrum", WaveSpectrum))
+    def test_wave_and_wave_to_wave(self, output_type, wave):
+        out = wr.multiply(wave, wave.copy(), output_type=output_type)
 
         vals_expect = wave._vals * wave._vals
 
@@ -260,8 +265,9 @@ class Test_multiply:
         np.testing.assert_array_almost_equal(out._dirs, wave._dirs)
         np.testing.assert_array_almost_equal(out._vals, vals_expect)
 
-    def test_wave_and_wave_to_dir_spectrum(self, wave):
-        out = wr.multiply(wave, wave.copy(), output_type="directional_spectrum")
+    @pytest.mark.parametrize("output_type", ("directional_spectrum", "DirectionalSpectrum", DirectionalSpectrum))
+    def test_wave_and_wave_to_dir_spectrum(self, output_type, wave):
+        out = wr.multiply(wave, wave.copy(), output_type=output_type)
 
         vals_expect = wave._vals * wave._vals
 
@@ -275,8 +281,9 @@ class Test_multiply:
         np.testing.assert_array_almost_equal(out._dirs, wave._dirs)
         np.testing.assert_array_almost_equal(out._vals, vals_expect)
 
-    def test_wave_and_wave_to_grid(self, wave):
-        out = wr.multiply(wave, wave.copy(), output_type="grid")
+    @pytest.mark.parametrize("output_type", ("grid", "Grid", Grid))
+    def test_wave_and_wave_to_grid(self, output_type, wave):
+        out = wr.multiply(wave, wave.copy(), output_type=output_type)
 
         vals_expect = wave._vals * wave._vals
 
