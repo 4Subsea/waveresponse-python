@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from numbers import Number
 
 import numpy as np
-from scipy.integrate import trapezoid, quad
+from scipy.integrate import quad, trapezoid
 from scipy.interpolate import RegularGridInterpolator as RGI
 from scipy.optimize import root_scalar
 from scipy.special import gamma

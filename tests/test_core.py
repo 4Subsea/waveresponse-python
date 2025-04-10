@@ -9,9 +9,9 @@ from scipy.integrate import quad
 from scipy.interpolate import RegularGridInterpolator as RGI
 
 import waveresponse as wr
-from waveresponse import (  # BinGrid,
+from waveresponse import (
     RAO,
-    CosineFullSpreading,
+    CosineFullSpreading,  # BinGrid,
     CosineHalfSpreading,
     DirectionalBinSpectrum,
     DirectionalSpectrum,
