@@ -5879,6 +5879,138 @@ class Test_CosineFullSpreading:
 
         assert len(np.unique(np.array(spread_out_list))) == 1
 
+    @pytest.mark.parametrize(
+        "n,dirs_expect",
+        [
+            [2, np.array([-26.4, 26.4])],
+            [3, np.array([-37.6, 0.0, 37.6])],
+            [4, np.array([-44.6, -12.5, 12.5, 44.6])],
+            [5, np.array([-49.5, -20.5, 0.0, 20.5, 49.5])],
+        ],
+    )
+    def test_discrete_directions_no_offset_full(self, n, dirs_expect):
+        spreading = CosineFullSpreading(4, degrees=True)
+        np.testing.assert_allclose(
+            (spreading.discrete_directions(n) + 1e-8) % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
+
+        spreading = CosineFullSpreading(4, degrees=False)
+        np.testing.assert_allclose(
+            np.degrees(spreading.discrete_directions(n) + 1e-8) % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
+
+    @pytest.mark.parametrize(
+        "n,dirs_expect",
+        [
+            [2, np.array([-16.4, 36.4])],
+            [3, np.array([-27.6, 10.0, 47.6])],
+            [4, np.array([-34.6, -2.5, 22.5, 54.6])],
+            [5, np.array([-39.5, -10.5, 10.0, 30.5, 59.5])],
+        ],
+    )
+    def test_discrete_directions_offset_full(self, n, dirs_expect):
+        spreading = CosineFullSpreading(4, degrees=True)
+        np.testing.assert_allclose(
+            (spreading.discrete_directions(n, 10.0) + 1e-8) % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
+
+        spreading = CosineFullSpreading(4, degrees=False)
+        np.testing.assert_allclose(
+            np.degrees(spreading.discrete_directions(n, np.radians(10)) + 1e-8) % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
+
+    @pytest.mark.parametrize(
+        "n,dirs_expect",
+        [
+            [2, np.array([-36.4, 16.4])],
+            [3, np.array([-47.6, -10.0, 27.6])],
+            [4, np.array([-54.6, -22.5, 2.5, 34.6])],
+            [5, np.array([-59.5, -30.5, -10.0, 10.5, 39.5])],
+        ],
+    )
+    def test_discrete_directions_neg_offset_full(self, n, dirs_expect):
+        spreading = CosineFullSpreading(4, degrees=True)
+        np.testing.assert_allclose(
+            (spreading.discrete_directions(n, -10.0) + 1e-8) % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
+
+        spreading = CosineFullSpreading(4, degrees=False)
+        np.testing.assert_allclose(
+            np.degrees(spreading.discrete_directions(n, np.radians(-10)) + 1e-8)
+            % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
+
+    @pytest.mark.parametrize(
+        "n,dirs_expect",
+        [
+            [2, np.array([332.6, 385.4])],
+            [3, np.array([321.4, 359.0, 396.6])],
+            [4, np.array([314.4, 346.5, 371.5, 403.6])],
+            [5, np.array([309.5, 338.5, 359.0, 379.5, 408.5])],
+        ],
+    )
+    def test_discrete_directions_large_offset_full(self, n, dirs_expect):
+        spreading = CosineFullSpreading(4, degrees=True)
+        np.testing.assert_allclose(
+            (spreading.discrete_directions(n, 359) + 1e-8) % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
+
+        spreading = CosineFullSpreading(4, degrees=False)
+        np.testing.assert_allclose(
+            np.degrees(spreading.discrete_directions(n, np.radians(359)) + 1e-8)
+            % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
+
+    @pytest.mark.parametrize(
+        "n,dirs_expect",
+        [
+            [2, np.array([-11.0, 31.0])],
+            [3, np.array([-20.0, 10.0, 40.0])],
+            [4, np.array([-25.6, 0.1, 19.9, 45.6])],
+            [5, np.array([-29.5, -6.3, 10.0, 26.3, 49.5])],
+        ],
+    )
+    def test_discrete_directions_other_s_full(self, n, dirs_expect):
+        spreading = CosineFullSpreading(6.5, degrees=True)
+        np.testing.assert_allclose(
+            (spreading.discrete_directions(n, 10) + 1e-8) % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
+
+        spreading = CosineFullSpreading(6.5, degrees=False)
+        np.testing.assert_allclose(
+            np.degrees(spreading.discrete_directions(n, np.radians(10)) + 1e-8) % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
+
 
 class Test_CosineHalfSpreading:
     def test__init__(self):
@@ -5995,41 +6127,134 @@ class Test_CosineHalfSpreading:
         spreading = CosineHalfSpreading(s, degrees=False)
         assert spreading(f, d) == pytest.approx(spread_expect)
 
-    @pytest.mark.parametrize("n,dirs_expect", [
-        [2, np.array([-13.2, 13.2])],
-        [3, np.array([-18.8, 0.0, 18.8])],
-        [4, np.array([-22.3, -6.3, 6.3, 22.3])],
-        [5, np.array([-24.8, -10.3, 0.0, 10.3, 24.8])]
-    ])
-    def test_discrete_directions_no_offset(self , n, dirs_expect):
+    @pytest.mark.parametrize(
+        "n,dirs_expect",
+        [
+            [2, np.array([-13.2, 13.2])],
+            [3, np.array([-18.8, 0.0, 18.8])],
+            [4, np.array([-22.3, -6.3, 6.3, 22.3])],
+            [5, np.array([-24.8, -10.3, 0.0, 10.3, 24.8])],
+        ],
+    )
+    def test_discrete_directions_no_offset(self, n, dirs_expect):
         spreading = CosineHalfSpreading(4, degrees=True)
-        np.testing.assert_allclose((spreading.discrete_directions(n) + 1e-8) % 360.0, dirs_expect % 360.0, rtol=0.0, atol=0.1)
+        np.testing.assert_allclose(
+            (spreading.discrete_directions(n) + 1e-8) % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
 
         spreading = CosineHalfSpreading(4, degrees=False)
-        np.testing.assert_allclose(np.degrees(spreading.discrete_directions(n) + 1e-8) % 360.0, dirs_expect % 360.0, rtol=0.0, atol=0.1)
+        np.testing.assert_allclose(
+            np.degrees(spreading.discrete_directions(n) + 1e-8) % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
 
-    @pytest.mark.parametrize("n,dirs_expect", [
-        [2, np.array([-3.2, 23.2])],
-        [3, np.array([-8.8, 10.0, 28.8])],
-        [4, np.array([-12.3, 3.7, 16.3, 32.3])],
-        [5, np.array([-14.8, -0.3, 10.0, 20.3, 34.8])]
-    ])
-    def test_discrete_directions_offset(self , n, dirs_expect):
+    @pytest.mark.parametrize(
+        "n,dirs_expect",
+        [
+            [2, np.array([-3.2, 23.2])],
+            [3, np.array([-8.8, 10.0, 28.8])],
+            [4, np.array([-12.3, 3.7, 16.3, 32.3])],
+            [5, np.array([-14.8, -0.3, 10.0, 20.3, 34.8])],
+        ],
+    )
+    def test_discrete_directions_offset(self, n, dirs_expect):
         spreading = CosineHalfSpreading(4, degrees=True)
-        np.testing.assert_allclose((spreading.discrete_directions(n, 10.0) + 1e-8) % 360.0, dirs_expect % 360.0, rtol=0.0, atol=0.1)
+        np.testing.assert_allclose(
+            (spreading.discrete_directions(n, 10.0) + 1e-8) % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
 
         spreading = CosineHalfSpreading(4, degrees=False)
-        np.testing.assert_allclose(np.degrees(spreading.discrete_directions(n, np.radians(10)) + 1e-8) % 360.0, dirs_expect % 360.0, rtol=0.0, atol=0.1)
+        np.testing.assert_allclose(
+            np.degrees(spreading.discrete_directions(n, np.radians(10)) + 1e-8) % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
 
-    @pytest.mark.parametrize("n,dirs_expect", [
-        [2, np.array([-23.2, 3.2])],
-        [3, np.array([-28.8, -10.0, 8.8])],
-        [4, np.array([-32.3, -16.3, -3.7, 12.3])],
-        [5, np.array([-34.8, -20.3, -10.0, 0.3, 14.8])]
-    ])
-    def test_discrete_directions_neg_offset(self , n, dirs_expect):
+    @pytest.mark.parametrize(
+        "n,dirs_expect",
+        [
+            [2, np.array([-23.2, 3.2])],
+            [3, np.array([-28.8, -10.0, 8.8])],
+            [4, np.array([-32.3, -16.3, -3.7, 12.3])],
+            [5, np.array([-34.8, -20.3, -10.0, 0.3, 14.8])],
+        ],
+    )
+    def test_discrete_directions_neg_offset(self, n, dirs_expect):
         spreading = CosineHalfSpreading(4, degrees=True)
-        np.testing.assert_allclose((spreading.discrete_directions(n, -10.0) + 1e-8) % 360.0, dirs_expect % 360.0, rtol=0.0, atol=0.1)
+        np.testing.assert_allclose(
+            (spreading.discrete_directions(n, -10.0) + 1e-8) % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
 
         spreading = CosineHalfSpreading(4, degrees=False)
-        np.testing.assert_allclose(np.degrees(spreading.discrete_directions(n, np.radians(-10)) + 1e-8) % 360.0, dirs_expect % 360.0, rtol=0.0, atol=0.1)
+        np.testing.assert_allclose(
+            np.degrees(spreading.discrete_directions(n, np.radians(-10)) + 1e-8)
+            % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
+
+    @pytest.mark.parametrize(
+        "n,dirs_expect",
+        [
+            [2, np.array([345.8, 372.2])],
+            [3, np.array([340.2, 359, 377.8])],
+            [4, np.array([336.7, 352.7, 365.3, 381.3])],
+            [5, np.array([334.2, 348.7, 359.0, 369.3, 383.8])],
+        ],
+    )
+    def test_discrete_directions_large_offset(self, n, dirs_expect):
+        spreading = CosineHalfSpreading(4, degrees=True)
+        np.testing.assert_allclose(
+            (spreading.discrete_directions(n, 359) + 1e-8) % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
+
+        spreading = CosineHalfSpreading(4, degrees=False)
+        np.testing.assert_allclose(
+            np.degrees(spreading.discrete_directions(n, np.radians(359)) + 1e-8)
+            % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
+
+    @pytest.mark.parametrize(
+        "n,dirs_expect",
+        [
+            [2, np.array([-0.5, 20.5])],
+            [3, np.array([-5.0, 10.0, 25.0])],
+            [4, np.array([-7.8, 5.0, 15.0, 27.8])],
+            [5, np.array([-9.8, 1.8, 10.0, 18.2, 29.8])],
+        ],
+    )
+    def test_discrete_directions_other_s(self, n, dirs_expect):
+        spreading = CosineHalfSpreading(6.5, degrees=True)
+        np.testing.assert_allclose(
+            (spreading.discrete_directions(n, 10) + 1e-8) % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
+
+        spreading = CosineHalfSpreading(6.5, degrees=False)
+        np.testing.assert_allclose(
+            np.degrees(spreading.discrete_directions(n, np.radians(10)) + 1e-8) % 360.0,
+            dirs_expect % 360.0,
+            rtol=0.0,
+            atol=0.1,
+        )
