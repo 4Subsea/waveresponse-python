@@ -5432,7 +5432,7 @@ class Test_calculate_response:
 
     @pytest.fixture
     def wave(self):
-        rng = np.random.default_rng(2)
+        rng = np.random.default_rng(123)
         freq = 2.0 * np.pi * np.array([0.01, 0.3, 0.6, 0.9])  # rad/s
         dirs = np.pi / 180.0 * np.array([0.0, 90.0, 180.0, 270.0])  # rad
         vals = rng.random((len(freq), len(dirs)))
