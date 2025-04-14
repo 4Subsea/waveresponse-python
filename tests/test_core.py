@@ -11,7 +11,7 @@ from scipy.interpolate import RegularGridInterpolator as RGI
 import waveresponse as wr
 from waveresponse import (
     RAO,
-    CosineFullSpreading,  # BinGrid,
+    CosineFullSpreading,
     CosineHalfSpreading,
     DirectionalBinSpectrum,
     DirectionalSpectrum,
