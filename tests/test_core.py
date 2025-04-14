@@ -5458,10 +5458,12 @@ class Test_calculate_response:
         vals_expect = wave._vals * vals_amp**2
 
         assert isinstance(response, wr.DirectionalSpectrum)
+        assert response._clockwise is rao._clockwise
+        assert response._waves_coming_from is rao._waves_coming_from
         np.testing.assert_allclose(response._vals, vals_expect)
 
-        assert isinstance(response, DirectionalSpectrum)
-        np.testing.assert_allclose(response._vals, vals_expect)
+        # assert isinstance(response, DirectionalSpectrum)
+        # np.testing.assert_allclose(response._vals, vals_expect)
 
         # freq_rao = np.array([0.0, 0.5, 1.0])
         # dirs_rao = np.array([45.0, 135.0, 225.0, 315.0])
