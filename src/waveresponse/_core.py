@@ -2312,7 +2312,11 @@ def calculate_response(
 
     The response spectrum is calculated according to:
 
-    S_x(w, theta) = H(w, theta) * H*(w, theta) * 
+        ``S_x(w, theta) = H(w, theta) * H*(w, theta) * S_w(w, theta)``
+
+    where ``S_x(w, theta)`` is the response spectrum, ``H(w, theta)`` is the RAO,
+    ``H*(w, theta)`` is the conjugate of the RAO, and ``S_w(w, theta)`` is the wave
+    spectrum.
 
     Parameters
     ----------
