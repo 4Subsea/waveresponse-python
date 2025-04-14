@@ -2305,7 +2305,13 @@ class WaveBinSpectrum(DisableComplexMixin, DirectionalBinSpectrum):
 
 
 def calculate_response(
-    rao, wave, heading, heading_degrees=False, reshape="rao_squared", coord_freq=None, coord_dirs=None
+    rao,
+    wave,
+    heading,
+    heading_degrees=False,
+    reshape="rao_squared",
+    coord_freq=None,
+    coord_dirs=None,
 ):
     """
     Calculate response spectrum.
@@ -2365,7 +2371,7 @@ def calculate_response(
         )
         if coord_freq == "wave":
             freq = wave_body._freq
-        elif coord_freq == "rao": 
+        elif coord_freq == "rao":
             freq = rao._freq
         else:
             raise ValueError("Invalid `coord_freq` value. Should be 'wave' or 'rao'.")
@@ -2383,11 +2389,15 @@ def calculate_response(
         raise ValueError("Both `coord_freq` and `coord_dirs` must be provided.")
 
     if reshape.lower() == "rao":
-        rao = rao.reshape(wave_body._freq, wave_body._dirs, freq_hz=False, degrees=False)
+        rao = rao.reshape(
+            wave_body._freq, wave_body._dirs, freq_hz=False, degrees=False
+        )
         rao_squared = (rao * rao.conjugate()).real
     elif reshape.lower() == "rao_squared":
         rao_squared = (rao * rao.conjugate()).real
-        rao_squared = rao_squared.reshape(wave_body._freq, wave_body._dirs, freq_hz=False, degrees=False)
+        rao_squared = rao_squared.reshape(
+            wave_body._freq, wave_body._dirs, freq_hz=False, degrees=False
+        )
     else:
         raise ValueError("Invalid `reshape` value. Should be 'rao' or 'rao_squared'.")
 

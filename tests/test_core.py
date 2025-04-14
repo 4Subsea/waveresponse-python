@@ -5411,9 +5411,11 @@ class Test_WaveBinSpectrum:
 class Test_calculate_response:
     @pytest.fixture
     def rao(self):
-        freq = 2.0 * np.pi * np.array([0.0, 0.5, 1.0])  # rad/s
-        dirs = np.pi / 180.0 * np.array([45.0, 135.0, 225.0, 315.0])  # rad
-        vals_amp = 2.0 * np.ones((len(freq), len(dirs)))
+        freq = 2.0 * np.pi * np.array([0.01, 0.2, 0.4, 0.6, 1.2])  # rad/s
+        dirs = np.pi / 180.0 * np.array([0.0, 45.0, 135.0, 225.0, 315.0])  # rad
+
+        a, b, c = 2.0, 3.0, 4.0
+        vals_amp = a * freq[:, np.newaxis] + b * dirs[np.newaxis, :] + c
         vals_phase = np.zeros((len(freq), len(dirs)))
 
         rao = RAO.from_amp_phase(
@@ -5427,12 +5429,12 @@ class Test_calculate_response:
             clockwise=True,
         )
         return rao
-    
-    pytest.fixture
+
+    @pytest.fixture
     def wave(self):
         rng = np.random.default_rng(2)
-        freq = 2.0 * np.pi * np.array([0.0, 0.3, 0.6, 0.9])  # rad/s
-        dirs = np.pi / 180.0 * np.array([90.0, 180.0, 270.0, 359.0])  # rad
+        freq = 2.0 * np.pi * np.array([0.01, 0.3, 0.6, 0.9])  # rad/s
+        dirs = np.pi / 180.0 * np.array([0.0, 90.0, 180.0, 270.0])  # rad
         vals = rng.random((len(freq), len(dirs)))
 
         wave = WaveSpectrum(
@@ -5446,18 +5448,19 @@ class Test_calculate_response:
         )
         return wave
 
-
     def test_calculate_response(self, rao, wave):
-        response = calculate_response(rao, wave, 0.0)
+        response = calculate_response(rao, wave, 0.0, reshape="rao")
 
-        vals_expect = wave._vals * 4.0
+        a, b, c = 2.0, 3.0, 4.0
+        vals_amp = a * wave._freq[:, np.newaxis] + b * wave._dirs[np.newaxis, :] + c
+
+        vals_expect = wave._vals * vals_amp**2
+
+        assert isinstance(response, wr.DirectionalSpectrum)
+        np.testing.assert_allclose(response._vals, vals_expect)
 
         assert isinstance(response, DirectionalSpectrum)
         np.testing.assert_allclose(response._vals, vals_expect)
-
-
-
-
 
         # freq_rao = np.array([0.0, 0.5, 1.0])
         # dirs_rao = np.array([45.0, 135.0, 225.0, 315.0])
@@ -5520,7 +5523,6 @@ class Test_calculate_response:
         # np.testing.assert_array_almost_equal(response._vals, vals_expect)
         # assert response._clockwise == rao._clockwise
         # assert response._waves_coming_from == rao._waves_coming_from
-
 
     # def test_calculate_response(self, rao, wave):
     #     response = calculate_response(rao, wave, 0.0)
