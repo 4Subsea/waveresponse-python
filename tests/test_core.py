@@ -5452,7 +5452,8 @@ class Test_calculate_response:
         response = calculate_response(rao, wave, 0.0, reshape="rao")
 
         a, b, c = 2.0, 3.0, 4.0
-        vals_amp = a * wave._freq[:, np.newaxis] + b * wave._dirs[np.newaxis, :] + c
+        f, theta = wave._freq[:, np.newaxis], wave._dirs[np.newaxis, :]
+        vals_amp = a * f + b * theta + c
 
         vals_expect = wave._vals * vals_amp**2
 
