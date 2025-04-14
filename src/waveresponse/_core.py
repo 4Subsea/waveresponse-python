@@ -1533,7 +1533,7 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
             1-D array of grid frequency coordinates. Positive and monotonically increasing.
         dirs : array-like
             1-D array of grid direction coordinates. Positive and monotonically increasing.
-            Must cover the directional range [0, 360) degrees (or [0, 2 * numpy.pi) radians).
+            Must cover the directional range [0, 360) degrees (or [0, 2 * pi) radians).
         spectrum1d : array-like
             1-D array of non-directional spectrum density values. These 1-D spectrum
             values will be scaled according to the spreading function, and distributed
@@ -2415,23 +2415,25 @@ class BaseSpreading(ABC):
 
     def discrete_directions(self, n, direction_offset=0.0):
         """
-        Find the equal energy directions for a given direction and spreading function.
-        The function uses the spreading function to find the directions
-        needed to use an equal energy approach similarly to how OrcaFlex does it.
+        Split the spreading function into discrete direction bins with
+        "equal energy", i.e. equal area under the curve. The direcitons
+        representing the bins are chosen to have equal area under the curve on
+        each side within the bin.
 
         Parameters
         ----------
         n : int
-            Number of equal energy directions to find.e
-        direction_offset : float
-            Direction of the peak wave energy.
-        degrees : bool, default False
-            If True, dirp is in degrees. If False, dirp is in radians.
+            Number of discrete directions.
+        direction_offset : float, default
+            A offset to add to the discrete directions. Units should be
+            according to the `degrees` flag given during initialization.
 
         Returns
         -------
-        np.array
-            Numpy array of equal energy directions in radians or degrees (same convention as input).
+        ndarray
+            A sequence of direction representing "equal energy" bins with range
+            wrapped to [0, 360) degrees or [0, 2 * numpy.pi) radians according
+            to the `degrees` flag given during initialization.
         """
         if self._degrees:
             x_lb = -180.0
@@ -2442,30 +2444,32 @@ class BaseSpreading(ABC):
             x_ub = np.pi
             periodicity = 2.0 * np.pi
 
-        try:
-            total_area = quad(lambda theta: self(None, theta), x_lb, x_ub)[0]
-        except Exception as e:
-            raise RuntimeError(
-                f"Failed to calculate total area under the spreading function: {e}"
-            )
+        total_area, _ = quad(
+            lambda theta: self(None, theta), x_lb, x_ub, epsabs=1.0e-6, epsrel=0.0
+        )
 
         half_bin_edges = np.empty(2 * n - 1)
 
         x_prev = x_lb
         for i in range(1, 2 * n):
             target_area = total_area * i / (2 * n)
-            try:
-                res = root_scalar(
-                    lambda x: quad(lambda theta: self(None, theta), x_lb, x)[0]
-                    - target_area,
-                    bracket=[x_prev, x_ub],
-                )
-            except Exception as e:
-                raise RuntimeError(f"Failed to calculate root for direction {i}: {e}")
+            res = root_scalar(
+                lambda x: quad(
+                    lambda theta: self(None, theta), x_lb, x, epsabs=1.0e-6, epsrel=0.0
+                )[0]
+                - target_area,
+                bracket=[x_prev, x_ub],
+            )
+
+            if not res.converged:
+                raise RuntimeError(f"Failed find the directions: {res.flag}")
+
             x_prev = res.root
             half_bin_edges[i - 1] = x_prev
 
-        return _robust_modulus(half_bin_edges[::2] + direction_offset, periodicity)
+        return np.round(
+            _robust_modulus(half_bin_edges[::2] + direction_offset, periodicity), 5
+        )
 
 
 class CosineHalfSpreading(BaseSpreading):
