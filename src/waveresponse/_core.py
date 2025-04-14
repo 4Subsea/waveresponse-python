@@ -2432,7 +2432,7 @@ class BaseSpreading(ABC):
         -------
         ndarray
             A sequence of direction representing "equal energy" bins with range
-            wrapped to [0, 360) degrees or [0, 2 * numpy.pi) radians according
+            wrapped to [0, 360) degrees or [0, 2 * pi) radians according
             to the `degrees` flag given during initialization.
         """
         if self._degrees:
