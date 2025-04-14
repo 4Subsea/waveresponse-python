@@ -2467,9 +2467,7 @@ class BaseSpreading(ABC):
             x_prev = res.root
             half_bin_edges[i - 1] = x_prev
 
-        return np.round(
-            _robust_modulus(half_bin_edges[::2] + direction_offset, periodicity), 5
-        )
+        return _robust_modulus(half_bin_edges[::2] + direction_offset, periodicity)
 
 
 class CosineHalfSpreading(BaseSpreading):
