@@ -2355,7 +2355,7 @@ def calculate_response(
     wave_body = wave.rotate(heading, degrees=heading_degrees)
     wave_body.set_wave_convention(**rao.wave_convention)
 
-    # TODO: Remove this once the deprecation period is over
+    # TODO: Remove this once the deprecation period is over (deprecated 2025-04-14)
     if coord_freq and coord_dirs:
         warnings.warn(
             "The `coord_freq` and `coord_dirs` parameters are deprecated and will be removed in a future release."
