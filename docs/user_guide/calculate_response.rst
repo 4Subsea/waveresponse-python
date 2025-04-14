@@ -52,10 +52,10 @@ This function is roughly equivalent to:
 
         Parameters
         ----------
-        rao : obj
-            ``RAO`` object.
-        wave : obj
-            ``WaveSpectrum`` object.
+        rao : RAO
+            Response amplitude operator (RAO).
+        wave : WaveSpectrum
+            Wave spectrum.
         heading : float
             Heading of vessel relative to wave spectrum coordinate system.
         heading_degrees : bool
@@ -63,7 +63,7 @@ This function is roughly equivalent to:
 
         Returns
         -------
-        obj :
+        DirectionalSpectrum :
             Response spectrum.
         """
 
@@ -85,9 +85,8 @@ This function is roughly equivalent to:
         dirs = wave_body.dirs(degrees=False)
         rao_squared = (rao * rao.conjugate()).real
         rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
-        wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
 
-        return wr.multiply(rao_squared, wave_body, output_type="directional_spectrum")
+        return wr.multiply(rao_squared, wave_body, output_type="DirectionalSpectrum")
 
 The response is returned as a :class:`~waveresponse.DirectionalSpectrum` object,
 and provides useful spectrum operations, such as:
