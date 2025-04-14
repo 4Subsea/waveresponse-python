@@ -2401,7 +2401,16 @@ def calculate_response(
     else:
         raise ValueError("Invalid `reshape` value. Should be 'rao' or 'rao_squared'.")
 
-    return multiply(rao_squared, wave_body, output_type=type(wave_body))
+    if isinstance(wave, WaveSpectrum):
+        type_ = "DirectionalSpectrum"
+    elif isinstance(wave, WaveBinSpectrum):
+        type_ = "DirectionalBinSpectrum"
+    else:
+        raise ValueError(
+            "Invalid `wave` type. Should be 'WaveSpectrum' or 'WaveBinSpectrum'."
+        )
+
+    return multiply(rao_squared, wave_body, output_type=type_)
 
 
 class BaseSpreading(ABC):
