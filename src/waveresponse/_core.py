@@ -2355,27 +2355,53 @@ def calculate_response(
     wave_body = wave.rotate(heading, degrees=heading_degrees)
     wave_body.set_wave_convention(**rao.wave_convention)
 
-    if 
+    # if coord_freq is not None and coord_dirs is not None:
+    #     warnings.warn(
+    #         "The `coord_freq` and `coord_dirs` parameters are deprecated. Use the `reshape` parameter instead.",
+    #         DeprecationWarning,
+    #     )
+    #     if coord_freq.lower() == "wave":
+    #         freq = wave_body._freq
+    #     elif coord_freq.lower() == "rao":
+    #         freq = rao._freq
+    #     else:
+    #         raise ValueError("Invalid `coord_freq` value. Should be 'wave' or 'rao'.")
 
-    if coord_freq.lower() == "wave":
-        freq = wave_body._freq
-    elif coord_freq.lower() == "rao":
-        freq = rao._freq
+    #     if coord_dirs.lower() == "wave":
+    #         dirs = wave_body._dirs
+    #     elif coord_dirs.lower() == "rao":
+    #         dirs = rao._dirs
+    #     else:
+    #         raise ValueError("Invalid `coord_dirs` value. Should be 'wave' or 'rao'.")
+    # elif coord_freq is not None or coord_dirs is not None:
+    #     raise ValueError(
+    #         "Both `coord_freq` and `coord_dirs` must be provided together, or neither should be provided."
+    #     )
+
+    # if coord_freq.lower() == "wave":
+    #     freq = wave_body._freq
+    # elif coord_freq.lower() == "rao":
+    #     freq = rao._freq
+    # else:
+    #     raise ValueError("Invalid `coord_freq` value. Should be 'wave' or 'rao'.")
+
+    # if coord_dirs.lower() == "wave":
+    #     dirs = wave_body._dirs
+    # elif coord_dirs.lower() == "rao":
+    #     dirs = rao._dirs
+    # else:
+    #     raise ValueError("Invalid `coord_dirs` value. Should be 'wave' or 'rao'.")
+
+    if reshape.lower() == "rao":
+        rao = rao.reshape(wave_body._freq, wave_body._dirs, freq_hz=False, degrees=False)
+        rao_squared = (rao * rao.conjugate()).real
+    elif reshape.lower() == "rao_squared":
+        rao_squared = (rao * rao.conjugate()).real
+        rao_squared = rao_squared.reshape(wave_body._freq, wave_body._dirs, freq_hz=False, degrees=False)
     else:
-        raise ValueError("Invalid `coord_freq` value. Should be 'wave' or 'rao'.")
+        raise ValueError("Invalid `reshape` value. Should be 'rao' or 'rao_squared'.")
 
-    if coord_dirs.lower() == "wave":
-        dirs = wave_body._dirs
-    elif coord_dirs.lower() == "rao":
-        dirs = rao._dirs
-    else:
-        raise ValueError("Invalid `coord_dirs` value. Should be 'wave' or 'rao'.")
-
-    rao_squared = (rao * rao.conjugate()).real
-    rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
-    wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
-
-    return multiply(rao_squared, wave_body, output_type="directional_spectrum")
+    return multiply(rao_squared, wave_body, output_type=type(wave_body))
 
 
 class BaseSpreading(ABC):
