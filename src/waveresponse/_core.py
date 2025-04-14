@@ -2355,6 +2355,33 @@ def calculate_response(
     wave_body = wave.rotate(heading, degrees=heading_degrees)
     wave_body.set_wave_convention(**rao.wave_convention)
 
+    # TODO: Remove this once the deprecation period is over
+    if coord_freq and coord_dirs:
+        warnings.warn(
+            "The `coord_freq` and `coord_dirs` parameters are deprecated and will be removed in a future release."
+            "Use the `reshape` parameter instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        if coord_freq == "wave":
+            freq = wave_body._freq
+        elif coord_freq == "rao": 
+            freq = rao._freq
+        else:
+            raise ValueError("Invalid `coord_freq` value. Should be 'wave' or 'rao'.")
+        if coord_dirs == "wave":
+            dirs = wave_body._dirs
+        elif coord_dirs == "rao":
+            dirs = rao._dirs
+        else:
+            raise ValueError("Invalid `coord_dirs` value. Should be 'wave' or 'rao'.")
+        rao_squared = (rao * rao.conjugate()).real
+        rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
+        wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
+        return multiply(rao_squared, wave_body, output_type="DirectionalSpectrum")
+    elif coord_freq or coord_dirs:
+        raise ValueError("Both `coord_freq` and `coord_dirs` must be provided.")
+
     if reshape.lower() == "rao":
         rao = rao.reshape(wave_body._freq, wave_body._dirs, freq_hz=False, degrees=False)
         rao_squared = (rao * rao.conjugate()).real
