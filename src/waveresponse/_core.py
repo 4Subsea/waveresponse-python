@@ -2305,7 +2305,7 @@ class WaveBinSpectrum(DisableComplexMixin, DirectionalBinSpectrum):
 
 
 def calculate_response(
-    rao, wave, heading, heading_degrees=False, coord_freq="wave", coord_dirs="wave"
+    rao, wave, heading, heading_degrees=False, reshape="rao_squared", coord_freq=None, coord_dirs=None
 ):
     """
     Calculate response spectrum.
@@ -2317,6 +2317,10 @@ def calculate_response(
     where ``S_x(w, theta)`` is the response spectrum, ``H(w, theta)`` is the RAO,
     ``H*(w, theta)`` is the conjugate of the RAO, and ``S_w(w, theta)`` is the wave
     spectrum.
+
+    The frequency and direction coordinates are dictatated by the wave spectrum.
+    The RAO (or the squared verison of it) is interpolated to match the grid coordinates
+    of the wave spectrum.
 
     Parameters
     ----------
@@ -2333,23 +2337,25 @@ def calculate_response(
         the wave spectrum. Linear interpolation is performed to match the frequency
         and direction coordinates of the wave spectrum.
     coord_freq : str, optional
-        Frequency coordinates for interpolation. Should be 'wave' or 'rao'. Determines
-        if it is the wave spectrum or the RAO that should dictate which frequencies
-        to use in response calculation. The other object will be interpolated to
-        match these frequencies.
+        Deprecated; use `reshape` instead. Frequency coordinates for interpolation.
+        Should be 'wave' or 'rao'. Determines if it is the wave spectrum or the
+        RAO that should dictate which frequencies to use in response calculation.
+        The other object will be interpolated to match these frequencies.
     coord_dirs : str, optional
-        Direction coordinates for interpolation. Should be 'wave' or 'rao'. Determines
-        if it is the wave spectrum or the RAO that should dictate which directions
-        to use in response calculation. The other object will be interpolated to
-        match these directions.
+        Deprecated; use `reshape` instead. Direction coordinates for interpolation.
+        Should be 'wave' or 'rao'. Determines if it is the wave spectrum or the
+        RAO that should dictate which directions to use in response calculation.
+        The other object will be interpolated to match these directions.
 
     Returns
     -------
-    obj :
-        Response spectrum as :class:`DirectionalSpectrum` object.
+    DirectionalSpectrum or DirectionalBinSpectrum :
+        Response spectrum.
     """
     wave_body = wave.rotate(heading, degrees=heading_degrees)
     wave_body.set_wave_convention(**rao.wave_convention)
+
+    if 
 
     if coord_freq.lower() == "wave":
         freq = wave_body._freq
