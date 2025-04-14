@@ -2310,16 +2310,24 @@ def calculate_response(
     """
     Calculate response spectrum.
 
+    The response spectrum is calculated according to:
+
+    S_x(w, theta) = H(w, theta) * H*(w, theta) * 
+
     Parameters
     ----------
-    rao : obj
-        Response amplitude operator (RAO) as a :class:`~waveresponse.RAO` object.
-    wave : obj
-        2-D wave spectrum as a :class:`~waveresponse.WaveSpectrum` object.
+    rao : RAO
+        Response amplitude operator (RAO).
+    wave : WaveSpectrum or WaveBinSpectrum
+        2-D wave spectrum.
     heading : float
         Heading of vessel relative to wave spectrum coordinate system.
     heading_degrees : bool
         Whether the heading is given in 'degrees'. If ``False``, 'radians' is assumed.
+    reshape : {'rao', 'rao_squared'}, default 'rao_squared'
+        Determines whether to reshape the RAO or the squared RAO before pairing with
+        the wave spectrum. Linear interpolation is performed to match the frequency
+        and direction coordinates of the wave spectrum.
     coord_freq : str, optional
         Frequency coordinates for interpolation. Should be 'wave' or 'rao'. Determines
         if it is the wave spectrum or the RAO that should dictate which frequencies
