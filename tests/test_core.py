@@ -5434,12 +5434,30 @@ class Test_calculate_response:
 
     @pytest.fixture
     def wave(self):
-        rng = np.random.default_rng(123)
+        rng = np.random.default_rng(1)
         freq = 2.0 * np.pi * np.array([0.01, 0.3, 0.6, 0.9])  # rad/s
         dirs = np.pi / 180.0 * np.array([10.0, 90.0, 180.0, 270.0])  # rad
         vals = rng.random((len(freq), len(dirs)))
 
         wave = WaveSpectrum(
+            freq,
+            dirs,
+            vals,
+            freq_hz=False,
+            degrees=False,
+            waves_coming_from=False,
+            clockwise=True,
+        )
+        return wave
+
+    @pytest.fixture
+    def wavebin(self):
+        rng = np.random.default_rng(2)
+        freq = 2.0 * np.pi * np.array([0.01, 0.3, 0.6, 0.9])  # rad/s
+        dirs = np.pi / 180.0 * np.array([10.0, 90.0, 180.0, 270.0])  # rad
+        vals = rng.random((len(freq), len(dirs)))
+
+        wave = WaveBinSpectrum(
             freq,
             dirs,
             vals,
@@ -5466,6 +5484,30 @@ class Test_calculate_response:
         )
 
         assert isinstance(response, wr.DirectionalSpectrum)
+        assert response._clockwise is False
+        assert response._waves_coming_from is True
+        assert response._freq_hz is False
+        assert response._degrees is False
+        np.testing.assert_allclose(response._freq, response_expect._freq)
+        np.testing.assert_allclose(response._dirs, response_expect._dirs)
+        np.testing.assert_allclose(response._vals, response_expect._vals)
+
+    def test_calculate_response_bin(self, rao, wavebin):
+        response = calculate_response(rao, wavebin, np.radians(45.0))
+
+        # Expected response
+        wave_body = wavebin.rotate(45.0, degrees=True)
+        wave_body.set_wave_convention(waves_coming_from=True, clockwise=False)
+        freq_expect, dirs_expect = wave_body._freq, wave_body._dirs
+        rao_squared_expect = (rao * rao.conjugate()).real
+        rao_squared_expect = rao_squared_expect.reshape(
+            freq_expect, dirs_expect, freq_hz=False, degrees=False
+        )
+        response_expect = wr.multiply(
+            rao_squared_expect, wave_body, "DirectionalBinSpectrum"
+        )
+
+        assert isinstance(response, wr.DirectionalBinSpectrum)
         assert response._clockwise is False
         assert response._waves_coming_from is True
         assert response._freq_hz is False
