@@ -5466,6 +5466,14 @@ class Test_calculate_response:
         np.testing.assert_allclose(response._dirs, wave._dirs)
         np.testing.assert_allclose(response._vals, vals_expect)
 
+    def calculate_response_heading_degrees(self, rao, wave):
+        response = calculate_response(rao, wave, 45.0, heading_degrees=True)
+        np.testing.assert_allclose(response._dirs, wave._dirs - np.pi / 4.0)
+
+    def calculate_response_heading_radians(self, rao, wave):
+        response = calculate_response(rao, wave, np.pi / 4.0, heading_degrees=False)
+        np.testing.assert_allclose(response._dirs, wave._dirs - np.pi / 4.0)
+
         # assert isinstance(response, DirectionalSpectrum)
         # np.testing.assert_allclose(response._vals, vals_expect)
 
