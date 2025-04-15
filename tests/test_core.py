@@ -5416,7 +5416,9 @@ class Test_calculate_response:
 
         a, b, c = 2.0, 3.0, 4.0
         vals_amp = a * freq[:, np.newaxis] + b * dirs[np.newaxis, :] + c
-        vals_phase = np.zeros((len(freq), len(dirs)))
+        vals_phase = np.linspace(0, 2 * np.pi, len(freq) * len(dirs)).reshape(
+            len(freq), len(dirs)
+        )
 
         rao = RAO.from_amp_phase(
             freq,
@@ -5456,8 +5458,12 @@ class Test_calculate_response:
         wave_body.set_wave_convention(waves_coming_from=True, clockwise=False)
         freq_expect, dirs_expect = wave_body._freq, wave_body._dirs
         rao_squared_expect = (rao * rao.conjugate()).real
-        rao_squared_expect = rao_squared_expect.reshape(freq_expect, dirs_expect, freq_hz=False, degrees=False)
-        response_expect = wr.multiply(rao_squared_expect, wave_body, "DirectionalSpectrum")
+        rao_squared_expect = rao_squared_expect.reshape(
+            freq_expect, dirs_expect, freq_hz=False, degrees=False
+        )
+        response_expect = wr.multiply(
+            rao_squared_expect, wave_body, "DirectionalSpectrum"
+        )
 
         assert isinstance(response, wr.DirectionalSpectrum)
         assert response._clockwise is False
