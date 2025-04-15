@@ -338,3 +338,18 @@ according to:
 
 
 where :math:`s` is a spreading coefficient, and :math:`\Gamma` is the Gamma function.
+
+In addition, the spreading functions in ``waveresponse`` cand determine discrete
+direction bins with equal energy:
+
+.. code:: python
+
+    import waveresponse as wr
+
+
+    spread_fun = wr.CosineFullSpreading(s=2, degrees=True)
+    discrete_dirs = spread_fun.discrete_directions(5, direction_offset=0.0)
+
+
+which may be used to spread 1-D 'non-directional' wave spectrum into waves
+with equal energy.

@@ -109,8 +109,7 @@ and provides useful spectrum operations, such as:
     .. math::
         S_x(\omega, \theta) = H_x(\omega, \theta)H_x^{*}(\omega, \theta) S_{\zeta}(\omega, \theta)
 
-    To obtain the one-dimentional spectrum (which is what you would measure with
-    a sensor), you need to integrate over direction:
+    To obtain the one-dimentional spectrum, you need to integrate over direction:
 
     .. math::
         S_x(\omega) = \int S_x(\omega, \theta) d\theta

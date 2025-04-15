@@ -11,5 +11,7 @@ This section will introduce concepts and utilites that are useful when working w
 
    grid
    rao
+   directional_bin_spectrum
    directional_spectrum
+   wave_bin_spectrum
    wave_spectrum

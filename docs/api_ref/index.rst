@@ -19,6 +19,7 @@ functions and methods.
     complex_to_polar
     CosineFullSpreading
     CosineHalfSpreading
+    DirectionalBinSpectrum
     DirectionalSpectrum
     Grid
     JONSWAP
@@ -33,6 +34,7 @@ functions and methods.
     rigid_transform_heave
     rigid_transform_surge
     rigid_transform_sway
+    WaveBinSpectrum
     WaveSpectrum
 
 
