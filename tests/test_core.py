@@ -5564,7 +5564,26 @@ class Test_calculate_response:
         rao_squared_expect = (rao * rao.conjugate()).real
         rao_squared_expect = rao_squared_expect.reshape(
             freq_expect, dirs_expect, freq_hz=False, degrees=False
+        )  # reshape squared RAO
+        response_expect = wr.multiply(
+            rao_squared_expect, wave_body, "DirectionalSpectrum"
         )
+
+        np.testing.assert_allclose(response._freq, response_expect._freq)
+        np.testing.assert_allclose(response._dirs, response_expect._dirs)
+        np.testing.assert_allclose(response._vals, response_expect._vals)
+
+    def test_calculate_response_reshape_rao(self, rao, wave):
+        response = calculate_response(rao, wave, np.radians(45), reshape="rao")
+
+        # Expected response
+        wave_body = wave.rotate(45.0, degrees=True)
+        wave_body.set_wave_convention(waves_coming_from=True, clockwise=False)
+        freq_expect, dirs_expect = wave_body._freq, wave_body._dirs
+        rao_expect = rao.reshape(
+            freq_expect, dirs_expect, freq_hz=False, degrees=False
+        )  # reshape RAO
+        rao_squared_expect = (rao_expect * rao_expect.conjugate()).real
         response_expect = wr.multiply(
             rao_squared_expect, wave_body, "DirectionalSpectrum"
         )
