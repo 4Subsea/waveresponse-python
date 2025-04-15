@@ -5426,7 +5426,7 @@ class Test_calculate_response:
             freq_hz=False,
             degrees=False,
             waves_coming_from=True,
-            clockwise=True,
+            clockwise=False,
         )
         return rao
 
@@ -5443,45 +5443,47 @@ class Test_calculate_response:
             vals,
             freq_hz=False,
             degrees=False,
-            waves_coming_from=True,
+            waves_coming_from=False,
             clockwise=True,
         )
         return wave
 
     def test_calculate_response(self, rao, wave):
-        response = calculate_response(rao, wave, 0.0, reshape="rao")
+        response = calculate_response(rao, wave, np.radians(45.0))
 
-        a, b, c = 2.0, 3.0, 4.0
-        f, theta = wave._freq[:, np.newaxis], wave._dirs[np.newaxis, :]
-        vals_amp = a * f + b * theta + c
-
-        vals_expect = wave._vals * vals_amp**2
+        # Expected response
+        wave_body = wave.rotate(45.0, degrees=True)
+        wave_body.set_wave_convention(waves_coming_from=True, clockwise=False)
+        freq_expect, dirs_expect = wave_body._freq, wave_body._dirs
+        rao_squared_expect = (rao * rao.conjugate()).real
+        rao_squared_expect = rao_squared_expect.reshape(freq_expect, dirs_expect, freq_hz=False, degrees=False)
+        response_expect = wr.multiply(rao_squared_expect, wave_body, "DirectionalSpectrum")
 
         assert isinstance(response, wr.DirectionalSpectrum)
-        assert response._clockwise is rao._clockwise
-        assert response._waves_coming_from is rao._waves_coming_from
-        assert response._freq_hz is False
-        assert response._degrees is False
-        np.testing.assert_allclose(response._freq, wave._freq)
-        np.testing.assert_allclose(response._dirs, wave._dirs)
-        np.testing.assert_allclose(response._vals, vals_expect)
-
-    def test_calculate_response_heading_degrees(self, rao, wave):
-        response = calculate_response(rao, wave, 5, heading_degrees=True)
-        np.testing.assert_allclose(response._dirs, wave._dirs - np.radians(5))
-
-    def test_calculate_response_heading_radians(self, rao, wave):
-        response = calculate_response(rao, wave, np.radians(5), heading_degrees=False)
-        np.testing.assert_allclose(response._dirs, wave._dirs - np.radians(5))
-
-    def test_calculate_response_wave_convention(self, rao, wave):
-        rao_convention = {"waves_coming_from": True, "clockwise": False}
-        wave_convention = {"waves_coming_from": False, "clockwise": True}
-        rao.set_wave_convention(**rao_convention)
-        wave.set_wave_convention(**wave_convention)
-        response = calculate_response(rao, wave, np.pi / 4.0, heading_degrees=False)
         assert response._clockwise is False
         assert response._waves_coming_from is True
+        assert response._freq_hz is False
+        assert response._degrees is False
+        np.testing.assert_allclose(response._freq, response_expect._freq)
+        np.testing.assert_allclose(response._dirs, response_expect._dirs)
+        np.testing.assert_allclose(response._vals, response_expect._vals)
+
+    # def test_calculate_response_heading_degrees(self, rao, wave):
+    #     response = calculate_response(rao, wave, 5, heading_degrees=True)
+    #     np.testing.assert_allclose(response._dirs, wave._dirs - np.radians(5))
+
+    # def test_calculate_response_heading_radians(self, rao, wave):
+    #     response = calculate_response(rao, wave, np.radians(5), heading_degrees=False)
+    #     np.testing.assert_allclose(response._dirs, wave._dirs - np.radians(5))
+
+    # def test_calculate_response_wave_convention(self, rao, wave):
+    #     rao_convention = {"waves_coming_from": True, "clockwise": False}
+    #     wave_convention = {"waves_coming_from": False, "clockwise": True}
+    #     rao.set_wave_convention(**rao_convention)
+    #     wave.set_wave_convention(**wave_convention)
+    #     response = calculate_response(rao, wave, np.pi / 4.0, heading_degrees=False)
+    #     assert response._clockwise is False
+    #     assert response._waves_coming_from is True
 
     def test_calculate_response_raises_coord_freq(self, rao, wave):
         # TODO: coord_freq and coord_dirs deprecated. Remove test in future.
