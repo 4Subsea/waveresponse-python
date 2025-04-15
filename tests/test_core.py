@@ -5412,7 +5412,7 @@ class Test_calculate_response:
     @pytest.fixture
     def rao(self):
         freq = 2.0 * np.pi * np.array([0.01, 0.2, 0.4, 0.6, 1.2])  # rad/s
-        dirs = np.pi / 180.0 * np.array([0.0, 45.0, 135.0, 225.0, 315.0])  # rad
+        dirs = np.pi / 180.0 * np.array([10.0, 45.0, 135.0, 225.0, 315.0])  # rad
 
         a, b, c = 2.0, 3.0, 4.0
         vals_amp = a * freq[:, np.newaxis] + b * dirs[np.newaxis, :] + c
@@ -5434,7 +5434,7 @@ class Test_calculate_response:
     def wave(self):
         rng = np.random.default_rng(123)
         freq = 2.0 * np.pi * np.array([0.01, 0.3, 0.6, 0.9])  # rad/s
-        dirs = np.pi / 180.0 * np.array([0.0, 90.0, 180.0, 270.0])  # rad
+        dirs = np.pi / 180.0 * np.array([10.0, 90.0, 180.0, 270.0])  # rad
         vals = rng.random((len(freq), len(dirs)))
 
         wave = WaveSpectrum(
@@ -5466,13 +5466,22 @@ class Test_calculate_response:
         np.testing.assert_allclose(response._dirs, wave._dirs)
         np.testing.assert_allclose(response._vals, vals_expect)
 
-    def calculate_response_heading_degrees(self, rao, wave):
-        response = calculate_response(rao, wave, 45.0, heading_degrees=True)
-        np.testing.assert_allclose(response._dirs, wave._dirs - np.pi / 4.0)
+    def test_calculate_response_heading_degrees(self, rao, wave):
+        response = calculate_response(rao, wave, 5, heading_degrees=True)
+        np.testing.assert_allclose(response._dirs, wave._dirs - np.radians(5))
 
-    def calculate_response_heading_radians(self, rao, wave):
+    def test_calculate_response_heading_radians(self, rao, wave):
+        response = calculate_response(rao, wave, np.radians(5), heading_degrees=False)
+        np.testing.assert_allclose(response._dirs, wave._dirs - np.radians(5))
+
+    def test_calculate_response_wave_convention(self, rao, wave):
+        rao_convention = {"waves_coming_from": True, "clockwise": False}
+        wave_convention = {"waves_coming_from": False, "clockwise": True}
+        rao.set_wave_convention(**rao_convention)
+        wave.set_wave_convention(**wave_convention)
         response = calculate_response(rao, wave, np.pi / 4.0, heading_degrees=False)
-        np.testing.assert_allclose(response._dirs, wave._dirs - np.pi / 4.0)
+        assert response._clockwise is False
+        assert response._waves_coming_from is True
 
         # assert isinstance(response, DirectionalSpectrum)
         # np.testing.assert_allclose(response._vals, vals_expect)
