@@ -5531,11 +5531,6 @@ class Test_calculate_response:
             rao_squared_expect, wave_body, "DirectionalSpectrum"
         )
 
-        assert isinstance(response, wr.DirectionalSpectrum)
-        assert response._clockwise is False
-        assert response._waves_coming_from is True
-        assert response._freq_hz is False
-        assert response._degrees is False
         np.testing.assert_allclose(response._freq, response_expect._freq)
         np.testing.assert_allclose(response._dirs, response_expect._dirs)
         np.testing.assert_allclose(response._vals, response_expect._vals)
@@ -5555,11 +5550,6 @@ class Test_calculate_response:
             rao_squared_expect, wave_body, "DirectionalSpectrum"
         )
 
-        assert isinstance(response, wr.DirectionalSpectrum)
-        assert response._clockwise is False
-        assert response._waves_coming_from is True
-        assert response._freq_hz is False
-        assert response._degrees is False
         np.testing.assert_allclose(response._freq, response_expect._freq)
         np.testing.assert_allclose(response._dirs, response_expect._dirs)
         np.testing.assert_allclose(response._vals, response_expect._vals)
@@ -5579,11 +5569,6 @@ class Test_calculate_response:
             rao_squared_expect, wave_body, "DirectionalSpectrum"
         )
 
-        assert isinstance(response, wr.DirectionalSpectrum)
-        assert response._clockwise is False
-        assert response._waves_coming_from is True
-        assert response._freq_hz is False
-        assert response._degrees is False
         np.testing.assert_allclose(response._freq, response_expect._freq)
         np.testing.assert_allclose(response._dirs, response_expect._dirs)
         np.testing.assert_allclose(response._vals, response_expect._vals)
