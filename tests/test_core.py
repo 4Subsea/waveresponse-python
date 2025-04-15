@@ -5592,6 +5592,10 @@ class Test_calculate_response:
         np.testing.assert_allclose(response._dirs, response_expect._dirs)
         np.testing.assert_allclose(response._vals, response_expect._vals)
 
+    def test_calculate_response_reshape_raises(self, rao, wave):
+        with pytest.raises(ValueError):
+            calculate_response(rao, wave, np.radians(45), reshape="invalid-value")
+
     # def test_calculate_response_heading_degrees(self, rao, wave):
     #     response = calculate_response(rao, wave, 5, heading_degrees=True)
     #     np.testing.assert_allclose(response._dirs, wave._dirs - np.radians(5))
