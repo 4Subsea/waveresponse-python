@@ -5596,17 +5596,17 @@ class Test_calculate_response:
             calculate_response(rao, wave, np.radians(45), reshape="invalid-value")
 
     def test_calculate_response_raises_coord_freq(self, rao, wave):
-        # TODO: coord_freq and coord_dirs deprecated. Remove test in future.
+        # TODO: Deprecated functionality. Remove test in future.
         with pytest.raises(ValueError):
             calculate_response(rao, wave, 0.0, coord_freq="invalid-value")
 
     def test_calculate_response_raises_coord_dirs(self, rao, wave):
-        # TODO: coord_freq and coord_dirs deprecated. Remove test in future.
+        # TODO: Deprecated functionality. Remove test in future.
         with pytest.raises(ValueError):
             calculate_response(rao, wave, 0.0, coord_freq="invalid-value")
 
     def test_calculate_response_coord_wave(self):
-        # TODO: coord_freq and coord_dirs deprecated. Remove test in future.
+        # TODO: Deprecated functionality. Remove test in future.
         freq_rao = np.array([0.0, 0.5, 1.0])
         dirs_rao = np.array([45.0, 135.0, 225.0, 315.0])
         vals_rao = np.array(
@@ -5679,7 +5679,7 @@ class Test_calculate_response:
         np.testing.assert_array_almost_equal(response._vals, vals_expect)
 
     def test_calculate_response_coord_rao(self):
-        # TODO: coord_freq and coord_dirs deprecated. Remove test in future.
+        # TODO: Deprecated functionality. Remove test in future.
         freq_rao = np.array([0.0, 0.5, 1.0])
         dirs_rao = np.array([45.0, 135.0, 225.0, 315.0])
         vals_rao = np.array(
