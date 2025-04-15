@@ -2304,6 +2304,29 @@ class WaveBinSpectrum(DisableComplexMixin, DirectionalBinSpectrum):
         return dirm
 
 
+def _calculate_response_deprecated(rao, wave_body, coord_freq, coord_dirs):
+    # TODO: Deprecated. Remove this function in a future release.
+
+    if coord_freq == "wave":
+        freq = wave_body._freq
+    elif coord_freq == "rao":
+        freq = rao._freq
+    else:
+        raise ValueError("Invalid `coord_freq` value. Should be 'wave' or 'rao'.")
+    if coord_dirs == "wave":
+        dirs = wave_body._dirs
+    elif coord_dirs == "rao":
+        dirs = rao._dirs
+    else:
+        raise ValueError("Invalid `coord_dirs` value. Should be 'wave' or 'rao'.")
+
+    rao_squared = (rao * rao.conjugate()).real
+    rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
+    wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
+
+    return multiply(rao_squared, wave_body, output_type="DirectionalSpectrum")
+
+
 def calculate_response(
     rao,
     wave,
@@ -2318,15 +2341,15 @@ def calculate_response(
 
     The response spectrum is calculated according to:
 
-        ``S_x(w, theta) = H(w, theta) * H*(w, theta) * S_w(w, theta)``
+        S_x(w, theta) = H(w, theta) * H*(w, theta) * S_w(w, theta)
 
-    where ``S_x(w, theta)`` is the response spectrum, ``H(w, theta)`` is the RAO,
-    ``H*(w, theta)`` is the conjugate of the RAO, and ``S_w(w, theta)`` is the wave
-    spectrum (expressed in the same coordinate system as the RAO).
+    where S_x(w, theta) denotes the response spectrum, H(w, theta) denotes the RAO,
+    H*(w, theta) denotes the RAO conjugate, and S_w(w, theta) denotes the wave
+    spectrum (expressed in the RAO's reference frame).
 
     The frequency and direction coordinates are dictatated by the wave spectrum.
-    The RAO (or the magnitude-squared verison of it) is interpolated to match the
-    grid coordinates of the wave spectrum.
+    I.e., the RAO (or the magnitude-squared verison of it) is interpolated to match
+    the grid coordinates of the wave spectrum.
 
     Parameters
     ----------
@@ -2361,7 +2384,7 @@ def calculate_response(
     wave_body = wave.rotate(heading, degrees=heading_degrees)
     wave_body.set_wave_convention(**rao.wave_convention)
 
-    # TODO: Remove this once the deprecation period is over (deprecated 2025-04-14)
+    # TODO: Remove once the deprecation period is over
     if coord_freq and coord_dirs:
         warnings.warn(
             "The `coord_freq` and `coord_dirs` parameters are deprecated and will be removed in a future release."
@@ -2369,35 +2392,17 @@ def calculate_response(
             DeprecationWarning,
             stacklevel=2,
         )
-        if coord_freq == "wave":
-            freq = wave_body._freq
-        elif coord_freq == "rao":
-            freq = rao._freq
-        else:
-            raise ValueError("Invalid `coord_freq` value. Should be 'wave' or 'rao'.")
-        if coord_dirs == "wave":
-            dirs = wave_body._dirs
-        elif coord_dirs == "rao":
-            dirs = rao._dirs
-        else:
-            raise ValueError("Invalid `coord_dirs` value. Should be 'wave' or 'rao'.")
-        rao_squared = (rao * rao.conjugate()).real
-        rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
-        wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
-        return multiply(rao_squared, wave_body, output_type="DirectionalSpectrum")
+        return _calculate_response_deprecated(rao, wave_body, coord_freq, coord_dirs)
     elif coord_freq or coord_dirs:
         raise ValueError("Both `coord_freq` and `coord_dirs` must be provided.")
 
-    if reshape.lower() == "rao":
-        rao = rao.reshape(
-            wave_body._freq, wave_body._dirs, freq_hz=False, degrees=False
-        )
+    freq, dirs = wave_body._freq, wave_body._dirs
+    if reshape == "rao":
+        rao = rao.reshape(freq, dirs, freq_hz=False, degrees=False)
         rao_squared = (rao * rao.conjugate()).real
-    elif reshape.lower() == "rao_squared":
+    elif reshape == "rao_squared":
         rao_squared = (rao * rao.conjugate()).real
-        rao_squared = rao_squared.reshape(
-            wave_body._freq, wave_body._dirs, freq_hz=False, degrees=False
-        )
+        rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
     else:
         raise ValueError("Invalid `reshape` value. Should be 'rao' or 'rao_squared'.")
 
