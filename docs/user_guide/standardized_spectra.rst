@@ -339,8 +339,8 @@ according to:
 
 where :math:`s` is a spreading coefficient, and :math:`\Gamma` is the Gamma function.
 
-In addition, the spreading functions may be used to determine discrete direction
-bins with equal energy.
+In addition, the spreading functions in ``waveresponse`` cand determine discrete
+direction bins with equal energy:
 
 .. code:: python
 
@@ -351,5 +351,5 @@ bins with equal energy.
     discrete_dirs = spread_fun.discrete_directions(5, direction_offset=0.0)
 
 
-The discrete directions may be used to spread 1-D 'non-directional' wave
-spectrum into waves with equal energy.
+which may be used to spread 1-D 'non-directional' wave spectrum into waves
+with equal energy.
