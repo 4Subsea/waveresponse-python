@@ -5411,11 +5411,11 @@ class Test_WaveBinSpectrum:
 class Test_calculate_response:
     @pytest.fixture
     def rao(self):
-        freq = 2.0 * np.pi * np.array([0.01, 0.2, 0.4, 0.6, 1.2])  # rad/s
-        dirs = np.pi / 180.0 * np.array([10.0, 45.0, 135.0, 225.0, 315.0])  # rad
+        freq = np.linspace(0.01, 2.0 * np.pi, 10, endpoint=False)  # rad/s
+        dirs = np.linspace(0.0, 2.0 * np.pi, 15, endpoint=False)  # rad
 
-        a, b, c = 2.0, 3.0, 4.0
-        vals_amp = a * freq[:, np.newaxis] + b * dirs[np.newaxis, :] + c
+        # random function: 2.0 * f + 3.0 * theta + 4.0
+        vals_amp = 2.0 * freq[:, np.newaxis] + 3.0 * dirs[np.newaxis, :] + 4.0
         vals_phase = np.linspace(0, 2 * np.pi, len(freq) * len(dirs)).reshape(
             len(freq), len(dirs)
         )
@@ -5434,9 +5434,11 @@ class Test_calculate_response:
 
     @pytest.fixture
     def wave(self):
-        freq = 2.0 * np.pi * np.array([0.01, 0.3, 0.6, 0.9])  # rad/s
-        dirs = np.pi / 180.0 * np.array([10.0, 90.0, 180.0, 270.0])  # rad
-        vals = np.random.default_rng(1).random((len(freq), len(dirs)))
+        freq = np.linspace(0.005, 2.0 * np.pi, 10, endpoint=False)  # rad/s
+        dirs = np.linspace(0.5, 2.0 * np.pi, 15, endpoint=False)  # rad
+
+        # random function: f + sqrt(theta) + 7.0
+        vals = freq[:, np.newaxis]**2 + np.sqrt(dirs[np.newaxis, :]) + 7.0 
 
         wave = WaveSpectrum(
             freq,
@@ -5451,10 +5453,11 @@ class Test_calculate_response:
 
     @pytest.fixture
     def wavebin(self):
-        rng = np.random.default_rng(2)
-        freq = 2.0 * np.pi * np.array([0.01, 0.3, 0.6, 0.9])  # rad/s
-        dirs = np.pi / 180.0 * np.array([10.0, 90.0, 180.0, 270.0])  # rad
-        vals = rng.random((len(freq), len(dirs)))
+        freq = np.linspace(0.005, 2.0 * np.pi, 10, endpoint=False)  # rad/s
+        dirs = np.linspace(0.5, 2.0 * np.pi, 15, endpoint=False)  # rad
+
+        # random function: f + sqrt(theta) + 7.0
+        vals = freq[:, np.newaxis]**2 + np.sqrt(dirs[np.newaxis, :]) + 7.0 
 
         wave = WaveBinSpectrum(
             freq,
