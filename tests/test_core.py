@@ -5460,6 +5460,10 @@ class Test_calculate_response:
         assert isinstance(response, wr.DirectionalSpectrum)
         assert response._clockwise is rao._clockwise
         assert response._waves_coming_from is rao._waves_coming_from
+        assert response._freq_hz is False
+        assert response._degrees is False
+        np.testing.assert_allclose(response._freq, wave._freq)
+        np.testing.assert_allclose(response._dirs, wave._dirs)
         np.testing.assert_allclose(response._vals, vals_expect)
 
         # assert isinstance(response, DirectionalSpectrum)
