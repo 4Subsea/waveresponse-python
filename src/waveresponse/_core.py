@@ -2362,9 +2362,10 @@ def calculate_response(
     heading_degrees : bool
         Whether the heading is given in 'degrees'. If ``False``, 'radians' is assumed.
     reshape : {'rao', 'rao_squared'}, default 'rao_squared'
-        Determines whether to reshape the RAO or the squared RAO before pairing with
-        the wave spectrum. Linear interpolation is performed to match the frequency
-        and direction coordinates of the wave spectrum.
+        Determines whether to reshape the RAO or the magnitude-squared version of
+        the RAO before pairing with the wave spectrum. Linear interpolation is
+        performed to match the frequency and direction coordinates of the wave
+        spectrum.
     coord_freq : str, optional
         Deprecated; use `reshape` instead. Frequency coordinates for interpolation.
         Should be 'wave' or 'rao'. Determines if it is the wave spectrum or the
@@ -2406,11 +2407,14 @@ def calculate_response(
     else:
         raise ValueError("Invalid `reshape` value. Should be 'rao' or 'rao_squared'.")
 
-    if isinstance(wave, WaveSpectrum):
-        type_ = "DirectionalSpectrum"
-    elif isinstance(wave, WaveBinSpectrum):
-        type_ = "DirectionalBinSpectrum"
-    else:
+    TYPE_MAP = {
+        WaveSpectrum: "DirectionalSpectrum",
+        WaveBinSpectrum: "DirectionalBinSpectrum",
+    }
+
+    try:
+        type_ = TYPE_MAP[type(wave)]
+    except KeyError:
         raise ValueError(
             "Invalid `wave` type. Should be 'WaveSpectrum' or 'WaveBinSpectrum'."
         )
