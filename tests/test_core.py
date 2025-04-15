@@ -5438,7 +5438,7 @@ class Test_calculate_response:
         dirs = np.linspace(0.5, 2.0 * np.pi, 15, endpoint=False)  # rad
 
         # random function: f + sqrt(theta) + 7.0
-        vals = freq[:, np.newaxis]**2 + np.sqrt(dirs[np.newaxis, :]) + 7.0 
+        vals = freq[:, np.newaxis] ** 2 + np.sqrt(dirs[np.newaxis, :]) + 7.0
 
         wave = WaveSpectrum(
             freq,
@@ -5457,7 +5457,7 @@ class Test_calculate_response:
         dirs = np.linspace(0.5, 2.0 * np.pi, 15, endpoint=False)  # rad
 
         # random function: f + sqrt(theta) + 7.0
-        vals = freq[:, np.newaxis]**2 + np.sqrt(dirs[np.newaxis, :]) + 7.0 
+        vals = freq[:, np.newaxis] ** 2 + np.sqrt(dirs[np.newaxis, :]) + 7.0
 
         wave = WaveBinSpectrum(
             freq,
