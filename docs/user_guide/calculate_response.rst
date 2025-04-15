@@ -57,7 +57,7 @@ This function is roughly equivalent to:
         wave : WaveSpectrum
             Wave spectrum.
         heading : float
-            Heading of vessel relative to wave spectrum coordinate system.
+            Heading of vessel relative to wave spectrum reference frame.
         heading_degrees : bool
             Whether the heading is given in 'degrees'. If ``False``, 'radians' is assumed.
 
@@ -73,10 +73,7 @@ This function is roughly equivalent to:
         # Ensure that ``rao`` and ``wave`` has the same 'wave convention'
         wave_body.set_wave_convention(**rao.wave_convention)
 
-        # Reshape ``rao`` and ``wave`` so that they share the same frequency/direction
-        # coordinates. In this example, ``wave`` will dictate the coordinates, and
-        # the ``rao`` object will be interpolated to match these coordinates.
-        # 
+        # Reshape the RAO to match the wave spectrum's frequency/direction coordinates.
         # It is recommended to reshape (i.e., interpolate) the magnitude-squared
         # version of the RAO when estimating response, since this has shown best
         # results:
