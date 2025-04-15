@@ -2305,51 +2305,18 @@ class WaveBinSpectrum(DisableComplexMixin, DirectionalBinSpectrum):
         return dirm
 
 
-def calculate_response(
-    rao, wave, heading, heading_degrees=False, coord_freq="wave", coord_dirs="wave"
-):
-    """
-    Calculate response spectrum.
+def _calculate_response_deprecated(rao, wave_body, coord_freq, coord_dirs):
+    # TODO: Deprecated. Remove this function in a future release.
 
-    Parameters
-    ----------
-    rao : obj
-        Response amplitude operator (RAO) as a :class:`~waveresponse.RAO` object.
-    wave : obj
-        2-D wave spectrum as a :class:`~waveresponse.WaveSpectrum` object.
-    heading : float
-        Heading of vessel relative to wave spectrum coordinate system.
-    heading_degrees : bool
-        Whether the heading is given in 'degrees'. If ``False``, 'radians' is assumed.
-    coord_freq : str, optional
-        Frequency coordinates for interpolation. Should be 'wave' or 'rao'. Determines
-        if it is the wave spectrum or the RAO that should dictate which frequencies
-        to use in response calculation. The other object will be interpolated to
-        match these frequencies.
-    coord_dirs : str, optional
-        Direction coordinates for interpolation. Should be 'wave' or 'rao'. Determines
-        if it is the wave spectrum or the RAO that should dictate which directions
-        to use in response calculation. The other object will be interpolated to
-        match these directions.
-
-    Returns
-    -------
-    obj :
-        Response spectrum as :class:`DirectionalSpectrum` object.
-    """
-    wave_body = wave.rotate(heading, degrees=heading_degrees)
-    wave_body.set_wave_convention(**rao.wave_convention)
-
-    if coord_freq.lower() == "wave":
+    if coord_freq == "wave":
         freq = wave_body._freq
-    elif coord_freq.lower() == "rao":
+    elif coord_freq == "rao":
         freq = rao._freq
     else:
         raise ValueError("Invalid `coord_freq` value. Should be 'wave' or 'rao'.")
-
-    if coord_dirs.lower() == "wave":
+    if coord_dirs == "wave":
         dirs = wave_body._dirs
-    elif coord_dirs.lower() == "rao":
+    elif coord_dirs == "rao":
         dirs = rao._dirs
     else:
         raise ValueError("Invalid `coord_dirs` value. Should be 'wave' or 'rao'.")
@@ -2358,7 +2325,102 @@ def calculate_response(
     rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
     wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
 
-    return multiply(rao_squared, wave_body, output_type="directional_spectrum")
+    return multiply(rao_squared, wave_body, output_type="DirectionalSpectrum")
+
+
+def calculate_response(
+    rao,
+    wave,
+    heading,
+    heading_degrees=False,
+    reshape="rao_squared",
+    coord_freq=None,
+    coord_dirs=None,
+):
+    """
+    Calculate response spectrum.
+
+    The response spectrum is calculated according to:
+
+        S_x(w, theta) = H(w, theta) * H*(w, theta) * S_w(w, theta)
+
+    where S_x(w, theta) denotes the response spectrum, H(w, theta) denotes the RAO,
+    H*(w, theta) denotes the RAO conjugate, and S_w(w, theta) denotes the wave
+    spectrum (expressed in the RAO's reference frame).
+
+    The frequency and direction coordinates are dictatated by the wave spectrum.
+    I.e., the RAO (or the magnitude-squared verison of it) is interpolated to match
+    the grid coordinates of the wave spectrum.
+
+    Parameters
+    ----------
+    rao : RAO
+        Response amplitude operator (RAO).
+    wave : WaveSpectrum or WaveBinSpectrum
+        2-D wave spectrum.
+    heading : float
+        Heading of vessel relative to wave spectrum coordinate system.
+    heading_degrees : bool
+        Whether the heading is given in 'degrees'. If ``False``, 'radians' is assumed.
+    reshape : {'rao', 'rao_squared'}, default 'rao_squared'
+        Determines whether to reshape the RAO or the magnitude-squared version of
+        the RAO before pairing with the wave spectrum. Linear interpolation is
+        performed to match the frequency and direction coordinates of the wave
+        spectrum.
+    coord_freq : str, optional
+        Deprecated; use `reshape` instead. Frequency coordinates for interpolation.
+        Should be 'wave' or 'rao'. Determines if it is the wave spectrum or the
+        RAO that should dictate which frequencies to use in response calculation.
+        The other object will be interpolated to match these frequencies.
+    coord_dirs : str, optional
+        Deprecated; use `reshape` instead. Direction coordinates for interpolation.
+        Should be 'wave' or 'rao'. Determines if it is the wave spectrum or the
+        RAO that should dictate which directions to use in response calculation.
+        The other object will be interpolated to match these directions.
+
+    Returns
+    -------
+    DirectionalSpectrum or DirectionalBinSpectrum :
+        Response spectrum.
+    """
+    wave_body = wave.rotate(heading, degrees=heading_degrees)
+    wave_body.set_wave_convention(**rao.wave_convention)
+
+    # TODO: Remove once the deprecation period is over
+    if coord_freq and coord_dirs:
+        warnings.warn(
+            "The `coord_freq` and `coord_dirs` parameters are deprecated and will be removed in a future release."
+            "Use the `reshape` parameter instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return _calculate_response_deprecated(rao, wave_body, coord_freq, coord_dirs)
+    elif coord_freq or coord_dirs:
+        raise ValueError("Both `coord_freq` and `coord_dirs` must be provided.")
+
+    freq, dirs = wave_body._freq, wave_body._dirs
+    if reshape == "rao":
+        rao = rao.reshape(freq, dirs, freq_hz=False, degrees=False)
+        rao_squared = (rao * rao.conjugate()).real
+    elif reshape == "rao_squared":
+        rao_squared = (rao * rao.conjugate()).real
+        rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
+    else:
+        raise ValueError("Invalid `reshape` value. Should be 'rao' or 'rao_squared'.")
+
+    TYPE_MAP = {
+        WaveSpectrum: "DirectionalSpectrum",
+        WaveBinSpectrum: "DirectionalBinSpectrum",
+    }
+
+    try:
+        type_ = TYPE_MAP[type(wave)]
+    except KeyError:
+        raise ValueError(
+            "Invalid `wave` type. Should be 'WaveSpectrum' or 'WaveBinSpectrum'."
+        )
+
+    return multiply(rao_squared, wave_body, output_type=type_)
 
 
 class BaseSpreading(ABC):

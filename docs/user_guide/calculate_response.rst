@@ -52,18 +52,18 @@ This function is roughly equivalent to:
 
         Parameters
         ----------
-        rao : obj
-            ``RAO`` object.
-        wave : obj
-            ``WaveSpectrum`` object.
+        rao : RAO
+            Response amplitude operator (RAO).
+        wave : WaveSpectrum
+            Wave spectrum.
         heading : float
-            Heading of vessel relative to wave spectrum coordinate system.
+            Heading of vessel relative to wave spectrum reference frame.
         heading_degrees : bool
             Whether the heading is given in 'degrees'. If ``False``, 'radians' is assumed.
 
         Returns
         -------
-        obj :
+        DirectionalSpectrum :
             Response spectrum.
         """
 
@@ -73,10 +73,7 @@ This function is roughly equivalent to:
         # Ensure that ``rao`` and ``wave`` has the same 'wave convention'
         wave_body.set_wave_convention(**rao.wave_convention)
 
-        # Reshape ``rao`` and ``wave`` so that they share the same frequency/direction
-        # coordinates. In this example, ``wave`` will dictate the coordinates, and
-        # the ``rao`` object will be interpolated to match these coordinates.
-        # 
+        # Reshape the RAO to match the wave spectrum's frequency/direction coordinates.
         # It is recommended to reshape (i.e., interpolate) the magnitude-squared
         # version of the RAO when estimating response, since this has shown best
         # results:
@@ -85,9 +82,8 @@ This function is roughly equivalent to:
         dirs = wave_body.dirs(degrees=False)
         rao_squared = (rao * rao.conjugate()).real
         rao_squared = rao_squared.reshape(freq, dirs, freq_hz=False, degrees=False)
-        wave_body = wave_body.reshape(freq, dirs, freq_hz=False, degrees=False)
 
-        return wr.multiply(rao_squared, wave_body, output_type="directional_spectrum")
+        return wr.multiply(rao_squared, wave_body, output_type="DirectionalSpectrum")
 
 The response is returned as a :class:`~waveresponse.DirectionalSpectrum` object,
 and provides useful spectrum operations, such as:
