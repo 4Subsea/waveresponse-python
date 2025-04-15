@@ -5596,23 +5596,6 @@ class Test_calculate_response:
         with pytest.raises(ValueError):
             calculate_response(rao, wave, np.radians(45), reshape="invalid-value")
 
-    # def test_calculate_response_heading_degrees(self, rao, wave):
-    #     response = calculate_response(rao, wave, 5, heading_degrees=True)
-    #     np.testing.assert_allclose(response._dirs, wave._dirs - np.radians(5))
-
-    # def test_calculate_response_heading_radians(self, rao, wave):
-    #     response = calculate_response(rao, wave, np.radians(5), heading_degrees=False)
-    #     np.testing.assert_allclose(response._dirs, wave._dirs - np.radians(5))
-
-    # def test_calculate_response_wave_convention(self, rao, wave):
-    #     rao_convention = {"waves_coming_from": True, "clockwise": False}
-    #     wave_convention = {"waves_coming_from": False, "clockwise": True}
-    #     rao.set_wave_convention(**rao_convention)
-    #     wave.set_wave_convention(**wave_convention)
-    #     response = calculate_response(rao, wave, np.pi / 4.0, heading_degrees=False)
-    #     assert response._clockwise is False
-    #     assert response._waves_coming_from is True
-
     def test_calculate_response_raises_coord_freq(self, rao, wave):
         # TODO: coord_freq and coord_dirs deprecated. Remove test in future.
         with pytest.raises(ValueError):
