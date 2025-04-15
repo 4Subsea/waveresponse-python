@@ -2322,11 +2322,11 @@ def calculate_response(
 
     where ``S_x(w, theta)`` is the response spectrum, ``H(w, theta)`` is the RAO,
     ``H*(w, theta)`` is the conjugate of the RAO, and ``S_w(w, theta)`` is the wave
-    spectrum.
+    spectrum (expressed in the same coordinate system as the RAO).
 
     The frequency and direction coordinates are dictatated by the wave spectrum.
-    The RAO (or the squared verison of it) is interpolated to match the grid coordinates
-    of the wave spectrum.
+    The RAO (or the magnitude-squared verison of it) is interpolated to match the
+    grid coordinates of the wave spectrum.
 
     Parameters
     ----------
