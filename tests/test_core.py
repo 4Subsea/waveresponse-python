@@ -5409,23 +5409,207 @@ class Test_WaveBinSpectrum:
 
 
 class Test_calculate_response:
+    @pytest.fixture
+    def rao(self):
+        freq = np.linspace(0.01, 2.0 * np.pi, 10, endpoint=False)  # rad/s
+        dirs = np.linspace(0.0, 2.0 * np.pi, 15, endpoint=False)  # rad
+
+        # random function: 2.0 * f + 3.0 * theta + 4.0
+        vals_amp = 2.0 * freq[:, np.newaxis] + 3.0 * dirs[np.newaxis, :] + 4.0
+        vals_phase = np.linspace(0, 2 * np.pi, len(freq) * len(dirs)).reshape(
+            len(freq), len(dirs)
+        )
+
+        rao = RAO.from_amp_phase(
+            freq,
+            dirs,
+            vals_amp,
+            vals_phase,
+            freq_hz=False,
+            degrees=False,
+            waves_coming_from=True,
+            clockwise=False,
+        )
+        return rao
+
+    @pytest.fixture
+    def wave(self):
+        freq = np.linspace(0.005, 2.0 * np.pi, 10, endpoint=False)  # rad/s
+        dirs = np.linspace(0.5, 2.0 * np.pi, 15, endpoint=False)  # rad
+
+        # random function: f + sqrt(theta) + 7.0
+        vals = freq[:, np.newaxis] ** 2 + np.sqrt(dirs[np.newaxis, :]) + 7.0
+
+        wave = WaveSpectrum(
+            freq,
+            dirs,
+            vals,
+            freq_hz=False,
+            degrees=False,
+            waves_coming_from=False,
+            clockwise=True,
+        )
+        return wave
+
+    @pytest.fixture
+    def wavebin(self):
+        freq = np.linspace(0.005, 2.0 * np.pi, 10, endpoint=False)  # rad/s
+        dirs = np.linspace(0.5, 2.0 * np.pi, 15, endpoint=False)  # rad
+
+        # random function: f + sqrt(theta) + 7.0
+        vals = freq[:, np.newaxis] ** 2 + np.sqrt(dirs[np.newaxis, :]) + 7.0
+
+        wave = WaveBinSpectrum(
+            freq,
+            dirs,
+            vals,
+            freq_hz=False,
+            degrees=False,
+            waves_coming_from=False,
+            clockwise=True,
+        )
+        return wave
+
     def test_calculate_response(self, rao, wave):
-        response = calculate_response(rao, wave, 0.0)
-        assert isinstance(response, DirectionalSpectrum)
-        assert response._clockwise == rao._clockwise
-        assert response._waves_coming_from == rao._waves_coming_from
+        response = calculate_response(rao, wave, np.radians(45.0))
+
+        # Expected response
+        wave_body = wave.rotate(45.0, degrees=True)
+        wave_body.set_wave_convention(waves_coming_from=True, clockwise=False)
+        freq_expect, dirs_expect = wave_body._freq, wave_body._dirs
+        rao_squared_expect = (rao * rao.conjugate()).real
+        rao_squared_expect = rao_squared_expect.reshape(
+            freq_expect, dirs_expect, freq_hz=False, degrees=False
+        )
+        response_expect = wr.multiply(
+            rao_squared_expect, wave_body, "DirectionalSpectrum"
+        )
+
+        assert isinstance(response, wr.DirectionalSpectrum)
+        assert response._clockwise is False
+        assert response._waves_coming_from is True
         assert response._freq_hz is False
         assert response._degrees is False
+        np.testing.assert_allclose(response._freq, response_expect._freq)
+        np.testing.assert_allclose(response._dirs, response_expect._dirs)
+        np.testing.assert_allclose(response._vals, response_expect._vals)
+
+    def test_calculate_response_bin(self, rao, wavebin):
+        response = calculate_response(rao, wavebin, np.radians(45.0))
+
+        # Expected response
+        wave_body = wavebin.rotate(45.0, degrees=True)
+        wave_body.set_wave_convention(waves_coming_from=True, clockwise=False)
+        freq_expect, dirs_expect = wave_body._freq, wave_body._dirs
+        rao_squared_expect = (rao * rao.conjugate()).real
+        rao_squared_expect = rao_squared_expect.reshape(
+            freq_expect, dirs_expect, freq_hz=False, degrees=False
+        )
+        response_expect = wr.multiply(
+            rao_squared_expect, wave_body, "DirectionalBinSpectrum"
+        )
+
+        assert isinstance(response, wr.DirectionalBinSpectrum)
+        assert response._clockwise is False
+        assert response._waves_coming_from is True
+        assert response._freq_hz is False
+        assert response._degrees is False
+        np.testing.assert_allclose(response._freq, response_expect._freq)
+        np.testing.assert_allclose(response._dirs, response_expect._dirs)
+        np.testing.assert_allclose(response._vals, response_expect._vals)
+
+    def test_calculate_response_heading_degrees(self, rao, wave):
+        response = calculate_response(rao, wave, 45, heading_degrees=True)
+
+        # Expected response
+        wave_body = wave.rotate(45.0, degrees=True)
+        wave_body.set_wave_convention(waves_coming_from=True, clockwise=False)
+        freq_expect, dirs_expect = wave_body._freq, wave_body._dirs
+        rao_squared_expect = (rao * rao.conjugate()).real
+        rao_squared_expect = rao_squared_expect.reshape(
+            freq_expect, dirs_expect, freq_hz=False, degrees=False
+        )
+        response_expect = wr.multiply(
+            rao_squared_expect, wave_body, "DirectionalSpectrum"
+        )
+
+        np.testing.assert_allclose(response._freq, response_expect._freq)
+        np.testing.assert_allclose(response._dirs, response_expect._dirs)
+        np.testing.assert_allclose(response._vals, response_expect._vals)
+
+    def test_calculate_response_heading_radians(self, rao, wave):
+        response = calculate_response(rao, wave, np.radians(45), heading_degrees=False)
+
+        # Expected response
+        wave_body = wave.rotate(45.0, degrees=True)
+        wave_body.set_wave_convention(waves_coming_from=True, clockwise=False)
+        freq_expect, dirs_expect = wave_body._freq, wave_body._dirs
+        rao_squared_expect = (rao * rao.conjugate()).real
+        rao_squared_expect = rao_squared_expect.reshape(
+            freq_expect, dirs_expect, freq_hz=False, degrees=False
+        )
+        response_expect = wr.multiply(
+            rao_squared_expect, wave_body, "DirectionalSpectrum"
+        )
+
+        np.testing.assert_allclose(response._freq, response_expect._freq)
+        np.testing.assert_allclose(response._dirs, response_expect._dirs)
+        np.testing.assert_allclose(response._vals, response_expect._vals)
+
+    def test_calculate_response_reshape_rao_squared(self, rao, wave):
+        response = calculate_response(rao, wave, np.radians(45), reshape="rao_squared")
+
+        # Expected response
+        wave_body = wave.rotate(45.0, degrees=True)
+        wave_body.set_wave_convention(waves_coming_from=True, clockwise=False)
+        freq_expect, dirs_expect = wave_body._freq, wave_body._dirs
+        rao_squared_expect = (rao * rao.conjugate()).real
+        rao_squared_expect = rao_squared_expect.reshape(
+            freq_expect, dirs_expect, freq_hz=False, degrees=False
+        )  # reshape squared RAO
+        response_expect = wr.multiply(
+            rao_squared_expect, wave_body, "DirectionalSpectrum"
+        )
+
+        np.testing.assert_allclose(response._freq, response_expect._freq)
+        np.testing.assert_allclose(response._dirs, response_expect._dirs)
+        np.testing.assert_allclose(response._vals, response_expect._vals)
+
+    def test_calculate_response_reshape_rao(self, rao, wave):
+        response = calculate_response(rao, wave, np.radians(45), reshape="rao")
+
+        # Expected response
+        wave_body = wave.rotate(45.0, degrees=True)
+        wave_body.set_wave_convention(waves_coming_from=True, clockwise=False)
+        freq_expect, dirs_expect = wave_body._freq, wave_body._dirs
+        rao_expect = rao.reshape(
+            freq_expect, dirs_expect, freq_hz=False, degrees=False
+        )  # reshape RAO
+        rao_squared_expect = (rao_expect * rao_expect.conjugate()).real
+        response_expect = wr.multiply(
+            rao_squared_expect, wave_body, "DirectionalSpectrum"
+        )
+
+        np.testing.assert_allclose(response._freq, response_expect._freq)
+        np.testing.assert_allclose(response._dirs, response_expect._dirs)
+        np.testing.assert_allclose(response._vals, response_expect._vals)
+
+    def test_calculate_response_reshape_raises(self, rao, wave):
+        with pytest.raises(ValueError):
+            calculate_response(rao, wave, np.radians(45), reshape="invalid-value")
 
     def test_calculate_response_raises_coord_freq(self, rao, wave):
+        # TODO: Deprecated functionality. Remove test in future.
         with pytest.raises(ValueError):
             calculate_response(rao, wave, 0.0, coord_freq="invalid-value")
 
     def test_calculate_response_raises_coord_dirs(self, rao, wave):
+        # TODO: Deprecated functionality. Remove test in future.
         with pytest.raises(ValueError):
             calculate_response(rao, wave, 0.0, coord_freq="invalid-value")
 
     def test_calculate_response_coord_wave(self):
+        # TODO: Deprecated functionality. Remove test in future.
         freq_rao = np.array([0.0, 0.5, 1.0])
         dirs_rao = np.array([45.0, 135.0, 225.0, 315.0])
         vals_rao = np.array(
@@ -5498,6 +5682,7 @@ class Test_calculate_response:
         np.testing.assert_array_almost_equal(response._vals, vals_expect)
 
     def test_calculate_response_coord_rao(self):
+        # TODO: Deprecated functionality. Remove test in future.
         freq_rao = np.array([0.0, 0.5, 1.0])
         dirs_rao = np.array([45.0, 135.0, 225.0, 315.0])
         vals_rao = np.array(
@@ -5547,127 +5732,6 @@ class Test_calculate_response:
                 ]
             )
             ** 2
-        )
-
-        assert isinstance(response, DirectionalSpectrum)
-        assert response._freq_hz is False
-        assert response._degrees is False
-        np.testing.assert_array_almost_equal(response._freq, freq_expect)
-        np.testing.assert_array_almost_equal(response._dirs, dirs_expect)
-        np.testing.assert_array_almost_equal(response._vals, vals_expect)
-        assert response._clockwise == rao._clockwise
-        assert response._waves_coming_from == rao._waves_coming_from
-
-    def test_calculate_response_heading_degrees(self):
-        freq_rao = np.array([0.0, 0.5, 1.0])
-        dirs_rao = np.array([45.0, 135.0, 225.0, 315.0])
-        vals_rao = np.array(
-            [
-                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 0.0j, 0.0 + 1.0j],
-                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 0.0j, 0.0 + 1.0j],
-                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 0.0j, 0.0 + 1.0j],
-            ]
-        )  # all amplitudes are 1
-        rao = RAO(
-            freq_rao,
-            dirs_rao,
-            vals_rao,
-            freq_hz=True,
-            degrees=True,
-        )
-
-        freq_wave = np.array([0.0, 0.3, 0.6, 0.9])  # extrapolation needed
-        dirs_wave = np.array([90.0, 180.0, 270.0, 359.0])
-        vals_wave = np.ones((len(freq_wave), len(dirs_wave)))
-        wave = WaveSpectrum(
-            freq_wave,
-            dirs_wave,
-            vals_wave,
-            freq_hz=True,
-            degrees=True,
-        )
-
-        response = calculate_response(
-            rao, wave, 45.0, heading_degrees=True, coord_freq="wave", coord_dirs="wave"
-        )
-        response.set_wave_convention(**wave.wave_convention)
-
-        freq_expect = wave._freq
-        dirs_expect = wave._dirs - (np.pi / 4.0)
-        vals_expect = (
-            1.0
-            / (2.0 * np.pi * np.pi / 180.0)
-            * np.array(
-                [
-                    [1.0, 1.0, 1.0, 1.0],
-                    [1.0, 1.0, 1.0, 1.0],
-                    [1.0, 1.0, 1.0, 1.0],
-                    [1.0, 1.0, 1.0, 1.0],
-                ]
-            )
-        )
-
-        assert isinstance(response, DirectionalSpectrum)
-        assert response._freq_hz is False
-        assert response._degrees is False
-        np.testing.assert_array_almost_equal(response._freq, freq_expect)
-        np.testing.assert_array_almost_equal(response._dirs, dirs_expect)
-        np.testing.assert_array_almost_equal(response._vals, vals_expect)
-        assert response._clockwise == rao._clockwise
-        assert response._waves_coming_from == rao._waves_coming_from
-
-    def test_calculate_response_heading_radians(self):
-        freq_rao = np.array([0.0, 0.5, 1.0])
-        dirs_rao = np.array([45.0, 135.0, 225.0, 315.0])
-        vals_rao = np.array(
-            [
-                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 0.0j, 0.0 + 1.0j],
-                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 0.0j, 0.0 + 1.0j],
-                [1.0 + 0.0j, 0.0 + 1.0j, 1.0 + 0.0j, 0.0 + 1.0j],
-            ]
-        )  # all amplitudes are 1
-        rao = RAO(
-            freq_rao,
-            dirs_rao,
-            vals_rao,
-            freq_hz=True,
-            degrees=True,
-        )
-
-        freq_wave = np.array([0.0, 0.3, 0.6, 0.9])  # extrapolation needed
-        dirs_wave = np.array([90.0, 180.0, 270.0, 359.0])
-        vals_wave = np.ones((len(freq_wave), len(dirs_wave)))
-        wave = WaveSpectrum(
-            freq_wave,
-            dirs_wave,
-            vals_wave,
-            freq_hz=True,
-            degrees=True,
-        )
-
-        response = calculate_response(
-            rao,
-            wave,
-            np.pi / 4.0,
-            heading_degrees=False,
-            coord_freq="wave",
-            coord_dirs="wave",
-        )
-        response.set_wave_convention(**wave.wave_convention)
-
-        freq_expect = wave._freq
-        dirs_expect = wave._dirs - (np.pi / 4.0)
-        vals_expect = (
-            1.0
-            / (2.0 * np.pi * np.pi / 180.0)
-            * np.array(
-                [
-                    [1.0, 1.0, 1.0, 1.0],
-                    [1.0, 1.0, 1.0, 1.0],
-                    [1.0, 1.0, 1.0, 1.0],
-                    [1.0, 1.0, 1.0, 1.0],
-                ]
-            )
         )
 
         assert isinstance(response, DirectionalSpectrum)
