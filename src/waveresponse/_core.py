@@ -2149,6 +2149,9 @@ class WaveSpectrum(DisableComplexMixin, DirectionalSpectrum):
             during instantiation.
         """
 
+        if degrees is None:
+            degrees = self._degrees
+
         dp, sp = self.spectrum1d(axis=0, degrees=False)
 
         d = self._full_range_dir(dp)
