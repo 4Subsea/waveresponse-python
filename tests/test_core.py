@@ -4171,7 +4171,11 @@ class Test_DirectionalSpectrum:
 
         freq_expect = (2.0 * np.pi) * y
         dirs_expect = (np.pi / 180.0) * x
-        vals_expect = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y]) * (180.0 / np.pi) / (2.0 * np.pi)
+        vals_expect = (
+            np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
+            * (180.0 / np.pi)
+            / (2.0 * np.pi)
+        )
 
         freq_out = grid_reshaped._freq
         dirs_out = grid_reshaped._dirs
@@ -4198,7 +4202,11 @@ class Test_DirectionalSpectrum:
 
         freq_expect = (2.0 * np.pi) * y
         dirs_expect = (np.pi / 180.0) * x
-        vals_expect = np.array([[a * x_i + b * y_i for x_i in x] for y_i in y]) * (180.0 / np.pi) / (2.0 * np.pi)
+        vals_expect = (
+            np.array([[a * x_i + b * y_i for x_i in x] for y_i in y])
+            * (180.0 / np.pi)
+            / (2.0 * np.pi)
+        )
 
         freq_out = grid_reshaped._freq
         dirs_out = grid_reshaped._dirs
@@ -4239,7 +4247,9 @@ class Test_DirectionalSpectrum:
         vals_imag_expect = np.array(
             [[a_imag * x_i + b_imag * y_i for x_i in x] for y_i in y]
         )
-        vals_expect = (vals_real_expect + 1j * vals_imag_expect) * (180.0 / np.pi) / (2.0 * np.pi)
+        vals_expect = (
+            (vals_real_expect + 1j * vals_imag_expect) * (180.0 / np.pi) / (2.0 * np.pi)
+        )
 
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
@@ -4272,9 +4282,11 @@ class Test_DirectionalSpectrum:
 
         freq_expect = (2.0 * np.pi) * y
         dirs_expect = (np.pi / 180.0) * x
-        vals_amp_expect = np.array(
-            [[a_amp * x_i + b_amp * y_i for x_i in x] for y_i in y]
-        ) * (180.0 / np.pi) / (2.0 * np.pi)
+        vals_amp_expect = (
+            np.array([[a_amp * x_i + b_amp * y_i for x_i in x] for y_i in y])
+            * (180.0 / np.pi)
+            / (2.0 * np.pi)
+        )
         x_, y_ = np.meshgrid(x, y, indexing="ij", sparse=True)
         vals_phase_cos_expect = RGI((xp, yp), np.cos(vp_phase).T)((x_, y_)).T
         vals_phase_sin_expect = RGI((xp, yp), np.sin(vp_phase).T)((x_, y_)).T
@@ -4288,6 +4300,7 @@ class Test_DirectionalSpectrum:
         np.testing.assert_array_almost_equal(freq_out, freq_expect)
         np.testing.assert_array_almost_equal(dirs_out, dirs_expect)
         np.testing.assert_array_almost_equal(vals_out, vals_expect)
+
 
 class Test_DirectionalBinSpectrum:
     def test__init___hz_deg(self):
@@ -5088,7 +5101,6 @@ class Test_DirectionalBinSpectrum:
 
         assert extreme_out == pytest.approx(extreme_expect)
 
-
     def test_reshape(self):
         a = 7
         b = 6
@@ -5103,7 +5115,9 @@ class Test_DirectionalBinSpectrum:
 
         freq_expect = (2.0 * np.pi) * y
         dirs_expect = (np.pi / 180.0) * xp
-        vals_expect = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in y]) / (2.0 * np.pi)
+        vals_expect = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in y]) / (
+            2.0 * np.pi
+        )
 
         freq_out = grid_reshaped._freq
         dirs_out = grid_reshaped._dirs
@@ -5128,7 +5142,9 @@ class Test_DirectionalBinSpectrum:
 
         freq_expect = (2.0 * np.pi) * y
         dirs_expect = (np.pi / 180.0) * xp
-        vals_expect = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in y]) / (2.0 * np.pi)
+        vals_expect = np.array([[a * x_i + b * y_i for x_i in xp] for y_i in y]) / (
+            2.0 * np.pi
+        )
 
         freq_out = grid_reshaped._freq
         dirs_out = grid_reshaped._dirs
@@ -5152,9 +5168,7 @@ class Test_DirectionalBinSpectrum:
         spectrum = DirectionalBinSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
 
         y = np.linspace(0.5, 1.0, 20)
-        grid_reshaped = spectrum.reshape(
-            y, freq_hz=True, complex_convert="rectangular"
-        )
+        grid_reshaped = spectrum.reshape(y, freq_hz=True, complex_convert="rectangular")
 
         freq_out = grid_reshaped._freq
         dirs_out = grid_reshaped._dirs
@@ -5190,9 +5204,7 @@ class Test_DirectionalBinSpectrum:
         spectrum = DirectionalBinSpectrum(yp, xp, vp, freq_hz=True, degrees=True)
 
         y = np.linspace(0.5, 1.0, 20)
-        grid_reshaped = spectrum.reshape(
-            y, freq_hz=True, complex_convert="polar"
-        )
+        grid_reshaped = spectrum.reshape(y, freq_hz=True, complex_convert="polar")
 
         freq_out = grid_reshaped._freq
         dirs_out = grid_reshaped._dirs
