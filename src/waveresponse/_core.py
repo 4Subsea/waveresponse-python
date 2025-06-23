@@ -1818,12 +1818,6 @@ class DirectionalSpectrum(_SpectrumMixin, Grid):
 
         vals_new = interp_fun(freq_new, dirs_new)
 
-        if freq_hz:
-            vals_new *= 2.0 * np.pi
-
-        if degrees:
-            vals_new *= np.pi / 180.0
-
         new = self.copy()
         new._freq, new._dirs, new._vals = freq_new, dirs_new, vals_new
         return new
@@ -2002,9 +1996,6 @@ class DirectionalBinSpectrum(_SpectrumMixin, Grid):
         )
 
         vals_new = interp_fun(freq_new, self._dirs)
-
-        if freq_hz:
-            vals_new *= 2.0 * np.pi
 
         new = self.copy()
         new._freq, new._vals = freq_new, vals_new
